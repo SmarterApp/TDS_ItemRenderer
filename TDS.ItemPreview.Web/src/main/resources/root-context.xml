@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd ">
+
+	<annotation-driven />
+	<context:annotation-config />
+
+	<context:property-placeholder location="classpath:settings.xml" ignore-unresolvable="true" order="900" />
+	<context:property-placeholder ignore-unresolvable="true" />
+
+	<beans:import resource="classpath:opentestsystem.shared.common-context-module.xml" />
+	<beans:import resource="classpath:opentestsystem.shared.security-context-module.xml" />
+
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- TDSSettings bean. This gives access to clientname and any other info such as session type etc. -->
+	<beans:bean id="tdsSettings" class="TDS.Shared.Configuration.TDSSettings" scope="prototype" />
+	<beans:bean id="urlHelper" class="AIR.Common.Web.UrlHelper" scope="singleton" />
+	<beans:bean id="browserParser" class="AIR.Common.Web.dummy.BrowserParser" scope="request" />
+	
+	<!--
+	TODO use tds.itempreview.ItemPreviewSettings
+	-->
+	<beans:bean id="itempreviewSettings" class="tds.itempreview.dummy.ItemPreviewSettings" scope="singleton" />
+	
+</beans:beans>
+

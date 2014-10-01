@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itemrelease version="2.0">
+  <item format="mc" id="1126" version="3" bankkey="187">
+    <attriblist>
+      <attrib attid="itm_item_id">
+        <name>Item: ITS ID</name>
+        <val>1126</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_item_subject">
+        <name>Item: Subject</name>
+        <val>MATH</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_item_desc">
+        <name>Item: Item Description</name>
+        <val>Cloned for Special Forms from 44343 - SB OP</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_FTUse">
+        <name>Fieldtest Use</name>
+        <val>PracTest::MG3::S1::SP13::BRAILLE (14); Math Training 3-5::SP 14::Braille (3);</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_OPUse">
+        <name>Operational Use</name>
+        <val>
+        </val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key">
+        <name>Item: Answer Key</name>
+        <val>B</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Grade">
+        <name>Item: Grade</name>
+        <val>3</val>
+        <desc>3</desc>
+      </attrib>
+      <attrib attid="itm_att_Item Format">
+        <name>Item: Item Format</name>
+        <val>MC</val>
+        <desc>MC4 [1]</desc>
+      </attrib>
+      <attrib attid="itm_att_Page Layout">
+        <name>Item: Page Layout</name>
+        <val>8</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Response Type">
+        <name>Item: Response Type</name>
+        <val>Vertical</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Item Point">
+        <name>Item: Item Point</name>
+        <val>1 pt.</val>
+        <desc>1 Point</desc>
+      </attrib>
+    </attriblist>
+    <tutorial id="1072" bankkey="187" />
+    <resourceslist />
+    <statistic />
+    <content language="ENU" version="2.0" approvedVersion="3">
+      <concept>
+        <name>What Knowledge Do Students Need to Understand This Concept?</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </concept>
+      <es>
+        <name>Explanation of Correct Answer</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </es>
+      <himi>
+        <name>Explanation of Correct Answer</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </himi>
+      <rationaleoptlist>
+        <rationale>
+          <name>Rationale for Option A</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option B</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option C</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option D</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+      </rationaleoptlist>
+      <stem><![CDATA[<p style="font-weight:normal; ">Which shows the fractions in the correct location on the number line?</p>]]></stem>
+      <optionlist>
+        <option>
+          <name>Option A</name>
+          <val><![CDATA[<p style=""><img id="item_1126_graphics1" src="item_1126_v3_graphics1_png256.png" width="484" height="89" style="vertical-align:baseline;" /></p>]]></val>
+          <feedback><![CDATA[<p style="">&#xA0;</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option B</name>
+          <val><![CDATA[<p style=""><img id="item_1126_graphics2" src="item_1126_v3_graphics2_png256.png" width="484" height="89" style="vertical-align:baseline;" /></p>]]></val>
+          <feedback><![CDATA[<p style="">&#xA0;</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option C</name>
+          <val><![CDATA[<p style=""><img id="item_1126_graphics3" src="item_1126_v3_graphics3_png256.png" width="484" height="89" style="vertical-align:baseline;" /></p>]]></val>
+          <feedback><![CDATA[<p style="">&#xA0;</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option D</name>
+          <val><![CDATA[<p style=""><img id="item_1126_graphics4" src="item_1126_v3_graphics4_png256.png" width="484" height="89" style="vertical-align:baseline;" /></p>]]></val>
+          <feedback><![CDATA[<p style="">&#xA0;</p>]]></feedback>
+        </option>
+      </optionlist>
+      <attachmentlist>
+        <attachment id="braillefile2" type="PRN" subtype="nemeth" file="item_1126_enu_nemeth.prn" />
+      </attachmentlist>
+    </content>
+  </item>
+</itemrelease>

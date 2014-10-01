@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itemrelease version="2.0">
+  <item format="mi" id="1689" version="10" bankkey="187">
+    <attriblist>
+      <attrib attid="itm_item_id">
+        <name>Item: ITS ID</name>
+        <val>1689</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_item_subject">
+        <name>Item: Subject</name>
+        <val>ELA</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_item_desc">
+        <name>Item: Item Description</name>
+        <val>56192 - SBAC_Field</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_FTUse">
+        <name>Fieldtest Use</name>
+        <val>ELA Training HS::SP 14 (6); ELA Training HS::SP 14::Braille (6);</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_OPUse">
+        <name>Operational Use</name>
+        <val>
+        </val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key">
+        <name>Item: Answer Key</name>
+        <val>MI</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Grade">
+        <name>Item: Grade</name>
+        <val>11</val>
+        <desc>11</desc>
+      </attrib>
+      <attrib attid="itm_att_Item Format">
+        <name>Item: Item Format</name>
+        <val>MI</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Page Layout">
+        <name>Item: Page Layout</name>
+        <val>8</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Response Type">
+        <name>Item: Response Type</name>
+        <val>TableMatch</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Item Point">
+        <name>Item: Item Point</name>
+        <val>1pt</val>
+        <desc>
+        </desc>
+      </attrib>
+    </attriblist>
+    <tutorial id="1080" bankkey="187" />
+    <resourceslist>
+      <resource type="wordList" id="1747" index="1" bankkey="187" />
+    </resourceslist>
+    <statistic />
+    <MachineRubric filename="Item_1689_v10.mrx" />
+    <content language="ENU" version="2.0" approvedVersion="10">
+      <qti spec="itemBody"><![CDATA[<matchInteraction responseIdentifier="RESPONSE" minAssociations="1" maxAssociations="0"><prompt /><simpleMatchSet><simpleAssociableChoice identifier="1" matchMax="0"><p style="font-weight:normal; ">The source is relevant to the topic of the paragraph.</p></simpleAssociableChoice><simpleAssociableChoice identifier="2" matchMax="0"><p style="font-weight:normal; ">The source is credible.</p></simpleAssociableChoice></simpleMatchSet><simpleMatchSet><simpleAssociableChoice identifier="a" matchMax="0"><p style="font-weight:bold; ">Source 1</p></simpleAssociableChoice><simpleAssociableChoice identifier="b" matchMax="0"><p style="font-weight:bold; ">Source 2</p></simpleAssociableChoice><simpleAssociableChoice identifier="c" matchMax="0"><p style="font-weight:bold; ">Source 3</p></simpleAssociableChoice><simpleAssociableChoice identifier="d" matchMax="0"><p style="font-weight:bold; ">Source 4</p></simpleAssociableChoice></simpleMatchSet></matchInteraction>]]></qti>
+      <stem><![CDATA[<p style="">A student is writing a research report about common ailments and their cures. He found possible sources on the Internet for a paragraph about getting rid of hiccups. Read the sources and the directions that follow.</p><p style=""><br /><span style="font-weight:bold; ">Source 1: Hiccup Help</span><span id="item_1689_TAG_9_BEGIN"><span style="font-weight:bold; ">—</span></span><span style="font-weight:bold; ">posted by the National Health Advisory </span><span id="item_1689_TAG_3_BEGIN"><span style="font-weight:bold; ">Panel</span></span><span style="font-weight:bold; "> </span></p><p style=""><br /><span id="item_1689_TAG_1_BEGIN"><span style="text-decoration:underline; ">www.nationalhealthinstitute.gov/minorillness</span></span></p><p style=""><br /><span id="item_1689_TAG_13_BEGIN">Dr.</span> Lament concludes that there is not an absolute way to stop the hiccups. Many people have reported success with these common, risk-free methods listed below. If hiccups become painful or persist for an unusual amount of time, consult your physician.</p><p style=""><br /><span style="font-weight:bold; ">Source 2: Health Minute</span><span id="item_1689_TAG_8_BEGIN"><span style="font-weight:bold; ">—</span></span><span style="font-weight:bold; ">article by research reviewer Shannon </span><span id="item_1689_TAG_2_BEGIN"><span style="font-weight:bold; ">Clark</span></span></p><p style=""><br /><span id="item_1689_TAG_4_BEGIN"><span style="text-decoration:underline; ">www.discoveryhealth.org</span></span></p><p style=""><br />Discover three scientific techniques engineered by <span id="item_1689_TAG_14_BEGIN">Dr.</span> Helen that work by <span id="item_1689_TAG_21" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>overwhelming<span class="its-tag" data-tag-ref="item_1689_TAG_21" data-tag-boundary="end"></span> the vagus nerve with signals. The signals let the brain know that something important has come up. The brain then stops the hiccups to deal with the more important matter at hand.</p><p style=""><br /><span style="font-weight:bold; ">Source 3: Reasonable Cure for the Price</span><span id="item_1689_TAG_6_BEGIN"><span style="font-weight:bold; ">—</span></span><span style="font-weight:bold; ">review posted by </span><span id="item_1689_TAG_5_BEGIN"><span style="font-weight:bold; ">DrHealth123</span></span></p><p style=""><br /><span id="item_1689_TAG_7_BEGIN"><span style="text-decoration:underline; ">www.goodbyehiccups.com</span></span></p><p style=""><br />Using scientific methods, <span id="item_1689_TAG_12_BEGIN">Dr.</span> Jones has <span id="item_1689_TAG_22" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>patented<span class="its-tag" data-tag-ref="item_1689_TAG_22" data-tag-boundary="end"></span> a product guaranteed to immediately take away your hiccups. The Goodbye Hiccups device can be purchased now, so you’ll have a go-to cure for your next bout of the hiccups.</p><p style=""><br /><span style="font-weight:bold; ">Source 4: The Science Behind Hiccups</span><span id="item_1689_TAG_10_BEGIN"><span style="font-weight:bold; ">—</span></span><span style="font-weight:bold; ">article by health correspondent James Miller</span></p><p style=""><br /><span id="item_1689_TAG_11_BEGIN"><span style="text-decoration:underline; ">www.journalofrespiratorymedicine.org</span></span></p><p style=""><br /><span id="item_1689_TAG_15_BEGIN">Dr.</span> Kumis, a leading expert in <span id="item_1689_TAG_24" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="5"></span>respiration<span class="its-tag" data-tag-ref="item_1689_TAG_24" data-tag-boundary="end"></span>, defines hiccups as <span id="item_1689_TAG_18_BEGIN">“involuntary</span> <span id="item_1689_TAG_23" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="4"></span>spasms<span class="its-tag" data-tag-ref="item_1689_TAG_23" data-tag-boundary="end"></span> or <span id="item_1689_TAG_20" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>contractions<span class="its-tag" data-tag-ref="item_1689_TAG_20" data-tag-boundary="end"></span> of the diaphragm, which is located at the bottom of the lungs. The contraction forces a quick closing of the vocal chords producing a ‘hiccup’ <span id="item_1689_TAG_19_BEGIN">sound.”</span> Hiccups vary in severity and can be an indication of an underlying medical problem. Below are some of the conditions that can cause hiccups.</p><p style=""><br />Evaluate the sources. Determine if each source is relevant to the topic of the student’s paragraph <span id="item_1689_TAG_17_BEGIN">and/or</span> is a credible source. Click on the boxes that appropriately describe each source. Some sources will have more than one box <span id="item_1689_TAG_16_BEGIN">selected.</span></p>]]></stem>
+      <attachmentlist>
+        <attachment id="braillefile1" type="BRF" subtype="contracted" file="item_1689_enu_contracted.brf" />
+        <attachment id="braillefile2" type="BRF" subtype="uncontracted" file="item_1689_enu_uncontracted.brf" />
+      </attachmentlist>
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae1">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_9_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>,</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>br—</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae2">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_3_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>Panel.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>Panel.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>Panel</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae3">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_1_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>w w w dot national health institute dot gov slash minor illness.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>w w w dot national health institutedot gov slash minor illness.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>
+                </brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae4">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_13_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>Doctor</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>Doctor</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>Dr.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae5">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_8_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>,</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>—</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae6">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_2_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>Clark.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>Clark.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>Clark</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae7">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_4_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>w w w dot discovery health dot org.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>w w w dot discovery health dot org.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>www.discoveryhealth.org</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae8">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_14_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>Doctor</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>Doctor</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>Dr.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae10">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_6_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>,</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>—</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae11">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_5_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>Doctor Health 123.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>DrHealth123</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>DrHealth123</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae12">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_7_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>w w w  dot good bye hiccups dot com.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>w w w  dot good bye hiccups dot com.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>www.goodbyehiccups.com</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae13">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_12_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>Doctor</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>Dr.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>Dr.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae15">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_10_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>,</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>—</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae16">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_11_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>, w w w  dot journal of respiratory medicine dot org.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>w w w  dot journal of respiratory medicine dot org.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>www.journalofrespiratorymedicine.org</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae17">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_15_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>Doctor</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>Doctor</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>Dr.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae19">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_18_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>quote, involuntary</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>quote, involuntary</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>“involuntary</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae22">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_19_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>sound. end quote,</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>sound.”</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>sound.”</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae23">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_17_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>and, slash, or</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>and, slash, or</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>and/or</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae24">
+            <contentLinkInfo itsLinkIdentifierRef="item_1689_TAG_16_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>selected. The table has 2 rows and 4 columns. 
+From left to right the column headings reed: Source 1, Source 2, Source 3, Source 4.
+From top to bottom the row headings reed: The source is relevant to the topic of the paragraph, The source is credible.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>selected.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>selected.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+  </item>
+</itemrelease>

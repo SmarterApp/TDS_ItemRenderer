@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+	version="2.1">
+
+	<managed-bean>
+		<managed-bean-name>defaultPageBean</managed-bean-name>
+		<managed-bean-class>tds.itempreview.web.backing.DefaultPageBackingBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<!-- 
+		<managed-property>
+          <property-name>firstName</property-name>
+           <value>Jane</value>
+        </managed-property>
+         -->
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>clientScriptBackingBean</managed-bean-name>
+		<managed-bean-class>AIR.Common.Web.taglib.ClientScriptContainerBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>classicPageBean</managed-bean-name>
+		<managed-bean-class>tds.itempreview.web.backing.ClassicPageBackingBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+
+	<!-- start Sample page -->
+	<managed-bean>
+		<managed-bean-name>userBean</managed-bean-name>
+		<managed-bean-class>tds.itempreview.web.sample.UserBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<!-- end Sample page -->
+
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+	</application>
+
+</faces-config>

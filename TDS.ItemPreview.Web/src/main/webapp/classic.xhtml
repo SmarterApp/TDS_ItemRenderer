@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://java.sun.com/jsf/passthrough"
+	xmlns:vt="http://jsfcompref.com/example"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<meta http-equiv="X-UA-Compatible" content="IE=IE7" />
+	<title>Item Preview</title>
+	<link
+		href="#{classicPageBean.getBlackboxUrl('Shared/CSS/testShell.css')}"
+		media="all" type="text/css" rel="stylesheet" />
+
+
+	<!-- Browser styles -->
+	<c:choose>
+		<c:when test="#{browserParser.isIE}">
+			<link
+				href="#{classicPageBean.getBlackboxUrl('Shared/CSS/Browsers/ie.css')}"
+				media="screen" type="text/css" rel="stylesheet" />
+		</c:when>
+		<c:otherwise>
+			<c:if test="#{browserParser.isWebKit}">
+				<link
+					href="#{classicPageBean.getBlackboxUrl('Shared/CSS/Browsers/webkit.css')}"
+					media="screen" type="text/css" rel="stylesheet" />
+			</c:if>
+		</c:otherwise>
+	</c:choose>
+
+	<style type="text/css">
+/* ITEM PREVIEW STYLES */
+#topHalf { /* hide footer */
+	bottom: 0px !important;
+	border-bottom: 0px !important;
+}
+
+.jumpRadio {
+	display: inline !important;
+	float: none !important;
+	margin-right: .5em !important;
+}
+
+/* override testshell.css (it hides iframes) */
+#contents iframe {
+	display: block;
+	height: 100%;
+	visibility: visible;
+	width: 100%;
+}
+</style>
+</h:head>
+<h:body>
+	<h:form>
+		<div id="topHalf">
+			<!-- wraps both the current Header and the test content -->
+			<table cellpadding="0" cellspacing="0" height="100%" width="100%">
+				<tbody>
+					<tr>
+						<td class="headCell">
+							<!-- contains the head -->
+							<div id="head" role="banner">
+								<div class="topBar">
+									<span class="studentInfo">ITEM PREVIEW</span>
+									<div class="smallButtons">
+										<a id="btnItemScore" href="#"><span>Score</span></a> <a
+											href="javascript:closeWindow();" id="logOut"><span>Close</span></a>
+										<a href="javascript:showAccommodations();"><span>Settings</span></a>
+									</div>
+									<span class="sessionID"></span> <span class="logo"></span> <span
+										class="clear"></span>
+								</div>
+
+								<div class="bottomBar">
+									<span id="lblTestName" class="testName"></span> <span
+										class="jumptTo">
+
+										<div id="navigation">
+											<label for="ddlNavigation">Items:</label> <select
+												id="ddlNavigation"></select>
+											<c:if test="#{itempreviewSettings.getShowDevTools().value}">
+												<label for="ddlLayouts">Layout:</label>
+												<input id="ddlLayouts" type="text" size="3" />
+											</c:if>
+
+										</div> <c:if test="#{itempreviewSettings.getShowDevTools().value}">
+										 &nbsp; <b><a id="btnReloadPage" href="#">Reload</a></b> | <a
+												href="#" onClick="openSelectedContent()">View
+												Accessibility</a>
+											<a id="btnResponse" href="#"><span>Response</span></a>
+
+											<div id="ttsTools" style="display: inline;">
+												<b>TTS: </b> <a href="#" onClick="showSelectedTTS(true)">Selected</a>
+												<a href="#" onClick="showSelectedTTS(false)">Component</a>
+											</div>
+
+											<div id="gridTools" style="display: none;">
+												<b>GRID: </b> <a href="#" onClick="forceSnapping()">Force
+													Snap</a> - <a href="#" onClick="showSnapPoints()">Show Snap
+													Points</a>
+											</div> | <a href="#" onClick="openScreenshot()">Screenshot</a>
+
+											<div id="measurementTools" style="display: inline;">
+												<b>Measurement Tools: </b> <a href="#"
+													onClick="toggleRuler(event)">Ruler</a> - <a href="#"
+													onClick="toggleProtractor(event)">Protractor</a>
+											</div>
+										</c:if>
+									</span>
+
+									<!--a id="btnReload">Reload</a-->
+									<span class="clear"></span>
+								</div>
+								<div class="notificationsContainer">
+									<div id="pnlNotifyError" class="notificationError"
+										style="display: none;">&nbsp;</div>
+									<div id="pnlNotifyNotice" class="notificationNotice"
+										style="display: none;">&nbsp;</div>
+									<div id="pnlNotifySuccess" class="notificationSuccess"
+										style="display: none;">&nbsp;</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="bottomthing">
+							<!-- contains test content/iFrame -->
+							<div id="contents" class="testContent">
+								<div id="reviews"></div>
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+	</h:form>
+
+	<!-- YUI -->
+	<script type="text/javascript"
+		src="#{classicPageBean.getBlackboxUrl('Scripts/Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js')}"></script>
+	<script type="text/javascript"
+		src="#{classicPageBean.getBlackboxUrl('Scripts/Libraries/YUI/cookie/cookie-min.js')}"></script>
+
+	<!-- Itempreview -->
+	<script type="text/javascript"
+		src="#{classicPageBean.getBlackboxUrl('Scripts/Blackbox/blackbox_loader.js')}"></script>
+	<script type="text/javascript" src="Scripts/itempreview.js"></script>
+	<script type="text/javascript" src="Scripts/navigation.js"></script>
+	<script type="text/javascript" src="Scripts/accommodations.js"></script>
+	<script type="text/javascript" src="Scripts/scoring.js"></script>
+	<script type="text/javascript" src="Scripts/development.js"></script>
+
+	<script type="text/javascript">
+		var ItemScoringServerUrl = '#{classicPageBean.itemScoringServerUrl}';
+		var ItemPreviewUrl = '#{urlHelper.getBase()}';
+		var BlackboxUrl = "#{classicPageBean.getBlackboxUrl('default.aspx', true)}";
+
+		// this function exists in blackbox_loader.js
+		BlackboxLoader.create('contents', BlackboxUrl);
+	</script>
+</h:body>
+</html>

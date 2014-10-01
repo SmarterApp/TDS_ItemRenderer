@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itemrelease version="2.0">
+  <item format="ms" id="1059" version="16" bankkey="187">
+    <attriblist>
+      <attrib attid="itm_item_id">
+        <name>Item: ITS ID</name>
+        <val>1059</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_item_subject">
+        <name>Item: Subject</name>
+        <val>MATH</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_item_desc">
+        <name>Item: Item Description</name>
+        <val>Multiple Selection Item. MAT.08.SR.1.000NS.A.XXX - SB OP</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_FTUse">
+        <name>Fieldtest Use</name>
+        <val>PracTest::MG8::S2::SP13 (17); PracTest::MG8::S2::SP13::BRAILLE (19); Math Training HS::SP 14 (6); Math Training HS::SP 14::Braille (6); Math Training HS::SP 14::Spanish (6);</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_OPUse">
+        <name>Operational Use</name>
+        <val>
+        </val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key">
+        <name>Item: Answer Key</name>
+        <val>B,D</val>
+        <desc>,</desc>
+      </attrib>
+      <attrib attid="itm_att_Grade">
+        <name>Item: Grade</name>
+        <val>8</val>
+        <desc>8</desc>
+      </attrib>
+      <attrib attid="itm_att_Item Format">
+        <name>Item: Item Format</name>
+        <val>MS</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Page Layout">
+        <name>Item: Page Layout</name>
+        <val>8</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Response Type">
+        <name>Item: Response Type</name>
+        <val>Vertical MS</val>
+        <desc>
+        </desc>
+      </attrib>
+      <attrib attid="itm_att_Item Point">
+        <name>Item: Item Point</name>
+        <val>1</val>
+        <desc>
+        </desc>
+      </attrib>
+    </attriblist>
+    <tutorial id="1073" bankkey="187" />
+    <resourceslist>
+      <resource type="wordList" id="1503" index="1" bankkey="187" />
+    </resourceslist>
+    <statistic />
+    <content language="ENU" version="2.0" approvedVersion="16">
+      <concept>
+        <name>What Knowledge Do Students Need to Understand This Concept?</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </concept>
+      <es>
+        <name>Explanation of Correct Answer</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </es>
+      <himi>
+        <name>Explanation of Correct Answer</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </himi>
+      <rationaleoptlist>
+        <rationale>
+          <name>Rationale for Option A</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option B</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option C</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option D</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+      </rationaleoptlist>
+      <stem><![CDATA[<p style=""><span id="item_1059_TAG_13" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>Look<span class="its-tag" data-tag-ref="item_1059_TAG_13" data-tag-boundary="end"></span> at these numbers.</p><p style=""><br /><img id="item_1059_Object1" style="vertical-align:middle;" src="item_1059_v16_Object1_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object2" style="vertical-align:middle;" src="item_1059_v16_Object2_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object3" style="vertical-align:middle;" src="item_1059_v16_Object3_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object4" style="vertical-align:middle;" src="item_1059_v16_Object4_png16malpha.png" width="21" height="20" /></p><p style=""><br /><span id="item_1059_TAG_14" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>Classify<span class="its-tag" data-tag-ref="item_1059_TAG_14" data-tag-boundary="end"></span> the numbers by <span id="item_1059_TAG_15" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>selecting<span class="its-tag" data-tag-ref="item_1059_TAG_15" data-tag-boundary="end"></span> all that apply.</p>]]></stem>
+      <optionlist minChoices="1" maxChoices="0">
+        <option>
+          <name>Option A</name>
+          <val><![CDATA[<p style="">integer</p>]]></val>
+          <feedback><![CDATA[<p style="">Mistakes integer for irrational and real</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option B</name>
+          <val><![CDATA[<p style="">irrational</p>]]></val>
+          <feedback><![CDATA[<p style="">Key</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option C</name>
+          <val><![CDATA[<p style="">rational</p>]]></val>
+          <feedback><![CDATA[<p style="">Mistakes rational for irrational and real</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option D</name>
+          <val><![CDATA[<p style="">real</p>]]></val>
+          <feedback><![CDATA[<p style="">Key</p>]]></feedback>
+        </option>
+      </optionlist>
+      <attachmentlist>
+        <attachment id="braillefile1" type="BRF" subtype="nemeth" file="item_1059_enu_nemeth.brf" />
+        <attachment pass="true" id="aslfile1" type="ASL" subtype="STEM" file="item_1059_ASL_STEM.MP4" />
+      </attachmentlist>
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae2">
+            <contentLinkInfo itsLinkIdentifierRef="item_1059_Object1" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>The square root of 2</audioShortDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>UNKNOWN</brailleTextString>
+                <brailleCode type="Nemeth">&gt;2}</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae3">
+            <contentLinkInfo itsLinkIdentifierRef="item_1059_Object2" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>The square root of 3</audioShortDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>UNKNOWN</brailleTextString>
+                <brailleCode type="Nemeth">&gt;3}</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae4">
+            <contentLinkInfo itsLinkIdentifierRef="item_1059_Object3" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>the square root of 5</audioShortDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>UNKNOWN</brailleTextString>
+                <brailleCode type="Nemeth">&gt;5}</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae5">
+            <contentLinkInfo itsLinkIdentifierRef="item_1059_Object4" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>the square root of 7;</audioShortDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>UNKNOWN</brailleTextString>
+                <brailleCode type="Nemeth">&gt;7}</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+    <content language="ESN" version="2.0" approvedVersion="16">
+      <concept>
+        <name>What Knowledge Do Students Need to Understand This Concept?</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </concept>
+      <es>
+        <name>Explanation of Correct Answer</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </es>
+      <himi>
+        <name>Explanation of Correct Answer</name>
+        <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+      </himi>
+      <rationaleoptlist>
+        <rationale>
+          <name>Rationale for Option A</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option B</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option C</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+        <rationale>
+          <name>Rationale for Option D</name>
+          <val><![CDATA[<p style="">&#xA0;</p>]]></val>
+        </rationale>
+      </rationaleoptlist>
+      <stem><![CDATA[<p style="">Observa estos números.</p><p style=""><br /><img id="item_1059_Object5" style="vertical-align:middle;" src="item_1059_v16_Object5_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object6" style="vertical-align:middle;" src="item_1059_v16_Object6_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object7" style="vertical-align:middle;" src="item_1059_v16_Object7_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object8" style="vertical-align:middle;" src="item_1059_v16_Object8_png16malpha.png" width="21" height="20" /></p><p style=""><br /><span style="color:#000000; language:es; country:ES; ">Clasifica los números seleccionando todos los que correspondan.</span></p><p class="languagedivider">&#xA0;</p><p style=""><span id="item_1059_TAG_13" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="3"></span>Look<span class="its-tag" data-tag-ref="item_1059_TAG_13" data-tag-boundary="end"></span> at these numbers.</p><p style=""><br /><img id="item_1059_Object1" style="vertical-align:middle;" src="item_1059_v16_Object1_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object2" style="vertical-align:middle;" src="item_1059_v16_Object2_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object3" style="vertical-align:middle;" src="item_1059_v16_Object3_png16malpha.png" width="21" height="20" />, <img id="item_1059_Object4" style="vertical-align:middle;" src="item_1059_v16_Object4_png16malpha.png" width="21" height="20" /></p><p style=""><br /><span id="item_1059_TAG_14" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>Classify<span class="its-tag" data-tag-ref="item_1059_TAG_14" data-tag-boundary="end"></span> the numbers by <span id="item_1059_TAG_15" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>selecting<span class="its-tag" data-tag-ref="item_1059_TAG_15" data-tag-boundary="end"></span> all that apply.</p>]]></stem>
+      <optionlist minChoices="1" maxChoices="0">
+        <option>
+          <name>Option A</name>
+          <val><![CDATA[<p style="">entero</p><p class="languagedivider">&#xA0;</p><p style="">integer</p><p class="optiondivider">&#xA0;</p>]]></val>
+          <feedback><![CDATA[<p style="">&#xA0;</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option B</name>
+          <val><![CDATA[<p style="">irracional</p><p class="languagedivider">&#xA0;</p><p style="">irrational</p><p class="optiondivider">&#xA0;</p>]]></val>
+          <feedback><![CDATA[<p style="">&#xA0;</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option C</name>
+          <val><![CDATA[<p style="">racional</p><p class="languagedivider">&#xA0;</p><p style="">rational</p><p class="optiondivider">&#xA0;</p>]]></val>
+          <feedback><![CDATA[<p style="">&#xA0;</p>]]></feedback>
+        </option>
+        <option>
+          <name>Option D</name>
+          <val><![CDATA[<p style="">real</p><p class="languagedivider">&#xA0;</p><p style="">real</p><p class="optiondivider">&#xA0;</p>]]></val>
+          <feedback><![CDATA[<p style="">&#xA0;</p>]]></feedback>
+        </option>
+      </optionlist>
+      <attachmentlist />
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae2">
+            <contentLinkInfo itsLinkIdentifierRef="item_1059_Object1" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>The square root of 2</audioShortDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>UNKNOWN</brailleTextString>
+                <brailleCode type="Nemeth">&gt;2}</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae3">
+            <contentLinkInfo itsLinkIdentifierRef="item_1059_Object2" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>The square root of 3</audioShortDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>UNKNOWN</brailleTextString>
+                <brailleCode type="Nemeth">&gt;3}</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae4">
+            <contentLinkInfo itsLinkIdentifierRef="item_1059_Object3" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>the square root of 5</audioShortDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>UNKNOWN</brailleTextString>
+                <brailleCode type="Nemeth">&gt;5}</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae5">
+            <contentLinkInfo itsLinkIdentifierRef="item_1059_Object4" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>the square root of 7;</audioShortDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>UNKNOWN</brailleTextString>
+                <brailleCode type="Nemeth">&gt;7}</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+  </item>
+</itemrelease>

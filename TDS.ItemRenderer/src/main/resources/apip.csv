@@ -1,0 +1,89 @@
+CODE,TYPE,SUBTYPE,TAG,CONTEXT,ORDER,PRIORITY
+TDS_TTX_A202,Graphics,All,Short Desc,All,1,2
+TDS_TTX_A202,Graphics,All,Braille Text,All,1,1
+TDS_TTX_A202,Text,All,Braille Text,All,1,1
+TDS_TTX_A202,Equations,All,Short Desc,All,1,2
+TDS_TTX_A202,Equations,All,Braille Text,All,1,1
+TDS_TTX_A202,Tables,All,Summary,All,1,2
+TDS_TTX_A202,Tables,All,Braille Text,All,1,1
+TDS_TTX_A203,Graphics,All,Literal Text,All,2,1
+TDS_TTX_A203,Graphics,All,Short Desc,All,1,1
+TDS_TTX_A203,Text,All,Alt. Pronunciation,All,1,1
+TDS_TTX_A203,Equations,All,Short Desc,All,1,1
+TDS_TTX_A203,Tables,All,Summary,All,1,1
+ITS_TTX_BRF101,Text,All,Braille Text,All,1,1
+ITS_TTX_BRF101,Equations,All,Nemeth,All,1,1
+ITS_TTX_BRF101,Tables,All,Summary,All,1,2
+ITS_TTX_BRF101,Tables,All,Braille Text,All,1,1
+ITS_TTX_BRF102,Text,All,Braille Text,All,1,1
+ITS_TTX_BRF102,Equations,All,Short Desc,All,1,2
+ITS_TTX_BRF102,Equations,All,Braille Text,All,1,1
+ITS_TTX_BRF102,Tables,All,Summary,All,1,2
+ITS_TTX_BRF102,Tables,All,Braille Text,All,1,1
+TDS_TTX_A204,Graphics,All,Short Desc,All,1,2
+TDS_TTX_A204,Graphics,All,Long Desc,All,1,1
+TDS_TTX_A204,Text,All,Braille Text,All,1,1
+TDS_TTX_A204,Equations,All,Short Desc,All,1,2
+TDS_TTX_A204,Equations,All,Braille Text,All,1,1
+TDS_TTX_A204,Tables,All,Summary,All,1,2
+TDS_TTX_A204,Tables,All,Braille Text,All,1,1
+TDS_TTX_A205,Graphics,All,Literal Text,All,1,1
+TDS_TTX_A205,Text,All,Alt. Pronunciation,All,1,1
+TDS_TTX_A205,Equations,All,Short Desc,All,1,1
+TDS_TTX_A205,Tables,All,Summary,All,1,1
+ITS_TTX_BRF103,Graphics,All,Short Desc,All,1,2
+ITS_TTX_BRF103,Graphics,All,Long Desc,All,1,1
+ITS_TTX_BRF103,Text,All,Braille Text,All,1,1
+ITS_TTX_BRF103,Equations,All,Nemeth,All,1,1
+ITS_TTX_BRF103,Tables,All,Summary,All,1,2
+ITS_TTX_BRF103,Tables,All,Braille Text,All,1,1
+ITS_TTX_BRF104,Graphics,All,Short Desc,All,1,2
+ITS_TTX_BRF104,Graphics,All,Long Desc,All,1,1
+ITS_TTX_BRF104,Text,All,Braille Text,All,1,1
+ITS_TTX_BRF104,Equations,All,Short Desc,All,1,2
+ITS_TTX_BRF104,Equations,All,Braille Text,All,1,1
+ITS_TTX_BRF104,Tables,All,Summary,All,1,2
+ITS_TTX_BRF104,Tables,All,Braille Text,All,1,1
+TDS_TTX_M101,Text,All,Alt. Pronunciation,All,1,1
+TDS_TTX_M101,Equations,All,Short Desc,All,1,1
+TDS_TTX_M102,Graphics,All,Literal Text,All,2,1
+TDS_TTX_M102,Graphics,All,Short Desc,All,1,1
+TDS_TTX_M102,Text,All,Alt. Pronunciation,All,1,2
+TDS_TTX_M102,Text,All,Short Desc,All,1,1
+TDS_TTX_M102,Equations,All,Short Desc,All,1,2
+TDS_TTX_M102,Equations,All,Long Desc,All,1,1
+TDS_TTX_M102,Tables,All,Summary,All,1,1
+TDS_TTX_HI101,Graphics,All,Literal Text,All,2,2
+TDS_TTX_HI101,Graphics,All,Short Desc,All,1,1
+TDS_TTX_HI101,Graphics,All,Long Desc,All,2,1
+TDS_TTX_HI101,Text,All,Alt. Pronunciation,All,1,1
+TDS_TTX_HI101,Equations,All,Short Desc,All,1,1
+TDS_TTX_HI101,Equations,All,Braille Text,All,1,2
+TDS_TTX_HI101,Tables,All,Summary,All,1,1
+TDS_TTX_HI102,Graphics,All,Literal Text,All,1,2
+TDS_TTX_HI102,Graphics,All,Braille Text,All,1,1
+TDS_TTX_HI102,Text,All,Braille Text,All,1,1
+TDS_TTX_HI102,Equations,All,Short Desc,All,1,2
+TDS_TTX_HI102,Equations,All,Braille Text,All,1,1
+TDS_TTX_HI102,Tables,All,Summary,All,1,2
+TDS_TTX_HI102,Tables,All,Braille Text,All,1,1
+ITS_BRF_HI105,Text,All,Braille Text,All,1,1
+ITS_BRF_HI105,Equations,All,Short Desc,All,1,3
+ITS_BRF_HI105,Equations,All,Braille Text,All,1,2
+ITS_BRF_HI105,Equations,All,Nemeth,All,1,1
+ITS_BRF_HI105,Tables,All,Summary,All,1,2
+ITS_BRF_HI105,Tables,All,Braille Text,All,1,1
+TDS_TTX_U101,Graphics,All,Literal Text,All,1,1
+TDS_TTX_U101,Text,All,Alt. Pronunciation,All,1,1
+TDS_TTX_U101,Equations,All,Short Desc,All,1,1
+TDS_TTX_U101,Tables,All,Summary,All,1,1
+TDS_TTX_U102,Graphics,All,Literal Text,All,1,2
+TDS_TTX_U102,Graphics,All,Short Desc,All,1,1
+TDS_TTX_U102,Text,All,Alt. Pronunciation,All,1,2
+TDS_TTX_U102,Text,All,Short Desc,All,1,1
+TDS_TTX_U102,Equations,All,Short Desc,All,1,2
+TDS_TTX_U102,Equations,All,Long Desc,All,1,1
+TDS_TTX_U102,Tables,All,Summary,All,1,1
+TDS_TTX_A206,Graphics,All,Literal Text,All,1,1
+TDS_TTX_A206,Equations,All,Short Desc,All,1,1
+TDS_TTX_A206,Tables,All,Summary,All,1,1

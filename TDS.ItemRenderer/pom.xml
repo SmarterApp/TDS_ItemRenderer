@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.opentestsystem.shared</groupId>
+		<artifactId>shared-master</artifactId>
+		<version>1.0.1</version>
+	</parent>
+
+	<groupId>org.opentestsystem.delivery</groupId>
+	<artifactId>item-renderer</artifactId>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
+	
+	<scm>
+        <connection>scm:hg:https://bitbucket.org/sbacoss/itemrendererdev</connection>
+        <developerConnection>scm:hg:https://bitbucket.org/sbacoss/itemrendererdev</developerConnection>
+        <url>https://bitbucket.org/sbacoss/itemrendererdev</url>
+    </scm>
+
+	
+	<properties>
+		<resource-bundler.version>0.0.1</resource-bundler.version>
+	</properties>
+
+	<name>TDS.ItemRenderer</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>org.opentestsystem.shared</groupId>
+			<artifactId>shared-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+		<!--  Shiva: Why do I need the el-api? How is EL working in the xhtml pages without this ? -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>el-api</artifactId>
+			<version>6.0.37</version>
+		</dependency>
+		<dependency>
+			<groupId>org.opentestsystem.shared</groupId>
+			<artifactId>shared-xml</artifactId>
+		</dependency>
+		<!-- Spring Mock -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-mock</artifactId>
+		</dependency>
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opentestsystem.shared</groupId>
+			<artifactId>shared-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>AIR</groupId>
+			<artifactId>ResourceBundler</artifactId>
+			<version>${resource-bundler.version}</version>
+		</dependency>
+        <dependency>
+        	<groupId>net.sf.supercsv</groupId>
+	        <artifactId>super-csv</artifactId>
+	        <version>2.2.0</version>
+        </dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+	</dependencies>
+
+	<distributionManagement>
+       <repository>
+            <id>central</id>
+            <name>libs-releases</name>
+            <url>http://airdev.artifactoryonline.com/airdev/libs-releases-local</url>
+        </repository>
+    </distributionManagement>
+
+</project>
