@@ -616,7 +616,6 @@ public class PageLayout extends UINamingContainer
     ITSContent itsContent = getContent (itemRender.getItem ());
     if (itsContent == null)
       return null;
-
     // IMAGE BASE
     templateStem.getQuestion ().setText (itsContent.getStem ());
 

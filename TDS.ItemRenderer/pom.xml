@@ -13,9 +13,9 @@
 	<packaging>jar</packaging>
 	
 	<scm>
-        <connection>scm:hg:https://bitbucket.org/sbacoss/itemrendererdev</connection>
-        <developerConnection>scm:hg:https://bitbucket.org/sbacoss/itemrendererdev</developerConnection>
-        <url>https://bitbucket.org/sbacoss/itemrendererdev</url>
+        <connection>scm:hg:https://bitbucket.org/sbacoss/itemrenderer_release</connection>
+        <developerConnection>scm:hg:https://bitbucket.org/sbacoss/itemrenderer_release</developerConnection>
+        <url>https://bitbucket.org/sbacoss/itemrenderer_release</url>
     </scm>
 
 	
@@ -83,12 +83,5 @@
 		
 	</dependencies>
 
-	<distributionManagement>
-       <repository>
-            <id>central</id>
-            <name>libs-releases</name>
-            <url>http://airdev.artifactoryonline.com/airdev/libs-releases-local</url>
-        </repository>
-    </distributionManagement>
 
 </project>

@@ -8,28 +8,22 @@
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -37,8 +31,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
-import tds.blackbox.ContentRequestHandler;
 
 /**
  * @author jmambo
@@ -58,28 +50,14 @@ public class XmlUtils
       document = builder.parse (new InputSource (new StringReader (xml)));
 
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace ();
+      _logger.error (e.getMessage (), e);
     }
-
     return document;
   }
   
   public static Document createFragmentDocument (String xml) {
-    Document document = null;
-    xml = xml.replace("&#xA0;", " ");
     xml = "<root>" + xml + "</root>";
-    try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance ();
-      DocumentBuilder builder = factory.newDocumentBuilder ();
-      document = builder.parse (new InputSource (new StringReader (xml)));
-
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace ();
-    }
-
-    return document;
+    return createDocument(xml);
   }
   
 
@@ -92,8 +70,7 @@ public class XmlUtils
       return (NodeList) expression.evaluate (document, XPathConstants.NODESET);
 
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace ();
+      _logger.error (e.getMessage (), e);
     }
     return null;
   }
@@ -104,40 +81,56 @@ public class XmlUtils
   
   public static String getXml (Document document, boolean hasRootTag) {
     try {
-      TransformerFactory tf = TransformerFactory.newInstance ();
-      Transformer transformer;
 
-      transformer = tf.newTransformer ();
+      //Fix SB-796 and SB-906 
+      //self enclosing span tags are not formatted correctly in JSF rendering of Stem template
+     //revisit if JSF rendering of self enclosing tags is fixed
+      NodeList nodeList = document.getElementsByTagName("*");
+      for (int i = 0; i < nodeList.getLength(); i++) {
+          Node node = nodeList.item(i);
+          if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+              if (StringUtils.isBlank (node.getTextContent())) {
+                node.setTextContent (" ");
+              }
+          }
+      }
+
+      TransformerFactory tf = TransformerFactory.newInstance ();
+      Transformer transformer = tf.newTransformer ();
       transformer.setOutputProperty (OutputKeys.OMIT_XML_DECLARATION, "yes");
       StringWriter writer = new StringWriter ();
       transformer.transform (new DOMSource (document), new StreamResult (writer));
-      String xml = writer.toString ();
+      String xml =  writer.toString ();
       if (hasRootTag) {
-         //remove the root tags
-         //<root></root>  
-         xml = xml.substring(6);
-         xml = xml.substring(0, xml.length() - 7);
-      }
+        //remove the root tags
+        //<root></root>  
+        xml = xml.substring(6);
+        xml = xml.substring(0, xml.length() - 7);
+     }
+      
+     //Fix SB-796 and SB-906 see above
+      xml = xml.replace (" </span>", "</span>");
+ 
       return xml;
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace ();
+      _logger.error (e.getMessage (), e);
     }
     return null;
   }
   
+
+  
   public static String getXml (Element element) {
       try {
         TransformerFactory tf = TransformerFactory.newInstance ();
-        Transformer transformer;
-        transformer = tf.newTransformer ();
+        Transformer transformer = tf.newTransformer ();
         transformer.setOutputProperty (OutputKeys.OMIT_XML_DECLARATION, "yes");
         StringWriter writer = new StringWriter ();
         transformer.transform (new DOMSource (element), new StreamResult (writer));
         return writer.toString ();
       } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace ();
+        _logger.error (e.getMessage (), e);
       }
       return null;
     }
@@ -148,8 +141,7 @@ public class XmlUtils
       XPath xpath = XPathFactory.newInstance ().newXPath ();
       return (Element) xpath.evaluate ("//*[@id='" + id + "']", document, XPathConstants.NODE);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace ();
+      _logger.error (e.getMessage (), e);
     }
     return null;
 

@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -171,25 +173,43 @@ public abstract class WordListHandlerBase
   protected void getWordListEntry (Map<String, String> htmlTabs, String itemIndex) {
     List<Keyword> keywords = _itemRelease.getItem ().getKeywordList ().getKeyword ();
     for (Keyword keyword : keywords) {
-      if (StringUtils.isEmpty (keyword.getIndex ()) || !keyword.getIndex ().equals (itemIndex)) {
+      if (StringUtils.isBlank (keyword.getIndex ()) || !keyword.getIndex ().equals (itemIndex)) {
         continue;
       }
       List<Html> htmls = keyword.getHtml ();
       for (Html html : htmls) {
         String wtype = html.getListType ();
-        if (StringUtils.isEmpty (wtype)) {
+        if (StringUtils.isBlank (wtype)) {
           continue;
         }
         String wacc = html.getListCode ();
-        if (StringUtils.isEmpty (wacc) || !isInAccList (wacc)) {
+        if (StringUtils.isBlank (wacc) || !isInAccList (wacc)) {
           continue;
         }
-        htmlTabs.put (wtype, html.getContent ());
+        if (!isBlankHtmlContent(html.getContent ())) {
+          htmlTabs.put (wtype, html.getContent ());
+        }
       }
 
     }
 
   }
+  
+  private boolean isBlankHtmlContent(String htmlContent) {
+    if (StringUtils.isBlank (htmlContent)) {
+      return true;
+    }
+    String tagPattern = "^<p[^>]*>(.+?)</p>$";
+    Pattern pattern =  Pattern.compile(tagPattern);
+    Matcher matcher = pattern.matcher(htmlContent.trim ());
+    while (matcher.find()) {
+      String tagContent = matcher.group(1).trim();   
+      if (tagContent.equals ("") || tagContent.equals ("&#xA0;")) {
+         return true;
+      }
+    }
+    return false;
+ }
 
   /**
    * Open an XML file and send it to the parser.

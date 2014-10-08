@@ -37,6 +37,41 @@ public class APIPXmlProcessorTest extends AbstractTest
   APIPRuleGroup _apipRuleGroup;
   ITSContent _content;
   ITSDocumentXml _itsDocument;
+
+  
+  @Test
+  public void testTemp() throws Exception {
+    
+ //   String  itemFile = "/tmp/Bank-187/Items/Item-187-1947/item-187-1947.xml";
+   String  itemFile = "/tmp/Bank-187/Items/Item-187-667/item-187-667.xml";
+  //  String  itemFile = "/tmp/Bank-187/Items/Item-187-1915/item-187-1915.xml";
+    //String  itemFile = "/tmp/Bank-187/Items/Item-187-676/item-187-676.xml"; //668, 676, 677
+    String ttx = "TDS_TTX_A202";
+ 
+    APIPCsvLoader.loadRules ();
+    for (APIPRuleGroup apipRuleGroup  : APIPRuleGroups.getGroups ()) {
+     if (apipRuleGroup.getCode ().equals (ttx)) {
+        _apipRuleGroup = apipRuleGroup ;
+        break;
+      }
+    }
+     _itsDocument  = (ITSDocumentXml) ITSDocumentFactory.loadUri2 (itemFile, null, false);
+    String language = "ENU";
+   _content = _itsDocument.getContent(language); 
+   
+    Document document = XmlUtils.createFragmentDocument (_content.getStem());
+    APIPXmlProcessor processor =  new APIPXmlProcessor (APIPMode.TTS, _apipRuleGroup);
+    Document resultDocument = processor.process (_itsDocument, ITSContentType.Html, ITSContextType.Stem, _content.getLanguage (), document );
+    System.out.println(XmlUtils.getXml(resultDocument));
+    //Attributes class ssml ssml_alias added to span element with id item_1689_TAG_9_BEGIN
+    //<span class="TTS speakAs" id="item_1689_TAG_9_BEGIN" ssml="sub" ssml_alias=",">
+    Element element = XmlUtils.getElementById (resultDocument, "item_1947_TAG_1_BEGIN");
+  //  assertEquals("TTS speakAs", element.getAttribute ("class"));
+  //  assertEquals("sub", element.getAttribute ("ssml"));
+   // assertEquals(",", element.getAttribute ("ssml_alias"));
+  }
+    
+  
   
   @Test
   public void testProcessForTtsWithA203() throws Exception {

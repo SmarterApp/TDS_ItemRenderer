@@ -59,7 +59,7 @@ public class APIPXmlProcessor implements IProcessorTask<Document>
     for (ApipElement apipElement : apipElements) {
       APIPAccessElement apipAccessElement = apipElement.getApipAccessElement ();
       Element apipNode = apipElement.getElement ();
-
+  
       // get APIP text for the rules
       String text = rulesEngine.evaluate (apipNode.getNodeName (), apipAccessElement);
 
@@ -70,6 +70,7 @@ public class APIPXmlProcessor implements IProcessorTask<Document>
           addBrailleToNode (apipNode, text);
         }
       }
+
     }
 
     return contextXml;
