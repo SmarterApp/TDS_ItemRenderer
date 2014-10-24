@@ -231,6 +231,27 @@ public class AccLookup
       }
     }
   }
+  
+  /*
+   * As part of our merging process we needed to make this one change in ItemRenderer.
+   * The new acc lookup string is separaterd by ";" instad of "|".
+   */
+  // / Deserialize a serialized String into this collection.
+  // / <param name="serialized"></param>
+  public void deserializeSemiColonSeparated (String serialized) {
+    if (StringUtils.isEmpty (serialized))
+      return;
+
+    for (String typeCodes : StringUtils.split (serialized, "|;")) {
+      String[] typeCodesPieces = typeCodes.split (":");
+      String type = typeCodesPieces[0];
+      String codes = typeCodesPieces[1];
+
+      for (String code : codes.split (",")) {
+        add (type, code);
+      }
+    }
+  }
 
   // / <summary>
   // / Get the accommodations as a strongly typed object.
