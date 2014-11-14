@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Educational Online Test Delivery System 
- * Copyright (c) 2014 American Institutes for Research
- *   
- * Distributed under the AIR Open Source License, Version 1.0 
- * See accompanying file AIR-License-1_0.txt or at
- * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+ * Educational Online Test Delivery System Copyright (c) 2014 American
+ * Institutes for Research
+ * 
+ * Distributed under the AIR Open Source License, Version 1.0 See accompanying
+ * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
+ * American_Institutes_for_Research_Open_Source_Software_License.pdf
  ******************************************************************************/
 package tds.itemrenderer.webcontrols.rendererservlet;
 
@@ -18,7 +18,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.faces.component.UIComponent;
 // Shiva: heavily tied to MyFaces implementation
 import javax.faces.webapp.FacesServlet;
 
@@ -28,9 +28,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import tds.itemrenderer.webcontrols.PageLayout;
-
+import tds.itemrenderer.webcontrols.templates.IResponseLayout;
 import AIR.Common.Utilities.SpringApplicationContext;
 import AIR.Common.Web.Session.Server;
+import AIR.Common.Web.taglib.JsfHelpers;
+import AIR.Common.Web.taglib.PlaceHolder;
 
 /*
  * Shiva: From what it seems in the docs tomcat allows only one servlet instance
@@ -80,6 +82,18 @@ public class RendererServlet implements Servlet
   public void destroy () {
     _servletConfig = null;
     _rendererServlet.destroy ();
+  }
+
+  public static String getRenderedUserControl (String libraryPath, String resourceName) throws ContentRenderingException {
+    try {
+      PageLayout pageLayout = SpringApplicationContext.getBean ("pageLayout", PageLayout.class);
+      pageLayout.renderUserControl (libraryPath, resourceName);
+      return getRenderedOutput (pageLayout);
+    } catch (Exception exp) {
+      exp.printStackTrace ();
+      // TODO log these exceptions
+      throw new ContentRenderingException (exp);
+    }
   }
 
   public static String getRenderedOutput (PageLayout pageLayout) throws ContentRenderingException {

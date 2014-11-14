@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Educational Online Test Delivery System 
- * Copyright (c) 2014 American Institutes for Research
- *   
- * Distributed under the AIR Open Source License, Version 1.0 
- * See accompanying file AIR-License-1_0.txt or at
- * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+ * Educational Online Test Delivery System Copyright (c) 2014 American
+ * Institutes for Research
+ * 
+ * Distributed under the AIR Open Source License, Version 1.0 See accompanying
+ * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
+ * American_Institutes_for_Research_Open_Source_Software_License.pdf
  ******************************************************************************/
 /**
  * 
@@ -23,11 +23,12 @@ import tds.itempreview.Item;
  */
 public class Page
 {
-  private boolean    _encrypted = false;
-  private String     _sectionId = null;
-  private String     _label     = null;
-  private Content    _passage   = null;
-  private List<Item> _items     = null;
+  private boolean    _encrypted;
+  private String     _sectionId;
+  private String     _label;
+  private Content    _passage;
+  private List<Item> _items;
+  private String     _layoutName;
 
   // / <summary>
   // / If this is true the file paths are encrypted and base64 encoded.
@@ -75,6 +76,15 @@ public class Page
 
   public void setItems (List<Item> value) {
     _items = value;
+  }
+
+  @JsonProperty ("layoutName")
+  public String getLayoutName () {
+    return _layoutName;
+  }
+
+  public void setLayoutName (String value) {
+    _layoutName = value;
   }
 
   public String toString () {

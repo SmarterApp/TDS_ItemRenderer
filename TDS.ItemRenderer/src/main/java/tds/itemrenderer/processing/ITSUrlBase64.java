@@ -12,137 +12,31 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.xml.bind.DatatypeConverter;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import tds.itemrenderer.configuration.ITSConfig;
 import AIR.Common.Utilities.Path;
-import AIR.Common.Web.EncryptionHelper;
-import AIR.Common.Web.UrlHelper;
+
+
 
 /**
  * 
  * @author jmambo
  * 
  */
-public class ITSUrlBase64 extends IITSResolver
+
+/**
+ * Used for resolving img tags into base64.
+ * 
+ * Remark: This is just for testing and is not production ready.
+ */
+public class ITSUrlBase64 extends ITSUrlResolver
 {
-
-  private final String _filePath;
-  private final String _baseUrl;
-  private boolean      _enableEncryption;
-  private String       _additionalParameters;
-
+  
   public ITSUrlBase64 (String filePath)
   {
-    _filePath = filePath;
-    _baseUrl = getUrl ();
+	  super(filePath);
   }
-
-  /**
-   * Gets the base URL path that is used to make HTTP request
-   * 
-   * @return base URL
-   */
-  private String getBaseUrl ()
-  {
-    
-    // ITSConfig.ImagePath: e.x., Image?path={0}&amp;file=
-
-    // e.x., /TDS_Preview/Image?path={0}&file=
-    String urlPath = UrlHelper.resolveUrl (ITSConfig.getResourcePath ());
-
-    // check if should lower case path
-    if (ITSConfig.getResourceFix ())
-    {
-      // this was some ITS request from a while ago
-      urlPath = urlPath.toLowerCase ();
-    }
-
-    // check if should add additional queryString parameters
-    if (!StringUtils.isEmpty (_additionalParameters))
-    {
-      int idx = urlPath.indexOf ('?');
-
-      if (idx > 0)
-      {
-        // make sure ends with &
-        if (!_additionalParameters.endsWith ("&"))
-        {
-          _additionalParameters = _additionalParameters + "&";
-        }
-
-        // insert addition queryString parameters
-        urlPath = new StringBuilder (urlPath).insert (idx + 1, _additionalParameters).toString ();
-      }
-    }
-
-    // MATHML: Need to use html entity for '&'
-    /*
-     * if (urlPath.Contains("&file")) { urlPath = urlPath.Replace("&file",
-     * "&amp;file"); }
-     */
-
-    return urlPath;
-  }
-
-  /**
-   * Gets the base file path (encrypted) where the XML and resources reside.
-   * 
-   * @return base path
-   */
-  private String getBasePath ()
-  {
-    // e.x., C:\TDS_Content\oaks\Bank-131\Items\Item-131-100174\
-    String basePath = _filePath.replace (Path.getFileName (_filePath), "");
-
-    // encrypt the basePath
-    if (_enableEncryption)
-    {
-      basePath = EncryptionHelper.EncryptToBase64 (basePath);
-    }
-    else
-    {
-      basePath = EncryptionHelper.EncodeToBase64 (basePath);
-    }
-
-    // e.x.,
-    // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
-    return basePath;
-  }
-
-  /**
-   * Gets the fully formatted URL ready to assign a file to the end of it.
-   * 
-   * @return formatted URL
-   */
-  private String getUrl ()
-  {
-    // e.x., /TDS_Preview/Image.axd?path={0}&file=
-    String baseUrl = getBaseUrl ();
-
-    // NOTE: The url can be NULL if we are not running this renderer in the
-    // context of a web page
-    if (StringUtils.isEmpty (baseUrl))
-      return null;
-
-    // e.x.,
-    // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
-    String basePath = getBasePath ();
-
-    // e.x.,
-    // /TDS_Preview/Image.axd?path=QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0&file=
-    return String.format (baseUrl, basePath);
-  }
-
-  /**
-   * 
-   * @param matcher
-   * @return
-   */
+  
   private String replaceHtmlMatch (Matcher matcher)
   {
     String basePath = _filePath.replace (Path.getFileName (_filePath), "");
@@ -189,55 +83,18 @@ public class ITSUrlBase64 extends IITSResolver
     matcher.appendTail (sb);
 
     return sb.toString ();
-
   }
-
+  
   /**
    * Sets the URL for images and links (e.x., ELPA audio).
    * 
    * @param content
    *          HTML to fix
    */
+  @Override
   public String resolveResourceUrls (String content)
   {
     return replaceHtmlMatches (content, "img", "src");
-  }
-
-  /**
-   * Sets the URL for images for a grid item.
-   * 
-   * @param content
-   *          FileSpec to fix
-   * @param language
-   *          Optional language (leave NULL if none)
-   * 
-   */
-  public String resolveGridXmlUrls (String content, String language)
-  {
-    // make sure there is HTML
-    if (StringUtils.isEmpty (content))
-      return content;
-
-    // check for page object, without this there is no URL to resolve since we
-    // aren't in the context of a website.
-    if (StringUtils.isEmpty (_baseUrl))
-      return content;
-
-    String url = _baseUrl;
-
-    // fix image path
-    if (!url.contains("&amp;")) { 
-       url = url.replace ("&", "&amp;");
-    }
-    // add language to url if it is not english
-    if (!StringUtils.isEmpty (language) && language.toUpperCase () != "ENU")
-    {
-      url = url.replace ("path=", "tag=" + language + "&amp;path=");
-    }
-
-    String fixedContent = content.replace ("<FileSpec>", "<FileSpec>" + url);
-
-    return fixedContent;
   }
 
 }

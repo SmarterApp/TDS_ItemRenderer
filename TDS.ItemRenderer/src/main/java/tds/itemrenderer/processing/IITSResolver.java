@@ -16,30 +16,30 @@ public abstract class IITSResolver
 {
 
   /** Enable or disable querysting encryption */
-  private boolean _enableEncryption     = false;
+  //private boolean _enableEncryption     = false;
  
-  private String  _additionalParameters = null;
+  //private String  _additionalParameters = null;
 
-  public boolean getEnableEncryption () {
+  /*public boolean getEnableEncryption () {
     return _enableEncryption;
   }
 
   public void setEnableEncryption (boolean value) {
     _enableEncryption = value;
-  }
+  }*/
 
   /**
    * Additional querystring parameters
    * 
    * @return additional parameters
    */
-  public String getAdditionalParameters () {
+  /*public String getAdditionalParameters () {
     return _additionalParameters;
   }
 
   public void setAdditionalParameters (String value) {
     _additionalParameters = value;
-  }
+  }*/
 
   /**
    * Sets the URL for images and links (e.x., ELPA audio).

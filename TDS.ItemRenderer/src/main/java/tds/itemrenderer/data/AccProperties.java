@@ -61,6 +61,11 @@ public class AccProperties    {
       return getCode("Test Shell");
   }
   
+  public boolean isStreamlinedMode()
+  {
+	  return isSelected("Streamlined Mode", "TDS_SLM1");
+  }
+  
   public boolean isCalculatorEnabled()
   {
     return isExistsAndNotEquals("Calculator", "TDS_Calc0"); 
@@ -113,7 +118,7 @@ public class AccProperties    {
 
   public boolean isGTREnabled()
   {
-    return isSelected("Guide to Revision", "TDS_GfR1"); 
+    return isSelected("Guide for Revision", "TDS_GfR1"); 
   }
 
   public boolean isHighlightingEnabled()
@@ -256,7 +261,23 @@ public class AccProperties    {
   {
     return getCode("TTX Business Rules"); 
   }
-
+  
+  /// <summary>
+  /// Determine how to show item numbers. 
+  /// </summary>
+  /// <remarks>
+  /// TDS_ItmNum0: Do not show numbers next to items
+  /// TDS_ItmNumPos: Show the item position number on the test
+  /// TDS_ItmNumSeq: Restart numbering items on every page
+  /// </remarks>
+  public String ItemNumbers(){
+	  
+	  if(getCode("Item Numbers")!=null)
+	  {
+		  return getCode("Item Numbers");
+	  }
+	  return "TDS_ItmNumPos";
+  }
   //#endregion
 
   //#region Acc Helpers

@@ -29,12 +29,14 @@ public class ITSUrlResolver2 extends ITSUrlResolver
 {
   private static final Pattern _imgRegex;
   private static final Pattern _audioRegex;
+  private static final Pattern _trackRegex;
   private static final Pattern _frameRegex;
   private static final Pattern _linkRegex;
 
   static {
       _imgRegex = createTagRegEx("img", "src");
       _audioRegex = createTagRegEx("source", "src");
+      _trackRegex = createTagRegEx("track", "src");
       _frameRegex = createTagRegEx("iframe", "src");
       _linkRegex = createTagRegEx("a", "href");
   }
@@ -74,10 +76,9 @@ public class ITSUrlResolver2 extends ITSUrlResolver
     // replace resource url's
     content = resolveTag(content, _imgRegex.matcher(content), "img");
     content = resolveTag(content, _frameRegex.matcher(content), "iframe");
+    content = resolveTag(content, _trackRegex.matcher(content), "track");
     content = resolveTag(content, _audioRegex.matcher(content), "source");
     content = resolveTag(content, _linkRegex.matcher(content), "a");
-    // add "Image" class to allow zooming
-    content = content.replace("<img ", "<img class=\"Image\" ");
 
     return content;
   }

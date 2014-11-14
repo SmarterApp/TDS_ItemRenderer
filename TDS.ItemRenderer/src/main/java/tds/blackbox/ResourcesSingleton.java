@@ -1,60 +1,103 @@
 /*******************************************************************************
- * Educational Online Test Delivery System 
- * Copyright (c) 2014 American Institutes for Research
- *   
- * Distributed under the AIR Open Source License, Version 1.0 
- * See accompanying file AIR-License-1_0.txt or at
- * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+ * Educational Online Test Delivery System Copyright (c) 2014 American
+ * Institutes for Research
+ * 
+ * Distributed under the AIR Open Source License, Version 1.0 See accompanying
+ * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
+ * American_Institutes_for_Research_Open_Source_Software_License.pdf
  ******************************************************************************/
 package tds.blackbox;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.jdom2.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import AIR.Common.Configuration.AppSetting;
 import AIR.Common.Configuration.AppSettings;
+import AIR.Common.Helpers.CaseInsensitiveMap;
 import AIR.Common.Utilities.Path;
+import AIR.Common.Utilities.TDSStringUtils;
 import AIR.Common.Web.UrlHelper;
 import AIR.Common.Web.Session.HttpContext;
+import AIR.Common.Web.Session.Server;
 import AIR.ResourceBundler.Xml.FileSet;
+import AIR.ResourceBundler.Xml.FileSetInput;
 import AIR.ResourceBundler.Xml.Resources;
+import AIR.ResourceBundler.Xml.ResourcesException;
+import AIR.WebResources.CachePrefetchMode;
+import AIR.WebResources.IStylePathHandler;
+import AIR.WebResources.ManifestSingleton;
 
 public class ResourcesSingleton
 {
-  private static final Object _syncRoot = new Object(); // for locking
-  private static final HashMap<String, Resources> _resourcesLookup = new HashMap<String, Resources>();
+  private static final Logger                 _logger          = LoggerFactory.getLogger (ResourcesSingleton.class);
+  private static final Object                 _syncRoot        = new Object ();                                     // for
+                                                                                                                     // //
+                                                                                                                     // locking
+  private static final Map<String, Resources> _resourcesLookup = new CaseInsensitiveMap<Resources> ();
+  private static IStylePathHandler            _stylePathHandler;
 
-  /// The unique ID to put on all the resource url's.
-  private static AppSetting<String> _cacheId;
+  public static String getStylePath () {
+    return (_stylePathHandler != null) ? _stylePathHandler.execute () : "AIR";
+  }
 
-  public static AppSetting<String> getCacheId(){
-    // TODO Ayo/Shiva got AppSettings.getString from AIR.Common.Configurations.AppSettings
+  public static AppSetting<String> getCacheId () {
     return AppSettings.getString ("http.cache.id");
-    // return AppSettings.get<String>("http.cache.id");
   }
 
-
-  private static Resources get(String file){
-    Resources resources;
-    // TODO Ayo/Shiva How would you port this, considering original Dictionary was not made case in-sensitive
-    resources = _resourcesLookup.get(file);
-    return resources;
+  public static AppSetting<Boolean> getCacheValidate () {
+    return AppSettings.getBoolean ("http.cache.validate");
   }
 
-  public static Resources load(String virtualPath){
-    Resources resources = get(virtualPath);
+  // / <summary>
+  // / Check if the manifest is enabled.
+  // / </summary>
+  public static AppSetting<CachePrefetchMode> getPrefetchMode () {
+    final String settingName = "http.cache.prefetch";
+    String prefetchModeStr = AppSettings.<String> getString (settingName).getValue ();
 
-    if (resources == null){
-      // TODO Ayo/Shiva Locking method? Synchronized block?
-      synchronized (_syncRoot){
-        resources = get(virtualPath);
+    // if manifest mode does not exist return disabled
+    if (StringUtils.isEmpty (prefetchModeStr)) {
+      return new AppSetting<CachePrefetchMode> (settingName, CachePrefetchMode.Disabled);
+    }
 
-        if (resources == null){
-          // String filePath = UrlHelper.ResolveUrl(virtualPath);
-          String filePath = HttpContext.getCurrentContext ().getServer ().mapPath (virtualPath);
-          resources = new Resources(filePath);
+    CachePrefetchMode prefetchMode = CachePrefetchMode.valueOf (prefetchModeStr);
+    return new AppSetting<CachePrefetchMode> (settingName, prefetchMode);
+  }
+
+  public static boolean getIsPrefetchEnabled () {
+    if (ManifestSingleton.getIsEnabled ())
+      return false;
+    return (getPrefetchMode ().getValue () == CachePrefetchMode.Enabled);
+  }
+
+  public static Resources load (String virtualPath) throws ResourcesException {
+    String filePath = Server.mapPath (virtualPath);
+    Resources resources = get (filePath);
+
+    if (resources == null) {
+      synchronized (_syncRoot) {
+        resources = get (filePath);
+        if (resources == null) {
+
+          resources = new Resources (filePath);
+          try {
+            resources.parse ();
+          } catch (Exception e) {
+            e.printStackTrace ();
+            _logger.error ("Error encoding all", e);
+            throw new ResourcesException (String.format ("Error parsing resources file %s", virtualPath), e);
+          }
+          _resourcesLookup.put (filePath, resources);
+          _resourcesLookup.put (virtualPath, resources);
         }
       }
     }
@@ -62,84 +105,97 @@ public class ResourcesSingleton
     return resources;
   }
 
-  public static String resolveUrl(String virtualPath, boolean includeCacheID, boolean includeCheckSum){
-    // resolved url
-    String url = UrlHelper.resolveUrl(virtualPath);
+  public static String resolveUrl (String virtualPath) throws URISyntaxException {
+    return resolveUrl (virtualPath, true, true);
+  }
 
-    // cache ID, this is used to change URL's signature
-    if (includeCacheID && !StringUtils.isEmpty (_cacheId.getValue ())){
-      url += url.contains("?") ? "&" : "?";
-      url += "cid=" + _cacheId;
+  public static String resolveUrl (String virtualPath, boolean includeCacheID, boolean includeCheckSum) throws URISyntaxException {
+    // check for replacement
+    if (StringUtils.indexOf (virtualPath, "{0}") >= 0) {
+      String stylePath = getStylePath ();
+      virtualPath = TDSStringUtils.format (virtualPath, stylePath);
     }
 
+    // resolve url
+    String url = UrlHelper.resolveFullUrl (virtualPath);
+
+    // cache ID, this is used to change URL's signature
+    if (includeCacheID && !StringUtils.isEmpty (getCacheId ().getValue ())) {
+      url += StringUtils.contains (url, "?") ? "&" : "?";
+      url += "cid=" + getCacheId ().getValue ();
+    }
+
+    if (includeCheckSum) {
+      String fileHash = ManifestSingleton.getFileHash (virtualPath);
+      if (fileHash != null) {
+        url += StringUtils.contains (url, "?") ? "&" : "?";
+        url += "chksum=" + fileHash;
+      }
+    }
     return url;
   }
 
-  public static String resolveUrl(String virtualPath){
-    return resolveUrl(virtualPath, true, true);
-  }
-
-  public static Iterable<String> getFilePaths(String resourceFileVirtualPath, String fileSetID) {
+  public static List<String> getFilePaths (String resourceFileVirtualPath, String fileSetID) throws URISyntaxException, ResourcesException {
     return getFilePaths (resourceFileVirtualPath, fileSetID, true);
   }
+
   /**
    * Gets a list of all the relative file paths for a resource group.
-   * @param resourceFileVirtualPath The virtual path for a resource xml file.
-   * @param fileSetID The resource ID inside the xml file.
-   * @param addCRC If this is true adds the checksum to the querystring of the file path.
+   * 
+   * @param resourceFileVirtualPath
+   *          The virtual path for a resource xml file.
+   * @param fileSetID
+   *          The resource ID inside the xml file.
+   * @param addCRC
+   *          If this is true adds the checksum to the querystring of the file
+   *          path.
    * @return
+   * @throws URISyntaxException
+   * @throws ResourcesException 
    */
-  public static Iterable<String> getFilePaths(String resourceFileVirtualPath, String fileSetID, boolean addCRC){
-    //TODO mpatel - remove following code while fixing this method
-    Iterable<String> returnList = new ArrayList<String> ();
-    return returnList;
-    
-    //TODO mpatel - Fix this method when started porting BlackBoxHandler 
-   /* // TODO Ayo/Shiva boolean AddCRC set to true in method declaration
-    String resourceFileName = Path.getFileName(resourceFileVirtualPath);
-
-    // e.x., "/student/"
-    // TODO Ayo/Shiva ResolveFullUrl method not yet implemented in UrlHelper class
-    String baseUrl = UrlHelper.resolveFullUrl("~/");
+  public static List<String> getFilePaths (String resourceFileVirtualPath, String resourceID, boolean addCRC) throws URISyntaxException, ResourcesException {
+    List<String> returnList = new ArrayList<String> ();
+    String resourceFileName = Path.getFileName (resourceFileVirtualPath);
 
     // e.x. "~/shared/"
-    String resourceVirtualPath = resourceFileVirtualPath.replace(resourceFileName, "");
+    String resourceVirtualPath = StringUtils.replace (resourceFileVirtualPath, resourceFileName, "");
 
     // get all the top level resources
-    Resources resources = load(resourceFileVirtualPath);
-    FileSet fileSet = resources.getFileSet(fileSetID);
-    // TODO Ayo/Shiva yield
-    if (fileSet == null) 
-      break;
+    Resources resources = load (resourceFileVirtualPath);
+    final FileSet fileSet = resources.getFileSet (resourceID);
+    if (fileSet == null)
+      return returnList;
 
-    // get a list of all the resource files
-    // TODO Ayo/Shiva => operator
-    Iterable<String> resourceFiles = (HttpContext.getCurrentContext ().isDebuggingEnabled() || (fileSet.getOutput() == null))
-        ? fileSet.Inputs.Select(input => input.Path)
-            : new List<String> { fileSet.getOutput () };
+    boolean isSeperated = (HttpContext.getCurrentContext ().isDebuggingEnabled () || StringUtils.isEmpty (fileSet.getOutput ()));
 
-            for(String resourceFile : resourceFiles){
-              // resourceFile.Href: "../scripts/libraries/yui/button/assets/skins/sam/button.css"
+    // get all the file paths
+    List<String> filePaths = new ArrayList<String> ();
+    if (isSeperated) {
+      // <-- debug is enabled or no combined output
+      Iterator<FileSetInput> fileIterator = fileSet.getFileInputs ();
+      while (fileIterator.hasNext ()) {
+        FileSetInput fileSetInput = fileIterator.next ();
+        filePaths.add (fileSetInput.getPath ());
+      }
+    } else
+      // <-- debug is disabled and there is a combined output
+      filePaths.add (fileSet.getOutput ());
 
-              // check if resource file is already well formed url
-              if (Uri.IsWellFormedUriString(resourceFile, UriKind.Absolute)){
-                // TODO Ayo/Shiva Port Yield
-                yield return resourceFile;
-              }else{
-                // e.x., "~/shared/../scripts/libraries/yui/button/assets/skins/sam/button.css"
-                String resourceFileResolved = Path.combine(resourceVirtualPath, resourceFile);
+    for (String filePath : filePaths) {
+      // e.x.,
+      // "~/shared/../scripts/libraries/yui/button/assets/skins/sam/button.css"
+      String resourceFileResolved = Path.combine (resourceVirtualPath, filePath, "/");
 
-                // replace placeholder with project specific path
-                if (resourceFileResolved.contains("{0}")){
-                  // e.x., "~/shared/../projects/{0}/css/login.css" --> ~/shared/../projects/Oregon/css/login.css
-                  resourceFileResolved = String.format(resourceFileResolved, BlackboxSettings.getMessagesName());
-                }
+      // e.x.,
+      // "/student/scripts/libraries/yui/button/assets/skins/sam/button.css"
+      returnList.add (resolveUrl (resourceFileResolved));
+    }
 
-                // e.x., "/student/scripts/libraries/yui/button/assets/skins/sam/button.css"
-                // yield return UrlHelper.ResolveFullUrl(resourceFileResolved).Replace(baseUrl, "");
-                yield return UrlHelper.resolveFullUrl(resourceFileResolved);
-              }
-            }*/
+    return returnList;
+  }
+
+  private static Resources get (String file) {
+    return _resourcesLookup.get (file);
   }
 
 }

@@ -52,7 +52,7 @@ public abstract class IITSDocument
     return _baseUri;
   }
 
-  protected void setBaseUri (String value) {
+  public void setBaseUri (String value) {
     _baseUri = value;
   }
 

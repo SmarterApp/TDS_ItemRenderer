@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import tds.itemrenderer.configuration.ITSConfig;
+import tds.itemrenderer.configuration.RendererSettings;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.UrlHelper;
@@ -28,8 +29,6 @@ public class ITSUrlResolver
 
   protected final String _filePath;
   protected  final String _baseUrl;
-  private boolean _enableEncryption;
-  private String _additionalParameters;
   private final List<String> _parsedFiles = new ArrayList<String>();
 
   public ITSUrlResolver(String filePath)
@@ -81,34 +80,6 @@ public class ITSUrlResolver
           // this was some ITS request from a while ago
           urlPath = urlPath.toLowerCase(); 
       }
-
-      // check if should add additional querystring paramters
-      if (!StringUtils.isEmpty(_additionalParameters))
-      {
-          int idx = urlPath.indexOf('?');
-          
-          if (idx > 0)
-          {
-              // make sure ends with &
-              if (!_additionalParameters.endsWith("&"))
-              {
-                _additionalParameters = _additionalParameters + "&";
-              }
-              
-              // insert addition querystring parameters
-             // urlPath = urlPath.Insert(idx + 1, _additionalParameters);
-              urlPath =  new StringBuilder(urlPath).insert(idx + 1, _additionalParameters).toString();
-          }
-      }
-
-      // MATHML: Need to use html entity for '&'
-      /*
-      if (urlPath.Contains("&file"))
-      {
-          urlPath = urlPath.Replace("&file", "&amp;file");
-      }
-      */
-
       return urlPath;
   }
 
@@ -142,7 +113,7 @@ public class ITSUrlResolver
       String basePath = _filePath.replace(Path.getFileName(_filePath), "");
 
       // encrypt the basePath
-      if (_enableEncryption)
+      if (RendererSettings.getIsEncryptionEnabled())
       {
           basePath = EncryptionHelper.EncryptToBase64(basePath);
       }
@@ -287,17 +258,28 @@ public class ITSUrlResolver
        if (!url.contains("&amp;")) {
          url = url.replace("&", "&amp;");
       }
-
-      String fixedContent = content.replace("src=\"", "src=\"" + url);
-      fixedContent = fixedContent.replace("image=\"", "image=\"" + url);
-      fixedContent = fixedContent.replace("deleteRowImage=\"", "deleteRowImage=\"" + url);
-      fixedContent = fixedContent.replace("flash=\"", "flash=\"" + url);
-      fixedContent = fixedContent.replace("altSrc=\"", "altSrc=\"" + url);
+    // SPEC: simulator
+      if(content.contains("<simulationItem"))
+      {
+    	// HACK: Check for QTI itemBody because for QTI we already processed src attribute.
+    	  if(!content.contains("<itemBody"))
+    	  {
+    		  content = content.replace("src=\"", "src=\"" + url);
+    	  }
+    	
+	      content = content.replace("image=\"", "image=\"" + url);
+	      content = content.replace("deleteRowImage=\"", "deleteRowImage=\"" + url);
+	      content = content.replace("flash=\"", "flash=\"" + url);
+	      content = content.replace("altSrc=\"", "altSrc=\"" + url);
+      }
+	      
+	  // SPEC: scratchpad
+	  if(content.contains("<scratchpad"))
+	  {
+		  content = content.replace("<backgroundImage>", "<backgroundImage>" + url);
+	  }
       
-      // SPEC: scratchpad
-      fixedContent = fixedContent.replace("<backgroundImage>", "<backgroundImage>" + url);
-      
-      return fixedContent;
+      return content;
   }
  
 
@@ -321,42 +303,6 @@ public class ITSUrlResolver
       // fix src attribute (images <img> and audio <source>)
       String fixedContent = content.replace(" src=\"", " src=\"" + url);
       return fixedContent;
-  }
-
-  /**
-   * Is Encryption enabled
-   * 
-   * @return true if encryption is enabled
-   */
-  public boolean isEnableEncryption () {
-    return _enableEncryption;
-  }
-
-  /**
-   * Sets enable encryption
-   * 
-   * @param enableEncryption
-   */
-  public void setEnableEncryption (boolean enableEncryption) {
-    _enableEncryption = enableEncryption;
-  }
-
-  /**
-   * Gets additional parameters
-   * 
-   * @return additional parameters
-   */
-  public String getAdditionalParameters () {
-    return _additionalParameters;
-  }
-
-  /**
-   * Sets additional Parameters
-   * 
-   * @param additionalParameters
-   */
-  public void setAdditionalParameters (String additionalParameters) {
-    _additionalParameters = additionalParameters;
   }
   
 }

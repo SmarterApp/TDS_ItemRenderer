@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Educational Online Test Delivery System 
- * Copyright (c) 2014 American Institutes for Research
- *   
- * Distributed under the AIR Open Source License, Version 1.0 
- * See accompanying file AIR-License-1_0.txt or at
- * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+ * Educational Online Test Delivery System Copyright (c) 2014 American
+ * Institutes for Research
+ * 
+ * Distributed under the AIR Open Source License, Version 1.0 See accompanying
+ * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
+ * American_Institutes_for_Research_Open_Source_Software_License.pdf
  ******************************************************************************/
 /**
  * 
@@ -17,10 +17,14 @@ package tds.itemrenderer.webcontrols;
  */
 public class PageSettings
 {
-  private boolean _includePageWrapper = false;
-  private boolean _includeItemWrapper = false;
-  private boolean _useUniquePageID    = false;
-  private boolean _includeJson        = false;
+  public enum UniqueIdType {
+    GroupId, IRiSGuid, PageLayout
+  }
+
+  private boolean      _includePageWrapper = false;
+  private boolean      _includeItemWrapper = false;
+  private UniqueIdType _useUniquePageID    = UniqueIdType.PageLayout;
+  private boolean      _includeJson        = false;
 
   // / <summary>
   // / Include a div wrapper around the page
@@ -44,11 +48,11 @@ public class PageSettings
   // / <summary>
   // / Include a unique ID on the page wrapper
   // / </summary>
-  public boolean getUseUniquePageId () {
+  public UniqueIdType getUseUniquePageId () {
     return _useUniquePageID;
   }
 
-  public void setUseUniquePageId (boolean value) {
+  public void setUseUniquePageId (UniqueIdType value) {
     _useUniquePageID = value;
   }
 

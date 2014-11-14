@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Educational Online Test Delivery System 
- * Copyright (c) 2014 American Institutes for Research
- *   
- * Distributed under the AIR Open Source License, Version 1.0 
- * See accompanying file AIR-License-1_0.txt or at
- * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+ * Educational Online Test Delivery System Copyright (c) 2014 American
+ * Institutes for Research
+ * 
+ * Distributed under the AIR Open Source License, Version 1.0 See accompanying
+ * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
+ * American_Institutes_for_Research_Open_Source_Software_License.pdf
  ******************************************************************************/
 /**
  * 
@@ -17,6 +17,7 @@ package tds.itemrenderer.webcontrols;
  */
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UINamingContainer;
@@ -37,6 +38,7 @@ import tds.itemrenderer.data.ITSOption;
 import tds.itemrenderer.data.ItemRenderGroup;
 import tds.itemrenderer.data.ItemRenderMCOption;
 import tds.itemrenderer.web.ITSDocumentJsonSerializable;
+import tds.itemrenderer.webcontrols.PageSettings.UniqueIdType;
 import tds.itemrenderer.webcontrols.templates.IResponseLayout;
 import tds.itemrenderer.webcontrols.templates.ITemplateAnswer;
 import tds.itemrenderer.webcontrols.templates.ITemplateAnswerTable;
@@ -50,51 +52,62 @@ import AIR.Common.Web.taglib.PlaceHolder;
 
 public class PageLayout extends UINamingContainer
 {
+  private List<UserComponent> _externalComponents       = new ArrayList<UserComponent> ();
   // TODO Shiva this did not seem as it was used.
   // public event EventHandler OnRendered = delegate { };
-//  private FacesContext    _currentContext           = null;
-  private static Logger _logger = LoggerFactory.getLogger (PageLayout.class);
-  private String          _layoutFolder             = ITSConfig.getLayoutFolder ();  // e.x.,
-                                                                                      // "~/Layouts_2009/"
-  private String          _responseTypesFolder      = ITSConfig.getResponseFolder ();
+  // private FacesContext _currentContext = null;
+  private static Logger       _logger                   = LoggerFactory.getLogger (PageLayout.class);
+  private String              _layoutFolder             = ITSConfig.getLayoutFolder ();              // e.x.,
+                                                                                                      // "~/Layouts_2009/"
+  private String              _responseTypesFolder      = ITSConfig.getResponseFolder ();
 
-  private String          _templateFolder           = ITSConfig.getTemplateFolder ();
-  private String          _templateFileStimulus     = "Stimulus.xhtml";
-  private String          _templateFileTools        = "Tools.xhtml";
-  private String          _templateFileStem         = "Stem.xhtml";
-  private String          _templateFileIllustration = "Illustration.xhtml";
-  private boolean         _templateFileWAI          = false;
+  private String              _templateFolder           = ITSConfig.getTemplateFolder ();
+  private String              _templateFileStimulus     = "Stimulus.xhtml";
+  private String              _templateFileTools        = "Tools.xhtml";
+  private String              _templateFileStem         = "Stem.xhtml";
+  private String              _templateFileIllustration = "Illustration.xhtml";
+  private boolean             _templateFileWAI          = false;
 
   // these are calculated based on the content when rendering
-  private String          _layoutName               = "";                            // e.x.,
+  private String              _layoutName               = "";                                        // e.x.,
   // "11 - Vertical"
-  private String          _layoutFile;                                               // e.x.,
-                                                                                      // "Layout_11.ascx"
-  private String          _layoutLanguage;
-  private String          _responseTypeOverride     = null;
-  private PageSettings    _settings                 = null;
-  private ItemRenderGroup _itemGroup;
-  private ErrorCategories _errorCategory            = ErrorCategories.None;
-  private String          _errorDescription;
-  private PlaceHolder     _placeHolder;
+  private String              _layoutFile;                                                           // e.x.,
+                                                                                                      // "Layout_11.ascx"
+  private String              _layoutLanguage;
+  private String              _responseTypeOverride     = null;
+  private PageSettings        _settings                 = null;
+  private ItemRenderGroup     _itemGroup;
+  private ErrorCategories     _errorCategory            = ErrorCategories.None;
+  private String              _errorDescription;
+  private PlaceHolder         _placeHolder;
 
-  private PlaceHolder     _contentPlaceHolder       = new PlaceHolder ();
-  private PlaceHolder     _preamblePlaceHolder      = new PlaceHolder ();
-  private PlaceHolder     _postamblePlaceHolder     = new PlaceHolder ();
+  private PlaceHolder         _contentPlaceHolder       = new PlaceHolder ();
+  private PlaceHolder         _preamblePlaceHolder      = new PlaceHolder ();
+  private PlaceHolder         _postamblePlaceHolder     = new PlaceHolder ();
 
-  private String          _renderToString;
+  private String              _renderToString;
 
   public PageLayout () {
     // set page settings defaults
     _settings = new PageSettings ();
     _settings.setIncludePageWrapper (true);
     _settings.setIncludeItemWrapper (true);
-    _settings.setUseUniquePageId (false);
+    _settings.setUseUniquePageId (UniqueIdType.PageLayout);
     _settings.setIncludeJson (true);
   }
 
   public PageLayout (ItemRenderGroup renderGroup) {
     setItemRenderGroup (renderGroup);
+  }
+
+  public void renderUserControl (final String libraryName, final String resourceName) {
+    _externalComponents.add (new UserComponent ()
+    {
+      {
+        _libraryName = libraryName;
+        _resourceName = resourceName;
+      }
+    });
   }
 
   // / <summary>
@@ -243,9 +256,8 @@ public class PageLayout extends UINamingContainer
   public void render () {
     try {
       renderControl ();
-    } catch (Exception ex)
-    {
-      _logger.error (ex.getMessage (),ex);
+    } catch (Exception ex) {
+      _logger.error (ex.getMessage (), ex);
       throw ex;
     }
   }
@@ -267,7 +279,12 @@ public class PageLayout extends UINamingContainer
   }
 
   protected void renderControl () {
-    createChildControls2 ();
+    if (_externalComponents.size () > 0) {
+      for (UserComponent uc : _externalComponents) {
+        JsfHelpers.<UIComponent, UIComponent> includeCompositeComponent (this.getPlaceHolder (), uc._libraryName, uc._resourceName, null, null, null);
+      }
+    } else
+      createChildControls2 ();
   }
 
   protected void createChildControls2 () {
@@ -331,9 +348,9 @@ public class PageLayout extends UINamingContainer
       }
 
       if (rendererBase.getTemplateWai () == null) {
-         this._templateFileWAI = false;
+        this._templateFileWAI = false;
       } else {
-         this._templateFileWAI = rendererBase.getTemplateWai ();
+        this._templateFileWAI = rendererBase.getTemplateWai ();
       }
     }
 
@@ -429,7 +446,7 @@ public class PageLayout extends UINamingContainer
 
     ItemRenderGroup itemGroup = getItemRenderGroup ();
     // add stem to layout
-//    int counter1 = 0;
+    // int counter1 = 0;
     for (IItemRender item : itemGroup) {
       // Shiva: This is a slight variation from .NET. We create PlaceHolders
       // instead
@@ -513,8 +530,7 @@ public class PageLayout extends UINamingContainer
       setRenderData (control, itemRender);
 
       return control;
-    } catch (Exception exp)
-    {
+    } catch (Exception exp) {
       throw new RuntimeException (exp);
     }
   }
@@ -586,8 +602,7 @@ public class PageLayout extends UINamingContainer
      * templateAnswer.Options.DataSource = renderOptions;
      * templateAnswer.Options.DataBind(); }
      */
-    else if (control instanceof ITemplateAnswerTable)
-    {
+    else if (control instanceof ITemplateAnswerTable) {
 
       ITemplateAnswerTable templateAnswer = (ITemplateAnswerTable) control;
       templateAnswer.setOptions ((List<Object>) CollectionUtils.collect (renderOptions, new Transformer ()
@@ -747,7 +762,11 @@ public class PageLayout extends UINamingContainer
     if (settings.getIncludePageWrapper ()) {
 
       // <div> (pageLayout wrapper info)
-      String pageID = settings.getUseUniquePageId () ? "Page_" + _itemGroup.getId () : "pageLayout";
+      String pageID = "pageLayout";
+      if (UniqueIdType.GroupId == settings.getUseUniquePageId ())
+        pageID = "Page_" + _itemGroup.getId ();
+      else if (UniqueIdType.IRiSGuid == settings.getUseUniquePageId ())
+        pageID = _itemGroup.getId ();
 
       BrowserParser browser = new BrowserParser ();
 
@@ -1006,4 +1025,10 @@ public class PageLayout extends UINamingContainer
   private IResponseLayout getResponseControl (String name, UIComponent parent) {
     return JsfHelpers.<IResponseLayout, IResponseLayout> includeCompositeComponent (parent, getResponseTypesFolder (), "Response_" + name + ".xhtml", null, null, null);
   }
+}
+
+class UserComponent
+{
+  public String _libraryName;
+  public String _resourceName;
 }

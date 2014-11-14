@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Educational Online Test Delivery System 
- * Copyright (c) 2014 American Institutes for Research
- *   
- * Distributed under the AIR Open Source License, Version 1.0 
- * See accompanying file AIR-License-1_0.txt or at
- * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+ * Educational Online Test Delivery System Copyright (c) 2014 American
+ * Institutes for Research
+ * 
+ * Distributed under the AIR Open Source License, Version 1.0 See accompanying
+ * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
+ * American_Institutes_for_Research_Open_Source_Software_License.pdf
  ******************************************************************************/
 /**
  * 
@@ -13,19 +13,23 @@ package tds.itempreview;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import AIR.Common.Json.JsonHelper;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.UrlHelper;
 import AIR.Common.Web.WebHelper;
 import AIR.Common.Web.Session.HttpContext;
+import AIR.Common.Web.Session.Server;
 
 /**
  * @author Shiva BEHERA [sbehera@air.org]
@@ -33,21 +37,12 @@ import AIR.Common.Web.Session.HttpContext;
  */
 public class ConfigLoader
 {
-  //Shiva: deviation from .NET code. We do not combine with the root path because we do not deploy content 
-  //in tomcat context folder.
-  //private String _rootPath = HttpContext.getCurrentContext ().getServer ().mapPath (".");
-  private String _rootPath = "";
-  
-  public Config load () throws IOException {
+  private String _rootPath = Server.getDocBasePath ();
+
+  public Config load () throws IOException, URISyntaxException {
     // get config file path
     String configFile = WebHelper.getQueryString ("data");
-    String contentPath = WebHelper.getQueryString ("content") == null ? "Content" : WebHelper.getQueryString ("content");
-
-    // Shiva: custom code that is different from .NET implementation. I do not
-    // want to add content folder to web.
-    // instead we will get the root of the content folder from the
-    // configuration.
-    contentPath = ItemPreviewSettings.getContentPath () + File.separator + contentPath;
+    String contentPath = WebHelper.getQueryString ("content") == null ? "ItemPreviewContent" : WebHelper.getQueryString ("content");
 
     // get config
     Config config;
@@ -56,7 +51,7 @@ public class ConfigLoader
       config = loadJson (configFile);
     } else {
       // check for default config
-      String defaultConfigFile = Path.combine (contentPath, "config.json");
+      String defaultConfigFile = Server.mapPath (Path.combine (contentPath, "config.json"));
       if (Path.exists (defaultConfigFile)) {
         // use default config file inside content folder
         config = loadJson (defaultConfigFile);
@@ -95,8 +90,7 @@ public class ConfigLoader
       // load json config
       String textConfig = FileUtils.readFileToString (new File (configFile));
 
-      ObjectMapper mapper = new ObjectMapper (); // can reuse, share globally
-      config = mapper.readValue (textConfig, Config.class);
+      config = JsonHelper.deserialize (textConfig, Config.class);
       setFilePaths (configBasePath, config);
     }
 
@@ -106,11 +100,13 @@ public class ConfigLoader
   // / <summary>
   // / Build the config based on xml in a folder.
   // / </summary>
-  private Config loadFolder (String contentPath) {
+  private Config loadFolder (String contentPath) throws URISyntaxException {
     String contentFullPath = Path.combine (_rootPath, contentPath);
     // load content folder
     ConfigBuilder configBuilder = new ConfigBuilder (contentFullPath);
-    return configBuilder.Create ();
+    configBuilder.setFilterFormat (WebHelper.getQueryString ("format"));
+    configBuilder.setFilterResponseType (WebHelper.getQueryString ("responseType"));
+    return configBuilder.create ();
   }
 
   // / <summary>
@@ -167,9 +163,7 @@ public class ConfigLoader
 
     String relativePath = configContent.getFile ().replace (rootPath, "");
     relativePath = StringUtils.replace (relativePath, "\\", "/");
-    configContent.setFile (UrlHelper.getBase () + relativePath);
-
-    UrlHelper.IsHttpProtocol (configContent.getFile ());
+    configContent.setFile (Server.getContextPath () + relativePath);
   }
 
   private void encryptPaths (Config config) {

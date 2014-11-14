@@ -11,6 +11,8 @@
  */
 package tds.blackbox;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Shiva BEHERA [sbehera@air.org]
  * 
@@ -19,6 +21,7 @@ public class ContentRequestPassage
 {
   private String _file = null;
 
+  @JsonProperty("file")
   public String getFile () {
     return _file;
   }

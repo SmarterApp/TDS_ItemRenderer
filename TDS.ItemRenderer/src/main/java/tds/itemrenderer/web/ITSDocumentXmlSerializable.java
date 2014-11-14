@@ -196,6 +196,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       writeAttribute("subject", itemRender.getItem().getSubject());
       writeAttribute("grade", itemRender.getItem().getGrade());
       writeAttribute("format", itemRender.getItem().getFormat());
+      writeAttribute("marked", itemRender.getMark());
       writeAttribute("disabled", itemRender.getDisabled ());
       writeAttribute("printable", itemRender.getPrintable());
       writeAttribute("printed", itemRender.getPrinted());
@@ -216,7 +217,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       writeResources(itemRender.getItem()); // <resources>
       writeAttachments(itemRender.getItem());
       writeRendererSpec(itemRender.getItem()); // <rendererSpec>
-      writeContent(itemRender.getItem());
+      writeItemContent(itemRender.getItem());
       writeElements(itemRender.getItem()); // generic elements
 
       writeCData("response", itemRender.getResponse()); // <response>
@@ -333,7 +334,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       return true;
   }
 
-  private boolean writeContent(IITSDocument doc)
+  private boolean writeItemContent(IITSDocument doc)
   {
       // get content for the language
       ITSContent content = doc.getContent(_language); // ?? itemRender.Item.GetContentDefault();
@@ -347,8 +348,8 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
           writeCData("gridAnswerSpace", gridAnswerSpace);
       }
 
-      // MC
-      writeOptions(content); // <options>
+      // MC/MS
+      writeMSOptions(content); // <options>
 
       // QTI
       writeQTI(content);
@@ -366,7 +367,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       endElement(); // </qti>
   }
 
-  private boolean writeOptions(ITSContent content)
+  private boolean writeMSOptions(ITSContent content)
   {
       if (content.getOptions() == null) {
         return false;

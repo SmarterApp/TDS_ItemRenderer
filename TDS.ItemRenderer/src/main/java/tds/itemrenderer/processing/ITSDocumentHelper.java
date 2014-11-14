@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Educational Online Test Delivery System 
- * Copyright (c) 2014 American Institutes for Research
- *   
- * Distributed under the AIR Open Source License, Version 1.0 
- * See accompanying file AIR-License-1_0.txt or at
- * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+ * Educational Online Test Delivery System Copyright (c) 2014 American
+ * Institutes for Research
+ * 
+ * Distributed under the AIR Open Source License, Version 1.0 See accompanying
+ * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
+ * American_Institutes_for_Research_Open_Source_Software_License.pdf
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
@@ -58,7 +58,10 @@ public class ITSDocumentHelper
     ReplacementPathElement replacementPath = ITSConfig.getReplacementPath ();
 
     if (replacementPath != null && !StringUtils.isEmpty (replacementPath.getMatch ()) && !StringUtils.isEmpty (replacementPath.getReplacement ())) {
-      filePath = StringUtils.replace (filePath, replacementPath.getMatch (), replacementPath.getReplacement ());
+      // replace only in the begining. this works because we are using
+      // replaceOnce
+      if (filePath.startsWith (replacementPath.getMatch ()))
+        filePath = StringUtils.replaceOnce (filePath, replacementPath.getMatch (), replacementPath.getReplacement ());
     }
 
     return filePath;
@@ -116,8 +119,7 @@ public class ITSDocumentHelper
       throw new ITSDocumentProcessingException (e);
     }
   }
-  
-  
+
   /**
    * Gets contents from specified URI string
    * 
@@ -125,9 +127,9 @@ public class ITSDocumentHelper
    * @return contents as String
    * @throws IOException
    */
-  public static String getContents (URI uri)  {
+  public static String getContents (URI uri) {
     if ("ftp".equals (uri.getScheme ())) {
-      return new String(FileFtpHandler.getBytes (uri), StandardCharsets.UTF_8);
+      return new String (FileFtpHandler.getBytes (uri), StandardCharsets.UTF_8);
     }
     // otherwise file
     try {
@@ -173,23 +175,23 @@ public class ITSDocumentHelper
    * @return true if file exist
    */
   public static boolean exists (_Ref<String> path) {
-    URI uri = createUri (path.get());
+    URI uri = createUri (path.get ());
 
     // check if ftp
     if ("ftp".equals (uri.getScheme ())) {
       return FileFtpHandler.exists (uri);
     }
 
-    if (Path.exists (path.get()))
-    	return true;
-    
-    //SB-372 Remove after case sensitivity is fixed in content
-    String dirName = Paths.get(path.get()).getParent().toString();
-    String fileName = Paths.get(path.get()).getFileName().toString();
-    File fileDir = new File(dirName);
-    for(String fileInDir:fileDir.list ()) {
-      if(fileInDir.equalsIgnoreCase (fileName)) {
-    	path.set (path.get ().replace (fileName, fileInDir));          
+    if (Path.exists (path.get ()))
+      return true;
+
+    // SB-372 Remove after case sensitivity is fixed in content
+    String dirName = Paths.get (path.get ()).getParent ().toString ();
+    String fileName = Paths.get (path.get ()).getFileName ().toString ();
+    File fileDir = new File (dirName);
+    for (String fileInDir : fileDir.list ()) {
+      if (fileInDir.equalsIgnoreCase (fileName)) {
+        path.set (path.get ().replace (fileName, fileInDir));
         return true;
       }
     }
@@ -205,26 +207,25 @@ public class ITSDocumentHelper
    * @throws UnsupportedEncodingException
    * @throws XMLStreamException
    */
-  public static String getRootElementName (URI uri)  {
+  public static String getRootElementName (URI uri) {
     XMLInputFactory inputFactory = TdsXmlInputFactory.newInstance ();
     try {
-    InputStream input = null;
-    String uriPath = getUriOriginalString (uri);
-    if (isFtp (uri)) {
+      InputStream input = null;
+      String uriPath = getUriOriginalString (uri);
+      if (isFtp (uri)) {
         input = new ByteArrayInputStream (FileFtpHandler.getBytes (uri));
-    } else {
-      input = new FileInputStream (uriPath);
-    }
-    XMLEventReader inputEventReader = inputFactory
-        .createXMLEventReader (input);
-    while (inputEventReader.hasNext ()) {
-      XMLEvent event = inputEventReader.nextEvent ();
-      if (event.isStartElement ()) {
-        return event.asStartElement ().getName ().getLocalPart ();
+      } else {
+        input = new FileInputStream (uriPath);
       }
-    }
+      XMLEventReader inputEventReader = inputFactory.createXMLEventReader (input);
+      while (inputEventReader.hasNext ()) {
+        XMLEvent event = inputEventReader.nextEvent ();
+        if (event.isStartElement ()) {
+          return event.asStartElement ().getName ().getLocalPart ();
+        }
+      }
     } catch (FileNotFoundException | XMLStreamException e) {
-       throw new ITSDocumentProcessingException(e);
+      throw new ITSDocumentProcessingException (e);
     }
     return null;
   }

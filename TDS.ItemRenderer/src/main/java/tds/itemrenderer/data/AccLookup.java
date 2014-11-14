@@ -45,26 +45,26 @@ public class AccLookup
 
   public AccLookup (int position, String ID) {
     _position = position;
-    _id= ID;
+    _id = ID;
   }
 
   @JsonIgnore
   public static AccLookup getNone () {
     return _empty;
   }
-/*
-  public AccProperties getProperties () {
-    return new AccProperties (this);
-  }
-*/
- @JsonProperty
+
+  /*
+   * public AccProperties getProperties () { return new AccProperties (this); }
+   */
+  @JsonProperty
   public int getPosition () {
     return _position;
   }
-  
+
   public void setPosition (int _position) {
     this._position = _position;
   }
+
   @JsonProperty
   public String getId () {
     return _id;
@@ -73,6 +73,7 @@ public class AccLookup
   public void setId (String _id) {
     this._id = _id;
   }
+
   @JsonIgnore
   public MultiValueDictionary<String, String> getTypesMap () {
     return _types;
@@ -97,6 +98,7 @@ public class AccLookup
       }
     });
   }
+
   @JsonProperty
   public MultiValueDictionary<String, String> getTypes () {
     return _types;
@@ -221,7 +223,7 @@ public class AccLookup
     if (StringUtils.isEmpty (serialized))
       return;
 
-    for (String typeCodes : serialized.split ("|")) {
+    for (String typeCodes : StringUtils.split (serialized, "|")) {
       String[] typeCodesPieces = typeCodes.split (":");
       String type = typeCodesPieces[0];
       String codes = typeCodesPieces[1];
@@ -231,6 +233,7 @@ public class AccLookup
       }
     }
   }
+  
   
   /*
    * As part of our merging process we needed to make this one change in ItemRenderer.

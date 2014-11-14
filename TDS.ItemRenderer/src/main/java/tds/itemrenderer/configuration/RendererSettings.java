@@ -23,81 +23,97 @@ import AIR.Common.Utilities.SpringApplicationContext;
  */
 public class RendererSettings
 {
-  
-  private static ConfigurationSection _appSettings;
-  
-  // / <summary>
-  // / Get the url resolver version we should use.
-  // / </summary>
-  // / <remarks>
-  // / Right now this can only be 1 (used for TDS) or 2 (used for LPN).
-  // / </remarks>
-  public static int getUrlResolverVersion () {
-    final String urlResolverKey = "tds.itemRenderer.urlResolverVersion";
 
-    // get resolver version #
-    int urlResolverVer = getAppSettings().getInt32 (urlResolverKey);
-    if (urlResolverVer > 0) {
-      return urlResolverVer;
-    }
+	private static ConfigurationSection _appSettings;
 
-    // try legacy setting
-    urlResolverVer =  getAppSettings().getInt32 ("UrlResolverVersion");
-    if (urlResolverVer > 0) {
-      return urlResolverVer;
-    }
+	// / <summary>
+	// / Get the url resolver version we should use.
+	// / </summary>
+	// / <remarks>
+	// / Right now this can only be 1 (used for TDS) or 2 (used for LPN).
+	// / </remarks>
+	public static int getUrlResolverVersion () {
+		final String urlResolverKey = "tds.itemRenderer.urlResolverVersion";
 
-    // return default
-    return 1;
+		// get resolver version #
+		int urlResolverVer = getAppSettings().getInt32 (urlResolverKey);
+		if (urlResolverVer > 0) {
+			return urlResolverVer;
+		}
 
-  }
+		// try legacy setting
+		urlResolverVer =  getAppSettings().getInt32 ("UrlResolverVersion");
+		if (urlResolverVer > 0) {
+			return urlResolverVer;
+		}
 
-  // / <summary>
-  // / If this is true then we allow for HTTP range requests.
-  // / </summary>
-  public static boolean getSupportHttpRanges () {
-    return getAppSettings().getBoolean ("tds.itemRenderer.supportHttpRanges");
-  }
+		// return default
+		return 1;
 
-  // / <summary>
-  // / If this is true then if a uri is not file based then deny access.
-  // / </summary>
-  public static boolean getDenyExternalContent () {
-    return getAppSettings().getBoolean ("tds.itemRenderer.denyHttpContent");
-  }
+	}
 
-  public static boolean getIsMathMLEnabled () {
-    return getAppSettings().getBoolean ("tds.itemRenderer.enableMathML");
-  }
+	// / <summary>
+	// / If this is true then we allow for HTTP range requests.
+	// / </summary>
+	public static boolean getSupportHttpRanges () {
+		return getAppSettings().getBoolean ("tds.itemRenderer.supportHttpRanges");
+	}
 
-  public static boolean getIsSVGEnabled () {
-    return getAppSettings().getBoolean ("tds.itemRenderer.enableSVG");
-  }
+	// / <summary>
+	// / If this is true then if a uri is not file based then deny access.
+	// / </summary>
+	public static boolean getDenyExternalContent () {
+		return getAppSettings().getBoolean ("tds.itemRenderer.denyHttpContent");
+	}
 
-  public static boolean getIsBase64Enabled () {
-    return getAppSettings().getBoolean ("tds.itemRenderer.enableBase64");
-  }
+	/// <summary>
+	/// Encrypt the resource url's path querystring. 
+	/// </summary>
+	public static boolean getIsEncryptionEnabled(){
+		return getAppSettings().getBoolean("tds.itemRenderer.enableEncryption", true);
+	}
 
-  // / <summary>
-  // / If this is true then we support replacing images with MathML, SVG or
-  // Base64.
-  // / </summary>
-  public static boolean supportHtmlReplacements () {
-    return (getIsMathMLEnabled () || getIsSVGEnabled () || getIsBase64Enabled ());
-  }
+	/// <summary>
+	/// Look for MathML .xml file for images and replace in the dom.
+	/// </summary>
+	public static boolean getIsMathMLEnabled () {
+		return getAppSettings().getBoolean ("tds.itemRenderer.enableMathML");
+	}
 
-  // / <summary>
-  // / If this is true then we will send down any feedback in the xml if it is
-  // available.
-  // / </summary>
-  public static AppSetting<Boolean> getIsFeedbackEnabled () {
-    return AppSettings.getBoolean ("tds.itemRenderer.enableFeedback");
-  }
+	/// <summary>
+	/// Look for .svg file for images and replace in the dom.
+	/// </summary>
+	public static boolean getIsSVGEnabled () {
+		return getAppSettings().getBoolean ("tds.itemRenderer.enableSVG");
+	}
 
-  public static ConfigurationSection getAppSettings() {
-    if (_appSettings == null) {
-      _appSettings =  SpringApplicationContext.getBean ("configurationManager", ConfigurationManager.class).getAppSettings ();
-    } 
-    return _appSettings;
-  }
+	/// <summary>
+	/// Convert any <img> tags into base64 data.
+	/// </summary>
+	public static boolean getIsBase64Enabled () {
+		return getAppSettings().getBoolean ("tds.itemRenderer.enableBase64");
+	}
+
+	// / <summary>
+	// / If this is true then we support replacing images with MathML, SVG or
+	// Base64.
+	// / </summary>
+	public static boolean supportHtmlReplacements () {
+		return (getIsMathMLEnabled () || getIsSVGEnabled () || getIsBase64Enabled ());
+	}
+
+	// / <summary>
+	// / If this is true then we will send down any feedback in the xml if it is
+	// available.
+	// / </summary>
+	public static AppSetting<Boolean> getIsFeedbackEnabled () {
+		return AppSettings.getBoolean ("tds.itemRenderer.enableFeedback");
+	}
+
+	public static ConfigurationSection getAppSettings() {
+		if (_appSettings == null) {
+			_appSettings =  SpringApplicationContext.getBean ("configurationManager", ConfigurationManager.class).getAppSettings ();
+		} 
+		return _appSettings;
+	}
 }
