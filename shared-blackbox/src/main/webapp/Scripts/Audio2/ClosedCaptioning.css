@@ -1,0 +1,48 @@
+.tdsClosedCaptioning, 
+.tdsClosedCaptioning .ccWrapper * {
+	display: none;
+}
+.tdsClosedCaptioning.tdsClosedCaptioningActive {
+	display: block;
+}
+.ccWrapper .currentText {
+	display: inherit;
+}
+.ccWrapper .currentText * {
+	display: inline;
+}
+.tdsClosedCaptioning {
+	display: none;
+	width: 80%;
+	min-height: 4em;
+	font-size: 2.5em;
+	line-height: 1.3em;
+	overflow: auto;
+	background-color: rgba(0,0,0,0.8);
+	color: #fff;
+	position: fixed;
+	z-index: 15;
+	bottom: 15%;
+	left: 50%;
+	margin-left: -40%;
+	pointer-events: none;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: .6em;
+   	text-shadow:
+    	2px 2px 0 #000,
+     	-1px -1px 0 #000,  
+      	1px -1px 0 #000,
+      	-1px 1px 0 #000,
+       	1px 1px 0 #000;
+}
+.TDS_PS_L1 .tdsClosedCaptioning {
+	font-size: 2.5em;
+}
+.TDS_PS_L2 .tdsClosedCaptioning, 
+.TDS_PS_L3 .tdsClosedCaptioning {
+	min-height: 130px;
+}
+.TDS_PS_L4 .tdsClosedCaptioning {
+	min-height: 150px;
+}

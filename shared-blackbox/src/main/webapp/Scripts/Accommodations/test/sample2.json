@@ -1,0 +1,662 @@
+{
+    "position": 0,
+    "id": "ELPA 6-8",
+    "label": "Grades 6 - 8 ELPA",
+    "types": [
+        {
+            "name": "Language",
+            "isVisible": true,
+            "isSelectable": true,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "ENU",
+                    "name": "English",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Mark for Review",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_MfR1",
+                    "name": "True",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Tutorial",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": "Language",
+            "values": [
+                {
+                    "code": "TDS_T1",
+                    "name": "True",
+                    "allowCombine": false,
+                    "isDefault": true
+                },
+                {
+                    "code": "TDS_T0",
+                    "name": "False",
+                    "allowCombine": false,
+                    "isDefault": false
+                }
+            ]
+        },
+        {
+            "name": "Strikethrough",
+            "isVisible": true,
+            "isSelectable": true,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": "Language",
+            "values": [
+                {
+                    "code": "TDS_ST1",
+                    "name": "True",
+                    "allowCombine": false,
+                    "isDefault": true
+                },
+                {
+                    "code": "TDS_ST0",
+                    "name": "False",
+                    "allowCombine": false,
+                    "isDefault": false
+                }
+            ]
+        },
+        {
+            "name": "Print Size",
+            "isVisible": true,
+            "isSelectable": true,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": "Language",
+            "values": [
+                {
+                    "code": "TDS_PS_L0",
+                    "name": "1X",
+                    "allowCombine": false,
+                    "isDefault": true
+                },
+                {
+                    "code": "TDS_PS_L1",
+                    "name": "1.5X",
+                    "allowCombine": false,
+                    "isDefault": false
+                },
+                {
+                    "code": "TDS_PS_L2",
+                    "name": "1.75X",
+                    "allowCombine": false,
+                    "isDefault": false
+                },
+                {
+                    "code": "TDS_PS_L3",
+                    "name": "2.5X",
+                    "allowCombine": false,
+                    "isDefault": false
+                },
+                {
+                    "code": "TDS_PS_L4",
+                    "name": "3X",
+                    "allowCombine": false,
+                    "isDefault": false
+                }
+            ]
+        },
+        {
+            "name": "Masking",
+            "isVisible": true,
+            "isSelectable": true,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_Masking0",
+                    "name": "Masking Not Available",
+                    "allowCombine": false,
+                    "isDefault": true
+                },
+                {
+                    "code": "TDS_Masking1",
+                    "name": "Masking Available",
+                    "allowCombine": false,
+                    "isDefault": false
+                }
+            ]
+        },
+        {
+            "name": "Student Comments",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_SCDropDown",
+                    "name": "DropDown",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Font Type",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_FT_Serif",
+                    "name": "Serif (Times)",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Exempted Domains",
+            "isVisible": true,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_Exmpt0",
+                    "name": "No Exemptions",
+                    "allowCombine": false,
+                    "isDefault": true
+                },
+                {
+                    "code": "TDS_Exmpt_LI",
+                    "name": "Listening",
+                    "allowCombine": true,
+                    "isDefault": false
+                },
+                {
+                    "code": "TDS_Exmpt_RE",
+                    "name": "Reading",
+                    "allowCombine": true,
+                    "isDefault": false
+                },
+                {
+                    "code": "TDS_Exmpt_SP",
+                    "name": "Speaking",
+                    "allowCombine": true,
+                    "isDefault": false
+                },
+                {
+                    "code": "TDS_Exmpt_WR",
+                    "name": "Writing",
+                    "allowCombine": true,
+                    "isDefault": false
+                }
+            ]
+        },
+        {
+            "name": "Passage Font Size",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_F_S12",
+                    "name": "12pt",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Item Types Exclusion",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_ItemTypeExcl_None",
+                    "name": "None",
+                    "allowCombine": false,
+                    "isDefault": true
+                },
+                {
+                    "code": "TDS_ItemTypeExcl_GI",
+                    "name": "Grid Items",
+                    "allowCombine": true,
+                    "isDefault": false
+                }
+            ]
+        },
+        {
+            "name": "Color Choices",
+            "isVisible": true,
+            "isSelectable": true,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": "Language",
+            "values": [
+                {
+                    "code": "TDS_CC0",
+                    "name": "Black on White",
+                    "allowCombine": false,
+                    "isDefault": true
+                },
+                {
+                    "code": "TDS_CCBlue",
+                    "name": "Blue",
+                    "allowCombine": false,
+                    "isDefault": false
+                },
+                {
+                    "code": "TDS_CCYellow",
+                    "name": "Yellow",
+                    "allowCombine": false,
+                    "isDefault": false
+                }
+            ]
+        },
+        {
+            "name": "Highlight",
+            "isVisible": true,
+            "isSelectable": true,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": "Language",
+            "values": [
+                {
+                    "code": "TDS_Highlight0",
+                    "name": "False",
+                    "allowCombine": false,
+                    "isDefault": false
+                },
+                {
+                    "code": "TDS_Highlight1",
+                    "name": "True",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Hardware Checks",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_HWRecording&amp;TDS_HWPlayback",
+                    "name": "Check Recording Capabilities&amp;Check Playback Capabilities",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Streamlined Mode",
+            "isVisible": true,
+            "isSelectable": true,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": "Language",
+            "values": [
+                {
+                    "code": "TDS_SLM0",
+                    "name": "Off",
+                    "allowCombine": false,
+                    "isDefault": true
+                },
+                {
+                    "code": "TDS_SLM1",
+                    "name": "On",
+                    "allowCombine": false,
+                    "isDefault": false
+                }
+            ]
+        },
+        {
+            "name": "Audio Playback Controls",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_APC_PSP",
+                    "name": "Play Stop and Pause",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Test Shell",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": false,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_TS_Modern",
+                    "name": "Modern skin",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Paginate Item Groups",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_PIG1",
+                    "name": "On",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Line Reader",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": false,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_LR1",
+                    "name": "Line Reader On",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "System Volume Control",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_SVC1",
+                    "name": "Show widget",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "TTS Audio Adjustments",
+            "isVisible": true,
+            "isSelectable": true,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_TTSAA_Volume&amp;TDS_TTSAA_Pitch",
+                    "name": "All adjustment types",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Enhanced Security Options",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": false,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_ESO_DetectBrowserBreach",
+                    "name": "ESO DetectBrowserBreach",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        },
+        {
+            "name": "Expandable Passages",
+            "isVisible": false,
+            "isSelectable": false,
+            "allowChange": true,
+            "studentControl": true,
+            "dependsOn": null,
+            "values": [
+                {
+                    "code": "TDS_ExpandablePassages1",
+                    "name": "Expandable Passages On",
+                    "allowCombine": false,
+                    "isDefault": true
+                }
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Strikethrough",
+            "thenValue": "TDS_ST1",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Highlight",
+            "thenValue": "TDS_Highlight0",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Strikethrough",
+            "thenValue": "TDS_ST0",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Highlight",
+            "thenValue": "TDS_Highlight1",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L3",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ESN",
+            "thenType": "Highlight",
+            "thenValue": "TDS_Highlight1",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ESN",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L1",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L0",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L4",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L1",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Tutorial",
+            "thenValue": "TDS_T0",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ESN",
+            "thenType": "Tutorial",
+            "thenValue": "TDS_T1",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ESN",
+            "thenType": "Strikethrough",
+            "thenValue": "TDS_ST1",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L2",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ESN",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L3",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ESN",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L2",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ESN",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L0",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Tutorial",
+            "thenValue": "TDS_T1",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L2",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L4",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L1",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Strikethrough",
+            "thenValue": "TDS_ST0",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ESN",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L4",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L3",
+            "isDefault": false
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Streamlined Mode",
+            "thenValue": "TDS_SLM1",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU-Braille",
+            "thenType": "Highlight",
+            "thenValue": "TDS_Highlight0",
+            "isDefault": true
+        },
+        {
+            "ifType": "Language",
+            "ifValue": "ENU",
+            "thenType": "Print Size",
+            "thenValue": "TDS_PS_L0",
+            "isDefault": true
+        }
+    ]
+}

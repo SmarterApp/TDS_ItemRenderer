@@ -1,0 +1,276 @@
+.response_hottext .stemContainer {
+	line-height: 1.3em;
+}
+/************/
+
+.selectable {
+    cursor: pointer;
+    -moz-transition: background-color .2s ease-in;
+    -webkit-transition: background-color .2s ease-in;
+    -o-transition: background-color .2s ease-in;
+    transition: background-color .2s ease-in;
+    border: solid 1px transparent;
+}
+.browser_ie .selectable {
+    transition: none !important;
+}
+.selectable.contextAreaFocus {
+    border: dotted 1px #00aeef;
+}
+.no-touch .selectable:hover {
+	background-color: rgb(172, 211, 115);
+	background-color: rgba(172, 211, 115, 0.2);
+}
+.TDS_CCInvert .selectable:hover, 
+.TDS_CCYellowB .selectable:hover, 
+.TDS_CCWhiteN .selectable:hover {
+	background-color: rgba(255,152,255,0.5);
+}
+.selectable.selected, 
+.browser_ie .selectable.selected * {
+	background-color: #cce3a9 !important;
+}
+.TDS_CCInvert .selectable.selected, 
+.TDS_CCInvert .browser_ie .selectable.selected * {
+	background-color: #999 !important;
+}
+.TDS_CCYellowB .selectable.selected, 
+.TDS_CCYellowB .browser_ie .selectable.selected * {
+	background-color: #2586e3 !important;
+}
+.TDS_CCWhiteN .selectable.selected, 
+.TDS_CCWhiteN .browser_ie .selectable.selected * {
+	background-color: #0068c6 !important;
+}
+.no-touch.TDS_CCGreen .selectable:hover, 
+.no-touch.TDS_CCGreen2 .selectable:hover {
+	background-color: rgb(242, 101, 34);
+	background-color: rgba(242, 101, 34, 0.2);
+}
+.selectable.selected .highlight {
+	background-color: rgb(234, 233, 129) !important;
+	background-color: rgba(255,238,104,0.6) !important;
+}
+/* for showing hover style of selectable text after highlight has already been applied */
+.selectable:hover .highlight {
+	background-color: rgb(234, 233, 129) !important;
+	background-color: rgba(255,238,104,0.6) !important;
+}
+.TDS_CCGreen .selectable.selected, 
+.TDS_CCGreen2 .selectable.selected {
+	background-color: #e8c99a !important;
+}
+.TDS_CCGreen .selectable.selected .highlight, 
+.TDS_CCGreen2 .selectable.selected .highlight {
+	background-color: rgb(248, 238, 46) !important;
+	background-color: rgba(255,255,2,0.7) !important;
+}
+/************/
+
+.draggable {
+	cursor: move;
+	margin-right: .3em;
+	-moz-transition: background-color .2s ease-in;
+    -webkit-transition: background-color .2s ease-in;
+    -o-transition: background-color .2s ease-in;
+    transition: background-color .2s ease-in;
+}
+.draggable:hover {
+	background-color: rgb(109, 207, 246);
+	background-color: rgba(109, 207, 246, 0.2);
+}
+.draggable.drag-source { /* original dragged element */
+    -webkit-opacity: 0.3;
+	-moz-opacity: 0.3;
+    opacity: 0.3;
+    background-color: #cfd3d3;
+}
+.TDS_CCInvert .draggable.drag-source, 
+.TDS_CCYellowB .draggable.drag-source, 
+.TDS_CCWhiteN .draggable.drag-source { 
+    -webkit-opacity: 0.5;
+	-moz-opacity: 0.5;
+    opacity: 0.5;
+    background-color: red;
+}
+.drag-proxy { /* the element that is used as a proxy when dragging */
+    border: 2px solid #999;
+    display: block;
+    padding: .5em;
+    max-height: 100px;
+    max-width: 200px;
+    overflow: hidden;
+	background-color: rgb(255, 255, 255);
+	background-color: rgba(255, 255, 255, 0.9);
+	-moz-box-shadow: 0em 0em .5em #666;
+	-webkit-box-shadow: 0em 0em .5em #666;
+	box-shadow: 0em 0em .5em #666;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 1.2em;
+}
+.TDS_CCInvert .drag-proxy { 
+    background-color: rgba(156,156,156,0.9);
+}
+.TDS_CCYellowB .drag-proxy, 
+.TDS_CCWhiteN .drag-proxy { 
+    background-color: rgba(56,104,156,0.9);
+}
+.drag-proxy.drag-proxy-over {
+    border: 4px solid #00aeef;
+}
+
+.TDS_PS_L1 .drag-proxy {
+	font-size: 1.5em;
+}
+.TDS_PS_L2 .drag-proxy {
+	font-size: 1.8em;
+}
+.TDS_PS_L3 .drag-proxy {
+	font-size: 2em;
+}
+.TDS_PS_L4 .drag-proxy {
+	font-size: 2.3em;
+}
+.draggable.drop-target { /* all elements that can accept current dragged element */
+	-webkit-opacity: 0.5;
+	-moz-opacity: 0.5;
+	opacity: 0.5;
+	background-color: rgb(109, 207, 246);
+	background-color: rgba(109, 207, 246, 0.2);
+}
+.TDS_CCBlue .draggable:hover, .TDS_CCBlue2 .draggable:hover, .TDS_CCBlue .draggable.drop-target, .TDS_CCBlue2 .draggable.drop-target {
+	background-color: rgb(168, 100, 168);
+	background-color: rgba(168, 100, 168, 0.2);
+}
+
+
+.TDS_CCInvert .draggable:hover, 
+.TDS_CCInvert .draggable.drop-target, 
+.TDS_CCYellowB .draggable:hover, 
+.TDS_CCYellowB .draggable.drop-target, 
+.TDS_CCWhiteN .draggable:hover, 
+.TDS_CCWhiteN .draggable.drop-target {
+	background-color: rgba(255,152,255,0.5);
+}
+
+
+.draggable.drag-over { /* current drop-target element that is under the mouse pointer at the moment */
+	-webkit-opacity: 1;
+	-moz-opacity: 1;
+	opacity: 1;
+}
+
+.drag-group.drop-target {
+    background-color: rgb(109, 207, 246);
+	background-color: rgba(109, 207, 246, 0.2);
+	-moz-transition: background-color .2s ease-in;
+    -webkit-transition: background-color .2s ease-in;
+    -o-transition: background-color .2s ease-in;
+    transition: background-color .2s ease-in;
+}
+.drag-group.drop-target.drag-over {
+    background-color: #00aeef;
+}
+
+.drag-group.drop-target.drop-target-collapsed {
+    display: inline-block;
+    height: 1em;
+    vertical-align: top;
+	width: 30px;
+}
+
+.drop-marker {
+    display: inline-block;
+    height: .5em;
+    padding: .2em;
+    margin-left: .2em;
+    margin-right: .2em;
+    margin-top: .2em;
+    vertical-align: top;
+	width: 7px;
+	background: #00aeef url(../images/droppoint.png) no-repeat center center;
+}
+/* @group Styling lists */
+
+ol.insteraction, ul.insteraction {
+	display: block;
+	margin-left: 2em;
+	margin-right: 2em;
+}
+
+/* @end */
+
+/* @group Order Interaction */
+
+.interaction.order-group {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.interaction.order-choice { /* <li>'s that can be ordered */
+    background-color: rgba(235, 235, 235, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 3px;
+    color: #000000;
+    display: block;
+    margin: .3em;
+    padding: .3em;
+    text-decoration: none;
+    /* -- Messes with Android 4.2.2
+    transition: all 0.3s linear 0s;*/
+    min-height: 1em;
+}
+.interaction.order-choice:hover {
+    border-color: #00abf4;
+}
+.interaction.order-choice.order-source { /* element user is dragging */
+	border-color: #cbddf3;
+	text-indent: -9999px;
+	background-color: transparent;
+	-moz-box-shadow: 0em 0em .5em #ececec;
+	-webkit-box-shadow: 0em 0em .5em #ececec;
+	box-shadow: 0em 0em .5em #ececec;
+	transition: all 0.2s linear 0s;
+}
+.order-proxy {
+    width: 100%;
+    cursor: move;
+    line-height: 1.3em;
+}
+.TDS_PS_L0 .order-proxy { 
+	font-size: 1.5em; 
+}
+.TDS_PS_L1 .order-proxy { 
+	font-size: 2em; 
+}
+.TDS_PS_L2 .order-proxy{ 
+	font-size: 2.3em; 
+}
+.TDS_PS_L3 .order-proxy{ 
+	font-size: 3.1em; 
+}
+.TDS_PS_L4 .order-proxy{ 
+	font-size: 4.5em; 
+}
+
+
+/* @end */
+
+/* to allow highlighting */
+.interaction, 
+.edit-container *, 
+.format_etc .stemContainer *, 
+.compound .stemContainer * {
+	-moz-user-select: element !important;
+	-webkit-user-select: auto !important;
+	-ms-user-select: auto !important;
+	user-select: element !important;
+}
+.edit-container,
+.interaction, 
+.format_etc .stemContainer, 
+.compound .stemContainer  {
+	-ms-user-select:text !important;
+}

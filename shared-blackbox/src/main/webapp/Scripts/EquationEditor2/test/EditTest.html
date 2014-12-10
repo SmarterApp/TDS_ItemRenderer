@@ -1,0 +1,847 @@
+<html>
+  <head>
+  <meta>
+    <meta charset="UTF-8">
+  </meta>
+  <!--
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    -->
+     <script src="rangy-1.2.3/rangy-core.js"></script>
+     <script type="text/javascript" src="../../MathJax/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full"></script>
+     <script src="../config.js"></script>
+     <script src="../content.js"></script>
+     <script src="../editor.js"></script>
+     <link href="../mathjax_editor.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <script type="text/mml">
+    </script>
+    <script type="text/javascript">
+      var assertNoException = function(f, label, w) {
+        try {
+          f(w);
+        }catch(e){
+          console.error("Failed to run the test labeled: ", label, w, e);
+        }
+      };
+      var tName = null; 
+      MathJax.Editor.Config.Navigation = false;
+
+
+      tName = "Edit test with number selection.  Should end (123)^2";
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '1', 
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, '2', null, function(){
+              ed.updateMath(null, '3', null, function(){
+                ed.updateMath(null, '^2');
+              })
+            })
+          }
+      });
+
+      tName = 'Editing in parens test.  Should be empty at the end.';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '', 
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, '(\\Box)', null, function(){
+              ed.updateMath(null, 'g', null, function(){
+                ed.remove();
+              });
+            });
+          }
+      });
+
+
+      tName = 'Editing in parens test.  Editing in multiple chained parens.  Should end: (g(\\Box)1)';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '', 
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, '(\\Box)', null, function(){
+              ed.updateMath(null, 'g', null, function(){
+                ed.right(); //Intentionally do not put parens around g
+                ed.updateMath(null, '(\\Box)', null, function(){
+                  ed.right(); ed.right();
+                  ed.updateMath(null, '1');
+                });
+              });
+            });
+          }
+      });
+
+      tName = 'Editing in parens test.  Should end f(g(x))';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: 'f(\\Box)', //Start empty..
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, 'g', null, function(){
+              ed.right();
+              ed.updateMath(null, '(\\Box)', null, function(){
+                ed.updateMath(null, 'x');
+              });
+            });
+          }
+        });
+
+      tName = 'Edit mrow, do not corrupt internal mrows. Should end (\\Box) 1/\\Box';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '', //Start empty..
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.right();
+            ed.updateMath(null, '(\\Box)', null, function(){
+              ed.right(); 
+              ed.right(); 
+              ed.updateMath(null, '1', null, function(){
+                ed.updateMath(null, '\\frac{\\Box}{\\Box}'); 
+              });
+            });
+          }
+        });
+
+      tName = 'Top level row insert test.  Should end x \\div';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: 'x \\div',
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.left();
+            ed.right();
+            ed.updateMath(null, '(\\Box)', null, function(){
+              ed.remove();
+            });
+          }
+      });
+
+      tName = 'Box replacement in power, should end {\\frac \\Box \\Box}^\\Box';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '\\Box^\\Box',
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.left();
+            ed.updateMath(null, '\\frac \\Box \\Box');
+          }
+      });
+
+
+      tName = 'Box replacement.  Should end (\\frac(\\Box)\\Box) ^ 2';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '\\Box^2',
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.left();
+
+            ed.updateMath(null, '(\\Box)', null, function(){
+              ed.right();   
+              ed.right();
+              ed.updateMath(null, '\\frac \\Box \\Box');
+            });
+          }
+      });
+
+      tName = "Insert not into mrow test.   Should end f(x) and x";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: ['\\displaystyle f', 'x'], 
+        cb: function(w){
+          var ed = w.getEdit();
+          ed.updateMath(null, '{x}', null, function(){
+            ed.right(); 
+            ed.right();
+            ed.updateMath(null, '=', null, function(){ 
+              //Ensure it inserted "out" for the {x} row, if it didn't, right and delete
+              //will delete the entire (x)= instead of just =
+              ed.right();
+              ed.remove();
+            });
+          })
+        }
+      });
+
+
+      tName = "Magical row selection test, shoudl end 1+(1.1)";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>+</mo><mn>1</mn><mo>.</mo><mn>1</mn></math>',
+        cb: function(w){
+          var ed = w.getEdit();
+          ed.updateMath(null, '(\\Box)');
+        }
+      });
+
+
+      tName = "Test fraction creation with two internal mrow elements.  Should end frac 1 {(2)(\\Box)}";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\frac 1 2',
+        cb: function(w){
+          var ed = w.getEdit();
+          ed.updateMath(null, '(\\Box)', null, function(){
+            ed.right(); ed.right();
+            ed.updateMath(null, '(\\Box)', null);
+          });
+        }
+      });
+
+      tName = "Test fraction creation with two internal mrow elements.  Should end frac 1 {1 + 1}";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\frac 1 2',
+        cb: function(w){
+          var ed = w.getEdit();
+          ed.updateMath(null, '(\\Box)', null, function(){
+            ed.right(); ed.right();
+            ed.updateMath(null, '1+1', null, function(){
+              ed.left(); ed.left(); ed.left();
+              MathJax.Hub.Queue(function() { 
+                ed.removeQueue(null, ed.removeQueue.bind(ed, null)); 
+              });
+            });
+          });
+        }
+      });
+
+      tName = "Magic Numbers Test, Should end (1.)^x";
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>+</mo><mn>1</mn><mo>.</mo></math>',
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, "\\Box^x", null, function(){});
+          }
+      });
+
+
+
+      tName = "Magic Numbers Test, Should end 1 + 10^x ";
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>+</mo><mn>1</mn><mn>0</mn></math>',
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, "\\Box^x", null, function(){});
+          }
+      });
+
+      tName = "Cos & Sin test to ensure we do not get too many parens.  Should end sin(1+cos(\\Box)) with no extra parens";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        cb: function(w){
+          var ed = w.getEdit();
+          ed.updateMath(null, "\\sin(1 + \\Box)", null, function(){
+            ed.updateMath(null, "\\cos(\\Box)");
+          });
+        }
+      });
+
+      tName = "Magic Numbers Test, Row selection related.  Should end 1 + {11.2}^\\Box"
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>+</mo><mn>1</mn><mn>1</mn><mo>.</mo><mn>2</mn></math>',
+        cb: function(w){
+          var ed = w.getEdit();
+            ed.updateMath(null, "\\Box^\\Box", null, function(){
+          });
+        }
+      });
+
+      tName = "Magic Numbers Test, Multiple dots / bad math test.  Should end 1.{11.2}^\\Box"
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>.</mo><mn>1</mn><mn>1</mn><mo>.</mo><mn>2</mn></math>',
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, "\\Box^\\Box", null, function(){});
+          }
+      });
+
+
+      tName = "Ensure we are guessing the correct cursor, should end x/x";
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: 'x',
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, "\\frac{\\Box}{\\Box}", null, function(){
+              console.log("Post fraction update.");
+              ed.updateMath(null, 'x');
+            });
+          }
+      });
+      tName = "Test Creation of a basic mrow element, then remove it safely, should be \\Box";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle x',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.updateMath(null, "\\lvert\\Box\\rvert", null, function(){
+            ed.remove();
+          });
+        }, tName)
+      });
+
+      tName = "Test a complex substitution of an abs should end |x|";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle x',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.updateMath(null, "\\lvert\\Box\\rvert");
+        }, tName)
+      });
+
+      tName = "Test a complex substitution of a sqrt should end \\sqrt{x+1}";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle x',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.updateMath(null, "\\sqrt{\\Box + 1}");
+        }, tName)
+      });
+
+      tName = "Test a complex substitution of a sqrt should end \\sqrt[Box]{x+1}";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle x',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.updateMath(null, "\\sqrt[\\Box]{\\Box + 1}");
+        }, tName)
+      });
+
+
+      tName = "Test a complex substitution of a (\\Box) should end (x2)";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle x',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.updateMath(null, "{\\Box}", null, function() {
+            ed.updateMath(null, '2');
+          });
+        }, tName)
+      });
+
+      tName = "Test a complex substitution of a sqrt should end \\sqrt{x+1}";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle x',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.updateMath(ed.getLast(), "\\sqrt{\\Box + 1}");
+        }, tName)
+      });
+
+      tName = "Update Fraction test with other magic fractions, should end \\frac{\\frac\\Box\\Box} \\Box";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle {}',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.updateMath(null, '\\frac \\Box {\\Box}', null, function(){
+            this.right();
+            this.right();
+            ed.updateMath(null, '\\frac{\\Box}{\\Box}');
+          }.bind(ed));
+        }, tName)
+      });
+
+      tName = "Stretchy Parens.(cannot click the parens / they are not real)";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle \\left(\\Box^2+1\\right)',
+        cb: assertNoException.bind(this, function(w) {
+        }, tName)
+      });
+
+      tName = "Chain paren test.  Should end: 1^(a+1)^x+1";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle 1^\\Box',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.setCursor(ed.getLast());
+          ed.updateMath(null, 'a+1', null, function() {
+            ed.right();
+            ed.updateMath(null, '\\Box^{x+1}');
+          });
+        }, tName)
+      });
+      tName = "Should end \\sqrt{(x+1)^\\Box}";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle \\sqrt {x+1}',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.left();
+          ed.left();
+          ed.left();
+          ed.updateMath(null, '\\Box^\\Box');
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Should end with 1^(a+1) Parens around the exponent test";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle 1^\\Box',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.setCursor(ed.getLast());
+          ed.updateMath(null, 'a+1');
+        }, tName)
+      });
+
+      tName = "Fraction Test \\sqrt{x^2} should end with \\sqrt{x^2} over \\Box (tests magical fraction replacements.";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle \\sqrt {x^2}',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.left();ed.left();ed.left();ed.left();
+          ed.updateMath(null, '\\frac{\\Box}{\\Box}');
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Delete from append mode test.  Should end with only 'ok'";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle ok 2 3',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.setCursor(ed.getLast());
+          ed.right(); //Force into append mode.
+
+          ed.remove(null, ed.remove.bind(ed));
+
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Starts as {2x}^2, selects the mrow of the subsup, deletes it.  Should end: \\Box^2";
+      new MathJax.Editor.Widget({ 
+          contentLabel: tName,
+          TeX: '{(2x)}^2',
+          cb: assertNoException.bind(this, function(w){
+            var ed = w.getEdit();
+            ed.left();
+            ed.left();
+            ed.left();//Selects the entire mrow part of {2x}
+            ed.remove();
+          }, tName)
+      });
+
+      tName = 'Test to ensure that fraction editing does not break.  Should end \\frac {1^\\Box} \\Box';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: "\\frac 1 \\Box",
+          cb: assertNoException.bind(this,function(w){
+            var ed = w.getEdit();
+            ed.setCursor(ed.getFirst());
+            ed.updateMath(null, '\\Box^\\Box');
+
+          }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Test Box replacement in fractions.  Ends \\frac {\\Box} {\\frac \\Box \\Box}";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\frac{\\Box}{\\Box}',
+        cb: assertNoException.bind(this, function(w){
+          var ed = w.getEdit();
+              ed.updateMath(ed.getLast(), '\\frac{\\Box}{\\Box}');
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Test that we are replacing simple math with proper mRows in fractions. Ends: \\frac {\\frac 1 \Box} 2";
+      new MathJax.Editor.Widget({ 
+          contentLabel: tName,
+          TeX: '\\frac{1}{2}',
+          cb: assertNoException.bind(this, function(w){
+             var ed = w.getEdit();  
+             ed.updateMath(ed.getFirst(), '\\frac{\\Box}{\\Box}');
+          }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = 'Entity test, insert a "-" sign into fraction.  Ends \\frac {b-}{3}  a';
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle \\frac{b}{3} a',
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          var fn = ed.getFirst();
+              ed.setCursor(fn);
+          ed.updateMath(null, '-'); 
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "\\Box replace test.  Should end \\frac {\\Box} {\\Box_\\Box}";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        cb: assertNoException.bind(this, function(w) {
+          var ed = w.getEdit();
+          ed.updateMath(null, "\\frac{\\Box}{\\Box}", null, function(){
+            ed.setCursor(ed.getLast());
+            ed.updateMath(null, '\\Box_\\Box', 'INSERT');
+          });
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Test that we do not remove the base mrow.  Should end empty";
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '\\Box',
+          cb: assertNoException.bind(this, function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, '\\int_z^2', null, 
+              ed.remove.bind(ed, null, 
+                ed.remove.bind(ed, null, 
+                  ed.remove.bind(ed, null)
+                  )
+                )
+              );
+          }, tName)
+      });
+
+
+      tName = "Ensure that both unshift and append fractions add correctly.  Should end with: " + 
+      "\\frac \\Box \\Box x \\frac \\Box \\Box";
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: 'x',
+          cb: assertNoException.bind(this, function(w){
+            var e  = w.getEdit();
+            e.left(); e.left();
+            e.makeFraction(null, '');
+
+            MathJax.Hub.Queue(function(){
+              e.setCursor(e.getLast());
+              e.right(); e.right();
+              e.makeFraction(null, '');
+            });
+          }, tName)
+      });
+
+      tName = "Ensure function removes are safe.  Should not Math Process error.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: "\\cos\\left(\\Box\\right)",
+        cb: assertNoException.bind(this, function(w){
+          var e = w.getEdit();
+          e.remove(e.getFirst());
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+    
+      tName = "Update Editors.  Starts as x+9, should end with 2 lines.   x+1 & x+2"; 
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          mathML: '<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>+</mo><mn>9</mn></math>',
+          cb: function(w){
+          try{
+             var mml =[
+              '<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>+</mo><mn>1</mn></math>',
+              '<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>+</mo><mn>2</mn></math>'
+             ];
+             w.updateEditors(mml);
+             }catch(e){
+              console.error('Failed to set the math on our edit test.', e);
+             }
+          }
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+      tName = "Full remove test of a power and a row.   Should be empty.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '{x1}^2',
+        TeXEntryMode: 'Allow',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+          edit.left();
+          
+          edit.remove(null, edit.remove.bind(edit, null, edit.remove.bind(edit, null)));
+          edit.Update();
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Delete empty row tests with a fraction with mrows, should be empty.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\frac{x+1}2',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+          edit.setCursor(edit.getFirst());
+
+          edit.remove(null, 
+            edit.remove.bind(edit, null,
+              edit.remove.bind(edit, null,
+                edit.remove.bind(edit)
+              )
+            )
+          );
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Clear Test.   Starts with math, then uses the clear operation.  Should be empty.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\sqrt{x^2+y^{2}}',
+        cb: assertNoException.bind(this, function(w) {
+          w.clearAll();
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+      tName = "Remove Test, Starts as \\sqrt{x} bcomes \\sqrt{\\Box} after the first remove and should end \\sqrt{zy}";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\sqrt{x}',
+        TeXEntryMode: 'Allow',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+              edit.remove();
+              edit.Update(function(){
+                edit.updateMath(null, 'z');
+                edit.updateMath(null, 'y');
+              });
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Start as x + x^2 and ends x + x^\\Box x +1";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        //TeX: '\\displaystyle x + x^2',
+        TeX: '\\displaystyle {x + x^2}',
+        TeXEntryMode: 'Allow',
+        cb: assertNoException.bind(this, function(w) {
+          var toReplace = w.getEdit().getLast();
+          var edit = w.getEdit();
+          edit.remove(edit.getLast(), function(){
+            edit.rightQ();
+            edit.updateMath(null, "x+1");
+          });
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+
+      tName = "Tests the UNSHIFT operation.  Starts x should end y + 1x";
+      new MathJax.Editor.Widget({ 
+        contentLabel: tName,
+        TeX: '\\displaystyle x',
+        TeXEntryMode: 'Vim',
+        cb: assertNoException.bind(this, function(w) {
+          //w.getEdit().makeEditable(toReplace);
+          //w.getEdit().remove();
+          //w.getEdit().Update();
+          w.getEdit().unshift('y + 1');
+          w.getEdit().Update();
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+
+      //TODO: Create more mathML validation tests.
+      tName = "Starts as x^{x+1} and should end as xz^{x+1x+1} and have selected the first x in the exp";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: 'x^{x+1}',
+        cb: assertNoException.bind(this, function(w) {
+          var toInsert = null;
+
+          toInsert = w.getEdit().getLast();
+          w.getEdit().makeEditable(toInsert);
+          w.getEdit().insert(toInsert, 'x + 1');
+
+          toInsert = w.getEdit().getFirst();
+          w.getEdit().makeEditable(toInsert);
+          w.getEdit().insert(toInsert, 'z'); 
+          w.getEdit().right();
+          w.getEdit().Update();
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+      tName = "Starts as \\sqrt{x^2+y^2} should end as \\sqrt{x^2+y^{2 - 2 + y + \\frac{x}{y+1}}}";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\sqrt{x^2+y^{2}}',
+        cb: assertNoException.bind(this, function(w) {
+          var ins = w.getEdit().getLast();
+          w.getEdit().insert(ins, '- 2 + y + \\frac{x}{y+1}');
+          w.getEdit().Update();
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+      tName = "Clean up empty Row Test.  Will console error if something is wrong.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\displaystyle x+1',
+        cb: assertNoException.bind(this, function(w) {
+          var ed  = w.getEdit();
+          var ins = ed.getLast();
+
+          ed.remove(null, true);
+          ed.remove(null, true);
+          ed.remove(null, true, function() {
+            if(!w.isEmpty()){
+              console.log(w.toMathML());
+              w.setLabel('FAILED TEST!' + w.CFG.contentLabel);  
+            }
+          });
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+      tName = "Starts as \\frac{x}{y} and should end \\frac{x}{\\Box}";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\frac{x}{y}',
+        cb: assertNoException.bind(this, function(w) {
+          var ins = w.getEdit().getLast();
+          w.getEdit().makeEditable(ins);
+          w.getEdit().remove();
+          w.getEdit().Update();
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+      tName = "Undo Test.  Inits x+1, deletes 2 times, should undo back to x+1 (it can take a second)";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        mathML: '<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>+</mo><mn>1</mn></math>',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+          var ins = w.getEdit().getLast();
+          edit.remove(null, function(){
+            var edit = w.getEdit();
+            edit.undo();
+            edit.Update();
+          });
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = "Edit with complex row inserts.  Starts \\sqrt{x^2} + 1 and should end \\sqrt{x^2} + cos(x)1";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\sqrt{x^2} + 1',
+        cb: assertNoException.bind(this, function(w) {
+          var ins = w.getEdit().getLast();
+          w.getEdit().left();
+          w.getEdit().insert(w.getEdit().getCursor(), '\\cos(x)');
+          w.getEdit().Update();
+        }, tName)
+      });
+
+      tName = "Delete All test using remove 3x";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\displaystyle {x+1}',
+        cb: assertNoException.bind(this, function(w) {
+          w.getEdit().remove();
+          w.getEdit().remove();
+          w.getEdit().remove(null, true);
+        }, tName)
+      });
+
+      tName = "Test to ensure that the item is not empty.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\displaystyle x',
+        cb: assertNoException.bind(this, function(w) {
+          if(w.getEdit().isEmpty()){
+            w.setLabel("Error.  This is detected as empty.");
+          }
+        }, tName)
+      });
+
+      tName = "Mrow unshift test, should produce only 1 mrow.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\displaystyle {x + 2}',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+              edit.append('x');
+          edit.Update();
+        }, tName)
+      });
+
+      tName = "No mrow add with x+2 and unshift x.  Ends xx+2";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\displaystyle x + 2',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+              edit.unshift('x');
+          edit.Update();
+        }, tName)
+      });
+
+      tName = "Unshift Text with an mrow {x+2} and unshift x-1";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\displaystyle {x + 2}',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+              edit.unshift('x-1');
+          edit.Update();
+        }, tName)
+      });
+
+      tName = "Complex element Append Test \\sqrt{{x+2}^2} and append x^2";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\displaystyle \\sqrt{{x + 2}^2}',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+          edit.append('x^2');
+          edit.Update();
+        }, tName)
+      });
+
+      tName = "Should end with x{x+2}^2";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\displaystyle {x + 2}^2',
+        cb: assertNoException.bind(this, function(w) {
+          var edit = w.getEdit();
+              edit.unshift('x');
+          edit.Update();
+        }, tName)
+      });
+    </script>
+    </body>
+</html>
+

@@ -1,0 +1,103 @@
+h3.moogle-Header {
+	background-color: rgb(235, 235, 235);
+    background-color: rgba(235, 235, 235, 0.5);
+	display: inline-block;
+	clear: both;
+	font-weight: bold;
+	padding: .3em;
+	line-height: 1.5em;
+	font-size: 1.1em;
+	border: 1px solid #efefef;
+}
+/* is this needed?
+.moogle-title {
+    background: -webkit-linear-gradient(top, #fff, #eee);
+    color: red;
+    font-size: 16pt;
+}*/
+
+.moogle-resultTitle {
+    color: #2cb436;
+    border-bottom: dashed 1px #2cb436;
+    display: inline-block;
+    margin-bottom: .2em; 
+}
+.moogle-resultTitle:hover {
+    color: #0785AB;
+    border-bottom: solid 1px #0785AB;
+}
+.moogle-thumbnailLeft {
+    float: left;
+}
+
+.moogle-snippetRight {
+    float: right;
+}
+
+.moogle-show a:hover {
+    cursor: pointer;
+}
+
+.moogle-show {
+	display: block;
+}
+.moogle-show:before {
+	content: ""; 
+	clear: both; 
+	display: block;
+}
+.moogle-hide {
+	display: none;
+}
+
+
+
+.moogle-btiLink {
+   	background: url(arrows.png) no-repeat -24px -1205px;
+	min-height: 28px;
+	padding-left: 32px;
+	padding-top: 6px;
+	float: left;
+	margin-bottom: .5em;
+}
+.moogle-btiLink:hover, .moogle-btiLink:active, .moogle-btiLink:focus  {
+   	background-position: -24px -1305px;
+   	cursor: pointer;
+   	color: #0785AB;
+}
+.TDS_PS_L1 .moogle-btiLink {
+    background-position: -22px -905px;
+	min-height: 36px;
+	padding-left: 40px;
+	padding-top: 6px;
+}
+.TDS_PS_L1 .moogle-btiLink:hover, .TDS_PS_L1 .moogle-btiLink:active, .TDS_PS_L1 .moogle-btiLink:focus  {
+   	background-position: -22px -1005px;
+}
+.TDS_PS_L2 .moogle-btiLink {
+    background-position: -20px -605px;
+	min-height: 40px;
+	padding-left: 45px;
+	padding-top: 6px;
+}
+.TDS_PS_L2 .moogle-btiLink:hover, .TDS_PS_L2 .moogle-btiLink:active, .TDS_PS_L2 .moogle-btiLink:focus  {
+   	background-position: -20px -705px;
+}
+.TDS_PS_L3 .moogle-btiLink {
+    background-position: -14px -305px;
+	min-height: 50px;
+	padding-left: 60px;
+	padding-top: 6px;
+}
+.TDS_PS_L3 .moogle-btiLink:hover, .TDS_PS_L3 .moogle-btiLink:active, .TDS_PS_L3 .moogle-btiLink:focus  {
+   	background-position: -14px -405px;
+}
+.TDS_PS_L4 .moogle-btiLink {
+    background-position: -9px -5px;
+	min-height: 60px;
+	padding-left: 70px;
+	padding-top: 6px;
+}
+.TDS_PS_L4 .moogle-btiLink:hover, .TDS_PS_L4 .moogle-btiLink:active, .TDS_PS_L4 .moogle-btiLink:focus  {
+   	background-position: -9px -105px;
+}

@@ -1,0 +1,239 @@
+.matchItemLines {
+    overflow: auto;
+    position: relative;
+    min-width: 22em;
+}
+.matchItemLines ul {
+	list-style:none;
+}
+.matchColumn  {
+	float:left;
+    text-align: center;
+    width: 10em;
+}
+.matchColumn li {
+    padding-top: .25em;
+    padding-bottom: .25em;
+}
+.matchSecondColumn {
+	float:right;
+}
+.matchColumn .innerContainer {
+    display:block;
+    color: #000;
+    text-decoration: none;
+    margin: 5px;
+    padding: 5px;
+    border: solid 1px transparent;
+    background-color: #ebebeb;
+    background-color: rgba(235, 235, 235, .7);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-transition: border-color .3s linear;
+	-moz-transition: border-color .3s linear;
+	transition: border-color .3s linear;
+}
+.matchFirstColumn .innerContainer  {
+	margin-right: 0px;
+}
+.matchSecondColumn .innerContainer  {
+	margin-left: 0px;
+}
+.matchColumn li .innerContainer:hover {
+    border-color: #00abf4;
+}
+.matchSelected .innerContainer, .contextAreaFocus .innerContainer  {
+    -moz-box-shadow:  0px 0px 3px 0px #666;
+    -webkit-box-shadow:  0px 0px 3px 0px #666;
+    box-shadow:  0px 0px 3px 0px #666;
+}
+.contextAreaFocus .innerContainer, .matchSelected .innerContainer {
+    border-color: #00abf4;
+}
+.matchMade .innerContainer  {
+	border-right-color: #0785AB;
+}
+.matchSecondColumn .matchMade .innerContainer {
+	border-left-color: #0785AB;
+	border-right-color: transparent;
+}
+.matchConnections a, .matchConnections li:nth-child(7) a {
+    position:absolute;
+    height:0px;
+    border-top: solid 3px #0785AB;
+    border-color: rgba(7, 131, 171, .6);
+    overflow:hidden;
+    text-indent:-9999px;
+}
+.ieline {
+    position:absolute !important;
+    height:0px !important;
+    border-top: solid 3px #0785AB !important;
+    overflow:hidden !important;
+    text-indent:-9999px !important;
+}
+.matchConnections li:nth-child(2) a, .matchConnections li:nth-child(8) a {
+	border-color: #1387aa;
+	border-color: rgba(19, 135, 170, .7);
+}
+.matchConnections li:nth-child(3) a, .matchConnections li:nth-child(9) a {
+	border-color: #298caa;
+	border-color: rgba(41, 140, 170, .8);
+}
+.matchConnections li:nth-child(4) a, .matchConnections li:nth-child(10) a {
+	border-color: #237993;
+	border-color: rgba(35, 121, 145, .6);
+}
+.matchConnections li:nth-child(5) a, .matchConnections li:nth-child(11) a {
+	border-color: #157491;
+	border-color: rgba(21, 116, 145, .7);
+}
+.matchConnections li:nth-child(6) a, .matchConnections li:nth-child(12) a {
+	border-color: #077191;
+	border-color: rgba(7, 113, 145, .8);
+}
+
+.matchColumn .contextAreaFocus {
+	border: none;
+}
+
+/* for table based match items*/
+.matchItemDemoAccesible-Ideal table {
+	margin-left: auto;
+	margin-right: auto;
+}
+.matchItemDemoAccesible-Ideal caption {
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+.matchItemDemoAccesible-Ideal th {
+	border: solid 1px #ccc;
+	padding: 3px 10px;
+	font-weight: bold;
+}
+.matchItemDemoAccesible-Ideal tr th:nth-child(1) {
+	border-top: none;
+}
+.matchItemDemoAccesible-Ideal thead th {
+	border-left: none;
+}
+.matchItemDemoAccesible-Ideal td {
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	position: relative;
+}
+
+/*.matchItemDemoAccesible-Ideal input {
+	visibility: hidden;
+	position: absolute !important;
+}*/
+.matchItemDemoAccesible-Ideal input {
+	z-index: 1;
+	width: 100% !important;
+	height: 30px;
+	float: left;
+	margin-bottom: -30px !important;
+	opacity: 0;
+	margin-top: 0px !important;
+}
+.TDS_PS_L0 .matchItemDemoAccesible-Ideal input.contextAreaFocus {
+	margin-bottom: -30px;
+}
+.matchItemDemoAccesible-Ideal label {
+	display: block;
+	width: 30px;
+	height: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	text-indent: -9999px;
+	overflow: hidden;
+	background: url(../../Shared/Images/checks.png) no-repeat 7px 5px;
+	-webkit-transition: background-color .3s linear;
+	-moz-transition: background-color .3s linear;
+	transition: background-color .3s linear;
+}
+/* hide anything that shouldn't be in the label tags */
+.matchItemDemoAccesible-Ideal label * {
+	opacity: 0;
+}
+.matchItemDemoAccesible-Ideal label:hover {
+	background-position: 7px -144px;
+}
+.matchItemDemoAccesible-Ideal input:checked + label, 
+.matchItemDemoAccesible-Ideal .matchItem_cellChecked label {
+	background-position: 7px -294px;
+}
+.matchItemDemoAccesible-Ideal input:active + label, 
+.matchItemDemoAccesible-Ideal input:focus + label {
+	background-color: #00abf4;
+}
+
+.TDS_PS_L1 .matchItemDemoAccesible-Ideal label {
+	width: 35px;
+	height: 35px;
+	background-position: 4px -446px;
+}
+.TDS_PS_L1 .matchItemDemoAccesible-Ideal input {
+	height: 35px;
+	margin-bottom: -35px !important;
+}
+.TDS_PS_L1 .matchItemDemoAccesible-Ideal label:hover {
+	background-position: 4px -622px;
+}
+.TDS_PS_L1 .matchItemDemoAccesible-Ideal input:checked + label, 
+.TDS_PS_L1 .matchItemDemoAccesible-Ideal .matchItem_cellChecked label {
+	background-position: 4px -797px;
+}
+
+.TDS_PS_L2 .matchItemDemoAccesible-Ideal label {
+	width: 45px;
+	height: 45px;
+	background-position: 4px -972px;
+}
+.TDS_PS_L2 .matchItemDemoAccesible-Ideal input {
+	height: 45px;
+	margin-bottom: -45px !important;
+}
+.TDS_PS_L2 .matchItemDemoAccesible-Ideal label:hover {
+	background-position: 4px -1172px;
+}
+.TDS_PS_L2 .matchItemDemoAccesible-Ideal input:checked + label, 
+.TDS_PS_L2 .matchItemDemoAccesible-Ideal .matchItem_cellChecked label {
+	background-position: 4px -1372px;
+}
+
+.TDS_PS_L3 .matchItemDemoAccesible-Ideal label {
+	width: 60px;
+	height: 60px;
+	background-position: 4px -1572px;
+}
+.TDS_PS_L3 .matchItemDemoAccesible-Ideal input {
+	height: 60px;
+	margin-bottom: -60px !important;
+}
+.TDS_PS_L3 .matchItemDemoAccesible-Ideal label:hover {
+	background-position: 4px -1822px;
+}
+.TDS_PS_L3 .matchItemDemoAccesible-Ideal input:checked + label, 
+.TDS_PS_L3 .matchItemDemoAccesible-Ideal .matchItem_cellChecked label {
+	background-position: 4px -2072px;
+}
+
+.TDS_PS_L4 .matchItemDemoAccesible-Ideal label {
+	width: 75px;
+	height: 75px;
+	background-position: 5px -2320px;
+}
+.TDS_PS_L4 .matchItemDemoAccesible-Ideal input {
+	height: 75px;
+	margin-bottom: -75px !important;
+}
+.TDS_PS_L4 .matchItemDemoAccesible-Ideal label:hover {
+	background-position: 5px -2621px;
+}
+.TDS_PS_L4 .matchItemDemoAccesible-Ideal input:checked + label, 
+.TDS_PS_L4 .matchItemDemoAccesible-Ideal .matchItem_cellChecked label {
+	background-position: 5px -2920px;
+}

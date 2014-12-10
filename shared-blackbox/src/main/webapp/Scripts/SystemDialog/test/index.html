@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <title>System Dialog</title>
+
+    <link href="../../Libraries/YUI/button/assets/skins/sam/button.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../Libraries/YUI/container/assets/skins/sam/container.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../../Shared/CSS/normalize.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../../Shared/CSS/modernshell.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../../Shared/CSS/dialogs.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../Slideshow/show.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../../Shared/CSS/items.css" rel="stylesheet" media="all" type="text/css">
+    
+    <!-- YUI -->
+    <script src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/element/element.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/button/button.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/container/container.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/dragdrop/dragdrop.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/slider/slider.js" type="text/javascript"></script>
+
+    <!-- Utils -->
+    <script type="text/javascript" src="../../Utilities/util.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_object.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_date.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_manager.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_frame.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_storage.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_slider.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_mozilla.js"></script>
+    <script type="text/javascript" src="../../Messages/messages_legacy.js"></script>
+
+    <!-- Secure Browser -->
+    <script type="text/javascript" src="../../SecureBrowser/Summit/air_mobile_2.js"></script>
+    <script type="text/javascript" src="../../SecureBrowser/factory.js"></script>
+    <script type="text/javascript" src="../../SecureBrowser/base.js"></script>
+    <script type="text/javascript" src="../../SecureBrowser/base.recorder.js"></script>
+    <script type="text/javascript" src="../../SecureBrowser/firefox.js"></script>
+    <script type="text/javascript" src="../../SecureBrowser/firefox.recorder.js"></script>
+    <script type="text/javascript" src="../../SecureBrowser/chrome.js"></script>
+    <script type="text/javascript" src="../../SecureBrowser/mobile.android.js"></script>
+    <script type="text/javascript" src="../../SecureBrowser/mobile.ios.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_securebrowser.js"></script>
+    
+    <!-- System Dialog -->
+    <script src="../../SystemDialog/base.js" type="text/javascript"></script>
+    <script src="../../SystemDialog/Controls/volume.js" type="text/javascript"></script>
+
+</head>
+
+<body class="yui-skin-sam TDS_PS_L0">
+
+    <div>
+        <a id="btnOpenDialog" href="#">Open</a>
+    </div>
+
+    <script type="text/javascript">
+
+        YUE.on('btnOpenDialog', 'click', function () {
+            TDS.SystemDialog.open();
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT simulationItem (definition, initialization?, state?, input, animation?, display?, evaluation?, semantics?, control?)>
+<!ATTLIST simulationItem mode (operation | validation) #REQUIRED>
+<!ATTLIST simulationItem language CDATA #REQUIRED>
+<!ATTLIST simulationItem height CDATA #IMPLIED>
+<!ATTLIST simulationItem width CDATA #IMPLIED>
+<!ATTLIST simulationItem xmlns CDATA #IMPLIED>
+<!ATTLIST simulationItem itemName CDATA #IMPLIED>
+<!ATTLIST simulationItem speechEnabled (yes | no) "no" >
+
+<!ELEMENT initialization (initializationSpec+)>
+<!ELEMENT initializationSpec EMPTY >
+<!ATTLIST initializationSpec variable CDATA #REQUIRED>
+<!ATTLIST initializationSpec value CDATA #REQUIRED>
+<!ATTLIST initializationSpec persistent (yes | no) "no" >
+
+<!ELEMENT state (stateSpec+)>
+<!ELEMENT stateSpec EMPTY >
+<!ATTLIST stateSpec variable CDATA #IMPLIED>
+<!ATTLIST stateSpec tableName CDATA #IMPLIED>
+
+<!ELEMENT definition (layout)>
+
+<!ELEMENT layout (informationPanel?, inputPanel, animationPanel?, dataOutputPanel?, controlPanel?, grid?) >
+<!ATTLIST layout format CDATA #REQUIRED>
+
+<!ELEMENT inputPanel (panelSpec) >
+
+<!ELEMENT panelSpec EMPTY >
+<!ATTLIST panelSpec top CDATA #IMPLIED >
+<!ATTLIST panelSpec left CDATA #IMPLIED >
+<!ATTLIST panelSpec float (left | right |none) #IMPLIED >
+<!ATTLIST panelSpec display (inline | block |none | hidden) #IMPLIED >
+<!ATTLIST panelSpec height CDATA #REQUIRED >
+<!ATTLIST panelSpec width CDATA #REQUIRED >
+<!ATTLIST panelSpec borderColor CDATA #IMPLIED >
+<!ATTLIST panelSpec backgroundColor CDATA #IMPLIED >
+<!ATTLIST panelSpec headerText CDATA #IMPLIED >
+<!ATTLIST panelSpec initialFocus (yes | no) "no" >
+
+<!ELEMENT informationPanel (panelSpec) >
+<!ATTLIST informationPanel button CDATA #IMPLIED >
+<!ATTLIST informationPanel instructions CDATA #IMPLIED >
+<!ATTLIST informationPanel title CDATA #IMPLIED >
+
+<!ELEMENT animationPanel (panelSpec) >
+
+<!ELEMENT dataOutputPanel (panelSpec) >
+
+<!ELEMENT controlPanel (panelSpec) >
+
+<!ELEMENT grid EMPTY >
+<!ATTLIST grid visibility (visible | hidden) #REQUIRED>
+
+<!ELEMENT input (section+)>
+<!ELEMENT section (inputElement | commandElement | staticElement)+>
+<!ELEMENT inputElement (slider | optionList | choiceList | dropList |upDownCounter |  textField)+>
+<!ATTLIST inputElement controllingSource CDATA #IMPLIED >   <!-- indicates that the definition of this input element is dependent on the element identified by the value of this attribute -->
+<!ATTLIST inputElement controllingSourceValue CDATA #IMPLIED >   <!-- indicates that the definition of this input element should be displayed if the element identified by the value of 'controllingSource' attribute has the value of this attribute -->
+<!ATTLIST inputElement showAtLoad (yes | no) #IMPLIED >  <!-- Determines whether or not the element should be shown with its initial values at load time if it is dependent on a controlling element  -->
+
+<!ATTLIST section label CDATA #IMPLIED>
+<!ATTLIST section divider (yes | no) "yes">
+<!ATTLIST section image CDATA #IMPLIED >
+<!ATTLIST section spaceAbove CDATA #IMPLIED >
+<!ATTLIST section spaceBelow CDATA #IMPLIED >
+
+<!ELEMENT slider (valueList?, event*)>
+
+<!ELEMENT event EMPTY>
+<!ATTLIST event eName CDATA #FIXED "event">
+<!ATTLIST event direction (to | from) #REQUIRED>
+<!ATTLIST event type (input | inputReq | command | info ) #REQUIRED>
+<!ATTLIST event context CDATA #REQUIRED>
+<!ATTLIST event data CDATA #IMPLIED>
+<!ATTLIST event postOnChange (yes | no) "no">
+<!ATTLIST event completeWithoutOutput  (yes | no) "no">
+
+<!ATTLIST slider eName CDATA #FIXED "slider">
+<!ATTLIST slider type CDATA #REQUIRED>
+<!ATTLIST slider name CDATA #REQUIRED> 
+<!ATTLIST slider label CDATA #REQUIRED>
+<!ATTLIST slider image CDATA #IMPLIED>
+<!ATTLIST slider units CDATA #IMPLIED>
+<!ATTLIST slider inputScope CDATA #REQUIRED>
+<!ATTLIST slider minValue CDATA #REQUIRED>
+<!ATTLIST slider maxValue CDATA #REQUIRED>
+<!ATTLIST slider defaultValue CDATA #REQUIRED>
+<!ATTLIST slider increment CDATA #REQUIRED>
+<!ATTLIST slider displayLabel (yes | no) "yes">
+<!ATTLIST slider orientation (horizontal | vertical) "horizontal">
+<!ATTLIST slider spaceAbove CDATA #IMPLIED >
+<!ATTLIST slider spaceBelow CDATA #IMPLIED >
+<!ATTLIST slider scoreable (yes | no) "yes" >
+<!ATTLIST slider saveOnChange (yes | no) "yes" >
+<!ATTLIST slider startTrial  (yes | no) "no" >
+<!ATTLIST slider reportMovement  (yes | no) "no" >
+<!ATTLIST slider valueModifier CDATA #IMPLIED >
+<!ATTLIST slider modifierOp (add | subtract | multiply | divide) "add" >
+
+<!ATTLIST slider speechLabel  CDATA #IMPLIED >
+
+<!ELEMENT upDownCounter (event*)>
+<!ATTLIST upDownCounter eName CDATA #FIXED "upDownCounter">
+<!ATTLIST upDownCounter type CDATA #REQUIRED>
+<!ATTLIST upDownCounter name CDATA #REQUIRED> 
+<!ATTLIST upDownCounter label CDATA #REQUIRED>
+<!ATTLIST upDownCounter image CDATA #IMPLIED>
+<!ATTLIST upDownCounter inputScope CDATA #REQUIRED>
+<!ATTLIST upDownCounter minValue CDATA #REQUIRED>
+<!ATTLIST upDownCounter maxValue CDATA #REQUIRED>
+<!ATTLIST upDownCounter defaultValue CDATA #REQUIRED>
+<!ATTLIST upDownCounter increment CDATA #REQUIRED>
+<!ATTLIST upDownCounter units CDATA #IMPLIED>
+<!ATTLIST upDownCounter displayLabel (yes | no) "yes">
+<!ATTLIST upDownCounter spaceAbove CDATA #IMPLIED >
+<!ATTLIST upDownCounter spaceBelow CDATA #IMPLIED >
+<!ATTLIST upDownCounter scoreable (yes | no) "yes" >
+<!ATTLIST upDownCounter actOnChange (yes | no) "no" >
+<!ATTLIST upDownCounter actOnChangeWithMouseout (yes | no) "no" >
+<!ATTLIST upDownCounter interButtonDelay (yes | no) "yes" >
+<!ATTLIST upDownCounter valueModifier CDATA #IMPLIED >
+<!ATTLIST upDownCounter modifierOp (add | subtract | multiply | divide) "add" >
+<!ATTLIST upDownCounter startTrial  (yes | no) "no" >
+
+<!ATTLIST upDownCounter speechLabel  CDATA #IMPLIED >
+
+<!ELEMENT commandElement (button)+>
+<!ELEMENT button (event*)>
+
+<!ATTLIST button eName CDATA #FIXED "button">
+<!ATTLIST button name CDATA #REQUIRED> 
+<!ATTLIST button type (text | image | mixed) "text">
+<!ATTLIST button label CDATA #REQUIRED>
+<!ATTLIST button predefinedImage CDATA #IMPLIED>
+<!ATTLIST button image CDATA #IMPLIED>
+<!ATTLIST button handler CDATA #REQUIRED>
+<!ATTLIST button handlerParameters CDATA #IMPLIED>
+<!ATTLIST button implication (positive | neutral | negative) "neutral">
+<!ATTLIST button spaceAbove CDATA #IMPLIED >
+<!ATTLIST button spaceBelow CDATA #IMPLIED >
+<!ATTLIST button alwaysEnabled (yes | no ) "no" >
+
+<!ATTLIST button speechLabel  CDATA #IMPLIED >
+
+<!ELEMENT optionList (item+, event*)>
+<!ATTLIST optionList eName CDATA #FIXED "optionList">
+<!ATTLIST optionList type CDATA #REQUIRED>
+<!ATTLIST optionList name CDATA #REQUIRED> 
+<!ATTLIST optionList inputScope CDATA #REQUIRED>
+<!ATTLIST optionList label CDATA #REQUIRED>
+<!ATTLIST optionList image CDATA #IMPLIED>
+<!ATTLIST optionList displayLabel (yes | no) "yes">
+<!ATTLIST optionList spaceAbove CDATA #IMPLIED >
+<!ATTLIST optionList spaceBelow CDATA #IMPLIED >
+<!ATTLIST optionList scoreable (yes | no) "yes" >
+<!ATTLIST optionList saveOnChange (yes | no) "yes" >
+<!ATTLIST optionList startTrial  (yes | no) "no" >
+
+<!ATTLIST optionList speechLabel  CDATA #IMPLIED >
+
+<!ELEMENT item EMPTY>
+<!ATTLIST item eName CDATA #FIXED "item">
+<!ATTLIST item label CDATA #IMPLIED>
+<!ATTLIST item type CDATA #FIXED "item">
+<!ATTLIST item val CDATA #REQUIRED>
+<!ATTLIST item image CDATA #IMPLIED>
+<!ATTLIST item dataProxy CDATA #IMPLIED>
+<!ATTLIST item animationProxy CDATA #IMPLIED>
+<!ATTLIST item evaluationProxy CDATA #IMPLIED>
+<!ATTLIST item displayLabel (yes | no) "yes">
+<!ATTLIST item default (yes | no) "no">
+
+<!ATTLIST item speechLabel  CDATA #IMPLIED >
+
+<!ELEMENT valueList EMPTY>
+<!ATTLIST valueList  values CDATA #REQUIRED>
+
+<!ELEMENT choiceList (item+, event*)>
+<!ATTLIST choiceList eName CDATA #FIXED "choiceList">
+<!ATTLIST choiceList type CDATA #REQUIRED>
+<!ATTLIST choiceList name CDATA #REQUIRED> 
+<!ATTLIST choiceList label CDATA #REQUIRED>
+<!ATTLIST choiceList inputScope CDATA #REQUIRED>
+<!ATTLIST choiceList image CDATA #IMPLIED>
+<!ATTLIST choiceList dataProxy CDATA #IMPLIED>
+<!ATTLIST choiceList displayLabel (yes | no) "yes">
+<!ATTLIST choiceList spaceAbove CDATA #IMPLIED >
+<!ATTLIST choiceList spaceBelow CDATA #IMPLIED >
+<!ATTLIST choiceList scoreable (yes | no) "yes" >
+<!ATTLIST choiceList saveOnChange (yes | no) "yes" >
+<!ATTLIST choiceList startTrial  (yes | no) "no" >
+
+<!ATTLIST choiceList speechLabel  CDATA #IMPLIED >
+
+<!ELEMENT dropList (item+, event*)>
+<!ATTLIST dropList eName CDATA #FIXED "dropList">
+<!ATTLIST dropList name CDATA #REQUIRED> 
+<!ATTLIST dropList type CDATA #REQUIRED>
+<!ATTLIST dropList inputScope CDATA #REQUIRED>
+<!ATTLIST dropList label CDATA #REQUIRED>
+<!ATTLIST dropList image CDATA #IMPLIED>
+<!ATTLIST dropList selectionType (multiple | single) "single">
+<!ATTLIST dropList displayLabel (yes | no) "yes">
+<!ATTLIST dropList spaceAbove CDATA #IMPLIED >
+<!ATTLIST dropList spaceBelow CDATA #IMPLIED >
+<!ATTLIST dropList scoreable (yes | no) "yes" >
+<!ATTLIST dropList saveOnChange (yes | no) "yes" >
+<!ATTLIST dropList startTrial  (yes | no) "no" >
+
+<!ATTLIST dropList speechLabel  CDATA #IMPLIED >
+
+<!ELEMENT textField (event*)>
+<!ATTLIST textField eName CDATA #FIXED "textField">
+<!ATTLIST textField name CDATA #REQUIRED> 
+<!ATTLIST textField type CDATA #REQUIRED>
+<!ATTLIST textField label CDATA #IMPLIED>
+<!ATTLIST textField inputScope CDATA #REQUIRED>
+<!ATTLIST textField image CDATA #IMPLIED>
+<!ATTLIST textField fieldLength  CDATA #IMPLIED>
+<!ATTLIST textField initialText CDATA #IMPLIED>
+<!ATTLIST textField userEditable (yes | no) "yes">
+<!ATTLIST textField displayLabel (yes | no) "yes">
+<!ATTLIST textField spaceAbove CDATA #IMPLIED >
+<!ATTLIST textField spaceBelow CDATA #IMPLIED >
+<!ATTLIST textField scoreable (yes | no) "yes" >
+<!ATTLIST textField saveOnChange (yes | no) "yes" >
+<!ATTLIST textField startTrial  (yes | no) "no" >
+<!ATTLIST textField typeInputAllowed (alphaOnly | numericOnly | alphaNumericOnly | textOnly | all) "textOnly" >
+
+<!ATTLIST textField speechLabel  CDATA #IMPLIED >
+
+<!ELEMENT staticElement (imageElement | horizontalLine | verticalSpace | textConstant | sectionDivider)>
+
+<!ELEMENT imageElement EMPTY>
+<!ATTLIST imageElement eName CDATA #FIXED "imageElement">
+<!ATTLIST imageElement type CDATA #REQUIRED>
+<!ATTLIST imageElement name CDATA #REQUIRED> 
+<!ATTLIST imageElement image CDATA #IMPLIED>
+
+<!ELEMENT horizontalLine EMPTY>
+<!ATTLIST horizontalLine width CDATA #IMPLIED>
+<!ATTLIST horizontalLine height CDATA #IMPLIED>
+<!ATTLIST horizontalLine alignment (left | right | center | absolute) "center">
+<!ATTLIST horizontalLine distance CDATA #IMPLIED>
+<!ATTLIST horizontalLine ownSpace (yes | no) "yes" >
+
+<!ELEMENT textConstant EMPTY>
+<!ATTLIST textConstant text CDATA #REQUIRED >
+<!ATTLIST textConstant spaceAbove CDATA #IMPLIED >
+<!ATTLIST textConstant spaceBelow CDATA #IMPLIED >
+<!ATTLIST textConstant heavy (yes | no) "no" >
+
+<!ELEMENT sectionDivider EMPTY>
+
+<!ATTLIST  verticalSpace lines CDATA #REQUIRED>
+
+<!ELEMENT verticalSpace EMPTY>
+<!ATTLIST verticalSpace lines CDATA #REQUIRED>
+
+<!ELEMENT display (commandElement*, displayElement+, commandElement*)>
+
+<!ELEMENT animation (animationSet+, commandElement*, speechControls?)>
+
+<!ELEMENT animationSet (animationElement+, commandElement*, event*, animationThread+, poster?)>
+<!ATTLIST animationSet  eName CDATA #FIXED "animationSet">
+<!ATTLIST animationSet  name CDATA #REQUIRED>
+<!ATTLIST animationSet  outputs CDATA #IMPLIED>
+<!ATTLIST animationSet  scoreable (yes | no) "no" >
+<!ATTLIST animationSet inputSource CDATA #IMPLIED>
+<!ATTLIST animationSet inputs CDATA #IMPLIED>
+<!ATTLIST animationSet outputOnRequest  (yes | no) "yes">
+
+<!ELEMENT animationElement (inlineData?) >
+<!ATTLIST animationElement eName CDATA #FIXED "animationElement">
+<!ATTLIST animationElement name CDATA #REQUIRED>
+<!ATTLIST animationElement type (flash | video | image | animation | hotText | program | html5 ) #REQUIRED>
+<!ATTLIST animationElement label CDATA #IMPLIED>
+<!ATTLIST animationElement controls (yes | no) "no">
+<!ATTLIST animationElement src CDATA #REQUIRED>
+<!ATTLIST animationElement altText CDATA #REQUIRED>
+<!ATTLIST animationElement outputOnRequest  (yes | no) "yes">
+<!ATTLIST animationElement behavior (timeBased | interactive | static) "timeBased">
+<!ATTLIST animationElement altSrc CDATA #IMPLIED>
+<!ATTLIST animationElement altSrcType (flash | video | image | animation | hotText | program | html5 ) #IMPLIED>
+
+<!ELEMENT inlineData (#PCDATA) >
+<!ATTLIST inlineData animationElement CDATA #REQUIRED>
+<!ATTLIST inlineData name CDATA #REQUIRED>
+<!ATTLIST inlineData id CDATA #REQUIRED>
+
+<!ELEMENT animationThread (selectionClause?, animationThreadElement+, event*)>
+<!ATTLIST animationThread eName CDATA #FIXED "animationThread">
+<!ATTLIST animationThread name CDATA #REQUIRED>
+<!ATTLIST animationThread requiresInput (yes | no) "no">
+<!ATTLIST animationThread waitOn CDATA #IMPLIED>
+
+<!ELEMENT poster EMPTY>
+<!ATTLIST poster name CDATA #REQUIRED>
+<!ATTLIST poster image CDATA #REQUIRED>
+<!ATTLIST poster show (before | after | both) #REQUIRED >
+
+<!ELEMENT animationThreadElement (selectionClause?)>
+<!ATTLIST animationThreadElement name CDATA #REQUIRED>
+<!ATTLIST animationThreadElement maxTime CDATA #IMPLIED>
+	
+<!ELEMENT selectionClause (clauseElement+)>
+
+<!ELEMENT clauseElement EMPTY>
+<!ATTLIST clauseElement variable CDATA #REQUIRED>
+<!ATTLIST clauseElement value CDATA #REQUIRED>
+<!ATTLIST clauseElement onChangeTo CDATA #IMPLIED>
+
+<!ELEMENT speechControls EMPTY>
+<!ATTLIST speechControls speechLabelList CDATA #REQUIRED>
+
+<!ELEMENT displayElement (table | graph)+>
+
+<!ELEMENT table (header?, footer?, event*)>
+<!ATTLIST table eName CDATA #FIXED "table">
+<!ATTLIST table name CDATA #REQUIRED>
+<!ATTLIST table title CDATA #IMPLIED>
+<!ATTLIST table rows CDATA #REQUIRED>
+<!ATTLIST table columns CDATA #REQUIRED>
+<!ATTLIST table deleteRowImage CDATA #IMPLIED>
+<!ATTLIST table clearRow (yes | no) "yes">
+<!ATTLIST table resultAction CDATA #IMPLIED>
+<!ATTLIST table editable (yes | no) "no">
+<!ATTLIST table visible (yes | no) "yes">
+<!ATTLIST table waitOn CDATA #IMPLIED>
+<!ATTLIST table incrementTrialOnOutput (true | false) "false">
+<!ATTLIST table userAddRows (true | false) "true">
+<!ATTLIST table outputSource (evaluator | animation) "evaluator">
+
+<!ELEMENT header (colHeader+)>
+<!ATTLIST header eName CDATA #FIXED "header">
+<!ATTLIST header type CDATA #FIXED "header">
+<!ATTLIST header color CDATA "#ffffff">
+<!ATTLIST header textColor CDATA "#000000">
+<!ATTLIST header visible (visible | hidden) "visible">
+<!ATTLIST header spanningHeader CDATA #IMPLIED>
+
+<!ELEMENT footer (colFooter+)>
+<!ATTLIST footer eName CDATA #FIXED "footer">
+<!ATTLIST footer eName CDATA #FIXED "footer">
+<!ATTLIST footer color CDATA "White">
+<!ATTLIST footer textColor CDATA "Black">
+
+<!ELEMENT colHeader EMPTY>
+<!ATTLIST colHeader eName CDATA #FIXED "colHeader">
+<!ATTLIST colHeader inputKey CDATA #IMPLIED>
+<!ATTLIST colHeader outputKey CDATA #IMPLIED>
+<!ATTLIST colHeader text CDATA #REQUIRED>
+<!ATTLIST colHeader autoCount (yes | no) "no">
+<!ATTLIST colHeader filter CDATA #IMPLIED>
+<!ATTLIST colHeader contentType (text | image) "text">
+<!ATTLIST colHeader rowFunction CDATA #IMPLIED>
+<!ATTLIST colHeader rowLabels CDATA #IMPLIED>
+<!ATTLIST colHeader scorable (yes | no) "no" >
+<!ATTLIST colHeader numDecFigures CDATA #IMPLIED >
+<!ATTLIST colHeader includeKeyInOutput  (yes | no) "no" >
+<!ATTLIST colHeader maxTextLength CDATA #IMPLIED >
+
+<!ELEMENT colFooter EMPTY>
+<!ATTLIST colFooter eName CDATA #FIXED "colFooter">
+<!ATTLIST colFooter text CDATA #REQUIRED>
+
+<!ELEMENT graph (xAxis, yAxis, lineSpec*, barSpec*, event*)>
+<!ATTLIST graph eName CDATA #FIXED "graph">
+<!ATTLIST graph name CDATA #REQUIRED>
+<!ATTLIST graph type (line | bar) #REQUIRED>
+<!ATTLIST graph title CDATA #IMPLIED>
+<!ATTLIST graph backgroundColor CDATA #IMPLIED>
+<!ATTLIST graph backgroundImage CDATA #IMPLIED>
+
+<!ATTLIST xAxis label CDATA #REQUIRED>
+<!ATTLIST xAxis startValue CDATA #REQUIRED>
+<!ATTLIST xAxis endValue CDATA #REQUIRED>
+<!ATTLIST xAxis step CDATA #IMPLIED>
+
+<!ATTLIST yAxis label CDATA #REQUIRED>
+<!ATTLIST yAxis startValue CDATA #REQUIRED>
+<!ATTLIST yAxis endValue CDATA #REQUIRED>
+<!ATTLIST yAxis step CDATA #IMPLIED>
+
+<!ELEMENT lineSpec EMPTY>
+<!ATTLIST lineSpec eName CDATA #FIXED "lineSpec">
+<!ATTLIST lineSpec title CDATA #REQUIRED>
+<!ATTLIST lineSpec lineWidth CDATA #IMPLIED>
+<!ATTLIST lineSpec lineColor CDATA #IMPLIED>
+
+<!ELEMENT barSpec EMPTY>
+<!ATTLIST barSpec eName CDATA #FIXED "barSpec">
+<!ATTLIST barSpec title CDATA #REQUIRED>
+<!ATTLIST barSpec barWidth CDATA #IMPLIED>
+<!ATTLIST barSpec barColor CDATA #IMPLIED>
+
+<!ELEMENT evaluation (unit+)>
+<!ELEMENT unit (functions+, variables*, constraints*, ranges*, event*, constants*)>
+<!ELEMENT functions (function+) >
+<!ATTLIST functions  scoreable (yes | no) "yes" >
+
+<!ELEMENT function EMPTY>
+<!ATTLIST function eName CDATA #FIXED "function">
+<!ATTLIST function name CDATA #REQUIRED> 
+<!ATTLIST function context CDATA #REQUIRED> 
+<!ATTLIST function formula CDATA #IMPLIED> 
+<!ATTLIST function value CDATA #REQUIRED> 
+<!ATTLIST function type CDATA #IMPLIED> 
+<!ATTLIST function variable CDATA #IMPLIED> 
+<!ATTLIST function keyName CDATA #IMPLIED> 
+<!ATTLIST function code CDATA #IMPLIED> 
+<!ATTLIST function note CDATA #IMPLIED> 
+<!ATTLIST function filter CDATA #IMPLIED>
+<!ATTLIST function nameProxy CDATA #IMPLIED>
+<!ATTLIST function scorable (yes | no) "yes" >
+<!ATTLIST function priority CDATA #IMPLIED >
+<!ATTLIST function orderedEvaluation (yes | no) "no" >
+
+<!ELEMENT variables (variable+)>
+<!ELEMENT variable (value*)>
+<!ELEMENT value EMPTY>
+<!ATTLIST value val CDATA #REQUIRED >
+
+<!ATTLIST variable eName CDATA #FIXED "variable">
+<!ATTLIST variable name CDATA #REQUIRED>
+<!ATTLIST variable object CDATA #IMPLIED>
+<!ATTLIST variable range CDATA #IMPLIED>
+<!ATTLIST variable type (binding | implicit | constant | result | lookup | cumulative | persistent) "binding">
+<!ATTLIST variable defaultValue CDATA #IMPLIED>
+<!ATTLIST variable value CDATA #IMPLIED>
+<!ATTLIST variable note CDATA #IMPLIED>
+<!ATTLIST variable store CDATA #IMPLIED>
+<!ATTLIST variable cumOp (add | subtract | multiply | divide) "add" >
+
+<!ELEMENT constraints (constraint+)>
+<!ELEMENT constraint EMPTY>
+<!ATTLIST constraint eName CDATA #FIXED "constraint">
+<!ATTLIST constraint name CDATA #REQUIRED>
+<!ATTLIST constraint formula CDATA #REQUIRED>
+<!ATTLIST constraint type (pre-condition | post-condition) "pre-condition">
+<!ATTLIST constraint clause CDATA #REQUIRED>
+<!ATTLIST constraint note CDATA #IMPLIED> 
+
+<!ELEMENT ranges (range+) >
+<!ELEMENT range EMPTY>
+<!ATTLIST range eName CDATA #FIXED "range">
+<!ATTLIST range type (iterator | range) #REQUIRED>
+<!ATTLIST range name CDATA #REQUIRED>
+<!ATTLIST range minValue CDATA #IMPLIED>
+<!ATTLIST range maxValue CDATA #IMPLIED>
+<!ATTLIST range increment CDATA #IMPLIED>
+<!ATTLIST range startValue CDATA #IMPLIED>
+<!ATTLIST range numIteration CDATA #IMPLIED>
+<!ATTLIST range note CDATA #IMPLIED> 
+
+<!ELEMENT semantics (semanticElement+)>
+<!ATTLIST semantics eName CDATA #FIXED "semantics">
+<!ATTLIST semantics name CDATA #REQUIRED>
+
+<!ELEMENT semanticElement (ruleDef+)>
+<!ATTLIST semanticElement eName CDATA #FIXED "semanticElement">
+<!ATTLIST semanticElement functionList CDATA #IMPLIED>
+<!ATTLIST semanticElement functionOp (sum) #REQUIRED>
+<!ATTLIST semanticElement variable CDATA #IMPLIED>
+<!ATTLIST semanticElement inputList CDATA #IMPLIED>
+<!ATTLIST semanticElement inputOp (time | all | any) #IMPLIED>
+
+<!ELEMENT ruleDef (rule)>
+<!ATTLIST rule clause CDATA #REQUIRED>
+<!ATTLIST rule action CDATA #REQUIRED>
+<!ATTLIST rule actionParameters CDATA #IMPLIED>
+
+<!ELEMENT control (commandElement+)>
+
+ 

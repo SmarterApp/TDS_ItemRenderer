@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html debug="true">
+    <head>
+        <title>Audio Test</title>
+        
+        <link href="../../../Shared/CSS/elpa.css" media="all" type="text/css" rel="stylesheet" />
+        
+        <style type="text/css">
+            .recorder {
+                float: left;
+                margin-right: 1em;
+            }
+        </style>
+
+        <!--
+        <script type="text/javascript">
+            window.onerror = function(msg, url, line) {
+                var errorMsg = "Error: " + msg + "\nurl: " + url + "\nline #: " + line;
+                console.error(errorMsg);
+                alert(errorMsg);
+            };
+        </script>
+        -->
+
+        <!--
+        <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
+        -->
+
+        <!-- YUI -->
+        <script type="text/javascript" src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js"></script>
+        <script type="text/javascript" src="../../Libraries/YUI/storage/storage-min.js"></script>
+        <script type="text/javascript" src="../../Libraries/soundmanager2/script/soundmanager2.js"></script>
+                                            
+        <!-- Utils -->                      
+        <script type="text/javascript" src="../../Utilities/util.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_object.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_date.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_event.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_event_manager.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_frame.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_storage.js"></script>
+                                            
+        <!-- Secure Browser -->             
+        <script type="text/javascript" src="../../SecureBrowser/Summit/air_mobile_2.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/factory.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/base.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/base.recorder.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/firefox.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/firefox.recorder.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/chrome.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/mobile.android.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/mobile.ios.js"></script>
+        <script type="text/javascript" src="../../SecureBrowser/mobile.recorder.js"></script>
+                                          
+        <!-- Audio -->             
+        <script type="text/javascript" src="../audio.js"></script>
+        <script type="text/javascript" src="../java.js"></script>
+        <script type="text/javascript" src="../services.js"></script>
+        
+        <!-- Audio Recorder -->             
+        <script type="text/javascript" src="../Recorder/recorder.js"></script>
+        <script type="text/javascript" src="../Recorder/recorder.sb.js"></script>
+        <!--
+        <script type="text/javascript" src="../Recorder/recorder.java.js"></script>
+        -->
+        
+        <!-- Audio Player -->
+        <script type="text/javascript" src="../Player/player.js"></script>
+        <script type="text/javascript" src="../Player/player.queue.js"></script>
+
+        <!-- Audio Widget -->
+        <script type="text/javascript" src="../widget.js"></script>
+            
+    </head>
+    <body>
+        
+        <script id="recorderTemplate" type="text/html">
+            <b>Recorder #{count}:</b> <br/>
+            <div id="{id}" class="elicitedwrap recording_ready disabled">
+                <span class="soundlevelwrap">
+                    <span class="soundlevelindicator" style="width:0"></span>
+                </span>
+                <div class="elicitedaround">
+                    <a href="#" class="btnRecord"></a>
+                    <a href="#" class="btnPlayPause"></a>
+                    <span class="elicitedcontrols"></span>
+                </div>
+            </div>
+            <br/>
+        </script>
+
+        <h1>Audio Recorder</h1>
+        
+        <div id="recorders"></div>
+        
+        <div style="clear:both;"></div>
+
+        <h1>Audio Player</h1>
+        
+        <b>Ogg Links:</b><br/>
+        <div id="players">
+            Stem: <a id="audio1" class="sound_repeat" href="Item_18_v4_sound1129581271114e054301_.ogg"></a><br/>
+            Option A: <a id="audio2" class="sound_repeat" href="Item_18_v4_sound1129581294738e054301a.ogg"></a><br/>
+            Option B: <a id="audio3" class="sound_repeat" href="Item_18_v4_sound1129581308166e054301b.ogg"></a><br/>
+            Option C: <a id="audio4" class="sound_repeat" href="Item_18_v4_sound1129581321992e054301c.ogg"></a><br/>
+            Option D: <a id="audio5" class="sound_repeat" href="Item_18_v4_sound1129581336036e054301d.ogg"></a><br/>
+        </div>
+        
+        <br/>
+        <button id="btnQueueStart">Queue Start</button>
+        <button id="btnQueueStop">Queue Stop</button>
+        <br/><br/>
+
+        <b>MP3 Links:</b><br/>
+        <div id="players">
+            Passage: <a id="audio6" class="sound_repeat" href="Passage_3812_v10_test.mp3"></a><br/>
+        </div>
+
+        <script type="text/javascript">
+
+            var recorderCount = 0;
+
+            function addRecorder() {
+                recorderCount++;
+                var id = 'recorder_' + recorderCount;
+                var recorderTemplate = YUD.get('recorderTemplate').textContent || 
+                                       YUD.get('recorderTemplate').text;
+                recorderTemplate = YAHOO.lang.substitute(recorderTemplate, {
+                    count: recorderCount, 
+                    id: id
+                });
+                var containerEl = document.createElement('div');
+                containerEl.innerHTML = recorderTemplate;
+                containerEl.className = 'recorder';
+                YUD.get('recorders').appendChild(containerEl);
+                TDS.Audio.Widget.createRecorder(YUD.get(id));
+            }
+
+            function setupRecorders() {
+
+                // initialize the SB for this browser
+                TDS.SecureBrowser.initialize();
+
+                // set the applet path
+                var appletPath = Util.Browser.resolveUrl('../../../Shared/Applets/');
+                TDS.Audio.Java.setAppletPath(appletPath);
+
+                // add recorders
+                for (var i = 0; i < 9; i++) {
+                    addRecorder();
+                }
+                
+                // add recorder #2 in three seconds (so we can see how it looks after init)
+                setTimeout(function() {
+                    addRecorder();
+                }, 3000);
+
+                TDS.Audio.Recorder.onDeviceError.subscribe(function(id, detail) {
+                    console.warn('Audio Recorder Error:', detail);
+                });
+
+                TDS.Audio.Recorder.onDeviceException.subscribe(function(id, ex) {
+                    console.error('Audio Recorder Exception:', ex);
+                });
+
+                // initialize audio recorder
+                TDS.Audio.Recorder.initialize();
+            }
+
+            var playerQueue;
+
+            function setupPlayers() {
+                
+                // set the applet path
+                var flashPath = Util.Browser.resolveUrl('../../../Scripts/Libraries/soundmanager2/swf/');
+                TDS.Audio.Player.setup(flashPath);
+
+                // create audio widgets
+                TDS.Audio.Widget.createPlayer('audio1');
+                TDS.Audio.Widget.createPlayer('audio2');
+                TDS.Audio.Widget.createPlayer('audio3');
+                TDS.Audio.Widget.createPlayer('audio4');
+                TDS.Audio.Widget.createPlayer('audio5');
+                TDS.Audio.Widget.createPlayer('audio6');
+
+                // create audio queue
+                playerQueue = TDS.Audio.Player.createQueue(['audio2', 'audio3']);
+                playerQueue.append('audio4');
+                playerQueue.append('audio5');
+
+                YUE.on('btnQueueStart', 'click', function() {
+                    playerQueue.start();
+                });
+
+                YUE.on('btnQueueStop', 'click', function() {
+                    playerQueue.stop();
+                });
+            }
+
+            function pageLoaded() {
+                setupRecorders();
+                setupPlayers();
+            }
+
+            window.onload = pageLoaded;
+
+        </script>
+
+    </body>
+</html>

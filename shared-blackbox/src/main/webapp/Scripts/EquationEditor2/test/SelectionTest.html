@@ -1,0 +1,196 @@
+<html>
+  <head>
+  <title> Only works in FF!! </title>
+  <meta>
+    <meta charset="UTF-8">
+  </meta>
+    <!--
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
+    --->
+     <script src="rangy-1.2.3/rangy-core.js"></script>
+     <script type="text/javascript" src="../../MathJax/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full"></script>
+     <script src="../config.js"></script>
+     <script src="../content.js"></script>
+     <script src="../editor.js"></script>
+     <link href="../mathjax_editor.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    Only works in firefox, the nodes are slightly off to get the perfect results in other browsers.
+    <script type="text/javascript">
+      //PH is a hack to enable different placeholders (ie lower grades use \\Box)
+      MathJax.Editor.Config.Navigation = false;
+      var assertNoException = function(f, label, w) {
+         try {
+           f(w);
+         }catch(e){
+           console.error("Failed to run the test labeled: ", label, w, e);
+         }
+       };
+
+      var tName = null;
+      tName = "Just a place to select more math from mathML.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        mathML: '<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>+</mo><mn>1</mn></math>'
+      });
+
+      tName = 'Ensure that we clean up mrow deletes correctly.  Should end with 1234, (\\frac {x}{y}) ^\\Box';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: ['1234x+1', '\\frac {x}{y}'],
+        cb: assertNoException.bind(this, function(w){
+          var editors = w.getEditors();
+          var ed = editors[editors.length-1];
+          ed.left(); ed.left();
+          ed.updateMath(null, '\\Box^\\Box');
+        }, tName)
+      });
+
+      tName = 'Ensure that partial selection of an mrow that also selects a paren actuall selects the entire mrow. Ends ok';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: 'ok \\left(x+1\\right)',
+        cb: assertNoException.bind(this, function(w){
+          var ed  = w.getEdit();
+
+          //Force select the end paren (clicks etc, left right prevent selection of parens)
+          var end  = ed.getLast();
+          var p    = end.parent;
+              end  = p.data[p.data.length-1];
+
+          //Select up to the paren.
+          ed.left(); ed.left();
+
+          var start  = ed.getCursor();
+          var el1 = document.getElementById('MathJax-Span-' + start.spanID); 
+          var el2 = document.getElementById('MathJax-Span-' + end.spanID);
+
+          var rng = rangy.createRange(); rng.setStart(el1); rng.setEnd(el2);
+          var sel = rangy.getSelection();
+          sel.setSingleRange(rng);
+
+          w.MOUSE.onmouseup(ed,function(){
+            this.getEdit().remove(null, function(){
+              ed.remove(null);
+            });
+            
+          }.bind(w));
+
+
+        }, tName)
+      });
+
+      tName = 'Ensure that we clean up mrow deletes correctly.  Should end with ok';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: 'ok 2\\left({x1}\\right)',
+        cb: assertNoException.bind(this, function(w){
+          var ed = w.getEdit();
+          ed.left();ed.left();
+
+          ed.remove(null, function() {
+            ed.remove(null, function(){
+              ed.remove();
+            });
+          });
+        }, tName)
+      });
+
+      tName = 'Do not allow deletion of top level mrow elements.  Should delete math and end as \\Box';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: 'x+1',
+        cb: assertNoException.bind(this, function(w){
+          var ed = w.getEdit();
+          var end = ed.getLast();
+          ed.left(); ed.left(); 
+          var start  = ed.getCursor();
+
+          var el1 = document.getElementById('MathJax-Span-' + start.spanID); 
+          var el2 = document.getElementById('MathJax-Span-' + end.spanID);
+
+          var rng = rangy.createRange(); rng.setStart(el1); rng.setEnd(el2);
+          var sel = rangy.getSelection();
+          sel.setSingleRange(rng);
+
+          w.MOUSE.onmouseup(ed,function(){
+            this.getEdit().remove();
+          }.bind(w));
+
+        }, tName)
+      });
+
+      tName = 'Test an initial range selection creating a new mRow. Should end \\frac {(11+2)+2} \\Box';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: 'x+\\left(11+2\\right) + 2',
+        cb: assertNoException.bind(this, function(w){
+
+          var ed = w.getEdit();
+          var end = ed.getLast();
+          ed.left(); ed.left(); ed.left(); //Select the 2 inside the mfenced object
+          var start  = ed.getCursor();
+
+          var el1 = document.getElementById('MathJax-Span-' + start.spanID); 
+          var el2 = document.getElementById('MathJax-Span-' + end.spanID);
+
+          var rng = rangy.createRange(); rng.setStart(el1); rng.setEnd(el2);
+          var sel = rangy.getSelection();
+          sel.setSingleRange(rng);
+
+          w.MOUSE.onmouseup(ed,function() { //Hacky callback so I can better test / see visual results
+            w.getEdit().updateMath(null, '\\frac \\Box \\Box');
+          }.bind(w));
+        }, tName)
+      });
+
+      tName = "Internal selection of smaller elements ends \\sqrt{ \\msubsup {\\frac {a+1} b} \\Box";
+      new MathJax.Editor.Widget({
+        contentLabel: tName, 
+        TeX: "\\sqrt{\\frac {a+1} b}",
+        cb: assertNoException.bind(this, function(w){
+          var ed    = w.getEdit();
+          var end   = ed.getLast();
+          ed.left(); ed.left();
+          var start = ed.getCursor();
+
+          var el1 = document.getElementById('MathJax-Span-' + start.spanID); 
+          var el2 = document.getElementById('MathJax-Span-' + end.spanID);
+
+          var rng = rangy.createRange(); rng.setStart(el1); rng.setEnd(el2);
+          var sel = rangy.getSelection();
+          sel.setSingleRange(rng);
+
+          w.MOUSE.onmouseup(ed, function(){
+            w.getEdit().updateMath(null, '\\Box^\\Box');
+          }.bind(w));
+
+        }, tName)
+      });
+
+      tName = 'Row creation inside of a sqrt, ends \\sqrt {\\sqrt{x+1}}';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\sqrt{x+1}',
+        cb: assertNoException.bind(this, function(w){
+          var ed    = w.getEdit();
+          var end   = ed.getLast();
+          ed.left(); ed.left(); 
+          var start = ed.getCursor();
+
+          var el1 = document.getElementById('MathJax-Span-' + start.spanID); 
+          var el2 = document.getElementById('MathJax-Span-' + end.spanID);
+
+          var rng = rangy.createRange(); rng.setStart(el1); rng.setEnd(el2);
+          var sel = rangy.getSelection();
+          sel.setSingleRange(rng);
+
+          w.MOUSE.onmouseup(ed, function(){
+            w.getEdit().updateMath(null, '\\sqrt{\\Box}');
+          }.bind(w));
+
+        }, tName)
+      });
+    </script>
+    </body>
+</html>

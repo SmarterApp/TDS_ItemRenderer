@@ -1,0 +1,100 @@
+<html>
+
+<head>
+    <title>HTML Editor 2</title>
+
+    <link href="../../Libraries/YUI/button/assets/skins/sam/button.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../Libraries/YUI/container/assets/skins/sam/container.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../../Shared/CSS/normalize.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../../Shared/CSS/modernshell.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../../Shared/CSS/dialogs.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../Slideshow/show.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../../Shared/CSS/items.css" rel="stylesheet" media="all" type="text/css">
+    
+    <!-- YUI -->
+    <script src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/json-old/json-min.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/connection/connection.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/element/element.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/button/button.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/container/container.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/dragdrop/dragdrop.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/YUI3-min.js" type="text/javascript"></script>
+	
+    <script src="../../Libraries/jQuery/jquery-1.10.2.min.js" type="text/javascript"></script>
+
+    <!-- Utils -->
+    <script type="text/javascript" src="../../Utilities/util.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_object.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_date.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_array.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_manager.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_frame.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_storage.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_querystring.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_mozilla.js"></script>
+    <script type="text/javascript" src="../../Messages/messages_legacy.js"></script>
+ 
+    <!-- Editor -->
+    <script src="../../Libraries/ckeditor/4.3/ckeditor.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.3/lang/en.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.3/styles.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.3/plugins/table/dialogs/table.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.3/plugins/specialchar/dialogs/specialchar.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.3/plugins/specialchar/dialogs/lang/en.js" type="text/javascript"></script>
+	
+    <script src="../../SpellCheck/spellcheck.js" type="text/javascript"></script>
+    <script src="../../SpellCheck/spellcheck_manager.js" type="text/javascript"></script>
+    <script src="../../SpellCheck/spellcheck_server.js" type="text/javascript"></script>
+    <script src="../../SpellCheck/spellcheck_mozilla.js" type="text/javascript"></script>
+		
+    <script src="../../HTMLEditor2/plugins/spellchecker/plugin.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/keymaphelp/plugin.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/clipboard/plugin.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/clipboard/lang/en.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/base.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/table.js" type="text/javascript"></script>
+
+</head>
+
+<body class="yui-skin-sam TDS_PS_L0" >
+
+	<table>
+		<tr style='height: 100px;'>
+			<td colspan='3'>
+		</tr>
+		<tr>
+			<td style='width: 100px;'></td>
+			<td style='width: 600px; height: 300px;'>
+				<div id='editor_Container' autocorrect='off' autocomplete='off' class='EditorContainer'>
+					<textarea autocorrect='off' autocomplete='off' style='display: none;' spellcheck='false'></textarea>
+				</div>
+			</td>
+			<td style='width: 100px;'></td>
+		</tr>
+	</table>
+
+    <script type="text/javascript">
+	
+		$(function(){
+
+			// Override to properly resolve paths
+			HTMLEditor.resolveBaseUrl = function (url) {
+			    return '/blackbox/' + url;
+			}
+
+			// Add the editor to the page
+			var containerEl = document.getElementById('editor_Container');
+			var editor = HTMLEditor.create(containerEl, 'HTMLEditor', { height: '300px' });
+		});
+	
+    </script>
+
+</body>
+
+</html>

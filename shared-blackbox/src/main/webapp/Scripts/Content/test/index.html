@@ -1,0 +1,127 @@
+<html>
+
+<head>
+    
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.14.0.css" type="text/css" media="screen">
+    <script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>    
+
+    <!-- Libs -->
+    <script src="../../Libraries/YUI/yahoo/yahoo.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/dom/dom.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/event/event.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/event-simulate/event-simulate.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/container/container.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/menu/menu.js" type="text/javascript"></script>
+    <script src="../../Libraries/jQuery/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../Libraries/hammerjs/hammer.js"></script>
+    <script type="text/javascript" src="../../Libraries/hammerjs/jquery.hammer.js"></script>
+    <script type="text/javascript" src="../../Libraries/q/q.min.js"></script>
+   
+    
+    <!-- Utils -->
+    <script type="text/javascript" src="../../Utilities/util.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_assert.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_object.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_date.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_array.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_structs.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_custom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_emitter.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_promise.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_storage.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_xml.js"></script>
+    
+    <!-- TDS -->
+    <script type="text/javascript" src="../../tools/tds.js"></script>
+    
+    <!-- Resource Loader -->
+    <script type="text/javascript" src="../../ResourceLoader/loader.js"></script>
+    <script type="text/javascript" src="../../ResourceLoader/collection.js"></script>
+    <script type="text/javascript" src="../../ResourceLoader/dependency.js"></script>
+    <script type="text/javascript" src="../../ResourceLoader/conditional.js"></script>
+    <script type="text/javascript" src="../../ResourceLoader/image.js"></script>
+    <script type="text/javascript" src="../../ResourceLoader/binary.js"></script>
+    <script type="text/javascript" src="../../ResourceLoader/script.js"></script>
+    <script type="text/javascript" src="../../ResourceLoader/xhr.js"></script>
+
+    <!-- Accommodations -->
+    <script src="../../Accommodations/accs.js" type="text/javascript"></script>
+    <script src="../../Accommodations/accs.type.js" type="text/javascript"></script>
+    <script src="../../Accommodations/accs.value.js" type="text/javascript"></script>
+    <script src="../../Accommodations/accs.props.js" type="text/javascript"></script>
+    <script src="../../Accommodations/accs.manager.js" type="text/javascript"></script>
+
+    <!-- Content Manager (Core) -->
+    <script src="../content_manager.js" type="text/javascript"></script>
+    <script src="../content_utils.js" type="text/javascript"></script>
+    <script src="../content_renderer.js" type="text/javascript"></script>
+    <script src="../content_pages.js" type="text/javascript"></script>
+    <script src="../content_page.js" type="text/javascript"></script>
+    <script src="../content_entity.js" type="text/javascript"></script>
+    <script src="../content_passage.js" type="text/javascript"></script>
+    <script src="../content_item.js" type="text/javascript"></script>
+    <script src="../content_response.js" type="text/javascript"></script>
+    <script src="../content_xml.js" type="text/javascript"></script>
+    <script src="../content_qti.js" type="text/javascript"></script>
+
+    <!-- Content Manager (Plugin/Widget) -->
+    <script src="../content_plugin_page.js" type="text/javascript"></script>
+    <script src="../content_plugin_entity.js" type="text/javascript"></script>
+    <script src="../content_plugins.js" type="text/javascript"></script>
+    <script src="../content_plugins_manager.js" type="text/javascript"></script>
+    <script src="../content_widget.js" type="text/javascript"></script>
+    <script src="../content_widgets.js" type="text/javascript"></script>
+    <script src="../content_widgets_manager.js" type="text/javascript"></script>
+
+    <!-- Content Manager (Addons) -->
+    <script src="../content_events.js" type="text/javascript"></script>
+    <script src="../content_keyboard.js" type="text/javascript"></script>
+    <script src="../content_zoom.js" type="text/javascript"></script>
+    <script src="../content_menu.js" type="text/javascript"></script>
+    <script src="../content_dialog.js" type="text/javascript"></script>
+    <script src="../content_singleton.js" type="text/javascript"></script>
+    
+    <style type="text/css">
+        .pageWrapper.hiding {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <h1 id="qunit-header">QUnit Test Suite</h1>
+    <h2 id="qunit-banner"></h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+    
+    <div id="contents" style="display:none;"></div>
+
+    <script type="text/javascript">
+        
+        function loadContent(file) {
+            $.getJSON(file)
+                .done(function (content) {
+                    // create a ContentPage object from json/xml response
+                    var page = pages.create(content);
+                    page.render();
+                })
+                .fail(function () {
+                    console.error('Couldn\'t find or parse sample.');
+                });
+        }
+
+    </script>
+    
+    
+    <script type="text/javascript" src="index.js"></script>
+
+</body>
+
+</html>

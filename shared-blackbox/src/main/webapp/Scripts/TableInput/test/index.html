@@ -1,0 +1,115 @@
+<html>
+
+	<head>
+		<script src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript" ></script>		
+		<script src="../../Libraries/jQuery/jquery-1.10.2.min.js" type="text/javascript"></script>
+		<script src="../../Utilities/util.js" type="text/javascript"></script>
+		<script src="../../Utilities/util_xml.js" type="text/javascript"></script>
+	    <script src="../base.js" type="text/javascript"></script>
+		<script src="../response.js" type="text/javascript"></script>
+		<script src="../validator.js" type="text/javascript"></script>
+        <link href="../base.css" rel="stylesheet" media="all" type="text/css">
+	</head>
+
+    <body>
+
+		<div align="left">
+			<table class="tableitem" style="width:17.1126em; border-spacing:0;" cellpadding="0" cellspacing="0">
+				<colgroup style="width:2.8416em; " />
+				<colgroup style="width:7.1334em; " />
+				<colgroup style="width:7.1376em; " />
+				<thead>
+					<tr>
+						<th data-its-identifier="col0" style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-top:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; font-weight:bold; ">Hour</p>
+						</th>
+						<th data-its-identifier="col1" style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-top:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; font-weight:bold; ">Lisa</p>
+						</th>
+						<th data-its-identifier="col2" style="vertical-align:middle; padding:0.2292em;  border:0.06em solid #000000;">
+							<p style="text-align:center; font-weight:bold; ">
+								<span data-its-input="true" data-its-validationRule="alphaOnly" data-its-includedInResponse="true">Jason</span>
+							</p>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; font-weight:bold; ">1</p>
+						</td>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; ">&#xA0;&#xA0;8</p>
+						</td>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-right:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; ">15</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; font-weight:bold; ">2</p>
+						</td>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; ">
+								<span data-its-input="true" data-its-validationRule="alphaNumericOnly">_</span>
+							</p>
+						</td>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-right:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; ">
+								<span data-its-input="true" data-its-validationRule="numericOnly">_</span>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; font-weight:bold; ">3</p>
+						</td>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; ">
+								<span data-its-input="true" data-its-validationRule="numericOnly">_</span>
+							</p>
+						</td>
+						<td style="vertical-align:middle; padding:0.2292em;  border-left:0.06em solid #000000; border-right:0.06em solid #000000; border-bottom:0.06em solid #000000;">
+							<p style="text-align:center; ">
+								<span data-its-input="true" data-its-validationRule="numericOnly">_</span>
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	
+		<script type="text/javascript">
+		// bind() polyfill
+		if (!Function.prototype.bind) {
+		  Function.prototype.bind = function (oThis) {
+			if (typeof this !== "function") {
+			  throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+			}
+			var aArgs = Array.prototype.slice.call(arguments, 1), 
+				fToBind = this, 
+				fNOP = function () {},
+				fBound = function () {
+				  return fToBind.apply(this instanceof fNOP && oThis
+										 ? this
+										 : oThis,
+									   aArgs.concat(Array.prototype.slice.call(arguments)));
+				};
+			fNOP.prototype = this.prototype;
+			fBound.prototype = new fNOP();
+			return fBound;
+		  };
+		}
+		</script>
+	
+        <script type="text/javascript">
+
+			var $table = $('.tableItem');
+			var ti = new TDS.TableInput($table);
+			ti.render();
+			
+        </script>
+        
+    </body>
+
+</html>

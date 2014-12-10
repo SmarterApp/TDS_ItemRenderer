@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>HTML5 Audio Recorder Test</title>
+    <link rel="stylesheet" href="css/test.css" />
+</head>
+<body>
+
+    <h2 align="center">HTML5 Audio Recorder Test</h2>
+    <h3 align="center" id="status_header"></h3>
+
+    <div id="content">
+        <hr />
+        <h3>Audio Recorder Initialization</h3>
+        <button id="initBtn">Initialize Audio Recorder</button>
+        <p>Status: <span id="statusLabel">Unknown</span></p>
+
+        <hr />
+        <h3>Device selection</h3>
+        <div id="devices-btns">
+            <button id="selectDeviceBtn" disabled>Select device</button> For browsers which support device enumeration (Chrome and SB7)<br />
+            <button id="useDefaultBtn" disabled>Default selection behavior</button> For all browsers except SB7
+        </div>
+        <div id="devices"></div>
+
+        <hr />
+        <h3>Record an Audio</h3>
+        <button id="startCaptureBtn" disabled>Start Recording</button>
+        <button id="endCaptureBtn" disabled>Stop Recording</button>
+        <p>Recorder Status: <span id="captureStatus"></span><pre id="captureDetails"></pre></p>
+        <p id="captureLog"></p>
+        <h4>Recording Data Output:</h4>
+        <textarea rows="10" cols="80" id="outputText" name="audio_data_output"></textarea>
+        <br />
+        <input id="fileName" name="fileName" type="text" /><button id="saveBtn" disabled>Save</button>
+
+        <hr />
+        <h3>Audio Playback</h3>
+        <h4>Import Audio File Here:</h4>
+        <input id="loadFileBtn" value="Load" type="file" disabled /><input id="loadFileName" name="loadFileName" type="text" /><button id ="loadBtn" disabled>Load</button>
+        <h4>Import Audio Data Here:</h4>
+        <textarea rows="10" cols="80" id="inputText" name="audio_data_input"></textarea>
+        <br />
+        <label>Select Source: </label><select id="audioSource"><option value="Import">Import Text Area</option><option value="LastRecording">Last Recording</option></select>
+        <button id="loadAudioBtn" disabled>Load</button>
+        <br />
+        <button id="startPlaybackBtn" disabled>Play</button>
+        <button id="stopPlaybackBtn" disabled>Stop</button>
+        <button id="pausePlaybackBtn" disabled>Pause</button>
+        <button id="resumePlaybackBtn" disabled>Resume</button>
+        <p>Playback Status: <span id="playbackStatus"></span></p>
+        <p>Sound Quality: <span id="soundQuality"></span></p>
+
+    </div>
+
+    <script src="../webaudio.js"></script>
+    <script src="../webaudio.resampler.js"></script>
+    <script src="../player/webaudio.player.js"></script>
+    <script src="../player/webaudio.playlist.js"></script>
+    <script src="../player/webaudio.track.js"></script>
+    <script src="../recorder/webaudio.recorder.js"></script>
+    <script src="../recorder/webaudio.recorder.polyfills.chrome.js"></script>
+    <script src="../recorder/webaudio.recorder.polyfills.securebrowser.js"></script>
+    <script src="../recorder/webaudio.recorder.source.js"></script>
+    <script src="../encoding/webaudio.encoding.js"></script>
+    <script src="../encoding/webaudio.encoder.js"></script>
+    <script src="../nodes/volumeAnalyserNode.js"></script>
+    <script src="../nodes/voiceActivityDetectionNode.js"></script>
+    <script src="../encoding/webaudio.sampledeque.js"></script>
+
+    <script src="../lib/b64.js"></script>
+
+    <iframe id="xpcom" src="xpcom/xpcom.html"></iframe>
+    <script src="xpcom/xpcom.js"></script>
+
+    <script src="test.js"></script>
+
+    <a href="javascript:(function(F,i,r,e,b,u,g,L,I,T,E){if(F.getElementById(b))return;E=F[i+'NS']&&F.documentElement.namespaceURI;E=E?F[i+'NS'](E,'script'):F[i]('script');E[r]('id',b);E[r]('src',I+g+T);E[r](b,u);(F[e]('head')[0]||F[e]('body')[0]).appendChild(E);E=new%20Image;E[r]('src',I+L);})(document,'createElement','setAttribute','getElementsByTagName','FirebugLite','4','firebug-lite.js','releases/lite/latest/skin/xp/sprite.png','https://getfirebug.com/','#startOpened');">Firebug</a>
+</body>
+</html>

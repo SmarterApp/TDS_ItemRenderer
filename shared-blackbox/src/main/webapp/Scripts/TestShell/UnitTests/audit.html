@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.14.0.css" type="text/css" media="screen">
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>
+    <script type="text/javascript" src="https://raw.githubusercontent.com/bahmutov/qunit-promises/master/qunit-promises.js"></script>
+
+    <!-- YUI -->
+    <script type="text/javascript" src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js"></script>
+    <script type="text/javascript" src="../../Libraries/hammerjs/hammer.min.js"></script>
+
+    <!-- Utils -->
+    <script type="text/javascript" src="../../Utilities/util.js"></script>    
+    <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_array.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_custom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_emitter.js"></script>
+
+    <script type ="text/javascript">
+        window.ContentManager = { pageEvents: new Util.Event.Emitter(window.ContentManager)};        
+        ContentManager.onPageEvent = function (name, callback) {
+            ContentManager.pageEvents.on(name, callback, null, false);
+        };        
+        window.contentPage = { id: 1, getItems: function () { return []; } };
+
+        window.TestShell = { Config: { auditTimerInterval: 1000 } };
+        TestShell.PageManager = { get: function () { return 100; } };
+        TestShell.Navigation = {};
+        Util.Event.Emitter(TestShell.Navigation);
+        
+        window.TTSManager = { Events: { onStatusChange: { subscribe: function () { } } } };
+        TestShell.registerModule = function (obj) {
+            obj.load();
+        };        
+        
+    </script>
+
+    <script type="text/javascript" src="../testshell_Audit.js"></script>
+    <script type="text/javascript" src="../modules/audit.js"></script>
+
+</head>
+
+<body>
+    
+    <h1 id="qunit-header">QUnit Test Suite</h1>
+    <h2 id="qunit-banner"></h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+
+    <div id="contents" style="display:none;"></div>
+
+    <script type="text/javascript" src="audit.js"></script>
+
+</body>
+
+</html>

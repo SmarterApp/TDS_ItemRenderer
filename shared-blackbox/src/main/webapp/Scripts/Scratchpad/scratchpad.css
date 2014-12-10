@@ -1,0 +1,489 @@
+
+body {
+    margin: 0;
+    padding: 0;
+}
+.focus {
+    outline: 1px dashed #888888;
+}
+.sp_container {
+    padding-bottom: 10px;
+    position: relative;
+    width: auto;
+}
+form.yui-panel.sp_container {
+    max-height: 100%;
+}
+.sp_dialog_form {
+    height: 704px;
+    width: 704px;
+}
+.sp_canvas_container {
+    margin-left: 95px;
+    position: relative;
+    overflow: hidden; /* to prevent DomNodes' elements from obscuring things outside the canvas's area */
+}
+.sp_property_panel {
+    background: rgba(242,242,242,0.95) none repeat scroll 0 0;
+    border: 1px solid #666;
+    color: #000000;
+    font-size: 1em;
+    font-weight: normal;
+    left: 155px;
+    top: 30px;
+    overflow: hidden;
+    padding: 10px;
+    position: absolute;
+    height: 450px;
+    width: 350px;
+    -webkit-box-shadow: 0px 0px 5px #666;
+	-moz-box-shadow: 0px 0px 5px #666;
+	box-shadow: 0px 0px 5px #666;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    border-radius: 5px;
+    z-index: 6;
+    display: none;
+    /* for IE */
+    text-align: left;
+}
+.TDS_PS_L0 .sp_property_panel {
+    width: 400px;
+}
+.TDS_PS_L1 .sp_property_panel {
+    width: 450px;
+}
+.TDS_PS_L2 .sp_property_panel {
+    width: 500px;
+}
+.TDS_PS_L3 .sp_property_panel {
+    width: 550px;
+}
+.TDS_PS_L4 .sp_property_panel {
+    width: 600px;
+}
+.sp_close_panel {
+	color: #000000;
+    display: block;
+    float: right;
+    height: 25px;
+    width: 25px;
+    overflow: hidden;
+    text-indent: -9999px;
+    line-height: 25px;
+    text-decoration: none;
+    position: absolute;
+    top: 1px;
+    right: 3px;
+	background: url(../../Shared/Images/modern/sprites_mobile_0.png) no-repeat center -2730px;
+}
+.sp_close_panel:hover {
+	background-position: center -2831px;
+}
+.sp_property_panel div.sp_drag_panel_handle {
+    cursor:move;
+    background-color: #dfdfdf;
+	border-bottom: solid 1px #ccc;
+	padding: .5em 5px;
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+	font-weight: bold;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	 -moz-box-sizing: border-box;
+  	box-sizing: border-box;
+}
+.sp_property_panel_contents {
+	position: absolute;
+	top: 2em;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	overflow: auto;
+	 -moz-box-sizing: border-box;
+  	box-sizing: border-box;
+}
+.sp_property_panel_wrapper {
+    font-size: 0.9em;
+}
+.sp_property_panel div span {
+    font-size: 0.8em;
+    font-weight: bold;
+    padding-bottom: 0.1em;
+}
+.sp_property_panel_contents > div {
+    padding: 0.25em 0 0.75em 0.5em;
+    border-bottom: 1px solid #e2e2e2;
+     -moz-box-sizing: border-box;
+  	box-sizing: border-box;
+  	clear : both;
+}
+.sp_property_shortcut {
+    background: none repeat scroll 0 0 #D0D0D0;
+    border-color: #808080 #E0E0E0 #E0E0E0 #808080;
+    border-left: 1px solid #808080;
+    border-right: 1px solid #E0E0E0;
+    border-style: solid;
+    border-width: 1px;
+    color: #4FA0D3;
+    font-weight: bold;
+    margin-right: 1em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+.sp_dialog_form .sp_canvas_container {
+    height: auto;
+    width: auto;
+}
+.sp_main_canvas {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px dashed #ACACAC;
+}
+.sp_colour_panel {
+    display: block;
+    float: none;
+    line-height: 12px;
+    width: 90px;
+}
+.sp_colour_panel ul {
+    clear: both;
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.sp_colour_panel ul li {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #000000;
+    display: inline-block;
+    height: 20px;
+    overflow: hidden;
+    width: 20px;
+    padding: 0px;
+}
+.sp_colour_panel ul li a {
+    display: block;
+    height: 100%;
+    width: 100%;
+     -moz-box-sizing: border-box;
+  	box-sizing: border-box;
+  	border-color: transparent;
+  	border-style: solid !important;
+  	border-width: 1px;
+  	overflow: hidden;
+  	text-indent: -99999px;
+}
+.sp_colour_wheel {
+    display: block;
+    height: 1.8em;
+    width: 1em;
+    min-width: 23px;
+    margin-top: -1.8em;
+	background: url("images/wd-wheel.png") no-repeat center center;
+	background-size:100%;
+}
+.TDS_PS_L0 .sp_colour_wheel {
+    background-size: inherit;
+}
+.sp_colour_input {
+	margin-left: 1.5em;
+	width: inherit !important;
+}
+.TDS_PS_L0 .sp_colour_input, 
+.TDS_PS_L1 .sp_colour_input {
+	margin-left: 30px;
+}
+.sp_property_panel_contents input[type="range"] {
+	/*width: auto !important;*/
+}
+.sp_colour_panel ul li a span {
+    left: -9999px;
+    position: absolute;
+}
+sp_colour_btn {
+}
+sp_colour_btn_select {
+}
+.sp_colour_000000 {
+    background: none repeat scroll 0 0 #000000;
+    color: #000000;
+    border-color: #fff !important;
+}
+.sp_colour_ffffff {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #FFFFFF;
+}
+.sp_colour_000088 {
+    background: none repeat scroll 0 0 #000088;
+    color: #000088;
+}
+.sp_colour_008800 {
+    background: none repeat scroll 0 0 #008800;
+    color: #008800;
+}
+.sp_colour_008888 {
+    background: none repeat scroll 0 0 #008888;
+    color: #008888;
+}
+.sp_colour_880000 {
+    background: none repeat scroll 0 0 #880000;
+    color: #880000;
+}
+.sp_colour_880088 {
+    background: none repeat scroll 0 0 #880088;
+    color: #880088;
+}
+.sp_colour_884400 {
+    background: none repeat scroll 0 0 #884400;
+    color: #884400;
+}
+.sp_colour_888888 {
+    background: none repeat scroll 0 0 #888888;
+    color: #888888;
+}
+.sp_colour_444444 {
+    background: none repeat scroll 0 0 #444444;
+    color: #444444;
+}
+.sp_colour_0000ff {
+    background: none repeat scroll 0 0 #0000FF;
+    color: #0000FF;
+}
+.sp_colour_00ff00 {
+    background: none repeat scroll 0 0 #00FF00;
+    color: #00FF00;
+}
+.sp_colour_00ffff {
+    background: none repeat scroll 0 0 #00FFFF;
+    color: #00FFFF;
+}
+.sp_colour_ff0000 {
+    background: none repeat scroll 0 0 #FF0000;
+    color: #FF0000;
+}
+.sp_colour_ff00ff {
+    background: none repeat scroll 0 0 #FF00FF;
+    color: #FF00FF;
+}
+.sp_colour_ffff00 {
+    background: none repeat scroll 0 0 #FFFF00;
+    color: #FFFF00;
+}
+.sp_toolbar {
+    display: inline-block;
+    float: left;
+    width: 95px;
+}
+.sp_toolbar_container {
+    display: block;
+    width: auto;
+}
+.sp_toolbar_container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.sp_toolbar_container ul li {
+    display: block;
+    float: left;
+    margin: 10px auto;
+    width: 40px;
+    padding: 0px;
+}
+.sp_toolbar .sp_toolbar_container ul.sp_toolbar_ul_left li a {
+    background-image: url("images/sprite_toolbar.png");
+    background-repeat: no-repeat;
+    display: block;
+    overflow:hidden;
+	padding: 30px 40px 0 0;
+	height: 0;
+	width: 0;
+}
+.sp_toolbar .sp_toolbar_container ul.sp_toolbar_ul_right li a {
+    background-image: url("images/sprite_toolbar.png");
+    background-repeat: no-repeat;
+	display: block;
+    overflow:hidden;
+	padding: 30px 40px 0 0;
+	height: 0;
+	width: 0;
+}
+.sp_toolbar_leftcolumn {
+    display: block;
+    float: left;
+    width: 40px;
+}
+.sp_toolbar_rightcolumn {
+    margin-left: 50px;
+}
+a.sp_tool_btn {
+    background-position: 0 0;
+}
+a.sp_tool_btn:hover {
+    background-position: 0 0;
+}
+a.sp_tool_btn_select {
+    background-position: 0 0;
+}
+a.sp_tool_btn_select:hover {
+    background-position: 0 0;
+}
+a.sp_tool_pick {
+    background-position: 0 0;
+}
+a.sp_tool_pick:hover {
+    background-position: -51px 0;
+}
+a.sp_tool_box {
+    background-position: 0px -245px;
+}
+a.sp_tool_box:hover {
+    background-position: -50px -245px;
+}
+a.sp_tool_circle {
+    background-position: 0px -280px;
+}
+a.sp_tool_circle:hover {
+    background-position: -50px -280px;
+}
+a.sp_tool_brush {
+    background-position: 0px -315px;
+}
+a.sp_tool_brush:hover {
+    background-position: -51px -315px;
+}
+a.sp_tool_line {
+    background-position: 0px -350px;
+}
+a.sp_tool_line:hover {
+    background-position: -50px -350px;
+}
+a.sp_tool_curve {
+    background-position: 0px -380px;
+}
+a.sp_tool_curve:hover {
+    background-position: -50px -380px;
+}
+a.sp_tool_arrow {
+    background-position: 0px -420px;
+}
+a.sp_tool_arrow:hover {
+    background-position: -50px -420px;
+}
+a.sp_tool_text {
+    background-position: 0px -455px;
+}
+a.sp_tool_text:hover {
+    background-position: -50px -455px;
+}
+a.sp_tool_redo {
+    background-position: 0px -70px;
+}
+a.sp_tool_redo:hover {
+    background-position: -50px -70px;
+}
+a.sp_tool_undo {
+    background-position: 0px -105px;
+}
+a.sp_tool_undo:hover {
+    background-position: -50px -105px;
+}
+a.sp_tool_copy {
+    background-position: 0px -140px;
+}
+a.sp_tool_copy:hover {
+    background-position: -50px -140px;
+}
+a.sp_tool_paste {
+    background-position: 0px -210px;
+}
+a.sp_tool_paste:hover {
+    background-position: -50px -210px;
+}
+a.sp_tool_math {
+    background-position: 0px -490px;
+}
+a.sp_tool_math:hover {
+    background-position: -50px -490px;
+}
+a.sp_tool_delete {
+    background-position: 0px -35px;
+}
+a.sp_tool_delete:hover {
+    background-position: -50px -35px;
+}
+a.sp_tool_edit{
+	background-position: 0px -175px;
+}
+a.sp_tool_edit:hover{
+	background-position: -50px -175px;
+}
+.TDS_PS_L3 .keydiv, 
+.TDS_PS_L4 .keydiv {
+	font-size: .8em;
+}
+.keydiv h1 {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 0.7em;
+}
+.keydiv p {
+    display: block;
+    line-height: 1.1em;
+    margin-bottom: 0.4em;
+}
+.keydiv .key.sp_property_shortcut {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 rgba(200, 200, 200, 0.5);
+    border-color: #FFFFFF #666666 #666666 #FFFFFF;
+    border-image: none;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 2px;
+    color: #000000;
+    display: inline-block;
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+.response_scratchpad .answerCell {
+    width: auto !important;
+}
+.TDS_Notes_dialog .notes_dialog_form {
+	height: 400px !important;
+}
+.TDS_Notes_dialog .notes_dialog_container {
+	height: 300px;
+	overflow: auto;
+	border-bottom: 1px solid #e8e8e8;
+}
+.touch .TDS_Notes_dialog {
+	top:  10px !important;
+	left: 484px !important;
+}
+/* force open the EQ form on iPad*/
+.platform_ios div[id*="ScratchPad"].TDS_Notes_dialog form[id*="ScratchPad"] {
+	margin: 30px 0px 0 !important;
+	height: 400px !important;
+	position: static !important;
+}
+/*.touch .TDS_Notes_dialog .notes_dialog_form {
+	height: 300px !important;
+}
+.touch .TDS_Notes_dialog .notes_dialog_container {
+	height: 200px;
+}*/
+.sp_canvas_container .mathJax_blockContainer {
+    overflow: hidden !important;    /* prevent scrollbars from showing on scratchpad equations*/
+    margin: 0px !important;         /* remove margin to simplify scaled equation element positioning */
+}
+.sp_canvas_container .mje_container {
+    font-size: 16px;                /* use a static pixel size so zoom level css doesn't cause difficulty scaling equation elements */
+    margin: 0px !important;         /* remove margin/padding to simplify scaled equation element positioning */
+    padding: 0px !important;
+}

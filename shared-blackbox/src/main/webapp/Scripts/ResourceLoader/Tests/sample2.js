@@ -1,0 +1,1 @@
+﻿var sample2 = true;

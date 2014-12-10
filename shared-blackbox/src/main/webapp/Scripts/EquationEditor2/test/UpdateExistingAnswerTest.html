@@ -1,0 +1,86 @@
+<html>
+  <head>
+  <meta>
+    <meta charset="UTF-8">
+  </meta>
+  <!--
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    -->
+     <script type="text/javascript" src="../../MathJax/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full"></script>
+     <script src="../config.js"></script>
+     <script src="../content.js"></script>
+     <script src="../editor.js"></script>
+     <script src="../equation.js"></script>
+     <link href="../mathjax_editor.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <script type="text/javascript">
+      var assertNoException = function(f, label, w) {
+        try {
+          f(w);
+        }catch(e){
+          console.error("Failed to run the test labeled: ", label, w, e);
+        }
+      };
+      var tName = null; 
+      MathJax.Editor.Config.Navigation = false;
+
+      new MathJax.Editor.Widget({
+        contentLabel: 'Attempt to fix another msup type issue.',
+        mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML"> <mstyle displaystyle="true"> <mrow class="MJX-TeXAtom-ORD"> <mn>6</mn> <mn>4</mn> <mo>.</mo> <mn>8</mn> <mo>&#xD7;</mo> <mn>1</mn> <msup> <mn>0</mn> <mn>9</mn> </msup> </mrow> </mstyle> </math>',
+        cb: function(w){
+          var ed = w.getEdit();
+          console.log(ed);
+          Equation.sanitizeMath(w);   
+        }
+      });
+
+      tName = "The msup fix addresses that math 'looks' correct in the UI, but is not correct for scoring";
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '123',
+          cb: function(w){
+            w.getEdit().updateMath(null, "\\Box^2"); 
+          }
+      });
+      new MathJax.Editor.Widget({
+        contentLabel: 'Unfortunately the math is actually wrong and represents this.',
+        TeX: '12(3^2)'
+      });
+      new MathJax.Editor.Widget({
+        contentLabel: 'The fix ensures the math is this.',
+        TeX: '{\\left(123\\right)}^2'
+      });
+
+      tName = 'Fix up msups that have numerics to the right, should NOT happen due to explicit mrows';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        mathML: ' <math xmlns="http://www.w3.org/1998/Math/MathML"> <mstyle displaystyle="true"> <mrow class="MJX-TeXAtom-ORD"> <mn>1</mn> <mn>2</mn> <mn>3</mn> <mn>4</mn> <msup>  <mrow> <mo>(</mo> <mn>1</mn> <mo>)</mo> </mrow> <mn>2</mn> </msup> </mrow> </mstyle> </math>', 
+        cb: function(w){
+          Equation.sanitizeMath(w);   
+        }
+      });
+
+      tName = 'Fix up msups that have numerics to the right, should work';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        mathML: ' <math xmlns="http://www.w3.org/1998/Math/MathML"> <mstyle displaystyle="true"> <mrow class="MJX-TeXAtom-ORD"> <mn>1</mn> <mn>2</mn><mo>.</mo> <mn>3</mn> <mn>4</mn> <msup>  <mn>1</mn> <mn>2</mn> </msup> </mrow> </mstyle> </math>',
+        cb: function(w){
+          Equation.sanitizeMath(w);   
+        }
+      });
+
+
+      tName = 'Fix up msups that have numerics to the right, decimal case';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML">  <mstyle displaystyle="true">  <mrow class="MJX-TeXAtom-ORD">  <mi>f</mi>  <mfenced open="(" close=")">  <mrow class="MJX-TeXAtom-ORD">  <mi>x</mi>  </mrow>  </mfenced>  <mo>=</mo>  <mn>5</mn>  <mn>0</mn>  <mn>0</mn>  <mo>&#x00D7;<!-- × --></mo>  <mn>1</mn>  <mo>.</mo>  <msup>  <mn>2</mn>  <mi>x</mi>  </msup>  </mrow>  </mstyle>  </math>',
+        cb: function(w){
+          Equation.sanitizeMath(w);   
+        }
+      });
+    </script>
+  </body>
+</html>
+
+

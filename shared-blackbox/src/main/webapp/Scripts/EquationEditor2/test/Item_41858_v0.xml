@@ -1,0 +1,77 @@
+<itemrelease version="2.0">
+<item format="eq" id="41858" version="0" bankkey="90">
+<attriblist>
+<attrib attid="itm_item_id">
+<name>Item: ITS ID</name>
+<val>41858</val>
+<desc/>
+</attrib>
+<attrib attid="itm_item_subject">
+<name>Item: Subject</name>
+<val>ELA</val>
+<desc/>
+</attrib>
+<attrib attid="itm_item_desc">
+<name>Item: Item Description</name>
+<val>Test New Item</val>
+<desc/>
+</attrib>
+<attrib attid="itm_FTUse">
+<name>Fieldtest Use</name>
+<val/>
+<desc/>
+</attrib>
+<attrib attid="itm_OPUse">
+<name>Operational Use</name>
+<val/>
+<desc/>
+</attrib>
+<attrib attid="itm_att_Answer Key">
+<name>Item: Answer Key</name>
+<val>EQ</val>
+<desc/>
+</attrib>
+<attrib attid="itm_att_Grade">
+<name>Item: Grade</name>
+<val>11</val>
+<desc>11</desc>
+</attrib>
+<attrib attid="itm_att_Item Format">
+<name>Item: Item Format</name>
+<val>EQ</val>
+<desc/>
+</attrib>
+<attrib attid="itm_att_Page Layout">
+<name>Item: Page Layout</name>
+<val>1</val>
+<desc/>
+</attrib>
+<attrib attid="itm_att_Response Type">
+<name>Item: Response Type</name>
+<val>EquationEditor</val>
+<desc/>
+</attrib>
+<attrib attid="itm_att_Item Point">
+<name>Item: Item Point</name>
+<val>1 pt.</val>
+<desc/>
+</attrib>
+<attrib attid="stm_pass_id">
+<name>Stim: ITS ID</name>
+<val>34</val>
+<desc/>
+</attrib>
+</attriblist>
+<resourceslist/>
+<statistic/>
+<MachineRubric filename="Item_41858_v0.erx"/>
+<RendererSpec filename="Item_41858_v0.eax"/>
+<content language="ENU" version="2.0">
+<rationaleoptlist/>
+<stem>
+<![CDATA[ <p style="">Equation Test</p> ]]>
+</stem>
+<rubriclist/>
+</content>
+</item>
+</itemrelease>

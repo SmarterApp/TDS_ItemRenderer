@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <script>
+        if (typeof netscape !== 'undefined' && netscape.security && netscape.security.PrivilegeManager && netscape.security.PrivilegeManager.enablePrivilege) {
+            window.netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+            window.enabled = true;
+        } else {
+            window.enabled = false;
+        }
+    </script>
+    <script src="IO.js"></script>
+</body>
+</html>

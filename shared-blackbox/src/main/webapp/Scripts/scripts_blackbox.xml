@@ -1,0 +1,97 @@
+<resources>
+
+  <import>scripts_shared.xml</import>
+
+  <!--
+	Classic Shell Item types required for Minnesota (MN):
+	MC, Grid, Sim2, Cover Pages, Item Tutorials
+	They also use animations in stimuli.
+	-->
+
+  <!-- Files for Loader.aspx -->
+  <fileSet name="modern" output="combined/blackbox_modern.js">
+
+    <!-- 3rd party libs -->
+    <reference set="libs" />
+
+    <!-- base files -->
+    <reference set="utilities" />
+    <reference set="loader" />
+    <reference set="messages" />
+    <reference set="accommodations" />
+    <reference set="tools" />
+    <reference set="audio2" />
+    <reference set="tts2" />
+
+    <!-- content files -->
+    <reference set="content-manager" />
+    <reference set="content-audio2" />
+    <reference set="content-tts2" />
+    <reference set="content-qti" />
+    <reference set="content-animation" />
+    <reference set="content-video" /> <!-- needs to be before video -->
+    <reference set="content-spell" />
+    <reference set="content-ms" />
+    <reference set="content-editor2" />
+    <reference set="content-grid2" />
+    <reference set="content-ht" />
+    <reference set="content-mi" />
+    <reference set="content-mt" />
+    <reference set="content-sim2" />
+    <reference set="content-eq3" />
+    <reference set="content-linereader" />
+    <reference set="content-slideshow" />
+    <reference set="content-mask" />
+    <reference set="content-edittask" />
+    <reference set="content-notes" />
+    <reference set="content-scratchpad" />
+    <reference set="content-scaffolding" />
+    <reference set="content-ti" />
+    <reference set="content-moogle" />
+    <reference set="content-modules" />
+
+  </fileSet>
+  
+  <fileSet name="universal" output="combined/blackbox_universal.js">
+    <reference set="modern" />
+  </fileSet>
+
+  <!-- Files for accessibility -->
+  <fileSet name="accessibility" output="combined/blackbox_accessibility.js">
+    <reference set="modern" />
+    <replace set="content-eq3" new="content-eq3-accessibility" />
+  </fileSet>
+
+  <!-- Files for LPN -->
+  <fileSet name="navigator" output="combined/blackbox_lpn.js">
+    <reference set="modern" />
+    <exclude set="content-eq3" />
+    <reference set="content-eq2" />
+    <exclude set="content-editor2" />
+    <exclude set="content-linereader" />
+    <exclude set="content-slideshow" />
+    <exclude set="content-notes" />
+    <exclude set="content-scaffolding" />
+    <exclude set="content-ti" />
+    <exclude set="content-mask" />
+  </fileSet>
+
+  <!-- Files for ITS -->
+  <fileSet name="its" output="combined/blackbox_its.js">
+    <reference set="modern" />
+    <exclude set="libs-jQuery" />
+  </fileSet>
+
+  <!-- Files for development -->
+  <fileSet name="dev" output="combined/blackbox_dev.js">
+    <reference set="modern" />
+  </fileSet>
+
+  <!-- blackbox core -->
+  <fileSet name="handler">
+    <input>Blackbox/blackbox_messages_{0}.js</input>
+    <input>Blackbox/blackbox.js</input>
+    <input>Blackbox/blackbox_seed.js</input>
+  </fileSet>
+
+</resources>

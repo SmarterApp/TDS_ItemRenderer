@@ -1,0 +1,66 @@
+<html>
+  <head>
+  <meta>
+    <meta charset="UTF-8">
+  </meta>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full"></script>
+  <!--
+    <script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    -->
+    <script src="../config.js"></script>
+    <script src="../content.js"></script>
+    <script src="../editor.js"></script>
+    <script src="../tools.js"></script>
+    <link href="../mathjax_editor.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="TEST">
+    </div>
+    <script type="text/javascript">
+
+        //Restrict these values, return true from the duplicate function in order
+        //to prevent the button from adding, make the UI pop up an alert to show
+        //the user what and why?
+        MathJax.Editor.Config.RestrictVariableButtons = ['x', 'times'];
+        MathJax.Editor.Config.duplicateHandler = function(btnCfg){
+          console.warn("Preventing duplicate dangerous UI practice.", btnCfg);
+          return true;
+        };
+        var controlEl     = new MathJax.Editor.Widget({ 
+          contentLabel: 'Existing Container ID Test', //The label for the equation (simply helper / debug)
+          containerId: 'TEST',                        //The dom element you want this to be contained in (creates if not in document)
+          configure: true,                            //Enable the configuration builder (not for use in std page, should set to false)
+          tabs: true,                                 //Should tabs with math buttons be visible in the page
+          TeXEntryMode: 'Allow',                      //Can the user type in tex vs restricting to pure button math
+          TeX: "\\displaystyle ", //The initial math for the page.
+          cb: function(w){
+              console.log("Post creation of the widget prevent duplicate restricted values test.");
+              var tools = w.TOOLS;
+                  tools.addBtn('x');
+                  tools.addBtn('times');
+                  tools.addBtn({key: 'times'});
+                  tools.addBtn({key: 'x'});
+
+              //Test that we insert into the correct row?
+          }
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        var b = MathJax.HTML.Element('button', null, 'Serialize Without Config and empty Container ID');
+        //Example looking up an editor
+        b.onclick = function(){
+          try{
+          var rez = MathJax.Editor.Store.query({containerId: 'TEST'});
+            if(rez && rez.length){
+              var conf = rez[0].serializeSettings();
+              console.log("Serialized this widget: ", conf);
+              new MathJax.Editor.Widget(conf);
+            }
+          }catch(e){
+            console.error("Failed to actually serialize correctly.", e);
+          }
+        };
+        document.body.appendChild(b);
+    </script>
+    </body>
+</html>

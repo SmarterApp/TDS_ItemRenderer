@@ -1,0 +1,1298 @@
+{
+    "position":0,
+    "id":"SBAC-ELA-7",
+    "label":"G7 SB ELA CA",
+    "types":[
+        {
+            "name":"Language",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"ENU",
+                    "name":"English",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"ENU-Braille",
+                    "name":"Braille",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"TTS",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_TTS0",
+                    "name":"None",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_TTS_Stim",
+                    "name":"Stimuli",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_TTS_Item",
+                    "name":"Items",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"Strikethrough",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_ST0",
+                    "name":"False",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_ST1",
+                    "name":"True",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Print Size",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":true,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_PS_L0",
+                    "name":"1X",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_PS_L1",
+                    "name":"Level 1",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_PS_L2",
+                    "name":"Level 2",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_PS_L3",
+                    "name":"Level 3",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_PS_L4",
+                    "name":"Level 4",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"Tutorial",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_T0",
+                    "name":"False",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_T1",
+                    "name":"True",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Word List",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_WL0",
+                    "name":"No Glossary",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_WL_Glossary",
+                    "name":"English Glossary",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Emboss",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_Emboss0",
+                    "name":"None",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_Emboss_Stim&amp;TDS_Emboss_Item",
+                    "name":"Stimuli&amp;Items",
+                    "allowCombine":true,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"Color Choices",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":true,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_CC0",
+                    "name":"Black on White",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_CCMagenta",
+                    "name":"Black on Rose",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_CCYellowB",
+                    "name":"Yellow on Blue",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_CCMedGrayLtGray",
+                    "name":"Medium Gray on Light Gray",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_CCInvert",
+                    "name":"Reverse Contrast",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"American Sign Language",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_ASL0",
+                    "name":"Do not show ASL videos",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_ASL1",
+                    "name":"Show ASL videos",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"Emboss Request Type",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_ERT0",
+                    "name":"Not Applicable",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_ERT_OR",
+                    "name":"On-Request",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_ERT_OR&amp;TDS_ERT_Auto",
+                    "name":"Auto-Request",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"Masking",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_Masking0",
+                    "name":"Masking Not Available",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_Masking1",
+                    "name":"Masking Available",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"Mark for Review",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_MfR0",
+                    "name":"False",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_MfR1",
+                    "name":"True",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Highlight",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_Highlight0",
+                    "name":"False",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_Highlight1",
+                    "name":"True",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Permissive Mode",
+            "isVisible":true,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_PM0",
+                    "name":"Permissive Mode Disabled",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_PM1",
+                    "name":"Permissive Mode Enabled",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"TTS Audio Adjustments",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_TTSAA0",
+                    "name":"No Adjustments for Braille",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_TTSAA_Volume",
+                    "name":"Allow TTS Volume Adjustments",
+                    "allowCombine":true,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_TTSAA_Pitch",
+                    "name":"Allow TTS Pitch Adjustments",
+                    "allowCombine":true,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_TTSAA_Rate",
+                    "name":"Allow TTS Rate Adjustments",
+                    "allowCombine":true,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_TTSAA_SelectVP",
+                    "name":"Allow Voice Pack Selection",
+                    "allowCombine":true,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"TTS Pausing",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_TTSPause0",
+                    "name":"TTS Pausing Off",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_TTSPause1",
+                    "name":"TTS Pausing On",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Test Shell",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_TS_Modern",
+                    "name":"Modern skin",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"System Volume Control",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_SVC1",
+                    "name":"Show widget",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"TTX Business Rules",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_TTX_A202",
+                    "name":"A202",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_TTX_A206",
+                    "name":"A206",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Streamlined Mode",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_SLM1",
+                    "name":"On",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_SLM0",
+                    "name":"Off",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Audio Playback Controls",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_APC_PSP",
+                    "name":"Play Stop and Pause",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Item Font Size",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_IF_S14",
+                    "name":"14pt Items",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Font Type",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_FT_Serif",
+                    "name":"Times New Roman",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Expandable Passages",
+            "isVisible":true,
+            "isSelectable":true,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":"Language",
+            "values":[
+                {
+                    "code":"TDS_ExpandablePassages0",
+                    "name":"Expandable Passages Off",
+                    "allowCombine":false,
+                    "isDefault":false
+                },
+                {
+                    "code":"TDS_ExpandablePassages1",
+                    "name":"Expandable Passages On",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Passage Font Size",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_F_S14",
+                    "name":"14pt",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Mute System Volume",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_Mute0",
+                    "name":"Not Muted",
+                    "allowCombine":false,
+                    "isDefault":true
+                },
+                {
+                    "code":"TDS_Mute1",
+                    "name":"Muted",
+                    "allowCombine":false,
+                    "isDefault":false
+                }
+            ]
+        },
+        {
+            "name":"Student Comments",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_SCNotepad",
+                    "name":"Notepad",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Test Progress Indicator",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_TPI_ResponsesFix",
+                    "name":"Show indicator as a fraction and adjust to test length",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Hardware Checks",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_HWPlayback",
+                    "name":"Check Playback Capabilities",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        },
+        {
+            "name":"Enhanced Security Options",
+            "isVisible":false,
+            "isSelectable":false,
+            "allowChange":true,
+            "studentControl":false,
+            "dependsOn":null,
+            "values":[
+                {
+                    "code":"TDS_ESO_DetectBrowserBreach",
+                    "name":"ESO DetectBrowserBreach",
+                    "allowCombine":false,
+                    "isDefault":true
+                }
+            ]
+        }
+    ],
+    "dependencies":[
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Mute System Volume",
+            "thenValue":"TDS_Mute1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CCMagenta",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD_Stim",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CCInvert",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Word List",
+            "thenValue":"TDS_WL0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CCInvert",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Tutorial",
+            "thenValue":"TDS_T1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Mark for Review",
+            "thenValue":"TDS_MfR1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Expandable Passages",
+            "thenValue":"TDS_ExpandablePassages0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CCYellowB",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Strikethrough",
+            "thenValue":"TDS_ST0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Strikethrough",
+            "thenValue":"TDS_ST0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CCYellowB",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Expandable Passages",
+            "thenValue":"TDS_ExpandablePassages1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"American Sign Language",
+            "thenValue":"TDS_ASL1",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Highlight",
+            "thenValue":"TDS_Highlight1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Expandable Passages",
+            "thenValue":"TDS_ExpandablePassages0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Word List",
+            "thenValue":"TDS_WL_Glossary",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Highlight",
+            "thenValue":"TDS_Highlight0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD_Stim&amp;TDS_PoD_Item",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"American Sign Language",
+            "thenValue":"TDS_ASL0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"TTS Pausing",
+            "thenValue":"TDS_TTSPause0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Streamlined Mode",
+            "thenValue":"TDS_SLM0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Streamlined Mode",
+            "thenValue":"TDS_SLM0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CC0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Emboss Request Type",
+            "thenValue":"TDS_ERT_OR&amp;TDS_ERT_Auto",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Mute System Volume",
+            "thenValue":"TDS_Mute0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"TTX Business Rules",
+            "thenValue":"TDS_TTX_A206",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CC0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Masking",
+            "thenValue":"TDS_Masking0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Highlight",
+            "thenValue":"TDS_Highlight0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Highlight",
+            "thenValue":"TDS_Highlight0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Streamlined Mode",
+            "thenValue":"TDS_SLM1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"American Sign Language",
+            "thenValue":"TDS_ASL0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Mark for Review",
+            "thenValue":"TDS_MfR0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"TTS Pausing",
+            "thenValue":"TDS_TTSPause1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD_Item",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Expandable Passages",
+            "thenValue":"TDS_ExpandablePassages0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CCMedGrayLtGray",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Braille Type",
+            "thenValue":"TDS_BT_G1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD_Stim",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Masking",
+            "thenValue":"TDS_Masking0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Mark for Review",
+            "thenValue":"TDS_MfR0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Strikethrough",
+            "thenValue":"TDS_ST1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Emboss",
+            "thenValue":"TDS_Emboss_Stim&amp;TDS_Emboss_Item",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"TTX Business Rules",
+            "thenValue":"TDS_TTX_A202",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Braille Type",
+            "thenValue":"TDS_BT_G2",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CCMagenta",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Mute System Volume",
+            "thenValue":"TDS_Mute0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CC0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"TTS Pausing",
+            "thenValue":"TDS_TTSPause1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Mark for Review",
+            "thenValue":"TDS_MfR0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"TTX Business Rules",
+            "thenValue":"TDS_TTX_A202",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Color Choices",
+            "thenValue":"TDS_CCMedGrayLtGray",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Highlight",
+            "thenValue":"TDS_Highlight1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"TTS",
+            "thenValue":"TDS_TTS_Item",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Strikethrough",
+            "thenValue":"TDS_ST0",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Masking",
+            "thenValue":"TDS_Masking1",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Masking",
+            "thenValue":"TDS_Masking1",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Tutorial",
+            "thenValue":"TDS_T1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"American Sign Language",
+            "thenValue":"TDS_ASL1",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Emboss Request Type",
+            "thenValue":"TDS_ERT_OR",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"TTS",
+            "thenValue":"TDS_TTS0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"American Sign Language",
+            "thenValue":"TDS_ASL0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Mark for Review",
+            "thenValue":"TDS_MfR1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Tutorial",
+            "thenValue":"TDS_T0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD_Stim&amp;TDS_PoD_Item",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Strikethrough",
+            "thenValue":"TDS_ST1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Expandable Passages",
+            "thenValue":"TDS_ExpandablePassages1",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print on Request",
+            "thenValue":"TDS_PoD_Item",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Masking",
+            "thenValue":"TDS_Masking0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L3",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L1",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L4",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L3",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L2",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L2",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L4",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ESN",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L1",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L0",
+            "isDefault":true
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L4",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L3",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L2",
+            "isDefault":false
+        },
+        {
+            "ifType":"Language",
+            "ifValue":"ENU-Braille",
+            "thenType":"Print Size",
+            "thenValue":"TDS_PS_L1",
+            "isDefault":false
+        }
+    ]
+}

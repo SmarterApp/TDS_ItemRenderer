@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title></title>
+    
+	<!-- Third party dependencies -->
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject_src.js"></script>
+	<script type="text/javascript" src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js"></script>
+
+	<!-- Loader: BASE -->
+	<script type="text/javascript" src="../loader.js"></script> <!-- loader -->
+	<script type="text/javascript" src="../collection.js"></script> <!-- loader (optional) -->
+	<script type="text/javascript" src="../dependency.js"></script> <!-- loader (optional) -->
+
+	<!-- Loader: Images -->
+	<script type="text/javascript" src="../image.js"></script> <!-- loader -->
+
+	<!-- Loader: Scripts (javascript files) -->
+	<script type="text/javascript" src="../../Libraries/YUI/get/get-min.js"></script>
+	<script type="text/javascript" src="../script.js"></script> <!-- loader -->
+    
+    <!-- Loader: Binary -->
+    <script type="text/javascript" src="../binary.js"></script> <!-- loader -->
+	
+	<!-- Loader: Conditional -->
+	<script type="text/javascript" src="../../Utilities/util.js"></script>
+	<script type="text/javascript" src="../../Utilities/util_event.js"></script>
+	<script type="text/javascript" src="../conditional.js"></script> <!-- loader -->
+	
+	<!-- Loader: XHR -->
+	<script type="text/javascript" src="../../Libraries/YUI/connection/connection-min.js"></script>
+	<script type="text/javascript" src="../../Utilities/util_array.js"></script>
+	<script type="text/javascript" src="../../Utilities/util_structs.js"></script>
+	<script type="text/javascript" src="../../Utilities/util_xhr.js"></script>
+	<script type="text/javascript" src="../xhr.js"></script> <!-- loader -->
+
+	<!-- Loader: Unit Testing -->
+	<script type="text/javascript" src="../simulate.js"></script> <!-- loader -->
+	<script type="text/javascript" src="unittests.js"></script>
+	
+</head>
+<body>
+    Running unit tests, check console....
+    
+    <div id="container"></div>
+    
+    <script type="text/javascript">
+		
+		// loaderTest();
+
+	    var binaryLoader = new ResourceLoader.Binary('cookies.swf');
+
+	    binaryLoader.subscribe(ResourceLoader.Status.COMPLETE, function()
+	    {
+
+
+	    });
+
+
+	    window.onload = init;
+	    
+	    function init()
+	    {
+	        var attObj = { data: 'cookies.swf', height: '100', width: '100' };
+	        swfobject.createSWF(attObj, {}, 'container');
+
+	        setTimeout(function() 
+            {
+                var container = document.getElementById('container');
+                console.log('animationInput: ' + typeof container.animationInput);
+                console.log('animationInput: ' + container.PercentLoaded());
+	        }, 100);
+	    }
+        		
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+

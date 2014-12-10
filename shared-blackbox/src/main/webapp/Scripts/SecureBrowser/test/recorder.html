@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html debug="true">
+    <head>
+        <title>Secure Browser Recorder</title>
+        
+        <script type="text/javascript">
+            window.onerror = function(msg, url, line) {
+                var errorMsg = "Error: " + msg + "\nurl: " + url + "\nline #: " + line;
+                console.error(errorMsg);
+                alert(errorMsg);
+            };
+        </script>
+        
+        <!--
+        <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
+        -->
+
+        <!-- YUI -->
+        <script type="text/javascript" src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js"></script>
+        <script type="text/javascript" src="../../Libraries/YUI/storage/storage-min.js"></script>
+    
+        <!-- Utils -->
+        <script type="text/javascript" src="../../Utilities/util.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_date.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_frame.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_storage.js"></script>
+
+        <!-- Secure Browser -->
+        <script type="text/javascript" src="../Summit/air_mobile_2.js"></script>
+        <script type="text/javascript" src="../factory.js"></script>
+        <script type="text/javascript" src="../base.js"></script>
+        <script type="text/javascript" src="../base.recorder.js"></script>
+        <script type="text/javascript" src="../firefox.js"></script>
+        <script type="text/javascript" src="../firefox.recorder.js"></script>
+        <script type="text/javascript" src="../chrome.js"></script>
+        <script type="text/javascript" src="../mobile.android.js"></script>
+        <script type="text/javascript" src="../mobile.ios.js"></script>
+        <script type="text/javascript" src="../mobile.recorder.js"></script>
+    
+        <style type="text/css">
+            legend {
+                font-weight: bold;
+            }
+
+            .group {
+                margin-bottom: 1em;
+            }
+
+            .group-header {
+                text-decoration: underline;
+            }
+
+        </style>
+
+    </head>
+    <body>
+        
+        <h1>Secure Browser Recorder</h1>
+
+        <fieldset>
+            <legend>Info</legend>
+            <button id="btnInitialize">Initialize</button> <br/>
+            Event: <span id="lblEvent"></span><br/>
+            Status: <span id="lblStatus"></span> <a id="btnUpdateStatus" href="#">(refresh)</a>
+        </fieldset>
+        <br/>
+        
+        <fieldset>
+            <legend>Recording</legend>
+            <!--<button id="btnCapabilities">Load Capabilities</button>-->
+            
+            <div class="group">
+                <span class="group-header">Capabilities</span><br/>
+                <label for="ddlDevices">Device:</label><select id="ddlDevices"></select> <br/> <!-- List of devices -->
+                <label for="ddlDeviceChannels">Channel:</label><select id="ddlDeviceChannels"></select>
+                <label for="ddlDeviceSampleRates">Sample Rate:</label><select id="ddlDeviceSampleRates"></select>
+                <label for="ddlDeviceSampleSizes">Sample Size:</label><select id="ddlDeviceSampleSizes"></select>
+                <label for="ddlDeviceFormats">Format:</label><select id="ddlDeviceFormats"></select>
+            </div>
+
+            <div class="group">
+                <span class="group-header">Capture Limit</span><br/>
+                
+                <label for="ddlCaptureType">Type:</label>
+                <select id="ddlCaptureType">
+                    <option value="duration">Duration (seconds)</option>
+                    <option value="size">Size</option>
+                </select>
+
+                <label for="txtCaptureLimit">Limit:</label><input id="txtCaptureLimit" type="text" size="3" value="90" />
+            </div>
+
+            <div class="group">
+                <span class="group-header">Progress Frequency</span><br/>
+                <label for="ddlProgressType">Type:</label>
+                <select id="ddlProgressType">
+                    <option value="time">Time (seconds)</option>
+                    <option value="size">Size</option>
+                </select>
+                <label for="txtProgressInterval">Interval:</label><input id="txtProgressInterval" type="text" size="3" value="1" />
+            </div>
+            
+            <div>
+                <button id="btnStartCapture">Start</button>
+                <button id="btnStopCapture">Stop</button>
+                <br/>
+                Progress: <span id="lblProgress"></span><br/>
+                File: <span id="lblCaptureFile"></span><br/>
+                Quality: <span id="lblCaptureQuality"></span><br/>
+                Compression: <span id="lblCaptureCompression"></span>
+            </div>
+
+        </fieldset>
+        <br/>
+
+        <fieldset>
+            <legend>Playback</legend>
+            
+            Mode:
+            <select id="btnPlayAudioMode">
+                <option value="filename" title="Use the file to play audio">Filename</option>
+                <option value="filedata" title="Use the Base64 data to play audio">Filedata</option>
+            </select>
+
+            <button id="btnPlayAudio">Play</button>
+            <button id="btnStopAudio">Stop</button>
+            <button id="btnPauseAudio">Pause</button>
+            <button id="btnResumeAudio">Resume</button>
+        </fieldset>
+        <br/>
+        
+        <fieldset>
+            <legend>File Management</legend>
+            <button id="btnRetrieveAudioFileList">Retrieve List</button>
+            <select id="ddlAudioFileList"></select>
+            <button id="btnRetrieveAudioFile">Play File</button>
+            <button id="btnClearAudioCache">Clear Cache</button>
+        </fieldset>
+        <br/>
+
+        <script type="text/javascript">
+
+            // the last recording
+            var RecordingData = {
+                filename: null,
+                filedata: null
+            };
+
+            var recorder;
+
+            function updateUIStatus() {
+                var status = recorder.getStatus();
+                var statusEl = YUD.get('lblStatus');
+                statusEl.innerHTML = status;
+            }
+
+            function updateUIEvent(evt) {
+                var eventEl = YUD.get('lblEvent');
+                eventEl.innerHTML = evt.type;
+            }
+
+            function clearSelectElement(select) {
+                while (select.length > 0)
+                    select.remove(0);
+            }
+
+            function setSelectOptions(select, values) {
+                clearSelectElement(select);
+
+                for (var i = 0; i < values.length; i++) {
+                    var opt = document.createElement('option');
+                    opt.value = values[i];
+                    opt.textContent = values[i];
+                    select.appendChild(opt);
+                }
+            }
+
+            // capabilities dropdowns
+            function updateUICapabilities() {
+
+                // get the dropdowns
+                var devicesEl = YUD.get('ddlDevices');
+                var channelsEl = YUD.get('ddlDeviceChannels');
+                var sampleRatesEl = YUD.get('ddlDeviceSampleRates');
+                var sampleSizesEl = YUD.get('ddlDeviceSampleSizes');
+                var formatsEl = YUD.get('ddlDeviceFormats');
+
+                // get the devices and capabilities
+                var capabilities = recorder.getCapabilities();
+                var devices = capabilities.supportedInputDevices;
+                //console.dir(devices);
+
+                // build the device dropdown
+                if (devicesEl.length == 0) {
+                    for (var i = 0; i < devices.length; i++) {
+                        var device = devices[i];
+                        var opt = document.createElement('option');
+                        opt.value = device.id;
+                        opt.textContent = device.description;
+                        devicesEl.appendChild(opt);
+                    }
+                }
+                
+                // build the device capabilities dropdowns
+                for (var i = 0; i < devices.length; i++) {
+                    var device = devices[i];
+                    
+                    // use either the first device or selected
+                    if (devicesEl.value == device.id) {
+                        setSelectOptions(channelsEl, device.channelCounts);
+                        setSelectOptions(sampleRatesEl, device.sampleRates);
+                        setSelectOptions(sampleSizesEl, device.sampleSizes);
+                        setSelectOptions(formatsEl, device.formats);
+                    }
+                }
+            }
+
+            // get the current selected capabilities
+            function getSelectedCapabilities() {
+
+                var capabilities = {
+                    captureDevice: YUD.get('ddlDevices').value * 1, // id
+                    channelCount: YUD.get('ddlDeviceChannels').value * 1,
+                    sampleRate: YUD.get('ddlDeviceSampleRates').value * 1,
+                    sampleSize: YUD.get('ddlDeviceSampleSizes').value * 1,
+                    encodingFormat: YUD.get('ddlDeviceFormats').value,
+                    qualityIndicator: true,
+                    captureLimit: {},
+                    progressFrequency: {
+                        type: YUD.get('ddlProgressType').value,
+                        interval: YUD.get('txtProgressInterval').value * 1 // isAIRMobile ? 100 : 4024
+                    }
+                };
+
+                // set capture limit (either duration or size, not both)
+                var captureType = YUD.get('ddlCaptureType').value;
+                var captureLimit = YUD.get('txtCaptureLimit').value * 1;
+                capabilities.captureLimit[captureType] = captureLimit;
+
+                return capabilities;
+            }
+
+            window.onload = function() {
+                TDS.SecureBrowser.initialize();
+                recorder = TDS.SecureBrowser.getRecorder();
+
+                if (recorder != null) {
+                    console.log('Found a SB recorder.');
+                } else {
+                    console.log('Could not find a SB recorder.');
+                }
+                
+                // hack for checking for older plugins
+                if (navigator.plugins && 
+                    navigator.plugins.length > 0 && 
+                    navigator.plugins[0].name == 'AIR Audio' &&
+                    navigator.plugins[0].version == '1.0.0.0') {
+                    alert('You are using an older incompatible version of the Firefox recorder plugin.');
+                }
+            };
+
+            function initHandler(event) {
+                updateUIEvent(event);
+                updateUIStatus();
+                
+                if (event.type == 'READY') {
+                    updateUICapabilities();
+                }
+            }
+
+            var progressCount = 0;
+            var progressValue = null; // the last progress value
+
+            // this is called during capture events
+            function recorderHandler(event) {
+	            
+                updateUIEvent(event);
+                updateUIStatus();
+                
+		        if (event.type == 'START') {
+		            progressCount = 0;
+		            YUD.get('lblProgress').innerHTML = '';
+		        } else if (event.type == 'INPROGRESS') {
+		            progressValue = event.data;
+                    var progressLabel = progressValue;
+		            progressLabel += ' (' + (++progressCount) + ')';
+		            YUD.get('lblProgress').innerHTML = progressLabel;
+		        } else if (event.type == 'END') {
+
+			        var results = JSON.parse(event.data, null);
+			        var saveAs = results.filename.replace(/^.*[\\\/]/, '');
+			        var base64 = results.base64;
+			        var quality = results.qualityIndicator;
+
+                    // set summary
+			        var fileEl = YUD.get("lblCaptureFile");
+			        fileEl.innerHTML = saveAs;
+
+			        var qualityEl = YUD.get("lblCaptureQuality");
+			        qualityEl.innerHTML = quality;
+
+                    // compression ratio (only if size was reported in progress)
+                    if (YUD.get('ddlProgressType').value == 'size') {
+                        var base64Len = base64.length;
+                        var base64Bytes = (base64Len / 4) * 3;
+                        var base64Ratio = Math.ceil(base64Bytes / progressValue);
+                        var compressionEl = YUD.get("lblCaptureCompression");
+			            compressionEl.innerHTML = base64Ratio + '% (estimate)';
+                    }
+
+			        // set recording globally
+                    RecordingData.filename = saveAs;
+			        RecordingData.filedata = base64;
+		        }
+            }
+            
+            function playbackHandler(event) {
+                
+                updateUIEvent(event);
+                updateUIStatus();
+
+            }
+
+            /*****************************************************/
+
+            YUE.on('btnInitialize', 'click', function() {
+                recorder.initialize(initHandler);
+            });
+
+            // someone clicks on button to load capabilities
+            YUE.on('btnCapabilities', 'click', function() {
+                updateUICapabilities();
+            });
+
+            // someone changes devices
+            YUE.on('ddlDevices', 'change', function() {
+                updateUICapabilities();
+            });
+
+            // refresh current status
+            YUE.on('btnUpdateStatus', 'click', function(evt) {
+                YUE.stopEvent(evt);
+                updateUIStatus();
+            });
+
+            YUE.on('btnStartCapture', 'click', function() {
+
+                // get the currently selected capabilities in the dropdowns
+                var options = getSelectedCapabilities();
+                // console.dir(options);
+                
+                // start recording voice
+                recorder.startCapture(options, recorderHandler);
+            });
+            
+            YUE.on('btnStopCapture', 'click', function() {
+                recorder.stopCapture();
+            });
+
+            YUE.on('btnPlayAudio', 'click', function() {
+
+                var playAudioModeEl = YUD.get('btnPlayAudioMode');
+
+                if (playAudioModeEl.value == 'filename') {
+                    recorder.play({
+                        type: 'filename',
+                        data: null,
+                        filename: RecordingData.filename
+                    }, playbackHandler);
+                } else {
+                    recorder.play({
+                        type: 'filedata',
+                        data: RecordingData.filedata,
+                        filename: null
+                    }, playbackHandler);
+                }
+            });
+
+            YUE.on('btnStopAudio', 'click', function() {
+                recorder.stopPlay();
+            });
+
+            YUE.on('btnPauseAudio', 'click', function() {
+                recorder.pausePlay();
+            });
+
+            YUE.on('btnResumeAudio', 'click', function() {
+                recorder.resumePlay();
+            });
+            
+            YUE.on('btnRetrieveAudioFileList', 'click', function() {
+                var audioListEl = YUD.get('ddlAudioFileList');
+                recorder.retrieveAudioFileList(function(list) {
+                    setSelectOptions(audioListEl, list);
+                    if (list.length === 0) {
+                        alert('No files recorded.');
+                    }
+                });
+            });
+
+            YUE.on('btnRetrieveAudioFile', 'click', function() {
+
+                // get the selected file
+                var audioListEl = YUD.get('ddlAudioFileList');
+                var audioFile = audioListEl.value;
+                if (audioFile == '') return;
+
+                // play specific file
+                recorder.play({
+                    type: 'filename',
+                    data: null,
+                    filename: audioFile
+                }, playbackHandler);
+            });
+
+            YUE.on('btnClearAudioCache', 'click', function() {
+                var audioListEl = YUD.get('ddlAudioFileList');
+                recorder.clearAudioFileCache(function() {
+                    setSelectOptions(audioListEl, []);
+                });
+            });
+
+            YUE.on('ddlProgressType', 'change', function() {
+                var typeEl = YUD.get('ddlProgressType');
+                var intervalEl = YUD.get('txtProgressInterval');
+                if (typeEl.value == 'time') {
+                    intervalEl.value = 1; // one second
+                } else if (typeEl.value == 'size') {
+                    intervalEl.value = 10; // 10k
+                }
+            });
+
+            YUE.on('ddlCaptureType', 'change', function() {
+                var typeEl = YUD.get('ddlCaptureType');
+                var limitEl = YUD.get('txtCaptureLimit');
+                if (typeEl.value == 'duration') {
+                    limitEl.value = 90; // 90 seconds
+                } else if (typeEl.value == 'size') {
+                    limitEl.value = 500; // 500k
+                }
+            });
+
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,426 @@
+<html>
+  <head>
+  <meta>
+    <meta charset="UTF-8">
+  </meta>
+    <!--
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
+    -->
+     <script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="rangy-1.2.3/rangy-core.js"></script>
+     <script src="../config.js"></script>
+     <script src="../content.js"></script>
+     <script src="../editor.js"></script>
+     <script src="../tools.js"></script>
+     <link href="../mathjax_editor.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id='calculus'>
+    </div>
+    <!--
+    An equation will go here.
+    <div id="ContainerIdTest" class="container">
+    </div>
+    <div id="MathTexContainer">
+      <div id="MathTex"> 
+          \(\displaystyle x + y - 20 \)
+      </div>
+    </div>
+    -->
+    <form>
+      <div id='form_test'></div>
+    </form>
+
+    <script type="text/javascript">
+      //PH is a hack to enable different placeholders (ie lower grades use \\Box)
+      var assertNoException = function(f, label, w) {
+         try {
+           f(w);
+         }catch(e){
+           console.error("Failed to run the test labeled: ", label, w, e);
+         }
+       };
+      var tName = null; 
+
+      tName = 'Basic editor with calculus items for click tests.';
+      new MathJax.Editor.Widget({
+          contentLabel: 'Calculus, easy editor test for mouse clicking about.',
+          containerId: 'calculus',
+          TeX: '\\frac{1}\\Box',
+          tabs: true,
+          tabConfig: {
+            Order: ['Calculus']
+          },
+          cb: function(w){
+            var ed = w.getEdit();
+            ed.left(); ed.right();
+            ed.updateMath(null, '(\\Box)', null, function(){
+              ed.right(); ed.right();
+              ed.updateMath(null, '(\\Box)');
+            });
+          }
+      });
+
+      tName = 'Test the unicode rendering of a - sign.';
+      new MathJax.Editor.Widget({
+       contentLabel: tName,
+        navigation: false,
+        mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML">    <mstyle displaystyle="true">      <mrow class="MJX-TeXAtom-ORD"></mrow>      <mo>&#x2212;<!-- − --></mo>      <mn>1</mn>    </mstyle>  </math>'
+      });
+
+      tName = 'Test the new label options.';
+      new MathJax.Editor.Widget({
+        editorLabels: ['Testing labels', 'Second Label'],
+        TeX: ['x', 'y', 'no third label'],
+        tabs: true,
+        tabConfig:{
+          Order: 'Basic'
+        }
+      });
+
+
+      tName = 'This is when the student could enter brackets manually.';
+      new MathJax.Editor.Widget({
+       contentLabel: tName,
+        navigation: false,
+       mathML: [
+       '<math xmlns="http://www.w3.org/1998/Math/MathML">    <mstyle displaystyle="true">      <mo stretchy="false">(</mo>      <mn>2</mn>      <mi>x</mi>      <mo>&#x2212;<!-- − --></mo>      <mn>5</mn>      <mrow>        <mrow>          <mo stretchy="false">)</mo>          <mo>=</mo>          <mo stretchy="false">(</mo>          <mn>3</mn>          <mi>x</mi>          <mo>+</mo>          <mn>1</mn>        </mrow>      </mrow>      <mo stretchy="false">)</mo>    </mstyle></math>'
+       ]
+      });
+
+      new MathJax.Editor.Widget({
+        navigation: false,
+       contentLabel: "This is what it looks like during the later phases of 2.1 and 2.2",
+       mathML: [
+       '<math xmlns="http://www.w3.org/1998/Math/MathML"><mstyle displaystyle="true"><mo stretchy="false">(</mo><mn>2</mn><mi>x</mi><mo>&#x2212;</mo><mn>5</mn><mrow><mo>(</mo><mrow><mo>(</mo><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mn>3</mn><mi>x</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow><mo>)</mo></mrow><mo stretchy="false">)</mo></mstyle></math>'
+       ]
+      });
+
+
+      tName = 'Prefix test';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: ['x \\times x']
+      });
+
+
+      tName = 'x vs \\times';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: ['x \\times x'],
+          tabs: true,
+          tabConfig: {
+            Order: [
+              'SBAC3',
+            ]
+          }
+      })
+      try{
+      tName = 'Hi';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeX: '\\sqrt{x+1} + x^2'
+      });
+      }catch(e){
+        console.error("Failed.", e);
+      }
+
+
+      tName = 'Ensure initial eq selection.  Click on the sqrt button and ensure it shows box selection';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: '',
+          tabs: true,
+          tabConfig: {
+            Order: ['Calculus']
+          }
+      });
+
+      tName = 'Test to ensure you can click on the boxes.';
+      new MathJax.Editor.Widget({
+        contentLabel: 'Check to see that clicks select the correct elements.',
+        TeX: '\\frac \\Box \\Box'
+      });
+
+      tName = "Test a leftmost box selection on inserts."
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: 'x',
+          cb: assertNoException.bind(this, function(w){
+            var ed = w.getEdit();
+            ed.updateMath(null, 'x+ 1');
+          }, tName)
+      });
+
+      tName = 'Restricted to keys in the content tab.';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          tabs: true,
+          RestrictKeysToContent: true,
+          tabConfig: {
+            Order: 'TMP',
+            TMP: {
+              rows: [{ 
+                title: 'Signs',
+                type: 'row',
+                items: ['lt', 'le', '=', 'ge', 'gt', 
+                 {key: '( )', value: '(\\PH)'},
+                 {key: '| |', value: '|\\PH|'}
+                ]
+              },{ 
+                title: 'Test Numbers',
+                type: 'row',
+                items: [1, 2, 3]
+              }]
+            }
+          }
+      });
+
+      tName = 'Is Empty Test: ';
+      new MathJax.Editor.Widget({
+          tabs: true,
+          contentLabel: tName,
+          RestrictKeysToContent: true,
+          TeX: ['', 'x + 1'],
+          cb: assertNoException.bind(this, function(w){
+            if(!w.isEmpty()){
+              w.setContentLabel('Success. This equation is considered not empty, which is correct.');
+            }else{
+              w.setContentLabel("ERROR, this equation was not empty but is empty returned true");
+            }
+          }, tName)
+      });
+
+      tName = 'This is empty of valid math.';
+      new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeX: ['\\Box', ''],
+          cb: assertNoException.bind(this, function(w){
+            if(w.isEmpty()){
+              w.setContentLabel("Success.   This equation is considered empty.");
+            }else{
+              w.setContentLabel("Error.  No valid Math but isEmpty returned false");
+            }
+          }, tName)
+      });
+
+      tName = 'Form Submit button test.  Click a button, it shoud NOT form submit.';
+      new MathJax.Editor.Widget({containerId: 'form_test', TeX: 'x+1', tabs: true, contentLabel: tName});
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName = 'Dynamically Adding in tabs and then a button.';
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        tabConfig: {
+          Order: []
+        },
+        TeX: 'X=1',
+        tabs: true,
+        cb: assertNoException.bind(this, function(w) {
+          try { 
+            w.CONTENT.addTab({title: 'Dynamic Tab 1'}, 'Dyn1')
+            w.CONTENT.addTab({title: 'Dynamic Tab 2'}, 'Dynamic2')
+            w.CONTENT.addBtn({text: 'Dynamic Button 1', value: '1'});
+            w.CONTENT.addBtn({text: 'Dynamic Button 2', value: '2'}, 1);
+            w.CONTENT.rebuild();
+          } catch (e) {
+            console.error("Failed to add in a new tab or button.", e);
+          }
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      tName =  "Non Standard placeholder. Should have x instead of \\Box";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        placeHold: "x",
+        tabs: true,
+        cb: assertNoException.bind(this, function(w) {
+          try {
+            //w.getEdit().makeEditable();
+            //w.CONTENT.btnClick(null, {value: "\\int_{\\PH}^{\\infty}{\\PH}"}, w.unfocus.bind(w)); 
+            var ed = w.getEdit();
+            ed.setCursor(ed.getBaseMrow());
+            ed.updateMath(null, "\\int_{\\PH}^{\\infty}{\\PH}");
+            
+          } catch(e) {
+            console.error("Why won't you hide?", e);
+          }
+        }, tName)
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      //Bells and Whistles, Tests a lot of stuff.
+      var controlEl     = new MathJax.Editor.Widget({ 
+        contentLabel: 'Existing Container ID Test With a ton of other tweaks and tests.  Kitchen sink example.',
+        containerId: 'ContainerIdTest', 
+        RestrictKeysToContent: true,
+        tabs: true,
+        tabContainerId: 'ControlTestEl',
+        TeX: "\\displaystyle {\\frac{x 1}{x^2 - 1} x + 1 + \\sqrt{x^2+y^2}}",
+        TeXEntryMode: 'Allow',
+        EditMode: MathJax.Editor.Config.EditModes.REPLACE,
+        tabConfig: {
+          Order: ['Calculus', 'TEST'],
+          TEST: {
+            title: 'THING',
+            rows:[{
+              type: 'row',  
+              items: ['a']
+              },{
+              type: 'grid',
+              cols: 2,
+              items: ['b', 'c', 'd']
+            }]
+          }
+        }, //Provide additional tab configuration.
+        cb: function(w) {
+          try {
+            w.getEdit().left();
+            w.getEdit().left();
+            w.getEdit().right();
+            w.getEdit().left();
+          } catch (e) {
+            console.error("Failed to determine the editor would work.", e);
+          }
+        }
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      var tName =  "Editor initialized with only a title and the ability to enter TeX.";
+      new MathJax.Editor.Widget({
+        contentLabel: tName,
+        TeXEntryMode: 'Allow'
+      });
+
+      new MathJax.Editor.Widget({
+        contentLabel: 'Empty Content (Should not crash and the css should let you see where the editor is)'
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      new MathJax.Editor.Widget({
+        contentLabel: 'Navigation Test.',
+        TeX: '\\int_{x=1}^{x-\\infty}+x -1 + x^2',
+        navigation: true
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+        //Simple Math in TeX format
+        new MathJax.Editor.Widget({
+          contentLabel: 'Simple Math Test',
+          TeX: 'x + 1'
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        //Simple Math in MathML format
+
+        //Existing page container & Math inside
+        new MathJax.Editor.Widget({
+          contentLabel: 'Existing Container ID with math',
+          containerId:  "MathTexContainer",
+          TeXEntryMode: 'None',
+          contentId:    "MathTex"
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        new MathJax.Editor.Widget({
+          contentLabel: 'Create a container with an ID (NOT in dom already)',
+          containerId:  "MathTexContainerNotInPage",
+          TeX: 'x - 500'
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        //Show the controls
+        new MathJax.Editor.Widget({
+          contentLabel: 'Controls with Empty Math',
+          tabs: true,
+          TeX: '\\displaystyle {}'
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        //Custom Tab Test (simple)
+        new MathJax.Editor.Widget({
+          TeX: "\\displaystyle {x}",
+          tabs: true,
+          tabConfig: {
+            Order: ['TEST', 'Algebra'],
+            TEST: {
+              rows:[{
+                type: 'row',  
+                items: ['a']
+              }]
+            }
+          }
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        //Tex Input Test
+        new MathJax.Editor.Widget({
+          contentLabel: 'TeX Entry typing with Replacement editing',
+          TeXEntryMode: 'Allow',
+          TeX: 'X - Y',
+          editMode: MathJax.Editor.Config.EditModes.REPLACE
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        //MathML test on Widget Constructor
+        new MathJax.Editor.Widget({
+          contentLabel: 'Math ML initialization',    
+          mathML: '<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>+</mo><mn>1</mn></math>'
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+
+
+
+
+        //Serialize Test
+        var cb = function(w) {
+          try {
+            var serialized = w.serialize();
+                serialized.contentLabel = 'Widget using serialized data. (TeX entry should still be on)'; 
+                serialized.TeX = null; //Ensure we are actually serializing the math
+                console.log("SERIALIZED", serialized);
+            new MathJax.Editor.Widget(serialized);
+          } catch (e) {
+            console.error("FAILED to serialize data.", e);
+          }
+        };
+
+        tName = 'Serialization initial widget test (Tex Entry Enabled)';
+        new MathJax.Editor.Widget({
+          contentLabel: tName,
+          TeXEntryMode: 'Allow',
+          TeX: 'x + 1 - x^{2}',
+          cb: cb,
+          editMode: MathJax.Editor.Config.EditModes.REPLACE
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        tName = 'Odd msubsub test case.  No idea how to repro to get an msup without a top element...';
+        new MathJax.Editor.Widget({
+         contentLabel: tName,
+         mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML"> <mstyle displaystyle="true"> <mrow class="MJX-TeXAtom-ORD"> <mo>&#x2212;<!-- − --></mo> <mn>9</mn> <mfenced open="(" close=")"> <mrow> <mo>&#x2212;<!-- − --></mo> <mn>2</mn> </mrow> </mfenced> <msup> <mo>=</mo> </msup> </mrow> </mstyle> </math>'
+        });
+
+
+      tName = 'Editor fraction button test.  There should not be two buttons.';
+    new MathJax.Editor.Widget({contentLabel: tName, "configure":false,"configure":false,"tabs":"true","TeXEntryEnabled":"true","TeX":["\\displaystyle {y}"],"id":"2","mathML":["<math xmlns=\"http://www.w3.org/1998/Math/MathML\">\n  <mstyle displaystyle=\"true\" />\n</math>","<math xmlns=\"http://www.w3.org/1998/Math/MathML\">\n  <mstyle displaystyle=\"true\"/>\n</math>"],"tabConfig":{"Order":["Basic"],"Basic":{"title":"Basic","rows":[{"type":"row","items":{"value":"\\frac{\\PH}{\\PH}","css":null,"text":"x/y"}}]}},"placeHold":"\\Box","TeXEntryMode":"Allow","TeXEntryInit":"Allow","editMode":"INSERT","containerId":"equationEditorReinstantiation"});
+
+      tName = 'Another Config Test.   Should not cause combile / build issues.';
+      new MathJax.Editor.Widget({contentLabel: tName,"configure":false,"tabs":"true","TeXEntryEnabled":"true","TeX":["\\displaystyle {y}"],"id":"2","tabConfig":{"Order":["Algebra"],"Algebra":{"title":"Algebra","rows":[{"type":"numpad","items":["7","8","9","4","5","6","1","2","3","0","."]},{"type":"row","items":["x","y","z","r","t","pi","theta"]},{"title":"operation_simple","type":"row","items":["+","-","times","div","="]},{"type":"row","items":{"value":"\\frac{\\PH}{\\PH}","css":null,"text":"x/y"}}]}},"placeHold":"\\Box","TeXEntryMode":"None","TeXEntryInit":"None","mathML":"<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mstyle displaystyle=\"true\"><mrow class=\"MJX-TeXAtom-ORD\"><mi>y</mi></mrow></mstyle></math>","editMode":"INSERT","containerId":"equationEditorConfig"});
+
+      tName =  "Testing different config issues.  Empty row test (no bailing allowed)";
+      new MathJax.Editor.Widget(
+{TeX: 'X+1', "contentLabel":tName,"configure":false,"tabs":"true","TeXEntryEnabled":"true","TeX":["\\displaystyle {y}"],"id":"3","mathML":"<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>cos</mi><mi>◻</mi><mo>⁡</mo><mo stretchy=\"false\">(</mo><mo stretchy=\"false\">)</mo></math>","tabConfig":{"Order":["Basic"],"Basic":{"title":"Basic","rows":[{"type":"row","items":["arcsin","arccos","arctan","arg","cos","cosh","cot","coth","csc","deg","det","dim","exp","gcd","hom","inf","ker","lg","lim","liminf","limsup","ln","log","max","min","Pr","sec","sin","sinh","sup","tan","tanh"]},null]}},"placeHold":"\\Box","TeXEntryMode":"None","TeXEntryInit":"None","editMode":"INSERT"}
+      );
+      document.body.appendChild(MathJax.HTML.Element('br'));
+
+      new MathJax.Editor.Widget({
+contentLabel: 'Kids do the darndest things',
+mathML: '<math xmlns="http://www.w3.org/1998/Math/MathML">   <mstyle displaystyle="true">     <mrow class="MJX-TeXAtom-ORD">       <mn>2</mn>       <mfenced open="(" close=")">         <mrow>           <mfenced open="(" close=")">             <mrow>               <msup>                 <mfenced open="(" close=")">                   <mrow>                     <mfenced open="(" close=")">                       <mrow>                         <mi>r</mi><mo>+</mo>                         <msup>                           <mfenced open="(" close=")">                             <mrow>                               <mfenced open="(" close=")">                                 <mn>4</mn>                               </mfenced>                             </mrow>                           </mfenced>                           <mn>2</mn></msup>                       </mrow>                     </mfenced>                   </mrow>                 </mfenced>               </msup>             </mrow>           </mfenced>         </mrow>       </mfenced>       <mo>&#x2212;<!-- − --></mo>       <mn>2</mn>       <msup>         <mfenced open="(" close=")">           <mrow>             <mi>&#x03C0;<!-- π --></mi>             <mi>r</mi>           </mrow>         </mfenced>         <mn>2</mn>       </msup></mrow>   </mstyle> </math>'
+      });
+      document.body.appendChild(MathJax.HTML.Element('br'));
+    </script>
+    </body>
+</html>

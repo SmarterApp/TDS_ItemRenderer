@@ -1,0 +1,57 @@
+<html>
+  <head>
+  <meta>
+    <meta charset="UTF-8">
+  </meta>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full"></script>
+  <!--
+    <script type="text/javascript" src="../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    -->
+     <script src="../config.js"></script>
+     <script src="../content.js"></script>
+     <script src="../editor.js"></script>
+     <script src="../tools.js"></script>
+     <link href="../mathjax_editor.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <script type="text/javascript">
+      MathJax.Hub.Config({
+       "HTML-CSS":{
+         scale: MathJax.Editor.Config.Scale || 150
+       }
+     });
+
+     new MathJax.Editor.Widget({
+          contentLabel: 'A Widget using all the defaults (key nav and delete is about all you can do)',
+          TeX: '\\displaystyle x+1+\\sqrt{x} + \\int_{x=1}^{\\infty}'
+	   });
+     document.body.appendChild(MathJax.HTML.Element('br'));
+
+     new MathJax.Editor.Widget({ 
+       contentLabel: 'A simple Widget with tabs enabled that also allows you to type math (space / enter eval it)',
+       tabs:true,
+	     TeXEntryMode: 'Allow',
+      // TeX: ['{x+1}^2', 'x^2 + 2x + 1']
+       TeX: [''],
+       tabConfig: {
+         Order: ['Calculus']
+       },
+
+       cb: function(w){
+         var ed = w.getEdit();
+         ed.updateMath(null, '(\\Box)');
+       }
+     });
+     document.body.appendChild(MathJax.HTML.Element('br'));
+
+     new MathJax.Editor.Widget({ 
+       contentLabel: 'Using the configuration.  Click rebuild if you change edit modes.',
+       configure: true,
+	     tabs: true,
+	     TeXEntryMode: 'Vim',
+          TeX: ['0', '1', '2', 'x=1']
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+    </script>
+    </body>
+</html>

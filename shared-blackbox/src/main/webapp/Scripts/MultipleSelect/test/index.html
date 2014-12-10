@@ -1,0 +1,98 @@
+<html>
+
+<head>
+
+    <!-- Libs -->
+    <script src="../../Libraries/YUI/yahoo/yahoo.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/dom/dom.js" type="text/javascript"></script>
+    <script src="../../Libraries/YUI/event/event.js" type="text/javascript"></script>
+    <script src="../../Libraries/jQuery/jquery-1.10.2.min.js" type="text/javascript"></script>
+
+    <!-- Utils -->
+    <script type="text/javascript" src="../../Utilities/util.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_assert.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_object.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_date.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_array.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_structs.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_custom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_emitter.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event_manager.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_frame.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_storage.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_xml.js"></script>
+
+    <script src="../base.js" type="text/javascript"></script>
+    <script src="../option.js" type="text/javascript"></script>
+    <script src="../renderer.js" type="text/javascript"></script>
+    
+    <style type="text/css">
+        .optionContainer {
+            border: 1px solid black;
+            margin: 5px;
+        }
+        .optionSelected {
+            background-color: beige;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <b>Multiple Choice:</b>
+    <div id="mc"></div>
+
+    <br/>
+    <b>Multiple Select Vertical:</b>
+    <div id="ms_vert"></div>
+
+    <br />
+    <b>Multiple Select Horizontal:</b>
+    <div id="ms_horiz"></div>
+
+    <script type="text/javascript">
+
+        var MS = TDS.MultipleSelect;
+        var MSRenderer = TDS.MultipleSelect.Renderer;
+
+        // multiple choice
+        var mc = new MS('mc', 0, 1);
+        mc.prompt = 'What option do you like?';
+        mc.createOption('A', 'Here is option A');
+        mc.createOption('B', 'Here is option B');
+
+        var mcRenderer = new MSRenderer(mc);
+        mcRenderer.render(document.getElementById('mc'));
+
+        // multiple select vertical
+        var ms = new MS('ms_vert', 0, 2);
+        ms.createOption('1', 'Here is option 1');
+        ms.createOption('2', 'Here is option 2');
+        ms.createOption('3', 'Here is option 3');
+        ms.createOption('4', 'Here is option 4');
+
+        var msRenderer = new MSRenderer(ms);
+        msRenderer.render(document.getElementById('ms_vert'));
+
+        // multiple select horizontal
+        var ms = new MS('ms_horiz', 0, 4);
+        ms.orientation = MS.Orientation.Horizontal;
+        ms.createOption('1', 'Here is option 1');
+        ms.createOption('2', 'Here is option 2');
+        ms.createOption('3', 'Here is option 3');
+        ms.createOption('4', 'Here is option 4');
+
+        var msRenderer = new MSRenderer(ms);
+        msRenderer.render(document.getElementById('ms_horiz'));
+
+    </script>
+
+</body>
+
+</html>

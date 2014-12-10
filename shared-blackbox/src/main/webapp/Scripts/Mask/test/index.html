@@ -1,0 +1,177 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="content-language" content="en-us" />
+    <meta http-equiv="cache-control" content="no-cache" />
+
+    <!-- OPTIONAL: You only need the YUI Button CSS if you're including YUI Button, mentioned below. -->
+    <link rel="stylesheet" type="text/css" href="../mask.css">
+ 
+    <!-- Dependencies -->
+    <script src="../../Libraries/YUI/yahoo/yahoo-min.js"></script>
+    <script src="../../Libraries/YUI/dom/dom-min.js"></script>
+    <script src="../../Libraries/YUI/selector/selector-min.js"></script>
+    <script src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js"></script>
+    <script src="../../Libraries/YUI/element/element-min.js"></script>
+
+    <!-- Masking Scripts -->
+    <script src="../main.js"></script> <!-- Simple on off, config etc -->
+    <script src="../control.js"></script> <!-- Controls for mass updates, storage of instances -->
+    <script src="../events.js"></script> <!-- Event listener pointed at a control -->
+    <style type="text/css">
+      .test_scroll {
+        overflow: auto;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h2> Test info: </h2>
+    You should see 3 masks created when the tests have run, and nothing in the error console.  The page should
+    start empty, but has 3 hidden masks that will show up if you click 'on'.  This additionally tests the mapping
+    of pageId to sets of masks.
+
+
+    You can click 2 times, or click and drag.  Note you can only start doing the click / mask dragging BELOW 
+    the buttons.  You cannot click too close together, there is a 'min' distance managed by the config.
+    <div> <!-- Minor user friendly hacks -->
+      <button id="on">On</button>
+      <button id="off">Off</button>
+      <button id="create">Create</button>
+    </div>
+    (click below here to test after hitting create)
+    <div id='pageId' class="test_scroll">
+      <br/><br/>
+      
+      <span id="area1">
+      This will test the masking tool, creation of elements and the scrolling information (eventually)
+      </span>
+      <br/> <br/>
+
+      <span id="area2">
+      Create the basic idea
+      </span>
+      <br/> <br/>
+
+      <span id="area3">
+        Create sections that can be 'masked off'
+      </span>
+      <br/> <br/>
+
+      <span id="area4">
+      Create some on off toggle events
+      </span>
+      <br/> <br/>
+
+      <span id="area5">
+      Mask specific sections and also fake fire certain events.
+      </span>
+      <br/> <br/> <br/> <br/> <br/> <br/>
+      <span id ="area6"> More space </span>
+      <br/> <br/> <br/> 
+      <span> Scrolling Test (should not be covered)</span>
+
+      More stuff
+    </div>
+
+    <!-- Question with image having alt text , bunch of extra gunk to force a scrollbar for the page-->
+    <div id="scroll" class="test_scroll">
+         <div class="layoutColumnRight theQuestions">
+           <div class="padding">
+             <div class="questionAnswerGroup itemContainer format_wb response_keyboardcustom firstItem lastItem            activeItem" id="Item_35918">
+               <div class="questionContainer">
+                 <span class="markComment" data-tts-skip="true">
+                   <a class="commentItem" id="Item_CommentLink_35918" href="#" tabindex="-1">Submit a comment for this     item</a>
+                   <a class="markReview " id="Item_MarkLink_35918" href="#" aria-checked="false" tabindex="-1">Mark Item   for Review</a>
+                   <input type="checkbox" name="Item_Mark_35918" id="Item_Mark_35918" style="display:none;">
+                 </span>
+ 
+               <h2>35918</h2>
+               <span>{--Space added before this post header</span>
+                 <div title="Question" class="stemContainer contextAreaFocus" id="Stem_35918">
+                   <p style="">Students collected eroded soil from a different stream table. The results are shown in the  data table.</p><p style="text-align:center; ">&nbsp;</p><p style="text-align:center; ">
+</p><p style="text-align:center; ">&nbsp;</p><p style="">What is the mean for     this data?</p><p style="">&nbsp;</p><p style="">You can use the calculator to help you answer this question.</p><p        style="">&nbsp;</p><p style=""><span id="item_35918_TAG_2_BEGIN">Use</span> the keypad or type your answer in the box.</  p><p style="">&nbsp;</p><p style=""><span id="item_35918_TAG_3_BEGIN"><input type="text" class="inputCloze character_5"   maxlength="5" size="5" name="textbox1_item_35918">g</span></p>
+                 </div>
+               </div>
+           </div>
+         </div>
+      what the hell even more stuff in a seperate scroll container
+    </div>
+    <!-- End of the scroll container -->
+  </body>
+
+  <script type="text/javascript">
+      var pageId = 'pageId';
+      var pDom   = document.getElementById(pageId); //The dom to activate mask creation on.
+
+      //For manual testing / hacking around a page.
+      var onBtn     = document.getElementById('on');
+          onBtn.onclick = function(){TDS.Mask.on(null, pageId)};
+      var offBtn    = document.getElementById('off');
+      offBtn.onclick = function(){
+        console.log("Hi hi.");
+        TDS.Mask.off(null, pageId)
+      };
+      var createBtn = document.getElementById('create');
+          createBtn.onclick = function(){
+            console.log("on click", pDom);
+            TDS.Mask.create(pDom)
+          };
+      
+      //Illegal starts, anything bail?  If not move on.
+      TDS.Mask.create();
+      TDS.Mask.on();
+      TDS.Mask.off();
+
+      //Initialize the service.
+      TDS.Mask.initialize();
+
+      //Does query handle empty information and invalid search params when nothing is in it?
+      TDS.Mask.Store.query();
+      TDS.Mask.Store.query({pageId: pageId});
+
+      //Helper variables.
+      var ctrl = TDS.Mask.getControl();
+
+      //Createa  single mask, should be valid
+      //============================================================
+      TDS.Mask.create(pDom, pageId);
+      ctrl.initMaskClick(pDom, {clientX: 20, clientY: 200}); //Reverse click test
+      ctrl.finishMaskClick(pDom, {clientX: 80, clientY: 160});
+      var rez = TDS.Mask.Store.query();
+      if(rez.length != 1){
+        console.error("We should have created a single element at this point.", rez);
+      }
+
+      //Should NOT create since the up is on the mask click location.
+      //============================================================
+      TDS.Mask.create(pDom, pageId);
+      ctrl.initMaskClick(pDom, {clientX: 50, clientY: 200});
+      ctrl.mouseUp(pDom, {clientX: 50, clientY: 160});
+
+      if(TDS.Mask.Store.query().length != 1){
+        console.error("Should NOT have created another mask on mouse up.", rez);
+      }
+      ctrl.finishMaskClick(pDom, {clientX: 150, clientY: 260});
+      if(TDS.Mask.Store.query().length != 2){
+        console.error("SHOULD have created another mask.", rez);
+      }
+
+      //Should create a mask based on drag positions.
+      //============================================================
+      TDS.Mask.create(pDom, pageId);
+      ctrl.initMaskClick(pDom, {clientX: 150, clientY: 280});
+      ctrl.mouseUp(pDom, {clientX: 200, clientY: 250});
+      if(TDS.Mask.Store.query().length != 3){
+        console.error("Should have created a mask on scroll event.");
+      }
+
+      //Show that the pageId switch works, then reset it so hitting on shows the masks again.
+      TDS.Mask.setPageId('notNormal');
+      TDS.Mask.off();
+      TDS.Mask.on();
+      TDS.Mask.setPageId(pageId);
+  </script>
+</html

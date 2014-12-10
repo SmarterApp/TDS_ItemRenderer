@@ -1,0 +1,59 @@
+﻿<html>
+  <head>
+  <meta>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </meta>
+  <!--
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"> </script>
+  -->
+  <!-- Dependencies --> 
+<script src="http://yui.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script src="http://yui.yahooapis.com/2.9.0/build/dragdrop/dragdrop-min.js"></script>
+ 
+<!-- Slider skin (optional) --> 
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/slider/assets/skins/sam/slider.css">
+ 
+<!-- Slider source file --> 
+<script src="http://yui.yahooapis.com/2.9.0/build/slider/slider-min.js"></script>
+
+  <script src="../../../Libraries/SoundManager2/script/soundmanager2.js"> </script>
+  <script src="../../sm2-show.js"> </script>
+  <link   href="../../show.css" rel="stylesheet" type="text/css">
+  </head>
+  <body body="yui-skin-sam">
+    Here be content.
+    <div class="slides_config hidden">
+      <div class="slides_container">
+        <!-- data-begin=second in which you want this slide to diplay -->
+          <!--<div data-begin="0" class="slide"><img   src="Slide1.jpg"/></div>
+              <div data-begin="30" class="slide"><img  src="Slide2.jpg"/></div>
+              <div data-begin="50" class="slide"><img  src="Slide3.jpg"/></div>        
+              <div data-begin="70" class="slide"><img src="Slide4.jpg"/></div>
+              <div data-begin="100" class="slide"><img src="Slide5.jpg"/></div>
+              <div data-begin="164" class="slide"><img src="Slide6.jpg"/></div>-->
+
+        <!-- data-begin='hhmmss' format in which you want this slide to diplay -->
+        <div data-begin="000000" class="slide"><img   src="Slide1.jpg"/></div>
+        <div data-begin="000030" class="slide"><img  src="Slide2.jpg"/></div>
+        <div data-begin="000050" class="slide"><img  src="Slide3.jpg"/></div>        
+        <div data-begin="000110" class="slide"><img src="Slide4.jpg"/></div>
+        <div data-begin="000140" class="slide"><img src="Slide5.jpg"/></div>
+        <div data-begin="000244" class="slide"><img src="Slide6.jpg"/></div>
+      </div>
+      <audio controls="controls" class="slides_audio" >
+        <source src="Costa Rica.m4a" type='audio/mp4'>
+        <source src="Costa Rica.ogg" type='audio/ogg; codecs="vorbis"' />
+        This browser does not support the audio file used.
+      </audio>
+    </div>
+    <script type="text/javascript"> 
+      soundManager.setup({
+        preferFlash: false,
+        allowPolling: true,
+        flashVersion: 9,
+        url: '../../../Libraries/SoundManager2/swf/'
+      });
+       soundManager.onready(slide.scanAndBuild);
+    </script>
+    </body>
+</html>

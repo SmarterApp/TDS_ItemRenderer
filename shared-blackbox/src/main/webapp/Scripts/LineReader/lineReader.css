@@ -1,0 +1,52 @@
+.TDS_Line_Reader {
+  	position: absolute;
+  	display: block;
+  	top: 0;
+  	left: 0;
+  	width: 0px;
+  	z-index: 0;
+  	/*z-index: -1;*/
+  	background-color: #99e5fa;
+  	background-color: rgba(0, 191, 243, .2);
+	border: solid 1px #00bff3;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-moz-border-radius:  3px;
+	-webkit-border-radius:  3px;
+    border-radius: 3px;
+    visibility: hidden;
+}
+.TDS_CCBlue .TDS_Line_Reader, 
+.TDS_CCBlue2 .TDS_Line_Reader, 
+.TDS_CCYellowB .TDS_Line_Reader {
+	background-color: rgba(244,167,0,0.2);
+	border-color: #f48300;
+}
+
+
+.TDS_Line_Reader_Relative_Pos {
+  position: relative;
+}
+
+.TDS_Line_Reader_Active {
+  	visibility: visible;
+  	width: 100%;
+}
+.pageWrapper.hiding .TDS_Line_Reader_Active {
+  	visibility: hidden;
+}
+
+
+.browser_ie.browserVer_9 .TDS_Line_Reader_Active, .browser_ie.browserVer_10 .TDS_Line_Reader_Active {
+  	min-height: 1em;
+}
+
+.TDS_Line_Reader_Btn {
+  /* Toolbar button that represents the line reader tool */
+}
+
+.TDS_Line_Reader_Btn_Active {
+  /* To show on the toolbar that the button is active */
+}
+

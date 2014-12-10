@@ -1,0 +1,65 @@
+.tds_mask_container {
+  	border: solid 3px #666;
+  	background-color: rgba(67,67,67,0.95);
+  	-moz-box-shadow: 0px 0px 3px 0px ;
+  	-webkit-box-shadow: 0px 0px 3px 0px ;
+	box-shadow: 0px 0px 3px 0px ;
+	min-height: 29px;
+	-webkit-transition: background-color .3s linear;
+	-moz-transition: background-color .3s linear;
+	transition: background-color .3s linear;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.TDS_CCYellowB .tds_mask_container {
+	background-color: rgba(19,46,101,0.95);
+}
+.TDS_CCInvert .tds_mask_container {
+	background-color: rgba(10,10,10,0.95);
+}
+.TDS_CCWhiteN .tds_mask_container {
+	background-color: rgba(7,42,76,0.95);
+}
+.tds_mask_container_drawing, 
+.tds_mask_container.tds_mask_container_drawing {
+    border: dashed 3px #00abf4;
+    background-color: rgba(217,217,217,0.5);
+    -moz-box-shadow: inherit;
+  	-webkit-box-shadow: inherit;
+	box-shadow: inherit;
+}
+.tds_mask_close {
+	display: block;
+	border: transparent;
+	background: transparent url("../../Shared/Images/modern/sprites_mobile_0.png") no-repeat scroll center -3235px;
+    height: 25px;
+    overflow: hidden;
+    text-decoration: none;
+    text-indent: -9999px;
+    width: 25px;
+    float: right;
+}
+.tds_mask_close:hover {
+	background-position: center -3340px;
+}
+/* logic for showing nav button - to unhide is controlled in accommodations.css */
+#navigation #btnMask {
+	display: none;
+}
+
+/* for Modern Shell */
+.TDS_Masking1.msk-enabled #btnMask {
+	background-position: center -145px;
+}
+
+/*for Universal Shell */
+.TDS_Masking1.msk-enabled #studentTools #btnMasking .icon, 
+.TDS_Masking1.msk-enabled #studentTools #btnMask .icon {
+	background-color: #e46f37;
+	background-position: center -3491px;
+	border-color: #fff;
+	-webkit-box-shadow: 0px 0px 3px #b4b4b4;
+	-moz-box-shadow: 0px 0px 3px #b4b4b4;
+	box-shadow: 0px 0px 3px #b4b4b4;
+}

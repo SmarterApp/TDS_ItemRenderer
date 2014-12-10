@@ -1,0 +1,25 @@
+﻿body { 
+	font-family: Tahoma, Geneva, sans-serif; 
+	font-size:12px; 
+	background-color:#F5F5F7;
+}
+
+p{
+    padding:5px 5px;
+}
+
+textarea {
+    overflow-y: scroll;
+}
+
+.device canvas {
+    height: 16px;
+    width: 100px;
+    vertical-align:bottom;
+    margin: 2px;
+    padding: 3px;
+}
+
+#devices-btns button {
+    width: 175px;
+}

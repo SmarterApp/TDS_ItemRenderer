@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Drag</title>
+
+    <link href="../CSS/Interaction.css" media="all" type="text/css" rel="stylesheet" />
+
+    <script type="text/javascript" src="../../Libraries/YUI/yahoo/yahoo.js"></script>
+    <script type="text/javascript" src="../../Libraries/YUI/dom/dom.js"></script>
+    <script type="text/javascript" src="../../Libraries/YUI/event/event.js"></script>
+	<script type="text/javascript" src="../../Libraries/YUI/dragdrop/dragdrop.js"></script>
+    <script type="text/javascript" src="../../Libraries/YUI/YUI3.js"></script>
+
+    <script type="text/javascript" src="../../Utilities/util.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_array.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_structs.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_iter.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_xml.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_mobile.js"></script>
+
+    <script type="text/javascript" src="../Interaction.js"></script>
+	<script type="text/javascript" src="../ChoiceInteraction.js"></script>
+    <script type="text/javascript" src="../DDInteraction.js"></script>
+
+    <script type="text/javascript" src="../Choice/Choice.js"></script>
+	<script type="text/javascript" src="../Choice/DragDrop.js"></script>
+	<script type="text/javascript" src="../Choice/DragGroup.js"></script>
+    
+</head>
+
+<body>
+    
+    <div id="content">
+        
+        <h2>Interaction: QTI #1</h2>
+        <div id="interaction-7">
+            <p style="">Arrange the events from the passage in the order in which they happen. Click on the sentences to drag them into the correct locations.</p>
+            <p style="">
+                <span id="item_35873_TAG_1_BEGIN">
+                    <span class="interaction draggable" data-its-identifier="1" data-its-group="1">Bella frees the baby squirrel.</span>
+                </span>
+            </p>
+            <p style="">
+                <span id="item_35873_TAG_2_BEGIN">
+                    <span class="interaction draggable" data-its-identifier="2" data-its-group="1">Bella feels angry.</span>
+                </span>
+            </p>
+            <p style="">
+                <span id="item_35873_TAG_3_BEGIN">
+                    <span class="interaction draggable" data-its-identifier="3" data-its-group="1">Bella hears a strange sound.</span>
+                </span>
+            </p>
+            <p style="">
+                <span id="item_35873_TAG_4_BEGIN">
+                    <span class="interaction draggable" data-its-identifier="4" data-its-group="1">Bella and her friends make a poster with a message reminding people that litter can hurt animals.</span>
+                </span>
+            </p>
+            <p style="">
+                <span id="item_35873_TAG_5_BEGIN">
+                    <span class="interaction draggable" data-its-identifier="5" data-its-group="2">Bella takes a walk in the woods.</span>
+                </span>
+            </p>
+            <p style="">
+                <span id="item_35873_TAG_6_BEGIN">
+                    <span class="interaction draggable" data-its-identifier="6" data-its-group="2">A baby squirrel's paw is stuck in a plastic bottle.</span>
+                </span>
+            </p>
+        </div>
+
+        <h2>Interaction: Draggable with unmovable table cell</h2>
+        <div id="interaction-6">
+        
+            <p>Here is a table:</p>
+            
+            <table border="1" style="width:800px">
+                <tbody>
+                    <tr>
+                        <td width="50%"><span class="interaction draggable" data-its-identifier="1" data-its-group="group1">##</span></td>
+                        <td width="50%"><span class="interaction draggable" data-its-identifier="2" data-its-group="group2">##</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="interaction draggable" data-its-identifier="3" data-its-group="group3">##</span></td>
+                        <td><span class="interaction draggable" data-its-identifier="4" data-its-group="group4">#Drag Here!#</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>Here is an empty paragraph:</p>
+            <p><span class="interaction draggable" data-its-identifier="5" data-its-group="group5">##</span></p>
+
+            <p>Here is an empty span:</p>
+            <span><span class="interaction draggable" data-its-identifier="6" data-its-group="group6">##</span></span>
+
+            <p>Here is some stuff to drag into table:</p>
+
+            <p>
+                <span class="interaction draggable" data-its-identifier="7" data-its-group="group7"><b>Apples</b></span>
+                <span class="interaction draggable" data-its-identifier="8" data-its-group="group7"><b>Bananas</b></span>
+                <span class="interaction draggable" data-its-identifier="9" data-its-group="group7"><b>Grapes</b></span>
+                <span class="interaction draggable" data-its-identifier="10" data-its-group="group7"><b>Oranges</b></span>
+                <span class="interaction draggable" data-its-identifier="11" data-its-group="group7"><b>Pears</b></span>
+            </p>
+            
+        </div >
+
+    
+        <h2>Interaction: Draggable sentences</h2>
+        <div id="interaction-1">
+            
+            <span class="interaction drag-group" data-its-identifier="group_1">
+                <span class="interaction draggable" data-its-identifier="1"><span style="font-variant:small-caps; ">One day as Raven walked by the sea</span>, he saw an old man, bent and wrinkled, paddling a canoe. </span>
+                <span class="interaction draggable" data-its-identifier="2">Raven can't watched hot-text the (old) man cast out his fishing line. </span>
+                <span class="interaction draggable" data-its-identifier="3">“I think I’ll have some fun,” said Raven, laughing to himself. </span>
+            </span>
+
+            <span class="interaction drag-group" data-its-identifier="group_2">
+                <span class="interaction draggable" data-its-identifier="4">“I’ll tug the line and make the old man think he has caught a great fish.” </span>
+                <span class="interaction draggable" data-its-identifier="5">Diving into the water, Raven took the fish bait into his beak and gave a gentle tug, like the nibbling of a great fish before it strikes. </span>
+                <span class="interaction draggable" data-its-identifier="6">The old man sat very still. </span>
+                <span class="interaction draggable" data-its-identifier="7">Again, Raven tugged gently at the line. </span>
+                <span class="interaction draggable" data-its-identifier="8">This time the old man was certain that a great fish was nibbling his bait. </span>
+                <span class="interaction draggable" data-its-identifier="9">Holding his line steady, he reached for his net. </span>
+                <span class="interaction draggable" data-its-identifier="10">Raven chuckled to himself. </span>
+                <span class="interaction draggable" data-its-identifier="11">Then swiftly and powerfully he pulled at the line, sure he could jerk it from the old man’s hands. </span>
+                <span class="interaction draggable" data-its-identifier="12">But the old man was strong and hungry. </span>
+                <span class="interaction draggable" data-its-identifier="13">He wanted the great fish. </span>
+                <span class="interaction draggable" data-its-identifier="14">He leaned back, trying to bring the fish to the net. </span>
+                <span class="interaction draggable" data-its-identifier="16">Back and forth they pulled. </span>
+            </span>
+
+            <span class="interaction draggable" data-its-identifier="17" data-its-group="group_3">The water around the canoe <span style="text-decoration:underline; ">churned</span>, white with waves. </span>
+            <span class="interaction draggable" data-its-identifier="18" data-its-group="group_3">Raven decided that this was becoming too much like work, so he opened his mouth to let the line free. </span>
+            <span class="interaction draggable" data-its-identifier="19" data-its-group="group_3">But the hook was stuck in Raven’s beak! </span>
+            <span class="interaction draggable" data-its-identifier="20" data-its-group="group_4">Raven could not get loose! </span>
+            <span class="interaction draggable" data-its-identifier="21" data-its-group="group_3">Frightened, Raven pulled hard on the line, but still he could not break free. </span>
+
+            <span class="interaction drag-group" data-its-identifier="group_5">
+                <span class="interaction draggable" data-its-identifier="22">Slowly, Raven’s beak began to bend under, curving more with each pull. </span>
+            </span>
+        </div>
+
+        <hr/>
+        
+        <h2>Interaction: Multiple paragraphs</h2>
+        <div id="interaction-5">
+            
+            <p>Paragraph #1</p>
+            <span class="interaction draggable" data-its-identifier="1" data-its-group="group_1">
+                <p>Paragraph #2</p>
+                <p>Paragraph #3</p>
+            </span>
+            <p>Paragraph #4</p>
+            <span class="interaction draggable" data-its-identifier="2" data-its-group="group_2">
+                <p>Paragraph #5</p>
+            </span>
+            <span class="interaction draggable" data-its-identifier="3" data-its-group="group_2">
+                <p>Paragraph #6</p>
+            </span>
+            <p>Paragraph #7</p>
+            
+        </div>
+        
+        <hr/>
+        
+        <h2>Interaction: Nested formatting</h2>
+        <div id="interaction-2">
+            
+            <p style="text-align:left; font-style:italic;">Read the passage below. Revise the essay by moving the bold supporting details to the correct paragraphs.</p>
+            <p style="text-align:left;">&#xA0;</p>
+            <p style="text-align:center;">
+                &#xA0;
+                <span style="font-weight:bold;">Election of the President</span>
+            </p>
+            <p>&#xA0;</p>
+            <p>
+                The process of electing a President was set up in the United States Constitution.
+                <span class="interaction draggable" data-its-identifier="13" data-its-group="">
+                    <span style="color:#000000; font-weight:bold; background-color:transparent;">A candidate needs to receive over half of the electors’ votes to win.</span>
+                    <span style="color:#000000; font-weight:bold; background-color:transparent;"></span>
+                </span>
+            </p>
+            <p>&#xA0;</p>
+            <p>The Constitution requires a candidate for the presidency to be:</p>
+            <p>• At least 35 years old</p>
+            <p>• A natural born citizen of the United States</p>
+            <p>• A resident of the United States for 14 years</p>
+            <p>&#xA0;</p>
+            <p>So how does one become President of the United States? The following steps outline the general process for presidential elections.</p>
+            <p style="font-style:italic;">&#xA0;</p>
+            <p style="font-style:italic; font-weight:normal;">Step 1: Primaries and Caucuses</p>
+            <p>There are many people who would like to become President. All of these people have their own ideas about how our government should work. Some of these people can belong to the same political party. That's where primaries and caucuses come in. In these elections, party members get to vote for the candidate that will represent their party in the upcoming general election.</p>
+            <p>&#xA0;</p>
+            <p style="font-style:italic; font-weight:normal;">Step 2: National Conventions</p>
+            <p>At the end of the primaries and caucuses, each party holds a national convention to finalize the selection of one Presidential nominee. During this time, each Presidential candidate chooses a running mate (or Vice-Presidential candidate).</p>
+            <p>&#xA0;</p>
+            <p style="font-style:italic;">
+                <span style="font-weight:normal;">Step 3: The General (or Popular) Election</span>
+                &#xA0;&#xA0;
+            </p>
+            <p>Now that each party is represented by one candidate, the general election process begins. Candidates campaign throughout the country in an attempt to win the support of voters. Finally in November, the people vote for one candidate. When people cast a vote in the general election, they are not voting directly for an individual Presidential candidate. Instead, voters in each state actually cast their vote for a group of people known as electors. These electors are part of the Electoral College and are supposed to vote for their state’s preferred candidate.</p>
+            <p>&#xA0;</p>
+            <p style="font-weight:bold;">
+                <span style="font-style:italic; font-weight:normal;">Step 4: The Electoral College</span>
+            </p>
+            <p>
+                In the Electoral College system, each state gets a certain number of electors, based on each state's total number of representatives in Congress. Each elector gets one electoral vote. For example, a large state like California gets 54 electoral votes, while Rhode Island gets only four. All together, there are 538 Electoral votes.
+                <span class="interaction draggable" data-its-identifier="14" data-its-group="1">
+                    <span style="color:#000000; font-weight:bold; background-color:transparent;">They both serve terms of four years, then the process starts over again.</span>
+                    <span style="color:#000000; font-weight:bold; background-color:transparent;"></span>
+                </span>
+                <span style="color:#ffff00;">.</span>
+            </p>
+            <p>&#xA0;</p>
+            <p>
+                In December (following the general election), the electors cast their votes. When the votes are counted on January 6th, the Presidential candidate that gets more than half (270) wins the election. The President-elect and Vice President-elect take the oath of office and are inaugurated two weeks later, on January 20th.
+                <span class="interaction draggable" data-its-identifier="16" data-its-group="2">
+                    <span style="font-weight:bold; background-color:transparent;">An amendment to the Constitution in 1804 guides the election of the President to the present day.</span>
+                    <span style="font-weight:bold; background-color:transparent;"></span>
+                </span>
+            </p>
+            <p>&#xA0;</p>
+            
+        </div>
+        
+        <hr/>
+        
+        <h2>Interaction: List using draggable</h2>
+        <div id="interaction-3">
+            
+			<p style="font-style:normal; font-weight:normal; ">The notes for a summary need to be arranged correctly into the order in which the events occur in the passage. Click on each sentence and move it to arrange the sentence into correct chronological order.</p><p style="font-style:normal; font-weight:normal; ">&#xA0;</p><p style="font-style:normal; font-weight:normal; ">Summary of events:</p>
+
+				<ol data-its-identifier="1" class="interaction drag-group">
+					<li class="interaction draggable" data-its-identifier="1" data-its-group="1">Zitkala's guests arrive. </li>
+					<li class="interaction draggable" data-its-identifier="2" data-its-group="1">Zitkala's mother asks the guests for a story. </li>
+					<li class="interaction draggable" data-its-identifier="3" data-its-group="1">The guests take turns telling stories. </li>
+					<li class="interaction draggable" data-its-identifier="4" data-its-group="1">The guest and family eat dinner. </li>
+					<li class="interaction draggable" data-its-identifier="5" data-its-group="1">Zitkala becomes afraid. </li>
+					<li class="interaction draggable" data-its-identifier="6" data-its-group="1">Zitkala laughs with the old women. </li>
+				</ol>
+
+        </div>
+        
+    </div>
+	
+    <script type="text/javascript">
+        
+        // drag and drop with qti 1
+        var ddInteraction7 = new TDS.DDInteraction('interaction-7');
+        ddInteraction7.load('interaction-7', {
+            createGroups: true,
+            moveDraggables: true
+        });
+
+        // drag and drop
+        var ddInteraction1 = new TDS.DDInteraction('interaction-1');
+        ddInteraction1.load('interaction-1');
+
+        // multiple paragraphs
+        var ddInteraction5 = new TDS.DDInteraction('interaction-5');
+        ddInteraction5.load('interaction-5');
+
+        // drag and drop with nested
+        var ddInteraction2 = new TDS.DDInteraction('interaction-2');
+        ddInteraction2.load('interaction-2');
+
+        // drag and drop with a list
+        var ddInteraction3 = new TDS.DDInteraction('interaction-3');
+        ddInteraction3.load('interaction-3');
+
+        // drag and drop with a table
+        var ddInteraction6 = new TDS.DDInteraction('interaction-6');
+        ddInteraction6.load('interaction-6');
+
+	</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

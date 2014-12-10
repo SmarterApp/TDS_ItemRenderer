@@ -1,0 +1,68 @@
+<html>
+
+<head>
+
+    <script type="text/javascript" src="../../Libraries/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../../Libraries/yui/yahoo-dom-event/yahoo-dom-event.js"></script>
+    <script type="text/javascript" src="../../Libraries/q/q.min.js"></script>
+
+    <script src="../../Utilities/util.js" type="text/javascript"></script>
+    <script src="../../Utilities/util_function.js" type="text/javascript"></script>
+    <script src="../../Utilities/util_string.js" type="text/javascript"></script>
+    <script src="../../Utilities/util_dom.js" type="text/javascript"></script>
+    <script src="../../Utilities/util_dom_builder.js" type="text/javascript"></script>
+    <script src="../../Utilities/util_array.js" type="text/javascript"></script>
+    <script src="../../Utilities/util_structs.js" type="text/javascript"></script>
+    <script src="../../Utilities/util_event_custom.js" type="text/javascript"></script>
+    <script src="../../Utilities/util_event_emitter.js" type="text/javascript"></script>
+
+    <script src="../accs.js" type="text/javascript"></script>
+    <script src="../accs.type.js" type="text/javascript"></script>
+    <script src="../accs.value.js" type="text/javascript"></script>
+    <script src="../accs.dependency.js" type="text/javascript"></script>
+    <script src="../accs.json.js" type="text/javascript"></script>
+    <script src="../accs.renderer.js" type="text/javascript"></script>
+    <script src="../accs.props.js" type="text/javascript"></script>    
+    
+</head>
+
+    <body>
+        <div id="accs"></div>
+        
+        <script type="text/javascript">
+            
+            // load content for testing
+            // sample1.json = itempreview
+            // sample2.json = "ELPA 6-8": Has a problem with strikethrough True/False order
+            // sample3.json = "SBAC-ELA-7": Has Braille dependencies
+            // sample4.json = Is only showing the acc type "Suppress Score" but it should be showing more like color choice
+            var accommodations = {};
+            var files = ['sample1.json', 'sample2.json', 'sample3.json', 'sample4.json'];
+            var requests = files.map(function (file) {
+                return $.getJSON(file).then(function (content) {
+                    var accs = new Accommodations();
+                    accs.importJson(content);
+                    accs.selectDefaults();
+                    accommodations[file] = accs;
+                });
+            });
+
+            // wait for all requests to come back
+            Q.all(requests).then(onContentLoaded);
+
+            var renderer;
+
+            function onContentLoaded() {
+                renderer = new Accommodations.Renderer(accommodations['sample4.json'], {
+                    reviewDisabled: true,
+                    reviewAll: false
+                });
+                renderer.bind();
+                renderer.render('accs');
+            }
+
+        </script>
+
+    </body>
+
+</html>

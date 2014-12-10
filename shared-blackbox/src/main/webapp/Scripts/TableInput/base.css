@@ -1,0 +1,71 @@
+/* @group Essential styles */
+
+table.tableItem .ti-editable .ti-input {
+    width: 100%;
+    min-width: 3em;
+    line-height: 1.1em;
+	padding: 0em;
+	background-color: rgba(174,219,232,0.3);
+    -moz-border-radius:  .2em !important;
+	-webkit-border-radius:  .2em !important;
+	border-radius: .2em !important;
+	border: solid 1px #7A7A7A;
+	-webkit-box-shadow: inset 0em 0em .1em #ccc;
+	-moz-box-shadow: inset 0em 0em .1em #ccc;
+	box-shadow: inset 0em 0em .1em #ccc;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+/*make textareas slightly taller by default, provide better spacing*/
+table.tableItem .ti-editable textarea.ti-input {
+    min-height: 4em;
+    margin-bottom: 1em;
+}
+
+table.tableItem .ti-editable .ti-input:focus {
+    border-color: #00ABF4;
+    box-shadow: 0 0 0.4em #666666;
+    background-color: transparent;
+}
+
+table.tableItem .ti-invalid .ti-input,
+table.tableItem .ti-invalid .ti-input:focus {
+    background-color: rgba(255,39,0,0.1) !important;
+	border: 1px dashed #b94a48;
+}
+
+/* @end */
+
+/* @group default table styles */
+
+table.tableItem {
+    width: 100%;
+    border: 1px solid #666666;
+    padding: 0px;
+}
+.tableItem th, 
+.tableItem td {
+    padding: 1px;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+}
+
+/* @end */
+
+/* @group color choices */
+
+.TDS_CCBlue2 .tableItem .ti-editable .ti-input,
+.TDS_CCBlue .tableItem .ti-editable .ti-input {
+	background-color: rgba(231,231,231,0.3) !important;
+}
+.TDS_CCBlue2 .tableItem .ti-editable .ti-input:focus,
+.TDS_CCBlue .tableItem .ti-editable .ti-input:focus {
+	background-color: transparent !important;
+}
+.TDS_CCInvert .tableItem th, 
+.TDS_CCInvert .tableItem td {
+	border-color: #ccc !important;
+}
+
+/* @end */

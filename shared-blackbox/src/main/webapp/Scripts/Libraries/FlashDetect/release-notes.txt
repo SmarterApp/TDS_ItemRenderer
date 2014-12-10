@@ -1,0 +1,45 @@
+Date: January 24, 2009
+Release Tag: flash_detect_rel_1-0-4
+-Added versionAtLeast comparison method for major with optional minor and revision arguments.
+-Added minorAtLeast method for minor check.
+-Added revisionAtLeast method for revision check.
+-Renamed static member release to JS_RELEASE to avoid ambiguity between Flash plugin release and JS library release.
+-Fixed release notes link for 1.0.3 in docs.
+-Added docs for versionAtLeast, majorAtLeast, minorAtLeast and revisionAtLeast methods.
+-Fixed typos in docs.
+-Switch master source from tabs to spaces for portability.
+-Added jsdoc formatted comments to master source.
+
+Date: May 26, 2008
+Release Tag: flash_detect_rel_1-0-3
+-Added raw value for full plugin description.
+-Removed activeXVersion instance variable, replaced with raw.
+-Created method for standard revision parsing, simplifies FlashDetect constructor. 
+-Revision parsing error as per Rob Parrett's email for win32 ff - changed to / +/ regex. 
+-Switch of "." split to regex spit for consistency.
+-Revised license in jsmin version to reduce size.
+
+Date: August 17, 2007
+Release Tag: flash_detect_rel_1-0-2
+-Switch to Singleton pattern, removal of constructor option params to overwrite activeX detect
+-Added comments where split calls in the future to be replaced with regex
+-Replaced instance library variable _release to class property release
+-Removed commented version line for .6 check for Win IE
+-Renamed constructor to follow same name as parent closure
+-Added space in parseInt argument call for code format consistency
+-Changed scope of _release variable to public to facilitate library version isolation in the future
+-YUI namespaced version
+-Addition of JSMin version
+-Full license removed from source, now an external url reference
+-JSLint see http://www.jslint.com/
+
+Date: April 3, 2007
+Release Tag: flash_detect_rel_1-0-1
+Notes:
+-Variable overused for activeX version detection
+-License invalid character replaced
+
+Date: March 17, 2007
+Release Tag: flash_detect_rel_1-0-0
+Notes:
+-Initial release

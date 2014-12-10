@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Voice-change-O-matic</title>
+	
+	<!--[if le IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="scripts/respond.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link href='http://fonts.googleapis.com/css?family=Righteous|Nova+Square' rel='stylesheet' type='text/css'>
+	  <link href="styles/normalize.css" rel="stylesheet" type="text/css">
+    <link href="styles/app.css" rel="stylesheet" type="text/css">
+	
+</head>
+<body>
+  <div class="wrapper">
+    
+    <header>
+      <h1>Biquad Filter tester</h1>
+    </header>
+
+    <canvas class="visualizer" width="640" height="100"></canvas> 
+
+    <form class="controls">
+      <div>
+        <label for="voice">Filter setting</label>
+        <select id="voice" name="voice">
+          <option value="off" selected>Off</option>
+          <option value="bandpass">Bandpass Filter</option>
+          <option value="hilopass">Highpass + Lowpass Filter</option>
+        </select>
+      </div>
+      <br>
+      <div>
+        <h2>please use headphones</h2>
+        <a class="mute">Mute Playback</a>
+      </div>
+    </form>
+
+
+  </div>
+
+    <script src="scripts/app.js"></script>
+	
+</body>
+</html>

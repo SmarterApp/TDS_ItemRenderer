@@ -1,0 +1,145 @@
+.cke_reset.cke_editable {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #B6B6B6;
+    border-top: 0px;
+    padding: 0.3em;
+    overflow: auto;
+    -moz-box-sizing: border-box;
+  	box-sizing: border-box;
+    text-align: left;
+    max-width: 100%;
+}
+.cke_contents.cke_reset {
+    height: 400px;
+}
+/* Allow for editor text to be selectable */
+.cke_editable {
+    -moz-user-select: text !important;
+    -webkit-user-select: auto !important;
+    -ms-user-select: text!important;
+}
+.cke_editable * {
+    -moz-user-select: text !important;
+    -webkit-user-select: auto !important;
+    -ms-user-select: text!important;
+}
+/* this is required for empty div */
+.cke_editable {
+    -moz-user-select: text !important;
+    -webkit-user-select: auto;
+}
+/*hopefully prevent context menu items from being draggable*/
+.cke_panel_block * {
+	-webkit-user-drag: none;
+}
+.cke_shared.cke_detached {
+	-moz-box-sizing: border-box;
+  	box-sizing: border-box;
+    position: relative;
+}
+.answerContainer .EditorContainer:hover span, 
+.answerCell .EditorContainer:hover span {
+    background-position: 0px 0px;
+}
+
+/* prevent editor from braking out of item layout*/
+.layout_2 .cke_editable, 
+.layout_2 .cke_reset.cke_editable, 
+.layout_3 .cke_editable, 
+.layout_3 .cke_reset.cke_editable, 
+.layout_4 .cke_editable, 
+.layout_4 .cke_reset.cke_editable,
+.layout_5 .cke_editable, 
+.layout_5 .cke_reset.cke_editable,
+.layout_6 .cke_editable, 
+.layout_6 .cke_reset.cke_editable,
+.layout_7 .cke_editable, 
+.layout_7 .cke_reset.cke_editable  {
+	max-width: 40em;
+}
+.layout_8 .cke_editable
+.layout_8 .cke_reset.cke_editable {
+	max-width: 60em;
+}
+/*dimensions for different layouts*/
+.format_WER.EditorContainer {
+	margin-bottom: 1em;
+}
+.format_WER .cke_reset.cke_editable, 
+.format_WER .cke_contents.cke_reset {
+	height: 90em;
+}
+
+/* bring back defualt styles */
+.cke_editable ul, 
+.cke_editable ol {
+	margin-left: .5em;
+	list-style: inside;
+}
+.cke_editable ol {
+	list-style-type: decimal;
+}
+.cke_editable strong {
+    font-weight: bold;
+}
+.cke_editable em {
+    font-style: italic;
+}
+/*table styles */
+.cke_contents .cke_editable td, 
+.cke_contents .cke_editable th {
+	border: solid 1px #ccc;
+	min-width: 30px;
+	padding: .2em;
+}
+.cke_contents .cke_editable th {
+	border-color: #999;
+	background-color: rgba(237,237,237,0.3);
+}
+.cke_contents .cke_editable caption {
+	background-color: rgba(237,237,237,0.5);
+	font-size: 1.1;
+	border: solid 1px #ccc;
+	padding: .2em;
+}
+
+
+/*spell check stuff */
+.cke_button__spellchecker_icon {
+	background: url(../../Shared/Images/controls/spellcheck.gif) no-repeat center center !important;
+}
+.cke_contents .cke_editable a.spellcheck-word {
+	color: #cf7327;
+}
+.TDS_CCYellowB .cke_contents .cke_editable a.spellcheck-word, 
+.TDS_CCInvert .cke_contents .cke_editable a.spellcheck-word, 
+.TDS_CCWhiteN .cke_contents .cke_editable a.spellcheck-word {
+	color: #fff0a2;
+}
+
+/* ios hacks */
+.cke_browser_ios .cke_contents.cke_reset {
+     overflow-y: inherit; 
+     -webkit-overflow-scrolling: inherit; 
+}
+.cke_contents.cke_reset iframe {
+	position: relative;
+    top: 2px;
+}
+.cke_browser_ios .cke_contents.cke_reset iframe {
+	height: 99% !important
+}
+/* hide help button in standard rendering, show in Streamlined mode */
+.cke_button.cke_button__keymaphelp {
+	height: 0px;
+	width: 0px;
+	overflow: hidden;
+	padding: 0px;
+}
+.layout_wai .cke_button.cke_button__keymaphelp {
+	height: inherit;
+	width: inherit;
+	overflow: inherit;
+	padding: 4px 6px;
+}

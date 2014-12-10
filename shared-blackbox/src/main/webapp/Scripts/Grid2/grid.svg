@@ -1,0 +1,277 @@
+<?xml version="1.0" standalone="no"?>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg"
+	 id="grid" width="600" height="500" preserveAspectRatio="none" overflow="visible">
+		
+	<g id="groupWrapper" transform="translate(0.5, 0.5) scale(1)">
+
+    <!-- CANVAS -->
+    <g id="groupCanvas" transform="translate(80, 25)">
+      <rect id="backgroundCanvas" x="-1" y="-1" width="502" height="411" stroke="black" style="fill:white;stroke-width:1;fill-opacity:0;stroke-opacity:1"></rect>
+      <g id="gridlines" style="fill:none;stroke:blue;stroke-width:1;opacity:0.2"></g>
+      <g id="staticimages"></g>
+      <!-- background/region images -->
+      <g id="snapPoints"></g>
+      <g id="shapes"></g>
+      <g id="images"></g>
+      <!-- canvas images -->
+      <g id="imageborders"></g>
+      <g id="lines"></g>
+      <g id="arrows"></g>
+      <g id="points"></g>
+      <g id="labels" ></g>
+
+      <!-- editor -->
+      <g id="mergeLines"></g>
+      <g id="crtool">
+        <g id="crtool_rectangle" style="fill:none;stroke:red;stroke-width:1"></g>
+        <g id="crtool_circle" style="fill:none;stroke:red;stroke-width:1"></g>
+        <g id="crtool_snapcenter" style="fill:blue;stroke:black;stroke-width:0;opacity:1"></g>
+        <g id="crtool_snapcircle" style="fill:none;stroke:blue;stroke-width:1;opacity:0.5;stroke-dasharray: 2, 5;"></g>
+      </g>
+    </g>
+
+    <!-- PALETTE -->
+    <g id="groupPalette">
+      <rect id="backgroundPalette" x="0" y="0" width="75" height="470" stroke="black" style="fill:white;stroke-width:1;fill-opacity:0;stroke-opacity:1"></rect>
+      <rect id="selectedPalette" x="0" y="0" stroke="black" style="display:none;fill:#BBCAE2;stroke:#8492C9;stroke-width:1"></rect>
+      <g clip-path="url(#clippalette)" id="paletteImages"></g>
+      <g id="paletteDragging"></g>
+      <g>
+        <path id ="panup" style="display:none" fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d = "M 35 1 L 45 14 L 25 14" />
+        <path id ="pandown" style="display:none" fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d = "M 25 457 L 45 457 L 35 470" />
+      </g>
+      <clipPath id="clippalette">
+        <rect id="palettecliprect" x="0" y="150" width="75" height="550"></rect>
+      </clipPath>
+    </g>
+
+    <!-- FEEDBACK -->
+    <g id="groupFeedback" transform="translate(80, 440)">
+      <rect id="backgroundFeedback" x="0" y="0" width="502" height="30" style="fill:white;stroke:lightblue;stroke-width:1;fill-opacity:0;stroke-opacity:1"></rect>
+      <text id="feedback" x="5" y="18" font-family="Arial" font-size="12" fill="blue"></text>
+      <text id="coordinates" x="450" y="18" font-family="Arial" font-size="12" fill="black"></text>
+    </g>
+
+    <!-- TOOLBAR -->
+		<g id="groupToolbar" transform="translate(80, 0)">
+			<rect id="backgroundToolbar" x="0" y="0" width="502" height="21" stroke="white" style="fill:white;stroke-width:1;fill-opacity:0;stroke-opacity:1"></rect>
+
+            <!-- BUTTONS -->
+            <g id="buttons">
+
+                <defs>
+                    <linearGradient id="buttons_background_up" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:#1F5181" />
+                        <stop offset="40%" style="stop-color:#3F98C6" />
+                    </linearGradient>
+
+                    <linearGradient id="buttons_background_selected" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="30%" style="stop-color:#CDCDCD"/>
+                        <stop offset="90%" style="stop-color:#FFFFFF"/>
+                    </linearGradient>
+
+                </defs>
+
+                <!-- BUTTON: MOVE -->
+                <g id="button_move">
+
+                    <circle cx="375.685" cy="290" r="8" fill="url(#button_move_up)" stroke="#1f5181" stroke-width="1" transform="translate(-367.185,-281.5)" />
+                    
+                    <linearGradient id="button_icon_move_2" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="25%" stop-color="#FEC2B4" />
+                        <stop offset="60%" stop-color="#FB532A" />
+                    </linearGradient>
+                    <path fill="url(#button_icon_move_2)" d="m 4.8368824,4.87891 3.04944,7.24372 1.55146,-1.55146 1.8600496,1.86005 1.23458,-1.23443 -1.8602,-1.86019 1.58486,-1.58478 z" />
+                </g>
+
+                <!-- BUTTON: DELETE -->
+                <g id="button_delete" transform="translate(105, 0)">
+
+                    <!-- BUTTON -->
+                    <path fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d="m 99.490338,8.5084 c 0,6.27691 -6.31799,7.9984 -7.28332,7.9984 H 7.574822 c -0.965331,0 -7.06482201,-1.45667 -7.06482201,-7.9984 0,-6.54173 6.09949101,-7.99840001 7.06482201,-7.99840001 h 84.632196 c 0.96533,0 7.28332,1.72149001 7.28332,7.99840001 z" />
+
+                    <!-- ICON -->
+                    <linearGradient id="button_icon_delete" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="25%" stop-color="#FEC2B4" />
+                        <stop offset="60%" stop-color="#FB532A" />
+                    </linearGradient>
+                    <path fill="url(#button_icon_delete)" d="m 91.901091,12.201753 -3.83904,-3.8391905 3.83919,-3.83918 -1.39053,-1.39053 -3.83919,3.83918 -3.83933,-3.83933 -1.39053,1.39053 3.83918,3.83933 -3.83903,3.8391905 1.39053,1.39053 3.83918,-3.8391805 3.83904,3.8391805 z" />
+
+                    <!-- TEXT -->
+                    <text x="6" y="12" fill="#ffffff" font-size="11px" font-family="Arial">Delete</text>
+
+                </g>
+
+                <!-- BUTTON: ADD POINT -->
+                <g id="button_point" transform="translate(210, 0)">
+
+                    <!-- BUTTON -->
+                    <path fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d="m 99.490338,8.5084 c 0,6.27691 -6.31799,7.9984 -7.28332,7.9984 H 7.574822 c -0.965331,0 -7.06482201,-1.45667 -7.06482201,-7.9984 0,-6.54173 6.09949101,-7.99840001 7.06482201,-7.99840001 h 84.632196 c 0.96533,0 7.28332,1.72149001 7.28332,7.99840001 z" />
+
+                    <!-- ICON -->
+                    <line x1="72.068466" y1="8.6539106" x2="96.977417" y2="8.6539106" fill="none" stroke="#ffffff" stroke-width="1" />
+                    <line x1="90.131241" y1="2.2445779" x2="90.131241" y2="15.017924" fill="none" stroke="#ffffff" stroke-width="1" />
+                    <line x1="85.615143" y1="4.2834573" x2="94.647339" y2="13.315654" fill="none" stroke="#ffffff" stroke-width="1" />
+                    <line x1="94.876038" y1="4.1377969" x2="85.843842" y2="13.169993" fill="none" stroke="#ffffff" stroke-width="1" />
+
+                    <circle cx="71.6" cy="8.7" r="2.5" fill="#ffffff" />
+
+                    <radialGradient id="button_icon_point" >
+                        <stop offset="0%" stop-color="#FFC9D1" />
+                        <stop offset="100%" stop-color="#DD4639" />
+                    </radialGradient>
+
+                    <circle cx="90.1" cy="8.7" r="3.5" fill="url(#button_icon_point)" />
+
+                    <!-- TEXT -->
+                    <text x="6" y="12" fill="#ffffff" font-size="11px" font-family="Arial">Add Point</text>
+                </g>
+
+                <!-- BUTTON: CONNECT LINE -->
+                <g id="button_connect" transform="translate(315, 0)">
+
+                    <!-- BUTTON -->
+                    <path fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d="m 99.490338,8.5084 c 0,6.27691 -6.31799,7.9984 -7.28332,7.9984 H 7.574822 c -0.965331,0 -7.06482201,-1.45667 -7.06482201,-7.9984 0,-6.54173 6.09949101,-7.99840001 7.06482201,-7.99840001 h 84.632196 c 0.96533,0 7.28332,1.72149001 7.28332,7.99840001 z" />
+
+                    <!-- ICON -->
+                    <line x1="80.51712" y1="8.4869757" x2="91.574646" y2="8.4869757" fill="none" stroke="#ffffff" stroke-width="1" />
+
+                    <linearGradient id="button_icon_connect_1" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFE6DB" />
+                        <stop offset="100%" style="stop-color:#EF2728" />
+                    </linearGradient>
+                    <path fill="url(#button_icon_connect_1)" d="m 79.341881,8.3188625 c 0,-4.04996 2.07429,-4.59315 3.65492,-5.13649 0,-0.60247 -1.16403,-1.38295 -1.81108,-1.38295 -2.38222,0 -4.31332,2.91886 -4.31332,6.5193 0,3.6004305 1.93124,6.5193005 4.31332,6.5193005 0.64676,0 2.13708,-0.81967 1.49804,-1.25972 -0.60918,-0.41923 -3.34188,-1.20947 -3.34188,-5.2594405 z" />
+
+                    <linearGradient id="button_icon_connect_2" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFE6DB" />
+                        <stop offset="100%" style="stop-color:#EF2728" />
+                    </linearGradient>
+                    <path fill="url(#button_icon_connect_2)" d="m 93.057541,8.5080825 c 0,4.0499705 -2.07429,4.5931605 -3.65477,5.1364905 0,0.60248 1.16402,1.38296 1.81092,1.38296 2.38223,0 4.31333,-2.91886 4.31333,-6.5193005 0,-3.60044 -1.9311,-6.5193 -4.31333,-6.5193 -0.64661,0 -2.13707,0.81966 -1.49789,1.25972 0.60889,0.41923 3.34174,1.20947 3.34174,5.25943 z" />
+
+                    <!-- TEXT -->
+                    <text x="6" y="12" fill="#ffffff" font-size="11px" font-family="Arial">Connect Line</text>
+                </g>
+
+                <!-- BUTTON: SINGLE ARROW -->
+                <g id="button_arrow" transform="translate(420, 0)">
+
+                    <!-- BUTTON -->
+                    <path fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d="m 99.490338,8.5084 c 0,6.27691 -6.31799,7.9984 -7.28332,7.9984 H 7.574822 c -0.965331,0 -7.06482201,-1.45667 -7.06482201,-7.9984 0,-6.54173 6.09949101,-7.99840001 7.06482201,-7.99840001 h 84.632196 c 0.96533,0 7.28332,1.72149001 7.28332,7.99840001 z" />
+
+                    <!-- ICON -->
+                    <line x1="72.34948" y1="8.5082197" x2="91.208847" y2="8.5082197" fill="none" stroke="#ffffff" stroke-width="1" />
+                    <linearGradient id="button_icon_arrow" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFFFFF" />
+                        <stop offset="80%" style="stop-color:#FB532A" />
+                    </linearGradient>
+                    <path fill="url(#button_icon_arrow)" d="m 97.955131,8.3493125 -6.91362,-3.77407 0,7.8659805 z" />
+
+                    <!-- TEXT -->
+                    <text x="6" y="12" fill="#ffffff" font-size="11px" font-family="Arial">Add Arrow</text>
+
+                </g>
+
+                <!-- BUTTON: DOUBLE ARROW -->
+                <g id="button_arrw2" transform="translate(525, 0)">
+
+                    <!-- BUTTON -->
+                    <path fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d="m 99.490338,8.5084 c 0,6.27691 -6.31799,7.9984 -7.28332,7.9984 H 7.574822 c -0.965331,0 -7.06482201,-1.45667 -7.06482201,-7.9984 0,-6.54173 6.09949101,-7.99840001 7.06482201,-7.99840001 h 84.632196 c 0.96533,0 7.28332,1.72149001 7.28332,7.99840001 z" />
+
+                    <!-- ICON -->
+                    <line x1="76.183701" y1="8.5083866" x2="91.041687" y2="8.5083866" fill="none" stroke="#ffffff" stroke-width="1" />
+
+                    <linearGradient id="button_icon_arrw2_1" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFFFFF" />
+                        <stop offset="60%" style="stop-color:#FB532A" />
+                    </linearGradient>
+                    <path fill="url(#button_icon_arrw2_1)" d="m 70.357048,8.34948 6.84632,-3.77407 0,7.86598 z" />
+
+                    <linearGradient id="button_icon_arrw2_2" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFFFFF" id="stop20" />
+                        <stop offset="80%" style="stop-color:#FB532A" id="stop22" />
+                    </linearGradient>
+                    <path fill="url(#button_icon_arrw2_2)" d="m 97.955298,8.34948 -6.84632,-3.77407 0,7.86598 z" />
+
+                    <!-- TEXT -->
+                    <text x="6" y="12" fill="#ffffff" font-size="11px" font-family="Arial">Add Arrow</text>
+                </g>
+
+                <!-- BUTTON: DASH LINE -->
+                <g id="button_dash" transform="translate(630, 0)">
+
+                  <!-- BUTTON -->
+                  <path fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d="m 99.490338,8.5084 c 0,6.27691 -6.31799,7.9984 -7.28332,7.9984 H 7.574822 c -0.965331,0 -7.06482201,-1.45667 -7.06482201,-7.9984 0,-6.54173 6.09949101,-7.99840001 7.06482201,-7.99840001 h 84.632196 c 0.96533,0 7.28332,1.72149001 7.28332,7.99840001 z" />
+
+                  <!-- ICON -->
+                  <line x1="80.51712" y1="8.4869757" x2="91.574646" y2="8.4869757" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="2,2" />
+
+                  <linearGradient id="button_icon_dash_1" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FFE6DB" />
+                    <stop offset="100%" style="stop-color:#EF2728" />
+                  </linearGradient>
+                  <path fill="url(#button_icon_dash_1)" d="m 79.341881,8.3188625 c 0,-4.04996 2.07429,-4.59315 3.65492,-5.13649 0,-0.60247 -1.16403,-1.38295 -1.81108,-1.38295 -2.38222,0 -4.31332,2.91886 -4.31332,6.5193 0,3.6004305 1.93124,6.5193005 4.31332,6.5193005 0.64676,0 2.13708,-0.81967 1.49804,-1.25972 -0.60918,-0.41923 -3.34188,-1.20947 -3.34188,-5.2594405 z" />
+
+                  <linearGradient id="button_icon_dash_2" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FFE6DB" />
+                    <stop offset="100%" style="stop-color:#EF2728" />
+                  </linearGradient>
+                  <path fill="url(#button_icon_dash_2)" d="m 93.057541,8.5080825 c 0,4.0499705 -2.07429,4.5931605 -3.65477,5.1364905 0,0.60248 1.16402,1.38296 1.81092,1.38296 2.38223,0 4.31333,-2.91886 4.31333,-6.5193005 0,-3.60044 -1.9311,-6.5193 -4.31333,-6.5193 -0.64661,0 -2.13707,0.81966 -1.49789,1.25972 0.60889,0.41923 3.34174,1.20947 3.34174,5.25943 z" />
+
+                  <!-- TEXT -->
+                  <text x="6" y="12" fill="#ffffff" font-size="11px" font-family="Arial">Connect Dash</text>
+
+                </g>
+              
+                <!-- BUTTON: CIRCLE -->
+                <g id="button_circle" transform="translate(735, 0)">
+
+                  <!-- BUTTON -->
+                  <path fill="url(#buttons_background_up)" stroke="#1f5181" stroke-width="1" d="m 99.490338,8.5084 c 0,6.27691 -6.31799,7.9984 -7.28332,7.9984 H 7.574822 c -0.965331,0 -7.06482201,-1.45667 -7.06482201,-7.9984 0,-6.54173 6.09949101,-7.99840001 7.06482201,-7.99840001 h 84.632196 c 0.96533,0 7.28332,1.72149001 7.28332,7.99840001 z" />
+
+                  <!-- ICON -->
+                  <g>
+                    <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="83.6" y1="8.7" x2="96.6" y2="8.7">
+                      <stop  offset="0" style="stop-color:#FFFFFF"/>
+                      <stop  offset="0.8098" style="stop-color:#F15731"/>
+                    </linearGradient>
+                    <circle fill="url(#SVGID_1_)" stroke="#000000" stroke-miterlimit="10" cx="90.1" cy="8.7" r="6.5"/>
+                    <g>
+                      <line fill="none" stroke="#FFFFFF" stroke-width="9" x1="86.014" y1="8.7" x2="94.186" y2="8.7"/>
+                      <line fill="none" stroke="#FFFFFF" stroke-width="9" x1="90.1" y1="11.086" x2="90.1" y2="2.914"/>
+                    </g>
+                  </g>
+                  <linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="83.6" y1="8.7" x2="96.6" y2="8.7">
+                    <stop  offset="0" style="stop-color:#FFFFFF"/>
+                    <stop  offset="0.8098" style="stop-color:#F15731"/>
+                  </linearGradient>
+                  <circle fill="url(#SVGID_2_)" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" cx="90.1" cy="8.7" r="6.5"/>
+                  <g>
+                    <line fill="none" stroke="#FFFFFF" x1="86.014" y1="8.7" x2="94.186" y2="8.7"/>
+                    <line fill="none" stroke="#FFFFFF" x1="90.1" y1="12.786" x2="90.1" y2="4.614"/>
+                  </g>
+
+
+                  <!-- TEXT -->
+                  <text x="6" y="12" fill="#ffffff" font-size="11px" font-family="Arial">Circle</text>
+
+                </g>
+
+            </g>
+
+        </g>
+
+	</g>
+
+	<!-- 
+	ORIGINAL GRID:
+	_topPosition = 5;
+	_gridModeButtonHeight= 16;
+	_gridModeButtonWidth = 102;
+	_palletWidth = 74;
+	_gridWidth = 500;
+	_gridHeight = 410;
+	_feedbackHeight = 22;
+	-->
+	
+</svg>

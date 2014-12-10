@@ -1,0 +1,76 @@
+config.js : Helper functions and configuration for the widget.
+content.js: Tab and button defaults (optional)
+editor.js : All the real code.
+
+The current editor seems to work for basic math, fraction editing, and can eval
+almost all the TeX cases thrown at it.   A hidden input field is updated with the
+most recent edit information in case you want to use it in form submission.
+
+Undo, redo and a bunch of other keycodes are supported based on the "EditMode"
+of the widget.   I suggest looking / loading some of the test pages if you want
+to see basic use.
+
+Tests are in the test/ directory and can be run directly from the file system (if you 
+have MathJax) or just adjust the cdn location / script src.   Also shows you what to
+do to include all the src you need.
+
+Requires
+==============================================================================
+require MathJax.js
+require MathJax.Editor.Config from config.js
+
+Classes in this file 
+==============================================================================
+ MathJax.Editor.Config : Provides default settings & unicode helpers.
+
+ MathJax.Editor.Store : Global store of all the current Widgets in the page.
+   .query({containerId: 'someIdToFind'}); //can query on any CFG key
+   .get(Widget.id);                      //Integer lookup for widgets
+
+ MathJax.Editor.KeyPressHandler : Global key press handler.  Singleton.  
+   -Widget : Allows key editing of only one Widget at a time.
+   -CODES  : A registry of what to do when users press different keys.
+             can add/remove listeners for additional keys. 
+
+ BASE : Closure class extends MathJax.Object and provides simple css helpers.
+ COMP : Closure base class extends Base
+
+ MathJax.Editor.Widget : Top level container, what is initialized.
+ -EDIT[]    : each editable line has state and helper operations each edit is a MathJax eq
+ -CONTENT   : Tabs full of buttons if enabled.
+ -NAVIGATION: Buttons for moving left, right and deleting (add more to basic nav)
+ -CONFIGURE : Default config and parsing / serialize helpers for the widget
+              Also provides the helpers for configuring a widget  
+ -UTIL      : Helper for searching around the MathJax Eq tree.
+
+ Example Initialization:
+==============================================================================
+
+ new MathJax.Editor.Widget();//New editor in the page
+
+ new MathJax.Editor.Widget({
+   contentLabel: 'string',                //Label for the math
+   TeX: 'x' || ['x', 'x + 2', '\int x+2'] //Mutiple edit lines, can be TeX
+ }); 
+
+ new MathJax.Editor.Widget({mathML: 'valid math ml' || [mml, mml, mml]});
+
+ new MathJax.Editor.Widget({
+   containerId: 'SomeDomId', //creates if not present in document
+   tabs: true,               //Provide the default tabs
+   cb: function(w){},        //Callback with the widget when the equation is parsed/ready
+ });
+
+ new MathJax.Editor.Widget({ //If you want to configure an editor, then save the json cfg
+   configure: true,
+   tabs: true
+ });
+
+ Additional editor edit modes.
+ new MathJax.Editor.Widget({ //If you want to configure an editor, then save the json cfg
+    TeXEntryMode: MathJax.Editor.Config.TeXEntryMode.None, //.Allow, .Vim   
+    EditMode: MathJax.Editor.Config.EditModes.REPLACE, //If you want to replace instead of insert
+ });
+
+ For more complex configuration I suggest using the configure: true to poke around at 
+ the available settings.

@@ -1,0 +1,33 @@
+<html>
+  <head>
+  <meta>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </meta>
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"> </script>
+  <script src="../../show.js"> </script>
+  <link   href="../../show.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="container" class="container">
+      <div id="slides" class="slides hidden">
+        <!-- t=second in which you want this slide to display -->
+        <div t="0" class="slides"><img src="slide1.jpg" class="withborder"/></div>
+        <div t="29" class="slides"><img src="slide2.jpg" class="withborder"/></div>
+        <div t="62" class="slides"><img src="slide3.jpg" class="withborder"/></div>        
+        <div t="84" class="slides"><img src="slide4.jpg" class="withborder"/></div>
+        <div t="123" class="slides"><img src="slide5.jpg" class="withborder"/></div>
+        <div t="140" class="slides"><img src="slide6.jpg" class="withborder"/></div>                
+      </div>
+      <audio id="testing" controls="controls" >
+        <source src="Bell Ringer.HEv2.VBR.Q0.15.m4a" type='audio/mp4'>
+        <source src="Bell Ringer.8KHz.Mono.VBR.Q0.0.ogg" type='audio/ogg; codecs="vorbis"' />
+        This browser does not support the audio file used.
+      </audio>
+    </div>
+    <script type="text/javascript"> 
+      $(function() {
+        var s = new slide.Show('testing', 'slides', 'container');
+      });
+    </script>
+    </body>
+</html>

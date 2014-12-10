@@ -1,0 +1,42 @@
+
+@media only screen and (orientation:portrait){
+	.mobile #calculatorwidget{
+		zoom: 2;
+	}
+	.mobile #calculatorwidget.basic4, .mobile #calculatorwidget.basic6, .mobile #calculatorwidget.basic4,.mobile #calculatorwidget.basicMem6{
+		width: 277px;
+		zoom: 2.5;
+	}
+	.mobile #calculatorwidget.scientific{
+		width: 325px;
+		zoom: 2;
+	}
+
+}
+
+@media only screen and (orientation:landscape){
+
+	.mobile #calculatorwidget.basic4, .mobile #calculatorwidget.basic6, .mobile #calculatorwidget.basic4,.mobile #calculatorwidget.basicMem6{
+		width: 285px;
+		zoom: 1.2;
+	}
+	.mobile #calculatorwidget.scientific{
+		width: 345px;
+		zoom: 1;
+	}
+	
+}
+/*7" tablet specific target*/
+@media only screen and (max-device-width: 966px) and (orientation:portrait){
+	.mobile #calculatorwidget{
+		zoom:0.75;
+	}
+	.mobile #calculatorwidget.basic4, .mobile #calculatorwidget.basic6, .mobile #calculatorwidget.basic4,.mobile #calculatorwidget.basicMem6{
+		width: 277px;
+		zoom: 2.5;
+	}
+	.mobile #calculatorwidget.scientific{
+		width: 325px;
+		zoom: 1;
+	}
+}

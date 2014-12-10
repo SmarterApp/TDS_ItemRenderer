@@ -1,0 +1,776 @@
+{
+    "id": "sample",
+    "types": [
+        {
+            "name": "Language",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "ENU",
+                    "name": "English",
+                    "selected": true
+                },
+                {
+                    "code": "ESN",
+                    "name": "Spanish"
+                },
+                {
+                    "code": "ENU-Braille",
+                    "name": "Braille"
+                }
+            ]
+        },
+        {
+            "name": "TTX Business Rules",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_TTX_0",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_TTX_A202",
+                    "name": "A202"
+                },
+                {
+                    "code": "TDS_TTX_A203",
+                    "name": "A203"
+                },
+                {
+                    "code": "TDS_TTX_A204",
+                    "name": "A204"
+                },
+                {
+                    "code": "TDS_TTX_A205",
+                    "name": "A205"
+                },
+                {
+                    "code": "TDS_TTX_A206",
+                    "name": "A206"
+                },
+                {
+                    "code": "TDS_TTX_M101",
+                    "name": "M101"
+                },
+                {
+                    "code": "TDS_TTX_M102",
+                    "name": "M102"
+                },
+                {
+                    "code": "TDS_TTX_HI101",
+                    "name": "HI101"
+                },
+                {
+                    "code": "TDS_TTX_HI102",
+                    "name": "HI102"
+                },
+                {
+                    "code": "ITS_BRF_HI105",
+                    "name": "HI105"
+                },
+                {
+                    "code": "ITS_TTX_BRF101",
+                    "name": "BRF101"
+                },
+                {
+                    "code": "ITS_TTX_BRF102",
+                    "name": "BRF102"
+                },
+                {
+                    "code": "ITS_TTX_BRF103",
+                    "name": "BRF103"
+                },
+                {
+                    "code": "ITS_TTX_BRF104",
+                    "name": "BRF104"
+                },
+                {
+                    "code": "TDS_TTX_U101",
+                    "name": "U101"
+                },
+                {
+                    "code": "TDS_TTX_U102",
+                    "name": "U102"
+                }
+            ]
+        },
+        {
+            "name": "Color Choices",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_CC0",
+                    "name": "None",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_CCYellow",
+                    "name": "Yellow"
+                },
+                {
+                    "code": "TDS_CCYellow2",
+                    "name": "Yellow Light"
+                },
+                {
+                    "code": "TDS_CCBlue",
+                    "name": "Blue"
+                },
+                {
+                    "code": "TDS_CCBlue2",
+                    "name": "Blue Light"
+                },
+                {
+                    "code": "TDS_CCMagenta",
+                    "name": "Magneta"
+                },
+                {
+                    "code": "TDS_CCMagenta2",
+                    "name": "Magneta Light"
+                },
+                {
+                    "code": "TDS_CCGray",
+                    "name": "Gray"
+                },
+                {
+                    "code": "TDS_CCGray2",
+                    "name": "Gray Light"
+                },
+                {
+                    "code": "TDS_CCGreen",
+                    "name": "Green"
+                },
+                {
+                    "code": "TDS_CCGreen2",
+                    "name": "Green Light"
+                },
+                {
+                    "code": "TDS_CCInvert",
+                    "name": "Invert"
+                },
+                {
+                    "code": "TDS_CCYellowB",
+                    "name": "Yellow on Blue"
+                },
+                {
+                    "code": "TDS_CCWhiteN",
+                    "name": "White on Navy"
+                }
+            ]
+        },
+        {
+            "name": "American Sign Language",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_ASL0",
+                    "name": "False",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_ASL1",
+                    "name": "True"
+                }
+            ]
+        },
+        {
+            "name": "Item Numbers",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_ItmNum1",
+                    "name": "True",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_ItmNum0",
+                    "name": "False"
+                }
+            ]
+        },
+        {
+            "name": "Print Size",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_PS_L0",
+                    "name": "None",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_PS_L1",
+                    "name": "Level 1"
+                },
+                {
+                    "code": "TDS_PS_L2",
+                    "name": "Level 2"
+                },
+                {
+                    "code": "TDS_PS_L3",
+                    "name": "Level 3"
+                },
+                {
+                    "code": "TDS_PS_L4",
+                    "name": "Level 4"
+                }
+            ]
+        },
+        {
+            "name": "Font Type",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_FT_San-Serif",
+                    "name": "Arial",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_FT_Serif",
+                    "name": "Times New Roman"
+                },
+                {
+                    "code": "TDS_FT_Verdana",
+                    "name": "Verdana"
+                }
+            ]
+        },
+        {
+            "name": "Font Size",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_F_S12",
+                    "name": "12 Point",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_F_S14",
+                    "name": "14 Point"
+                }
+            ]
+        },
+        {
+            "name": "TTS",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_TTS0",
+                    "name": "Disabled",
+                    "allowCombine": false
+                },
+                {
+                    "code": "TDS_TTS_Item",
+                    "name": "Item",
+                    "allowCombine": true,
+                    "selected": true
+                },
+                {
+                    "code": "TDS_TTS_Stim",
+                    "name": "Stimulus",
+                    "allowCombine": true,
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "TTS Pausing",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_TTSPause0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_TTSPause1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "TTS Tracking",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_TTSTracking0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_TTSTracking1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Masking",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_Masking0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_Masking1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Highlight",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_Highlight0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_Highlight1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Expandable Passages",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_ExpandablePassages0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_ExpandablePassages1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Item Tools Menu",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_ITM0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_ITM1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Item Response Reset",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_ItemReset0",
+                    "name": "False",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_ItemReset1",
+                    "name": "True"
+                }
+            ]
+        },
+        {
+            "name": "Print on Request",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_PoD0",
+                    "name": "None",
+                    "allowCombine": false
+                },
+                {
+                    "code": "TDS_PoD_Item",
+                    "name": "Item",
+                    "allowCombine": true,
+                    "selected": true
+                },
+                {
+                    "code": "TDS_PoD_Stim",
+                    "name": "Stimulus",
+                    "allowCombine": true,
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Guide for Revision",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_GfR0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_GfR1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Mark for Review",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_MfR0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_MfR1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Student Comments",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_SC0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_SC1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Tutorial",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_T0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_T1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Strikethrough",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_ST0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_ST1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Line Reader",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_LR0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_LR1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Feedback",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "LPN_FB0",
+                    "name": "False"
+                },
+                {
+                    "code": "LPN_FB1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Word List",
+            "allowChange": false,
+            "isSelectable": false,
+            "isVisible": false,
+            "values": [
+                {
+                    "code": "TDS_WL_DICT",
+                    "name": "Dictionary",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_WL_ESNGlossary",
+                    "name": "Dictionary",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_WL_THES",
+                    "name": "Thesaurus",
+                    "selected": false
+                }
+            ]
+        },
+        {
+            "name": "Compass",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_Compass0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_Compass1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Straight Line",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_StraightLine0",
+                    "name": "False"
+                },
+                {
+                    "code": "TDS_StraightLine1",
+                    "name": "True",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Ruler",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_Ruler0",
+                    "name": "False",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_Ruler1",
+                    "name": "True"
+                }
+            ]
+        },
+        {
+            "name": "Protractor",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_Protractor0",
+                    "name": "False",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_Protractor1",
+                    "name": "True"
+                }
+            ]
+        },
+        {
+            "name": "Scaffolding Voice Guidance",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_ASIGuide0",
+                    "name": "True",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_ASIGuide1",
+                    "name": "False"
+                }
+            ]
+        },
+        {
+            "name": "Audio Playback Controls",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_APC_PS",
+                    "name": "Play and Stop",
+                    "selected": false
+                },
+                {
+                    "code": "TDS_APC_PSP",
+                    "name": "Play Stop and Pause",
+                    "selected": true
+                }
+            ]
+        },
+        {
+            "name": "Streamlined Mode",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_SLM0",
+                    "name": "False",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_SLM1",
+                    "name": "True",
+                    "selected": false
+                }
+            ]
+        },
+        {
+            "name": "Paginate Item Groups",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_PIG0",
+                    "name": "False",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_PIG1",
+                    "name": "True",
+                    "selected": false
+                }
+            ]
+        },
+        {
+            "name": "HTMLEditor Button Groups",
+            "allowChange": true,
+            "isSelectable": true,
+            "isVisible": true,
+            "values": [
+                {
+                    "code": "TDS_HEBG_None",
+                    "name": "All button enabled",
+                    "selected": true
+                },
+                {
+                    "code": "TDS_HEBG_BasicStyles",
+                    "name": "Disable Basic Styles",
+                    "allowCombine": true
+                },
+                {
+                    "code": "TDS_HEBG_Cleanup",
+                    "name": "Disable Cleanup",
+                    "allowCombine": true
+                },
+                {
+                    "code": "TDS_HEBG_List",
+                    "name": "Disable List",
+                    "allowCombine": true
+                },
+                {
+                    "code": "TDS_HEBG_Indent",
+                    "name": "Disable Indent",
+                    "allowCombine": true
+                },
+                {
+                    "code": "TDS_HEBG_Clipboard",
+                    "name": "Disable Clipboard",
+                    "allowCombine": true
+                },
+                {
+                    "code": "TDS_HEBG_Undo",
+                    "name": "Disable Undo/Redo",
+                    "allowCombine": true
+                },
+                {
+                    "code": "TDS_HEBG_SpellChecker",
+                    "name": "Disable Spell Check",
+                    "allowCombine": true
+                },
+                {
+                    "code": "TDS_HEBG_Tables",
+                    "name": "Disable Insert Table",
+                    "allowCombine": true
+                },
+                {
+                    "code": "TDS_HEBG_SpecialChar",
+                    "name": "Disable Special Characters",
+                    "allowCombine": true
+                }
+            ]
+        }
+    ]
+}

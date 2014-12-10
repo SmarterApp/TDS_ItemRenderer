@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xml:lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    
+    <title>Example of MathML responses and SymPy recoding</title>
+     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--
+     <script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    -->
+     <script src="../config.js"></script>
+     <script src="../content.js"></script>
+     <script src="../editor.js"></script>
+     <script src="MathTest.js"></script> 
+     <link href="../mathjax_editor.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+  <div id="ContainerId"></div>
+  <script type="text/javascript">
+    var container = document.getElementById("ContainerId");
+    var eq = {};
+    for (var i = 0; i < MATH_TO_TEST.length; ++i) {
+      var mml = MATH_TO_TEST[i];
+
+      container.appendChild(MathJax.HTML.Element("span", {id: i + ""}, "Math Eq on Line: " + (i+1) + " :"));
+      eq[i] = new MathJax.Editor.Widget({containerId: 'ContainerId', mathML: mml});
+      container.appendChild(MathJax.HTML.Element("br"));
+    }
+  </script>
+</body>
+</html>

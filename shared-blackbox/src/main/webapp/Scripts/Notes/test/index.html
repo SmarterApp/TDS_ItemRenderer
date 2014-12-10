@@ -1,0 +1,167 @@
+<html>
+  <head>
+  <meta>
+    <meta charset="UTF-8">
+
+    <!-- OPTIONAL: You only need the YUI Button CSS if you're including YUI Button, mentioned below. -->
+    <link rel="stylesheet" type="text/css" href="../../Libraries/YUI/container/assets/skins/sam/container.css">
+    <link rel="stylesheet" type="text/css" href="../../Libraries/YUI/button/assets/skins/sam/button.css">
+    <link rel="stylesheet" type="text/css" href="../../../shared/CSS/accommodations.css">
+    <link rel="stylesheet" type="text/css" href="../../../Shared/CSS/modernShell.css">
+    <link rel="stylesheet" type="text/css" href="../../ScratchPad/scratchpad.css">
+    <link rel="stylesheet" type="text/css" href="../../EquationEditor2/mathjax_editor.css">
+  </meta>
+ 
+    <!-- Dependencies -->
+	<script src="../../Libraries/jQuery/jquery-1.10.2.min.js"></script>	
+    <script src="../../Libraries/YUI/yahoo/yahoo-min.js"></script>
+    <script src="../../Libraries/YUI/dom/dom-min.js"></script>
+    <script src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js"></script>
+    <script src="../../Libraries/YUI/animation/animation-min.js"></script>
+    <script src="../../Libraries/YUI/connection/connection-min.js"></script>
+    <script src="../../Libraries/YUI/dragdrop/dragdrop-min.js"></script>
+    <script src="../../Libraries/YUI/element/element-min.js"></script>
+    <script src="../../Libraries/YUI/button/button-min.js"></script>
+    <script src="../../Libraries/YUI/container/container-min.js"></script>
+
+    <!-- Math editor -->
+    <script type="text/javascript" src="../../Libraries/MathJax//MathJax.js?config=TeX-AMS-MML_HTMLorMML-full"></script>
+    <script src="../../EquationEditor2/config.js"></script>
+    <script src="../../EquationEditor2/content.js"></script>
+    <script src="../../EquationEditor2/editor.js"></script>
+
+    <script src="../../Scratchpad/zwibbler2.js"></script>
+
+    <script src="../main.js"></script>
+    <script src="../dialog.js"></script>
+
+    <script src="../base.js"></script>
+    <script src="../textarea.js"></script>
+    <script src="../scratchpad.js"></script>
+    <script src="../equation.js"></script>
+    <script src="../dropdown.js"></script>
+    <script src="../factory.js"></script>
+    <script src="test_data.js"></script>
+    <!--
+     <script src="../dialog.js"></script>
+     -->
+  </head>
+  <body>
+    <div>
+       You should see a comment box for each of the major notes types open, then be populated with
+       additional data.  There should be _no_ console.error statements.  You should be able to drag
+       around the widgets, and also close them, or fake save them.
+    </div>
+  </body>
+  <script type="text/javascript">
+    //Fake load all the types using a manager class / event system
+    TestManager = function(){
+        console.log("Creatinga  new test manager.");
+        this.MockResults = window.TestData;
+    };
+    TestManager.addMockResult = function(id, result){
+      this.MockResults[id] = result;
+    };
+    TestManager.prototype.save = function(action, args){
+      try{
+        args = args && args.length ? args[0] : {};
+        console.log("What are we saving?", action, args);
+        if(typeof args.cb == 'function'){
+            args.cb("MOCK RESPONSE");
+        }
+        this.MockResults[args.id + '_Save'] = args;
+        console.log("This Mock Results", this.MockResults);
+      }catch(e){
+          console.error("failed to do a save with a mock response.", e);
+      }
+    };
+    TestManager.prototype.listen = function(type, args){
+        console.log("arguments?", args);
+        setTimeout(this.timeIt.bind(this, args[0]), 2000);
+    };
+    TestManager.prototype.timeIt = function(args){
+        console.log("Call a set timeout function", args);
+        try{
+          var data = this.MockResults[args.id]
+          if(typeof data == 'string'){
+            data = JSON.parse(JSON.stringify(data));
+          }
+
+          console.log("What do we have for data?", data);
+          if(args && args.cb){
+              args.cb(data);
+          }
+        }catch(e){
+            console.error('Failed to unserialize.', args, data, e);
+        }
+    };
+    TestManager.prototype.showAllTypes = function(){
+        //Opens all the types.
+        for(var k in TDS.Notes.Types){
+           try{
+              TDS.Notes.open(TDS.Notes.Types[k]);
+           }catch(e){
+              console.error('Failed to construct this type: ', k, e)
+           }
+        }
+    };
+    TestManager.prototype.hideAllTypes = function(){
+        //Close all types
+        for(var k in TDS.Notes.Types){
+            TDS.Notes.close(TDS.Notes.Types[k]);
+        }
+    };
+    TestManager.prototype.saveAllTypes = function(){
+        //Index the save state by using???
+        for(var k in TDS.Notes.Types){
+            var type = TDS.Notes.Types[k];
+            var note = TDS.Notes.get(type);
+            if(note){
+                note.submit();
+            }
+        }
+    };
+    TestManager.prototype.loadAllTypes = function(){
+        for(var k in TDS.Notes.Types){
+            var type = TDS.Notes.Types[k];
+            var note = TDS.Notes.get(type);
+            if(note){
+                note.load();
+            }
+        }
+    };
+  
+    var TM = new TestManager();
+    TDS.Notes.Events.Load.subscribe(
+        TM.listen.bind(TM)
+    );
+    TDS.Notes.Events.Save.subscribe(
+        TM.save.bind(TM)
+    );
+
+    console.log("Building all the dialog types.");
+    TM.showAllTypes();
+
+    console.log("Hiding all the types.");
+    TM.hideAllTypes();
+
+    console.log("Show the types again, ensure that they have no 2x show hide render issues.");
+    TM.showAllTypes();
+    console.log("Ensure that the serialize method works on all dialogs.");
+    TM.saveAllTypes();
+
+    console.log("Showing all types after the new fake results are loaded into them.");
+    TM.showAllTypes();
+
+    console.log("Fake load content for each of the widgets.");
+    TM.loadAllTypes();
+
+
+    //TDS.Notes.get(TDS.Notes.Types.ScratchPad).close();
+    /*
+    var test = ScratchPad.Factory.getInstance().getOrCreateScratchPadById('zwibbler');
+        test.load('list', window.TestData.ScratchPad);
+    */
+
+  </script>
+</html

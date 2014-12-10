@@ -1,0 +1,76 @@
+<html>
+  <head>
+  <meta>
+    <meta charset="UTF-8">
+  </meta>
+  <!--
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full"></script>
+    -->
+    <link href="../mathjax_editor.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div>
+    </div>
+  </body>
+     <script type="text/javascript" src="../../MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+     <script src="../config.js"></script>
+     <script src="../content.js"></script>
+     <script src="../editor.js"></script>
+    <script type="text/javascript">
+        new MathJax.Editor.Widget({ 
+          contentLabel: 'Multi Editor Test (should have 3 functions)',
+          TeXEntryMode: 'Allow',                      //Can the user type in tex vs restricting to pure button math
+          TeX: [
+            "\\displaystyle {x + \\pi}",
+            "\\displaystyle {y - 1 + \\sqrt{x^3}}",
+            "\\displaystyle {z - 1}"
+          ]
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        new MathJax.Editor.Widget({ 
+          contentLabel: 'Adds multi editor capability after the initial widget parse should be 4 edit boxes',
+          TeXEntryMode: 'Allow',                      //Can the user type in tex vs restricting to pure button math
+          TeX: ['0', 'x+1'],
+          navigation: false,
+          cb: function(w){
+            var wtf = w;
+            wtf.addEditor(null, '1');
+            wtf.addEditor(null, '2');
+            wtf.addEditor(null, '3');
+          }
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        new MathJax.Editor.Widget({ 
+          contentLabel: 'Remove Multi Eq Test, starts with 0,1,2, should end with 0, 2',
+          TeXEntryMode: 'Allow',                      //Can the user type in tex vs restricting to pure button math
+          TeX: ['0', '1', '2'],
+          navigation: false,
+          cb: function(w){
+            var editors = w.getEditors();
+            var death = editors[1];
+            w = w.removeEditorObj(death);
+          }
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        new MathJax.Editor.Widget({ 
+          contentLabel: 'Configuration test.  3 Eq, should be able to rebuild and add and remove excess lines.',
+          TeXEntryMode: 'Allow',
+          navigation: false,
+          tabs: true,
+          TeX: ['{(x+1)}^2', 'x^2 + 2x + 1']
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+
+        new MathJax.Editor.Widget({ 
+          contentLabel: 'Configuration test.  4 Eq, should be able to rebuild and add and remove excess lines.',
+          configure: true,
+          navigation: false,
+          tabs: true,
+          TeX: ['0', '1', '2', 'x=1']
+        });
+        document.body.appendChild(MathJax.HTML.Element('br'));
+    </script>
+</html>

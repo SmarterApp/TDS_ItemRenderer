@@ -1,0 +1,133 @@
+.format_ebsr .interactionPrompt {
+	border-top: solid 1px #DBDBDB;
+	margin: 0 0em 1em;
+	padding-top: .5em;
+}
+
+.format_ebsr h3 {
+	background-color: #DBDBDB;
+	display: inline-block;
+	clear: both;
+	font-style: normal;
+	font-weight: bold;
+	color: #000000;
+	text-align: center;
+	padding-right: .2em;
+	padding-left: .2em;
+	line-height: 1.5em;
+}
+/* not needed
+.format_ebsr .optionContainer {
+	border: solid 1px transparent;
+}
+.format_ebsr .optionContainer.contextAreaFocus {
+	border: dotted 1px #00AEEF;
+}*/
+.EBSR_ms .optionClicker {
+	background-image: url(../../Shared/Images/checks.png) !important;
+	background-position: 0px 0px !important;
+}
+.EBSR_ms:hover .optionClicker {
+	background-image: url(../../Shared/Images/checks.png) !important;
+	background-position: 0px -149px !important;
+}
+.EBSR_ms.optionSelected .optionClicker, 
+.EBSR_ms.optionSelected:hover .optionClicker {
+	background: url(../../Shared/Images/checks.png) no-repeat 0px -299px !important;
+}
+
+.EBSR_mc .optionClicker {
+	background-position: 0px 0px !important;
+}
+.EBSR_mc:hover .optionClicker {
+	background-position: 0px -21px !important;
+}
+.EBSR_mc.optionSelected .optionClicker, .EBSR_mc.optionSelected:hover .optionClicker {
+	background-position: 0px -40px !important;
+}
+
+/* 1 */
+.TDS_PS_L1 .EBSR_ms .optionClicker {
+	background-position: 0px -449px !important;
+}
+.TDS_PS_L1 .EBSR_ms:hover .optionClicker {
+	background-position: 0px -625px !important;
+}
+.TDS_PS_L1 .EBSR_ms.optionSelected .optionClicker, 
+.TDS_PS_L1 .EBSR_ms.optionSelected:hover .optionClicker {
+	background: url(../../Shared/Images/checks.png) no-repeat 0px -799px !important;
+}
+
+.TDS_PS_L1 .EBSR_mc .optionClicker {
+	background-position: -40px 0px !important;
+}
+.TDS_PS_L1 .EBSR_mc:hover .optionClicker {
+	background-position: -40px -30px !important;
+}
+.TDS_PS_L1 .EBSR_mc.optionSelected .optionClicker {
+	background-position: -40px -60px !important;
+}
+
+/* 2 */
+.TDS_PS_L2 .EBSR_ms .optionClicker {
+	background-position: 0px -975px !important;
+}
+.TDS_PS_L2 .EBSR_ms:hover .optionClicker {
+	background-position: 0px -1174px !important;
+}
+.TDS_PS_L2 .EBSR_ms.optionSelected .optionClicker, 
+.TDS_PS_L2 .EBSR_ms.optionSelected:hover .optionClicker {
+	background: url(../../Shared/Images/checks.png) no-repeat 0px -1375px !important;
+}
+
+.TDS_PS_L2 .EBSR_mc .optionClicker {
+	background-position: 0px -60px !important;
+}
+.TDS_PS_L2 .EBSR_mc:hover .optionClicker {
+	background-position: 0px -100px !important;
+}
+.TDS_PS_L2 .EBSR_mc.optionSelected .optionClicker {
+	background-position: -40px -100px !important;
+}
+/* 3 */
+.TDS_PS_L3 .EBSR_ms .optionClicker {
+	background-position: 0px -1575px !important;
+}
+.TDS_PS_L3 .EBSR_ms:hover .optionClicker {
+	background-position: 0px -1825px !important;
+}
+.TDS_PS_L3 .EBSR_ms.optionSelected .optionClicker, 
+.TDS_PS_L3 .EBSR_ms.optionSelected:hover .optionClicker {
+	background: url(../../Shared/Images/checks.png) no-repeat 0px -2075px !important;
+}
+
+.TDS_PS_L3 .EBSR_mc .optionClicker {
+	background-position: -80px -70px !important;
+}
+.TDS_PS_L3 .EBSR_mc:hover .optionClicker {
+	background-position: -80px -127px !important;
+}
+.TDS_PS_L3 .EBSR_mc.optionSelected .optionClicker {
+	background-position: -12px -140px !important;
+}
+/* 4 */
+.TDS_PS_L4 .EBSR_ms .optionClicker {
+	background-position: 0px -2325px !important;
+}
+.TDS_PS_L4 .EBSR_ms:hover .optionClicker {
+	background-position: 0px -2626px !important;
+}
+.TDS_PS_L4 .EBSR_ms.optionSelected .optionClicker, 
+.TDS_PS_L4 .EBSR_ms.optionSelected:hover .optionClicker {
+	background: url(../../Shared/Images/checks.png) no-repeat 0px -2925px !important;
+}
+
+.TDS_PS_L4 .EBSR_mc .optionClicker {
+	background-position: -70px 0px !important;
+}
+.TDS_PS_L4 .EBSR_mc:hover .optionClicker {
+	background-position: -140px -1px !important;
+}
+.TDS_PS_L4 .EBSR_mc.optionSelected .optionClicker {
+	background-position: -140px -70px !important;
+}

@@ -1,0 +1,148 @@
+/* @group Reset Code */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+}
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th {
+	text-align: left;
+	font-weight: normal;
+}
+td {
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+blockquote {
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+textarea {
+   resize: none;
+}
+/* @end */
+
+/* makes most of the body clickable without causing scroll bar to be visible*/
+body.cke_editable {
+	position: absolute;
+	overflow: auto;
+	top: .3em;
+	bottom: .3em;
+	left: .3em;
+	right: .3em;
+}
+html {
+	position: relative;
+	height: 100%;
+}
+
+.TDS_PS_L1 { 
+	font-size: 1.065em; 
+}
+.TDS_PS_L2 { 
+	font-size: 1.5em; 
+}
+.TDS_PS_L3 { 
+	font-size: 1.9em; 
+}
+.TDS_PS_L4 { 
+	font-size: 2.5em; 
+}
+.cke_editable ul, 
+.cke_editable ol {
+	margin-left: .5em;
+	list-style: inside;
+}
+.cke_editable ol {
+	list-style-type: decimal;
+}
+.cke_editable strong {
+    font-weight: bold;
+}
+.cke_editable em {
+    font-style: italic;
+}
+.cke_editable td, 
+.cke_editable th {
+	border: solid 1px #ccc;
+	min-width: 30px;
+	padding: .2em;
+}
+.cke_editable th {
+	border-color: #999;
+	background-color: rgba(237,237,237,0.3);
+}
+.cke_editable caption {
+	background-color: rgba(237,237,237,0.5);
+	font-size: 1.1;
+	border: solid 1px #ccc;
+	padding: .2em;
+}
+
+/* prevents IE10 from collapsing empty elements when spellchcking is active */
+body[contenteditable=false] p, 
+body[contenteditable=false] td, 
+body[contenteditable=false] th {
+	min-height: 1em;
+}
+
+/*hopefully prevent context menu items from being draggable*/
+.cke_panel_block * {
+	-webkit-user-drag: none;
+}
+
+a.spellcheck-word {
+	color: #cf7327;
+}
+.TDS_CCYellowB a.spellcheck-word, 
+.TDS_CCInvert a.spellcheck-word, 
+.TDS_CCWhiteN a.spellcheck-word {
+	color: #fff0a2;
+}
+
+/* iOS hackkery to prevent floating cursor - temp disable 
+html {
+	height:100%;
+	max-height:100%;
+	overflow: hidden;
+}
+body {
+	overflow:auto;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+}*/

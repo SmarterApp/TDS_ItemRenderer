@@ -1,0 +1,16 @@
+<resources>
+
+  <fileSet name="diagnostic" compress="false">
+    <input>../Config/networkdiagnosticstestinfo.js</input>
+    <input>../Config/globalaccommodations.js</input>
+    <input>Sections/section.js</input>
+    <input>Sections/section_Diagnostics.js</input>
+    <input>Sections/section_TTSCheck.js</input>
+    <input>Sections/section_SoundCheck.js</input>
+  </fileSet>
+  
+  <fileSet name="diagnostictool" output="combined\tds_diagnostictool.js">
+    <reference set="diagnostic" />
+  </fileSet>
+    
+</resources>

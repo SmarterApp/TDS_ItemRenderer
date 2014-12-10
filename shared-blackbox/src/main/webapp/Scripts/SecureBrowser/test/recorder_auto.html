@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Firefox recorder test</title>
+        
+        <script type="text/javascript">
+            window.onerror = function(msg, url, line) {
+                var errorMsg = "Error: " + msg + "\nurl: " + url + "\nline #: " + line;
+                console.error(errorMsg);
+                alert(errorMsg);
+            };
+        </script>
+        
+        <!-- YUI -->
+        <script type="text/javascript" src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js"></script>
+    
+        <!-- Utils -->
+        <script type="text/javascript" src="../../Utilities/util.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_date.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+        <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+
+    </head>
+
+    <body>
+        
+        <button id="btnStartTest">Start Test</button>
+        <button id="btnStopTest">Stop Test</button>
+
+        <script type="text/javascript">
+
+            var eventNames = [
+                'INITIALIZING', 'READY', 'AUDIOERROR', 
+                'START', 'INPROGRESS', 'END', 
+                'PLAYSTART', 'PLAYSTOP', 'PLAYPAUSED', 'PLAYRESUMED'
+            ];
+
+            var api, defaultOptions;
+
+            // create 
+            function createAPI() {
+                var embed = document.createElement('embed');
+                embed.setAttribute('id', 'recorder');
+                embed.setAttribute('type', 'application/airaudio');
+                embed.setAttribute('style', 'display: block; width: 0px; height: 0px;');
+                document.body.appendChild(embed);
+                return embed;
+            }
+            
+            function setDefaultOptions() {
+                var capabilities = JSON.parse(api.getCapabilities());
+                var devices = capabilities.supportedInputDevices;
+                if (devices == null || devices.length == 0) {
+                    throw new Error('There are no supported input devices.');
+                }
+                var device = devices[0]; // first device is system default
+                var channelCount = device.channelCounts[0];
+                var sampleRate = device.sampleRates[0];
+                var sampleSize = device.sampleSizes[0];
+
+                defaultOptions = {
+                    captureDevice: device.id, // id
+                    channelCount: channelCount,
+                    sampleRate: sampleRate,
+                    sampleSize: sampleSize,
+                    encodingFormat: 'OPUS',
+                    qualityIndicator: true,
+                    captureLimit: {
+                        type: 'time',
+                        duration: 30
+                    }
+                };
+        
+                console.log('Capabilities: ', device);
+            }
+
+            var lastBase64 = null;
+
+            function processEvent(event) {
+                if (event.type == 'AUDIOERROR') {
+                    console.warn('ERROR:' + event.detail);
+                } else {
+                    console.info('EVENT:' + event.type);
+                }
+                
+                // check if plugin is ready
+                if (event.type == 'READY') {
+                    setDefaultOptions();
+                }
+
+                // check if we are still running test
+                if (!started) return;
+                
+                if (event.type == 'START') {
+                    setTimeout(function() {
+                        stopCapture();
+                    }, 5000);
+                }
+                
+                if (event.type == 'END') {
+
+                    var recordData = JSON.parse(event.detail);
+                    lastBase64 = recordData.base64;
+
+                    setTimeout(function() {
+                        playAudio();
+                    }, 1000);
+                }
+
+                if (event.type == 'PLAYSTART') {
+                    setTimeout(function() {
+                        stopAudio();
+                    }, 4000);
+                }
+
+                if (event.type == 'PLAYSTOP') {
+                    setTimeout(function() {
+                        startCapture();
+                    }, 1000);
+                }
+
+            }
+
+            function initialize() {
+
+                // add event listeners
+                for (var i = 0; i < eventNames.length; i++) {
+                    YUE.addListener(document, eventNames[i], processEvent, this, true);
+                }
+
+                // create api
+                api = createAPI();
+                
+                // call initialize
+                api.initialize();
+            }
+            
+            function startCapture() {
+                var optionsStr = JSON.stringify(defaultOptions);
+                api.startCapture(optionsStr, function() {
+                    // if we don't put this function here the recorder doesn't work...
+                });
+            }
+
+            function stopCapture() {
+                api.stopCapture();
+            }
+            
+            function playAudio() {
+
+                var playData = {
+                    type: 'filedata',
+                    data: lastBase64
+                };
+
+                api.play(JSON.stringify(playData));
+            }
+            
+            function stopAudio() {
+                api.stopPlay();
+            }
+
+            // wait for window to load and then schedule initialization
+            YUE.on(window, 'load', function() {
+                setTimeout(function() {
+                    initialize();
+                }, 1000); // <-- set this to 0 or remove setTimeout and plugin will crash on every other call...
+            });
+
+            var started = false;
+
+            YUE.on('btnStartTest', 'click', function(ev) {
+                started = true;
+                startCapture();
+            });
+
+            YUE.on('btnStopTest', 'click', function(ev) {
+                started = false;
+            });
+
+        </script>
+
+    </body>
+
+</html>

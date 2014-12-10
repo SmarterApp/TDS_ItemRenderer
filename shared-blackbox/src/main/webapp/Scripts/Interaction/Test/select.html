@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Select</title>
+
+    <link href="../CSS/Interaction.css" media="all" type="text/css" rel="stylesheet" />
+
+    <script type="text/javascript" src="../../Libraries/YUI/yahoo/yahoo.js"></script>
+    <script type="text/javascript" src="../../Libraries/YUI/dom/dom.js"></script>
+    <script type="text/javascript" src="../../Libraries/YUI/event/event.js"></script>
+	<script type="text/javascript" src="../../Libraries/YUI/dragdrop/dragdrop.js"></script>
+    <script type="text/javascript" src="../../Libraries/YUI/YUI3.js"></script>
+
+    <script type="text/javascript" src="../../Utilities/util.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_function.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_string.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_event.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_dom.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_array.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_structs.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_iter.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_xml.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_browser.js"></script>
+    <script type="text/javascript" src="../../Utilities/util_mobile.js"></script>
+
+    <script type="text/javascript" src="../Interaction.js"></script>
+	<script type="text/javascript" src="../ChoiceInteraction.js"></script>
+	<script type="text/javascript" src="../SelectInteraction.js"></script>
+
+    <script type="text/javascript" src="../Choice/Choice.js"></script>
+	<script type="text/javascript" src="../Choice/SelectChoice.js"></script>
+    
+</head>
+
+<body>
+    
+    <div id="content">
+    
+        <h2>Interaction: Selectable sentences</h2>
+        <div id="interaction-1">
+            
+            <div><b>Min: 2 Max: 3</b></div>
+            <span class="interaction selectable" data-its-identifier="1" data-its-group="group_1"><span style="font-variant:small-caps; ">One day as Raven walked by the sea</span>, he saw an old man, bent and wrinkled, paddling a canoe. </span>
+            <span class="interaction selectable" data-its-identifier="2" data-its-group="group_1">Raven can't watched hot-text the (old) man cast out his fishing line. </span>
+            <span class="interaction selectable" data-its-identifier="3" data-its-group="group_1">“I think I’ll have some fun,” said Raven, laughing to himself. </span>
+            <span class="interaction selectable" data-its-identifier="4" data-its-group="group_1">“I’ll tug the line and make the old man think he has caught a great fish.” </span>
+            <span class="interaction selectable" data-its-identifier="5" data-its-group="group_1">Diving into the water, Raven took the fish bait into his beak and gave a gentle tug, like the nibbling of a great fish before it strikes. </span>
+            <span class="interaction selectable" data-its-identifier="6" data-its-group="group_1">The old man sat very still. </span>
+            <span class="interaction selectable" data-its-identifier="7" data-its-group="group_1">Again, Raven tugged gently at the line. </span>
+            <span class="interaction selectable" data-its-identifier="8" data-its-group="group_1">This time the old man was certain that a great fish was nibbling his bait. </span>
+            <span class="interaction selectable" data-its-identifier="9" data-its-group="group_1">Holding his line steady, he reached for his net. </span>
+            
+            <hr/>
+            
+            <div><b>Min: 1 Max: 2</b></div>
+            <span class="interaction selectable" data-its-identifier="10" data-its-group="group_2">Raven chuckled to himself. </span>
+            <span class="interaction selectable" data-its-identifier="11" data-its-group="group_2">Then swiftly and powerfully he pulled at the line, sure he could jerk it from the old man’s hands. </span>
+            <span class="interaction selectable" data-its-identifier="12" data-its-group="group_2">But the old man was strong and hungry. </span>
+            <span class="interaction selectable" data-its-identifier="13" data-its-group="group_2">He wanted the great fish. </span>
+            <span class="interaction selectable" data-its-identifier="14" data-its-group="group_2">He leaned back, trying to bring the fish to the net. </span>
+            <span class="interaction selectable" data-its-identifier="16" data-its-group="group_2">Back and forth they pulled. </span>
+
+            <hr />
+            
+            <div><b>Min: 0 Max: 1</b></div>
+            <span class="interaction selectable" data-its-identifier="17" data-its-group="group_3">The water around the canoe <span style="text-decoration:underline; ">churned</span>, white with waves. </span>
+            <span class="interaction selectable" data-its-identifier="18" data-its-group="group_3">Raven decided that this was becoming too much like work, so he opened his mouth to let the line free. </span>
+            <span class="interaction selectable" data-its-identifier="19" data-its-group="group_3">But the hook was stuck in Raven’s beak! </span>
+            <span class="interaction selectable" data-its-identifier="20" data-its-group="group_3">Raven could not get loose! </span>
+            <span class="interaction selectable" data-its-identifier="21" data-its-group="group_3">Frightened, Raven pulled hard on the line, but still he could not break free. </span>
+            <span class="interaction selectable" data-its-identifier="22" data-its-group="group_3">Slowly, Raven’s beak began to bend under, curving more with each pull. </span>
+        
+            <br /><br />
+            <input type="button" value="Validate" onclick="validate()" />
+
+        </div>
+        
+    </div>
+	
+    <script type="text/javascript">
+
+        // create interaction
+        var selectInteraction = new TDS.SelectInteraction('selectables');
+
+        // load elements
+        selectInteraction.load('interaction-1');
+
+        // set constraints
+        selectInteraction.setCardinality('group_1', 2, 3);
+        selectInteraction.setCardinality('group_2', 1, 2);
+        selectInteraction.setCardinality('group_3', 0, 1);
+
+        function validate() {
+            alert('Validate: ' + selectInteraction.validateResponse());
+        }
+
+	</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

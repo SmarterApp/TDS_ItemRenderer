@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT inputSpec EMPTY>
+<!ATTLIST inputSpec
+	element NMTOKEN #REQUIRED
+	value NMTOKEN #REQUIRED
+>
+<!ELEMENT responseSpec (responseTable,state)>
+<!ELEMENT state (inputSpec+,stateVarSpec*,stateTableSpec)>
+<!ELEMENT stateVarSpec EMPTY>
+<!ATTLIST stateVarSpec
+	element NMTOKEN #REQUIRED
+	value CDATA #REQUIRED
+	persistent (yes | no) "no"
+	cumulative (yes | no) "no"
+>
+<!ELEMENT stateTableSpec (stateTable)>
+<!ATTLIST stateTableSpec id NMTOKEN #REQUIRED>
+<!ELEMENT responseTable (tr+)>
+<!ELEMENT stateTable (tr+)>
+<!ATTLIST stateTable id NMTOKEN #IMPLIED>
+<!ATTLIST responseTable id NMTOKEN #IMPLIED>
+<!ELEMENT td (#PCDATA)>
+<!ATTLIST td id NMTOKEN #IMPLIED>
+<!ELEMENT th (#PCDATA)>
+<!ATTLIST th id NMTOKEN #REQUIRED>
+<!ELEMENT tr (td|th)*>
