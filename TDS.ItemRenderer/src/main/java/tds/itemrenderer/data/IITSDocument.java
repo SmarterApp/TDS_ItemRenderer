@@ -76,7 +76,7 @@ public abstract class IITSDocument
     return _bankKey;
   }
 
-  protected void setBankKey (long value) {
+  public void setBankKey (long value) {
     _bankKey = value;
   }
 
