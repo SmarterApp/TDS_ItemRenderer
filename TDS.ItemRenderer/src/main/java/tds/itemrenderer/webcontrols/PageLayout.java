@@ -165,8 +165,15 @@ public class PageLayout extends UINamingContainer
   public boolean setLayout () {
     // if there is no layout name manually assigned then get it from the first
     // item
-    if (StringUtils.isEmpty (getLayoutName ()) && getItemRenderGroup ().size () > 0) {
-      _layoutName = getItemRenderGroup ().get (0).getItem ().getLayout ();
+    if (StringUtils.isEmpty (getLayoutName ())) {
+      if (getItemRenderGroup ().size () > 0) {
+        _layoutName = getItemRenderGroup ().get (0).getItem ().getLayout ();
+      }
+      else if (getItemRenderGroup ().getHasPassage ())
+      {
+        if (!StringUtils.isEmpty (getItemRenderGroup ().getPassage ().getLayout ()))
+          _layoutName = getItemRenderGroup ().getPassage ().getLayout ();
+      }
     }
 
     // create the virtual path used to load the layout file

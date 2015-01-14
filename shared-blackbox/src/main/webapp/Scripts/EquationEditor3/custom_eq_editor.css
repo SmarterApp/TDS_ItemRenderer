@@ -1626,3 +1626,7 @@ div.mje_selected_tab, div.mje_selected_tab:hover {
 .mathquill-editable .mq-empty {
     min-height: 1em;
 }
+/* SB-1010 */
+.mathquill-rendered-math .mq-non-leaf, .mathquill-rendered-math .mq-scaled { 
+	vertical-align: middle; 
+}

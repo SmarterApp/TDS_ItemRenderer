@@ -70,7 +70,7 @@ public class ResourceHandler extends FileHttpHandler
     _validExtensions.put ("webm", true); // VP8/WebM
 
     // Closed Captions
-    _validExtensions.put (".vtt", true); // WebVTT
+    _validExtensions.put ("vtt", true); // WebVTT
 
     // APPLICATION:
     _validExtensions.put ("rtf", true);
