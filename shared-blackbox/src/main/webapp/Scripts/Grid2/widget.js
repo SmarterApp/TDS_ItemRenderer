@@ -207,8 +207,10 @@ This module hooks up the grid renderer.
     function match_ITS(page, item, content) {
         var id = 'GridContainer_' + item.position;
         var el = document.getElementById(id);
-        if (el) {
-            return new CM.WidgetConfig(id, el, item.gridAnswerSpace);
+        //SB-1128
+        var gridSpec=item.gridAnswerSpace||item.rendererSpec;
+		if (el && gridSpec) {
+            return new CM.WidgetConfig(id, el, gridSpec);
         }
         return false;
     }
