@@ -5,11 +5,10 @@ Widget for desmos equation editor.
 (function (CM) {
 
     ///////////////////////////////////
-
     function match(page, item) {
         var id = 'EquationEditor_' + item.position;
         var el = document.getElementById(id);
-        if (el && !CM.isAccessibilityEnabled()) {
+        if (el && !CM.getAccommodationProperties().hasBraille()) {   // Braille tests get a plain text response area
             return new CM.WidgetConfig(id, el);
         }
         return false;
@@ -35,7 +34,7 @@ Widget for desmos equation editor.
         var data = MathEditorContent.Config.PreviewFormatter.getPreviewXmlDoc(content);
         var containerDom = document.getElementById('EquationEditor_' + item.position);
         var oldClasses = containerDom.getAttribute('class');
-        containerDom.setAttribute('class', oldClasses + ' no-highlight');
+        containerDom.setAttribute('class', oldClasses + ' no-highlight lr-skip');
         var debug = false; //TURN OFF in Production
         var eq = MathEditorWidget(containerDom, data, debug ? function (msg) { /*eventcallback for widget*/ /*console.log(msg);*/ } : function (msg) { });
         this.eq = eq;
@@ -133,7 +132,7 @@ Widget for desmos equation editor.
     function match_EQA(page, item) {
         var id = 'EquationEditor_' + item.position;
         var el = document.getElementById(id);
-        if (el && CM.isAccessibilityEnabled()) {
+        if (el && CM.getAccommodationProperties().hasBraille()) {
             return new CM.WidgetConfig(id, el);
         }
         return false;

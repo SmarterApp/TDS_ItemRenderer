@@ -52,7 +52,8 @@ TDS.SecureBrowser.Mobile.Android.prototype.initialize = function () {
 };
 
 TDS.SecureBrowser.Mobile.Android.prototype.isEnvironmentSecure = function () {
-    return (!this._config.pausedSinceLaunch && !this._config.keyboardChanged && !this._config.clipboardChanged);
+    var result = { 'secure': (!this._config.pausedSinceLaunch && !this._config.keyboardChanged && !this._config.clipboardChanged), 'messageKey': null };
+    return result;
 };
 
 

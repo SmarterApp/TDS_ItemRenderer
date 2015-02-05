@@ -11,7 +11,7 @@ Validate if expose is enabled on OS X.
         // is this browser supported
         isSupported: function () {
             // only perform Expose validation on Mac SB running on OS X 10.6 or earlier
-            return (Util.Browser.isSecure() && Util.Browser.isMac() && (Util.Browser.getOSXVersion() <= 10.6));
+            return (Util.Browser.isSecure() && Util.Browser.isMac() && Util.Browser.osxVersionIsAtMost(10, 6));
         },
 
         // if everything validates then return true, otherwise false

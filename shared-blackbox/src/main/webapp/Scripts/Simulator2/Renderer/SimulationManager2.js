@@ -511,6 +511,9 @@ Simulator.SimulationManager = function (sim) {
     this.setTrialLimitReachedState = function () {
         this.setState(state.TrialLimitReached);
         layout().disableAllInput();
+
+        // fb-147867: re-enable start button after max trial reached so that all subsequent attempts will throw warning
+        layout().enableStartButton();
     };
 
     this.getNextItem = function () {

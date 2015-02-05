@@ -58,6 +58,7 @@ Sections.SoundCheck.prototype.init = function () {
     //#region Player
 
     var requiresAudio = accProps.hasSoundPlayCheck(),
+        requiresRecorder = accProps.hasRecorderCheck(),
         requiresVolSlider = accProps.hasSoundPlayVolCheck(),
         audioPlayer = null;
 
@@ -65,6 +66,11 @@ Sections.SoundCheck.prototype.init = function () {
         TDS.Audio.Player.setup();
 
         audioPlayer = YUD.get('audioPlayer');
+
+        // prevent someone from clicking on hard coded link
+        YUE.addListener(audioPlayer, 'click', function(evt) {
+            YUE.stopEvent(evt);
+        });
 
         //HACK FOR BUGG-102153
         //switch .ogg to .m4a if unsupported
@@ -78,7 +84,17 @@ Sections.SoundCheck.prototype.init = function () {
             YUD.setAttribute(audioPlayer, 'type', str);
         }
 
-        TDS.Audio.Widget.createPlayer(audioPlayer);
+        // create player ui
+        if (requiresRecorder) {
+            // set timeout to fix audio recorder crackling on OS X
+            $('#checkSound .audioControls').addClass('load_start');
+            setTimeout(function () {
+                $('#checkSound .audioControls').removeClass('load_start');
+                TDS.Audio.Widget.createPlayer(audioPlayer);
+            }, 1500);
+        } else {
+            TDS.Audio.Widget.createPlayer(audioPlayer);
+        }
 
         Player.onIdle.subscribe(function () {
             YUD.removeClass('btnSoundYes', cssDisabled);
@@ -168,8 +184,7 @@ Sections.SoundCheck.prototype.init = function () {
 
     //#region Recorder
 
-    var requiresRecorder = accProps.hasRecorderCheck(),
-        audioSourceSelect = null,
+    var audioSourceSelect = null,
         audioSourceSelectPromise = null,
         audioRecorder = null,
         recorderSupported = false,

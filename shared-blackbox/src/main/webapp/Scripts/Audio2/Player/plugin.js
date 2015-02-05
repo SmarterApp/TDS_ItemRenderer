@@ -14,8 +14,8 @@ This code takes the <a> audio links and makes them widgets.
     function match(page, entity, content) {
         var entityEl = entity.getElement();
         if (entityEl) {
-            var audioElements = $('audio', entityEl)    // get <audio> elements
-                             .not('.slides_audio')      // which aren't slideshow audio
+            var audioElements = $('audio, div.tds-audio', entityEl) // get <audio> elements
+                             .not('.slides_audio')                  // which aren't slideshow audio
                              .add('a.sound_explicit, a.sound_repeat, a.sound_cue', entityEl)    // include <a> which are configured with audio data
                              .get();
 
@@ -55,7 +55,11 @@ This code takes the <a> audio links and makes them widgets.
             var audio,
                 isMCOption = $audio.closest('.optionSound').length > 0,
                 accProps = page.getAccommodationProperties();
-            if (!isMCOption && accProps && accProps.isAudioRewindEnabled()) {
+
+            if (!isMCOption && accProps && accProps.isAudioScrubberEnabled()) {
+                // widget has play/pause and scrubber
+                audio = Widget.createPlayerScrubber(audioEl);
+            } else if (!isMCOption && accProps && accProps.isAudioRewindEnabled()) {
                 // widget has play/pause and rewind
                 audio = Widget.createPlayerRewind(audioEl);
             } else {

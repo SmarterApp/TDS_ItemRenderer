@@ -219,6 +219,11 @@ Simulator.Control.Button = function (sim, panel, section, container) {
         this.setState('enabled');
     };
 
+    this.enableStartButton = function () {
+        if (this.getHandler() === 'StartTrial')
+            this.enableInput();
+    };
+
     this.getSourceName = function () {
         return source;
     };

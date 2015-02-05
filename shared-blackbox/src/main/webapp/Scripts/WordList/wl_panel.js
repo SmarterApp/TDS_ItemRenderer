@@ -24,18 +24,8 @@ WordListPanel.tabCount = 0; // used for hotkey tabbing in WL pane
 WordListPanel.tabCurrent = 0;
 
 // Save word list yet-to-be-sent requests in a queue
-WordListPanel.requestQ = [];
-WordListPanel.indices = '';
-
-WordListPanel.LoadingPageString = "<div id=\"word-list-list-div\" class=\"yui-navset\">\r\n<ul class=\"yui-nav\"> " +
-    "<li class=\"selected\"><a href=\"#word-list-tab1\"><em>Loading</em></a></li></ul>\r\n" +
-    "   <div class=\"yui-content\"> " +
-    "<div id=\"word-list-tab1\"><p>Please Wait</p></div> </div> ";
-
-WordListPanel.ErrorPageString = "<div id=\"word-list-list-div\" class=\"yui-navset\">\r\n<ul class=\"yui-nav\"> " +
-    "<li class=\"selected\"><a href=\"#word-list-tab1\"><em>Information</em></a></li></ul>\r\n" +
-    "   <div class=\"yui-content\"> " +
-    "<div id=\"word-list-tab1\"><p>Content Not Found.</p></div> </div> ";
+WordListPanel.requestQ = {};
+WordListPanel.tagQ = {};
 
 // URL that we agree on with server 
 WordListPanel.xhrUrl = "Pages/API/WordList.axd";
@@ -45,18 +35,10 @@ WordListPanel.xhrMethod = "resolve";
 // This is the id of the content div in the word list pane.
 WordListPanel.tabbedDivName = "word-list-list-div";
 
-// Tagged span in html has the form bbb-iii:xxx, where
-// bbb=bankKey, iii=itemKey, xxx=index withing the word list.
-// parse it for easier consumption by the student app.
-// TODO: The format of this is gonna change based on feedback from
-// ITS tools team
-WordListPanel.splitter = new RegExp("(\\d+):(\\w+)");
-
 // Avoid doing deep fetch for this def, if we've already done it.
-WordListPanel.contentWordCache = [];
-WordListPanel.headerWordCache = [];
-WordListPanel.message = [];
-WordListPanel.failedRequest = [];
+WordListPanel.contentWordCache = {};
+WordListPanel.headerWordCache = {};
+WordListPanel.message = {};
 
 WordListPanel.getKeyFromQEntry = function(entry) {
     var keyIndex = YUD.getAttribute(entry.span, WordListItem.attributeName);
@@ -83,41 +65,47 @@ WordListPanel.postCallback = {
             WordListPanel.contentWordCache[key] = tabString;
             WordListPanel.message[key] = messages[i];
         }
-        
-        // Tag the individual spans that returned WordList entries
-        if (WordListPanel.requestQ[itemKey] == null) {
-            console.log("word list: server returned empty response, returning.");
-            return;
-        }
-        for (i = 0; i < WordListPanel.requestQ[itemKey].length; ++i) {
-            var entry = WordListPanel.requestQ[itemKey][i];
-            var cacheEntry = WordListPanel.message[entry.key];
-            if (cacheEntry && cacheEntry.EntryFound) {
-                entry.wl_item.TagSingleSpan(entry.span);
-            }
-        }
+
+        WordListPanel.ProcessTagQ(itemKey);
     }),
     argument: []
 };
 
+WordListPanel.ProcessTagQ = function(itemKey) {
+    // Tag the individual spans that returned WordList entries
+    var itemTagQ = WordListPanel.tagQ[itemKey];
+    if (itemTagQ == null) {
+        console.log("word list: server returned empty response, returning.");
+        return;
+    }
+    for (var i = itemTagQ.length - 1; i >= 0; --i) {
+        var entry = itemTagQ[i];
+        var cacheEntry = WordListPanel.message[entry.key];
+        if (cacheEntry && cacheEntry.EntryFound) {
+            entry.wl_item.TagSingleSpan(entry.span);
+            itemTagQ.splice(i, 1);
+        }
+    }
+};
 
 // User has clicked on a span.  Search for the definition
 WordListPanel.processClick = (function (entry, headerText) {
-    if (entry != null) {
-        if ((WordListPanel.panel != null) && (WordListPanel.toolDiv != null)) {
-            var cacheKey = WordListPanel.getKeyFromQEntry(entry);
-            
-            // Do we already know this word?
-            if (WordListPanel.contentWordCache[cacheKey] != null) {
-                // yep, look it up.
+    if ((WordListPanel.panel != null) && (WordListPanel.toolDiv != null)) {
+        if (!WordListPanel.IsVisible()) {
+            if (entry != null) {
+                var cacheKey = WordListPanel.getKeyFromQEntry(entry);
 
-                // It is possible that multiple words/phrases map to same
-                // definition.  So update the header with that word/phrase.
-                WordListPanel.headerWordCache[cacheKey] = headerText;
+                // Do we know this word?
+                if (WordListPanel.contentWordCache[cacheKey] != null) {
+                    // It is possible that multiple words/phrases map to same
+                    // definition.  So update the header with that word/phrase.
+                    WordListPanel.headerWordCache[cacheKey] = headerText;
 
-                WordListPanel.setPanel(WordListPanel.headerWordCache[cacheKey], WordListPanel.contentWordCache[cacheKey]);
-            } else {
-                ContentManager.log("WordList: errantly tagged span");
+                    WordListPanel.setPanel(WordListPanel.headerWordCache[cacheKey], WordListPanel.contentWordCache[cacheKey]);
+                    WordListPanel.panel.mask.style.display = 'none';
+                } else {
+                    ContentManager.log("WordList: errantly tagged span");
+                }
             }
         }
     }
@@ -129,15 +117,23 @@ WordListPanel.processClick = (function (entry, headerText) {
 WordListPanel.sendRequest = (function (wl_item) {
     var bankKey = wl_item.wl_res.bankKey;
     var itemKey = wl_item.wl_res.itemKey;
-
-    // If there are no tagged spans, don't send the request at all.
-    if (typeof(WordListPanel.indices) != "string" || WordListPanel.indices.length < 1)
-        return;
-    
+ 
     // build the form post data 
-    var str = WordListPanel.bankKeyHdr + "=" + bankKey.toString();
-    str = str + "&" + WordListPanel.itemKeyHdr + "=" + itemKey.toString();
-    str = str + "&" + WordListPanel.indices;
+    var str = WordListPanel.bankKeyHdr + "=" + bankKey.toString() + "&" + WordListPanel.itemKeyHdr + "=" + itemKey.toString();
+
+    // Build a URL query list of all word list values for this bank/item that we need
+    var strValues = '';
+    var requestQ = WordListPanel.requestQ[itemKey];
+    $.each(requestQ, function (key, value) {
+        strValues = strValues + '&index=' + value;
+    });
+
+    if (strValues == '') { // No words that we don’t already know? Then we're done.
+        WordListPanel.ProcessTagQ(itemKey);
+        return;     
+    }
+
+    str = str + strValues;
 
     // get the selected WL accommodations
     var wlCodes = Accommodations.Manager.getCurrent().getType(WordListPanel.AccType).getCodes(true);
@@ -155,9 +151,10 @@ WordListPanel.sendRequest = (function (wl_item) {
     // This is a hack for ItemPreview and related tools, which is different from Student.
     // If WordListPanel.xhrUrl looks like a fully-qualified URL then use it alone, otherwise
     // construct the URL from baseUrl (Student app).
-    if (/^http/.test(WordListPanel.xhrUrl))
+    if (/^http/.test(WordListPanel.xhrUrl)) {
         urlString = WordListPanel.xhrUrl + "/" + WordListPanel.xhrMethod;
-    
+    }
+
     YAHOO.util.Connect.asyncRequest('POST', urlString, WordListPanel.postCallback, str);
 
     // Display loading screen.
@@ -208,11 +205,29 @@ WordListPanel.setPanel = function (hd, bd) {
 
         WordListPanel.tabView = new YAHOO.widget.TabView(WordListPanel.tabbedDivName);
 
+        /// Count # of tabs in word list panel
         WordListPanel.tabCount = 0;
         while (WordListPanel.tabView.getTab(WordListPanel.tabCount) != null) {
             WordListPanel.tabCount++;
         }
-        WordListPanel.tabCurrent = 0;
+
+        WordListPanel.tabCurrent = 0; // Set currently selected tab index
+
+        // Hook up an event to move the 'aria-title' attribute as different tabs
+        //  are selected for WCAG
+        WordListPanel.tabView.on("activeTabChange", function (event) {
+            var curTab
+            var oTabEl;
+
+            for (var i = 0; i < WordListPanel.tabCount; ++i) {
+                curTab = WordListPanel.tabView.getTab(i);
+                oTabEl = curTab.get("element");
+                $(oTabEl).removeAttr('aria-title');
+            }
+
+            oTabEl = this.get("activeTab").get("element");
+            $(oTabEl).attr('aria-title', 'Selected');
+        });   
         
         setTimeout(function () {
             WordListPanel.postProcessAudioTags();
@@ -221,8 +236,8 @@ WordListPanel.setPanel = function (hd, bd) {
 };
 
 // Set up the word list pane.  Should only be done once.
-WordListPanel.InitializePane = (function () {
-    
+WordListPanel.InitializePane = (function() {
+
     // This next line fixes a bug in YUI2 where active tab
     // has a title attribute which generates a tooltip
     YAHOO.widget.Tab.prototype.ACTIVE_TITLE = '';
@@ -232,6 +247,8 @@ WordListPanel.InitializePane = (function () {
         WordListPanel.toolDiv = document.createElement("div");
         YUD.addClass(WordListPanel.toolDiv, "yui-dialog focused");
         YUD.setAttribute(WordListPanel.toolDiv, 'id', WordListPanel.divId);
+
+        // Add style sheet link
         var clink = document.createElement("link");
         YUD.setAttribute(clink, 'type', 'text/css');
         YUD.setAttribute(clink, 'rel', 'stylesheet');
@@ -240,8 +257,26 @@ WordListPanel.InitializePane = (function () {
         WordListPanel.toolDiv.appendChild(clink);
 
         toolDiv.appendChild(WordListPanel.toolDiv);
-        WordListPanel.panel = new YAHOO.widget.Panel("wordListPanel", { width: "320px", zindex: 1004, visible:false, constraintoviewport: true });
-        WordListPanel.panel.render(WordListPanel.toolDiv);
+
+        WordListPanel.panel = new YAHOO.widget.Panel("wordListPanel", { width: "320px", zindex: 1004, visible: false, constraintoviewport: true, modal: true });
+    }
+
+    WordListPanel.panel.render(WordListPanel.toolDiv);
+
+    // Generate and add a keyup event handler in streamlined mode so we can close (or hide) the panel
+    //  by pressing space/enter when on the panel's closer in the title bar
+    var accProps = Accommodations.Manager.getCurrentProps();
+    if (accProps.isStreamlinedMode()) {
+
+        var closeBtn = $(WordListPanel.toolDiv).find('.container-close');
+        closeBtn.keyup(function (evt) {
+            if (WordListPanel.panel != null) {
+                if (evt.which == 13 || evt.which == 32) {
+                    WordListPanel.panel.hide();
+                    evt.preventDefault();
+                }
+            }
+        });
     }
 });
 
@@ -254,7 +289,7 @@ WordListPanel.RenderHtmlTabs = function (messages) {
     for (i = 0; i < messages.Entries.length; ++i) {
         tabString = tabString + "<li";
         if (i == 0) {
-            tabString = tabString + " class=\"selected\"";
+            tabString = tabString + " class=\"selected\" aria-title=\"Selected\"";
         }
         tabString = tabString + "> <a href=\"#word-list-" + i.toString();
 
@@ -284,7 +319,7 @@ WordListPanel.postProcessAudioTags = function () {
 
         for (var i = 0; i < audioEls.length; ++i) {
             var span = audioEls[i];
-            if ((span) && (span.href)) {
+            if (span && span.href) {
                 var href = span.href;
 
                 // Is this an audio span?
@@ -307,6 +342,13 @@ WordListPanel.postProcessAudioTags = function () {
     } catch (e) {
         console.error("Error creating players in the word list panel (error, dom).", e, bd);
     }
-
 };
 
+// Returns whether the word list panel is currently displaying on screen
+WordListPanel.IsVisible = function() {
+    if (WordListPanel.panel) {
+        return WordListPanel.panel.cfg.getProperty('visible');
+    }
+
+    return false;
+};

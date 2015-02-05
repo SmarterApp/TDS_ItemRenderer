@@ -106,7 +106,9 @@ This contains general content manager keyboard subscriptions.
 
         // check if entity has changed
         if (nextEntity && nextEntity != currentEntity) {
-            nextEntity.setActive(evt);
+            nextEntity.setActive({
+                component: false // don't set default component
+            });
         }
 
         // set new component

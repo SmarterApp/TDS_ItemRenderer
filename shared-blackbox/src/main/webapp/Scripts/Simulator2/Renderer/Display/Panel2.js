@@ -171,6 +171,13 @@ Simulator.Display.Panel = function (sim, panelNum) {
         }
     };
 
+    this.enableStartButton = function () {
+        for (var i = 0; i < ioElements.length; i++) {
+            if (ioElements[i].enableStartButton)
+                ioElements[i].enableStartButton();
+        }
+    };
+
     this.saveInputs = function (forcedSave) {
         for (var i = 0; i < ioElements.length; i++) {
             if (ioElements[i].recordInput)

@@ -13,6 +13,8 @@ Simulator.Whiteboard = function (sim) {
 
     var source = 'Whiteboard';
 
+    var transDictionary = function () { return sim.getTranslationDictionary(); };
+
     var dbg = function () {return sim.getDebug();};
 
     var key = Math.random()*1000;
@@ -28,6 +30,16 @@ Simulator.Whiteboard = function (sim) {
     this.getCategory = function(name) {
         if(name in categories) return categories[name];
         else return null;
+    };
+
+    // needed for animation, which always expects english string
+    this.getEnglishTranslatedCategory = function (catName) {
+        if(catName in categories) {
+            var translatedCategory = [];
+            for (itemName in categories[catName])
+                translatedCategory[itemName] = this.getEnglishTranslatedItem(catName, itemName);
+            return translatedCategory;
+        } else return null;
     };
     
     this.getCategoryAsString = function(name, separator) {
@@ -51,9 +63,32 @@ Simulator.Whiteboard = function (sim) {
         }
         else return null;
     };
+
+    // needed for animation, which always expects english string
+    this.getCategoryAsEnglishTranslatedString = function (name, separator) {
+        var buff = [];
+        var num = 0;
+        if(name in categories) {
+            var cat = categories[name];
+            for(var item in cat) {
+                if(cat.hasOwnProperty(item)) {
+                    if(num > 0) buff.push(Simulator.Constants.PAIR_DELIMITTER + ' ');
+                    buff.push(item); 
+                    if(separator) buff.push(Simulator.Constants.KEY_VALUE_DELIMITTER + ' '); 
+                        //if(separator) buff.push(Simulator.Constants.KEY_VALUE_DELIMITTER + ' ['); 
+                    else buff.push(Simulator.Constants.KEY_VALUE_DELIMITTER);
+                    //else buff.push(Simulator.Constants.KEY_VALUE_DELIMITTER + '[');
+                    buff.push(this.getEnglishTranslatedItem(name, item)); //buff.push(']'); // translated here
+                    num++;
+                }
+            }
+            return buff.join('');
+        }
+        else return null;
+    };
     
     this.categoryExists = function(categoryName) {
-        return category in categories;
+        return categoryName in categories;
     };
     
     this.itemExists = function(categoryName, itemName) {
@@ -95,6 +130,21 @@ Simulator.Whiteboard = function (sim) {
         }
         else return null;
     };
+
+    this.getEnglishTranslatedItem = function (category, theItem) {
+        // if item is a translation tag ("trans.[element].[field].[value]"), then retrieve the english version
+        // otherwise, this is the same as getItem()
+        var myItem = this.getItem(category, theItem);
+        if (!myItem)
+            return null;
+        if (myItem instanceof Array) { // this seems to always be the case: inputs are stored as length-1 arrays
+            var translatedArray = [];
+            for (var i in myItem)
+                translatedArray.push(transDictionary().translateToEnglish(myItem[i]));
+            return translatedArray;        
+        } else // if it happens to be a naked string, translate directly
+            return transDictionary().translateToEnglish(myItem); 
+    }
     
     this.clearCategory = function(category) {
         if(categories[category]) categories[category] = [];
@@ -110,7 +160,7 @@ Simulator.Whiteboard = function (sim) {
         var buff = [];
         var sep = '\n\n';
         buff.push('Inspecting Whiteboard:'); buff.push(sep);
-        for ( var i in categories) {
+        for (var i in categories) {
             var aCat = categories[i];
             buff.push('Inspecting '); buff.push(i); buff.push(' category:'); buff.push(sep);
             for(var k in aCat) {

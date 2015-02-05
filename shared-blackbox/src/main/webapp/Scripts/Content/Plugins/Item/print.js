@@ -10,7 +10,8 @@ NOTE: To test this in itempreview add querystring "printable=true"
         if (entity instanceof ContentItem && content.printable) {
             // check if the print acc is enabled for items
             var accProps = page.getAccProps();
-            return accProps.hasPrintItem();
+            return accProps.hasPrintItem() ||
+                   accProps.hasEmbossItem();
         }
         return false;
     }

@@ -30,7 +30,7 @@
         Util.Event.Emitter(this);
 
         this.init();
-    };
+    }
 
     Entity.prototype.init = function () { };
 
@@ -83,7 +83,8 @@
 
         // create tool
         toolEl = document.createElement('a');
-        toolEl.className = obj.classname;
+        $(toolEl).addClass('toolButton');
+        $(toolEl).addClass(obj.classname);
         toolEl.setAttribute('href', '#');
         toolEl.setAttribute('tabindex', '0');
 
@@ -93,6 +94,7 @@
         }
 
         // add aria
+        toolEl.setAttribute('role', 'button');
         if (obj.hasPopup) {
             toolEl.setAttribute('aria-haspopup', 'true');
         }
@@ -214,7 +216,7 @@
         // check if the page we are blurring really is focused
         if (!activeEntity || activeEntity != this) return false;
 
-        this._log('blur entity');
+        this._log('ENTITY INACTIVE');
 
         var element = activeEntity.getElement();
 
@@ -227,48 +229,55 @@
         // remove active entity
         this._page._activeEntity = null;
 
+        // when leaving item remove focus from component
+        this.clearComponent();
+
         // fire event
         this.fire('blur');
         return true;
     };
 
+    var ActiveOptions = {
+        component: true, // set default component
+        force: false // for making this item active even it already is
+    };
+
     // make this entity active 
     // (set force to true to force the focus regardless if it already focused)
-    Entity.prototype.setActive = function(domEvent, force) // parameters optional
-    {
+    Entity.prototype.setActive = function (opts) {
+
+        // set options
+        opts = YAHOO.lang.augmentObject(opts || {}, ActiveOptions);
+
         // check if this entity is already active
         var previousEntity = this._page.getActiveEntity() || null;
-        if (!force && this == previousEntity) {
+        if (!opts.force && this == previousEntity) {
             return false;
         }
 
         // clear active entity
         this._page.clearEntity();
 
-        this._log('focus entity');
+        this._log('ENTITY ACTIVE');
 
         // set new entity
         this._page._activeEntity = this;
         this._page._lastEntity = this;
 
-        // focus
-        this.focus();
-
-        // scroll (only if key shortcut was used)
-        if (typeof(domEvent) == 'undefined') {
-            // this.scrollTo();
+        // set focus to the first component if not a dom event or key press
+        if (opts.component) {
+            if (opts.component === true) {
+                // set the first component
+                this.resetComponent();
+            } else if (typeof opts.component == 'object') {
+                // set specific component as default
+                this.setActiveComponent(opts.component);
+            }
         }
 
         // fire event
-        this.fire('focus', previousEntity, domEvent);
+        this.fire('focus', previousEntity);
         return true;
-    };
-
-    // this sets focus where we can use up/down
-    Entity.prototype.focus = function() {
-        // then try and set focus on the element (probably won't work)
-        var entityElement = this.getElement();
-        CM.focus(entityElement);
     };
 
     // this scrolls to the item/passage so it is in view
@@ -283,11 +292,34 @@
 
     // add a component
     Entity.prototype.addComponent = function (el) {
-        if (!el) return false;
+
+        if (!el) {
+            return false;
+        }
+
         // if dom element add tabindex
         if (Util.Dom.isElement(el)) {
             el.setAttribute('tabindex', '0');
         }
+
+        // make sure this component is set when it gets focus
+        if (el.addEventListener) {
+            // NOTE: at some point we should just enable this for everyone
+            var page = this.getPage();
+            var accProps = page.getAccProps();
+            if (accProps && accProps.isStreamlinedMode()) {
+                el.addEventListener('focus', function (evt) {
+                    YUE.stopPropagation(evt);
+                    this.setActiveComponent(el);
+                }.bind(this));
+                el.addEventListener('blur', function (evt) {
+                    YUE.stopPropagation(evt);
+                    this.clearComponent();
+                }.bind(this));
+            }
+        }
+
+        // add component
         if (this._components) {
             this._components.push(el);
             return true;
@@ -330,15 +362,17 @@
     };
 
     // set an entities component as being active
-    Entity.prototype.setActiveComponent = function(component, force) {
+    Entity.prototype.setActiveComponent = function (component, force) {
+
         // check if component is already focused
         if (!force && this._activeComponent == component) {
             return;
         }
 
         // remove current component
-        if (this._activeComponent != null) {
-            this._log('blur component - \'' + this._activeComponent.id + '\'');
+        if (this._activeComponent) {
+
+            this._log('COMPONENT BLUR: ' + this._activeComponent.id + ' (' + this._activeComponent.className + ')');
 
             // remove focus from the active component (blur)
             CM.blur(this._activeComponent);
@@ -354,27 +388,19 @@
         }
     
         // check if there is any element
-        if (component == null) {
+        if (!component) {
             return;
         }
 
         // make sure this entity has focus
         if (!this.isActive()) {
-            throw new Error('The entity must have focus before setting a component.');
+            this.setActive({
+                component: false // do not set component
+            });
         }
 
         // make sure this component belongs to this entity
-        var components = this.getComponents();
-
-        var componentFound = false;
-
-        for (var i = 0; i < components.length; i++) {
-            if (component == components[i]) {
-                componentFound = true;
-                break;
-            }
-        }
-
+        var componentFound = this.getComponents().indexOf(component) != -1;
         if (!componentFound) {
             throw new Error('Component not found for this item.');
         }
@@ -382,14 +408,16 @@
         // set element to active
         this._activeComponent = component;
 
-        this._log('focus component - \'' + this._activeComponent.id + '\'');
+        this._log('COMPONENT FOCUS: ' + this._activeComponent.id + ' (' + this._activeComponent.className + ')');
 
         // try to set focus on the component
+        // NOTE: If YUI dialog is open it will prevent focus (container.js line 5879)
         CM.focus(this._activeComponent);
 
         // fire component focus event
         CM.fireComponentEvent('focus', this, this._activeComponent);
         this.fire('focusComponent', this._activeComponent);
+
     };
 
     // clear the active component
@@ -425,7 +453,6 @@
 
         // set focus on the page window and then the element
         CM.focus(pageWin);
-        // CM.focus(element);
 
         // get all text nodes of this element
         var xPathResult = pageDoc.evaluate(".//text()", element, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);

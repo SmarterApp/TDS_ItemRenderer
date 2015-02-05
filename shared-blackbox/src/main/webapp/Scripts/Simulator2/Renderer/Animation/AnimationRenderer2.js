@@ -25,6 +25,7 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
     var panel = thePanel;
     var simID = null;
     var iFrameID = null;
+    var altTextID = this.createItemID(false, -1, 'altText');
 
     if (sim) {
         simID = sim.getSimID();
@@ -44,6 +45,8 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
     var layout = function () { return sim.getLayout(); };
 
     var simDocument = function () { return sim.getSimDocument(); };
+
+    var transDictionary = function () { return sim.getTranslationDictionary(); };
 
     function doImageRendering(element, img, panelName, div, span, renderMaxTime) {
         debug('In doImageRendering - Image = ' + img.src + ', height = ' + img.height + ', width = ' + img.width);
@@ -99,15 +102,16 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
         var foundSource = false;
         var interactive = false;
         var data = '';
+        var accessibilityMode = sim.getAccessibilityIFActive();
         element = (!element) ? currentAnimationElement : element;
         debug('In sendDataToAnimationElement - element = ' + element.getName());
         if (util().elementInArray(animationSet.getInputSource(), 'evaluator')) {
-            data = whiteboard().getItem('evaluationOutput', 'output');
+            data = transDictionary().translateEvaluationOutput(whiteboard().getItem('evaluationOutput', 'output')); // translate tags to english strings
             if (data == null || data == '') data = '';
             else foundSource = true;
         }
         if (util().elementInArray(animationSet.getInputSource(), 'animation')) {
-            var animationData = whiteboard().getCategoryAsString('animationInput');
+            var animationData = whiteboard().getCategoryAsEnglishTranslatedString('animationInput'); // translate tags to english strings
             foundSource = true;
             if (animationData != '' && animationData != null) {
                 if (data != '' && data != null) data += Simulator.Constants.PAIR_DELIMITTER + animationData;
@@ -148,9 +152,16 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
                         movie.animationInput(simID, 'input', 'input');
                         debugf('Sending "input" to animation "' + currenAnimationName + '"');
                     }
-                    debugf('Sending "play" to current animation after ' + util().getElapsedTime() + ' ms');
-                    eventMgr().postEvent(new Simulator.Event(animationSet, 'info', 'animationStarted'));
-                    movie.animationInput(simID, 'command', 'play');
+                    
+                    if (sim.getAccessibilityIFActive()) {
+                        // send 'finished' event right away in accessibility mode
+                        simulateAnimationExecutionTime();
+                        requestAltText(movie); // request alt text with each new trial (allows for input-specific alt text)
+                    } else {
+                        debugf('Sending "play" to current animation after ' + util().getElapsedTime() + ' ms');
+                        eventMgr().postEvent(new Simulator.Event(animationSet, 'info', 'animationStarted'));
+                        movie.animationInput(simID, 'command', 'play');
+                    }
                 }
                 else {
                     if (movie.animationInput) {
@@ -182,7 +193,7 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
         sendDataToAnimationElement(element, false);
     };
 
-    this.renderImage = function (element, panelName, imageSrc, currentElementName, renderMaxTime, thread) {
+    this.renderImage = function (element, panelName, imageSrc, currentElementName, renderMaxTime, thread, altText) {
         var img = null;
         var span = null;
         var HTMLAnimation = null;
@@ -227,14 +238,18 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
             util().bindEvent(img, 'load', function () { imageLoaded = true; });
             img.src = imageSrc;
 
+            if (altText) {
+                img.alt = altText; // set altText if given (fb-153484)
+            }
+
             wait = setInterval(function () {
                 //debug('In setInterval waiting for image to load');
                 if (imageLoaded) {
                     //debug('In setInterval - image loaded');
                     clearInterval(wait);
+                    doImageRendering(element, img, panelName, div, span, renderMaxTime);
                     eventMgr().postEvent(new Simulator.Event(element, 'info', 'imageEmbedded', img));
                     eventMgr().postEvent(new Simulator.Event(element, "info", "allMediaLoaded"));
-                    doImageRendering(element, img, panelName, div, span, renderMaxTime);
                 }
             }, 1);
         }
@@ -268,21 +283,10 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
         } else holderDiv = simDocument().getElementById('holderAnimation' + simID);
         elementInfosrc = animationSrc;
         currentAnimationElement = element;
-        if(sim.getAccessibilityIFActive()) {  // If we are in the accessibility IF, we show the altText instead
-            var altText = element.getAltText();
-            var altTextSpan = simDocument().createElement('span');
-            altTextSpan.style.position='absolute';
-            altTextSpan.style.top = '50%';
-            holderDiv.style.verticalAlign='middle';
-            holderDiv.style.horizontalAlign='center';
-            altTextSpan.style.fontSize = 'xx-large';
-            altTextSpan.innerHTML = altText;
-            holderDiv.innerHTML = '';
-            holderDiv.appendChild(altTextSpan);
-            debug('renderAnimation simulating time of animation execution since accessibilityIF is true');
-            setTimeout(simulateAnimationExecutionTime, 5000);
-            return;
-        }
+
+        if (sim.getAccessibilityIFActive()) // ALT TEXT
+            createAltTextElement();
+
         if (!iFrameID) iFrameID = this.createItemID(true, -1, 'html5iFrame');
         var iFrame = simDocument().getElementById(iFrameID);
         if (!iFrame) {
@@ -335,7 +339,9 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
                 behavior: element.getBehavior(),
                 inlineData: null,
                 containerID: iFrame.id,
-                outputOnReq: animationSet.getOutputOnRequest()
+                outputOnReq: animationSet.getOutputOnRequest(),
+                simLanguage: sim.getAnimationDisplayLanguage(), // will be 'ENU' for english
+                accessibilityMode: sim.getAccessibilityIFActive() ? 'true' : 'false' // pass accessibility mode to animation for alt text retrieval (EXPECTS STRING!)
             };
             animationSet.setCurrentAnimation(html5Shell);
             result = html5Shell.initialize(simID, parameters);
@@ -413,7 +419,9 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
             var flashObjectArray = HTMLPanel.getElementsByTagName('object');
             if (flashObjectArray && flashObjectArray.length == 1) {
                 var flashObj = flashObjectArray[0];
-                flashObj.animationResize(parseInt(flashObj.style.width), parseInt(flashObj.style.height));
+                // fb-147535: we are not supporting zooming animations; also, flashObj.style.width was often just "",
+                // leading the following line to cause to the flash object to effectively disappear
+                //flashObj.animationResize(parseInt(flashObj.style.width), parseInt(flashObj.style.height));
             }
         }
         else {
@@ -458,7 +466,9 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
                 simID: simID,
                 simURL: escape(flashSrc),
                 simCallback: (window.document == simDocument()) ? Simulator.Constants.SIM_CALLBACK : 'window.parent.' + Simulator.Constants.SIM_CALLBACK,
-                simBehavior: element.getBehavior()
+                simBehavior: element.getBehavior(),
+                simLanguage: sim.getAnimationDisplayLanguage(), // will be 'ENU' for english
+                accessibilityMode: sim.getAccessibilityIFActive() ? 'true' : 'false' // pass accessibility mode to animation for alt text retrieval (EXPECTS STRING!)
             };
             debug("flashvars.simBehavior = " + flashvars.simBehavior);
             var params = {
@@ -495,23 +505,12 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
             holderDiv.name = 'holderAnimation' + simID;
             holderDiv.elementName = flashName;
             holderDiv.setAttribute('class', 'holderAnimation');
-            holderDiv.innerHTML = '<h1>Alternative content</h1>';
+            holderDiv.innerHTML = '<h1>Alternative content</h1>'; // REMOVE???
             HTMLPanel.appendChild(holderDiv);
-            if(sim.getAccessibilityIFActive()) {  // If we are in the accessibility IF, we show the altText instead
-                var altText = element.getAltText();
-                var altTextSpan = simDocument().createElement('span');
-                altTextSpan.style.position='absolute';
-                altTextSpan.style.top = '50%';
-                holderDiv.style.verticalAlign='middle';
-                holderDiv.style.horizontalAlign='center';
-                altTextSpan.style.fontSize = 'xx-large';
-                altTextSpan.innerHTML = altText;
-                holderDiv.innerHTML = '';
-                holderDiv.appendChild(altTextSpan);
-                debug('renderFlash simulating time of animation execution since accessibilityIF is true');
-                setTimeout(simulateAnimationExecutionTime, 5000);
-                return;
+            if (sim.getAccessibilityIFActive()) {
+                createAltTextElement();
             }
+
             elementInfomediaType = 'flash';
             elementInfoid = holderDiv.id;
             elementInfosrc = flashSrc;
@@ -523,6 +522,7 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
                 //var callbackStr = util().createTimeOutCallbackStr('AnimationThread', 'handleTimeout', element.getNodeID());
                 setTimeout(function () { handleTimeout(element); }, renderMaxTime);
             }
+
 
         }
         else
@@ -555,6 +555,48 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
         debug('Posting animationThreadFinished event since accessibilityIF is true');
         eventMgr().postEvent(new Simulator.Event(this, 'info', 'animationThreadFinished'));
     }
+
+    // we place the altText in a span within a div which we append to the animationPanel
+    // this function creates that the first time it is called
+    // this is called in renderFlash() and renderAnimation() (for HTML5)
+    function createAltTextElement() {
+        if (simDocument().getElementById(altTextID))
+            return simDocument().getElementById(altTextID);
+
+        var altTextDiv = simDocument().createElement('div');
+        altTextDiv.id = 'altTextDiv' + simID;
+        altTextDiv.setAttribute('class', 'altText');
+        altTextDiv.style.position = 'absolute';
+        altTextDiv.style.top = '0px';
+        var altTextSpan = simDocument().createElement('span');
+        altTextSpan.id = altTextID;
+        altTextDiv.appendChild(altTextSpan);
+        var HTMLPanel = panel.getHTMLElement();
+        HTMLPanel.appendChild(altTextDiv);
+
+        return altTextSpan;
+    };
+
+    // we now request the alt text with each new trial, in case the alt text depends on the inputs
+    function requestAltText(movie) {
+        if (movie.requestAltText)
+            movie.requestAltText(); // for html5, directly use html5shell API
+        else
+            movie.animationInput(simID, Simulator.Constants.PARAM_COMMAND, Simulator.Constants.ALT_TEXT_REQ_CMD); // for flash, send 'command': 'altTextRequest'
+    }
+
+    // this actually inserts the alt text into the HTML element
+    // we store the altText in the Simulator object (b/c we can access sim easily and there is only one altText, and it presists for the whole session)
+    // this is fired by an 'altTextReceived' event (handled by the animationSet object)
+    this.updateAltText = function () {
+        var altText = sim.getAltText();
+        var altTextSpan = simDocument().getElementById(altTextID);
+        if (!altTextSpan) {
+            altTextSpan = createAltTextElement();
+        }
+        altTextSpan.innerHTML = altText;
+    };
+
 
     //#endregion
 

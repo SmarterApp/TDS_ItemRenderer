@@ -2,7 +2,7 @@
 // Program logic.  Handles all the interactions that ASI item supports.
 ////////////////////////////////
 
-AsiItem.Interaction = function (asiHtmlObject, parser,voiceGuidance) {
+AsiItem.Interaction = function (asiHtmlObject, parser, voiceGuidance) {
     this._html = asiHtmlObject;
     this._parser = parser;
 
@@ -64,7 +64,7 @@ AsiItem.Interaction = function (asiHtmlObject, parser,voiceGuidance) {
 // These functions interact with the test shell (module).
 //////////////////////////////
 
-// The page is being hidden. STop any audio and 
+// The page is being hidden. Stop any audio and 
 // reset the GUI to a non-audio state.
 AsiItem.Interaction.prototype.hidePage = function () {
     if (this.complete)
@@ -84,21 +84,19 @@ AsiItem.Interaction.prototype.hidePage = function () {
 
     // If we have never heard the complete audio, just reset the 
     // question to its original state.
-    if (this._voiceGuidance && this.hasPlayedOnce) {
-        this._html.enableResponses(this._responseSpanIds);
-        this._html.setPlayIcon(this.audioWidget);
-
-    } else if (this._voiceGuidance) {
-        this._html.resetInteractions(this._responseSpanIds);
+    if (this._voiceGuidance) {
+        if (this.hasPlayedOnce) {
+            this._html.enableResponses(this._responseSpanIds);
+        } else {
+            this._html.resetInteractions(this._responseSpanIds);
+        }
         this._html.setPlayIcon(this.audioWidget);
     }
-
 };
 
-// THe item has been loaded.  Allow student interaction.
+// The item has been loaded.  Allow student interaction.
 // Called by the module when the item is parsed and ready.
 AsiItem.Interaction.prototype.startInteraction = function (valueToRestore) {
-    var self = this;
 
     //ensure audio is preloaded
     if (this._voiceGuidance) {
@@ -120,7 +118,7 @@ AsiItem.Interaction.prototype.startInteraction = function (valueToRestore) {
         var choiceContent = this._parser.asiContent.choices;
         for (var i = 0; i < choiceContent.length; i++) {
 
-            var respSpanId = this._html.createSpanId('response-' + i.toString());
+            var respSpanId = this._html.createSpanId('response-' + String.fromCharCode(65 + i));
             track = {
                 id: respSpanId,
                 url: choiceContent[i].audioCue,
@@ -131,7 +129,6 @@ AsiItem.Interaction.prototype.startInteraction = function (valueToRestore) {
             playerContent.push(track);
 
             //add feedback if any
-            //var feedbackContent = choiceContent[i].content.feedback;
             var feedbackSpanId = this._html.createSpanId('feedback-' + i.toString());
             if (choiceContent[i].audioCue) {
                 track = {
@@ -144,11 +141,12 @@ AsiItem.Interaction.prototype.startInteraction = function (valueToRestore) {
         }
 
         //if audio is all loaded then build item html
-        this._audioFactory.onReady(playerContent, function() {
+        var self = this;
+        this._audioFactory.onReady(playerContent, function () {
             //start interaction
             self.constructAudioTag(self._html.getStemCell());
 
-            self.populateResponses(self._parentDiv, self._voiceGuidance);
+            self.populateResponses(self._parentDiv);
             self._html.allowInteractiveGui();
             self._playSourceFromResponse = false;
 
@@ -159,12 +157,12 @@ AsiItem.Interaction.prototype.startInteraction = function (valueToRestore) {
         });
     } else {
         //if no Audio then start interaction        
-        this.populateResponses(this._parentDiv, this._voiceGuidance);
+        this.populateResponses(this._parentDiv);
         this._html.allowInteractiveGui();
 
         // Bug 117669 - restore after item has been rendered, and sounds have been downloaded.
         if (valueToRestore) {
-            self.setResponse(valueToRestore);
+            this.setResponse(valueToRestore);
         }
     }
 };
@@ -174,22 +172,14 @@ AsiItem.Interaction.prototype.startInteraction = function (valueToRestore) {
 AsiItem.Interaction.prototype.playStory = function () {
     AsiItem.EventLog('AsiItem.Interaction.prototype.playStory');
 
-    // Since IOS doesn't autoplay, we just dont' autoplay on any platform.
+    // Since IOS doesn't autoplay, we just don't autoplay on any platform.
     this._html.setPlayIcon(this.audioWidget);
     // this.playAudio(this._playbackInfo);
 };
 
 // Get the responses that the user has picked so far.
 AsiItem.Interaction.prototype.getResponse = function () {
-    var rv = '';
-    for (var i = 0; i < this._responseIdentifiers.length; ++i) {
-        if (rv.length > 0) {
-            rv = rv + ' ';
-        }
-        rv = rv + this._responseIdentifiers[i];
-    }
-
-    return rv;
+    return this._responseIdentifiers.join(' ');
 };
 
 // Restore the GUI to reflect the saved responses.
@@ -212,11 +202,7 @@ AsiItem.Interaction.prototype.setResponse = function (value) {
                 this.responsesLeft--;
 
                 this._html.showFeedbackHideResponse(fSpan, span);
-                if (this._terminalSpanIds[YUD.getAttribute(span, 'id')]) {
-                    this.complete = true;
-                    this.terminateInteraction();
-                }
-                if (this.responsesLeft == 0) {
+                if (this._terminalSpanIds[YUD.getAttribute(span, 'id')] || this.responsesLeft == 0) {
                     this.complete = true;
                     this.terminateInteraction();
                 }
@@ -260,12 +246,14 @@ AsiItem.Interaction.prototype.constructAudioTag = function (parentDiv) {
 
 // The user has clicked on one of the anwers, process the response.
 AsiItem.Interaction.prototype.processResponse = function (span) {
-    if (this._isPlaying || this._isResponsePlaying || this._isFeedbackPlaying)
+
+    if (this._isPlaying || this._isResponsePlaying || this._isFeedbackPlaying) {
         return;
+    }
+
     this.responsesLeft--;
 
     // Find the span that was clicked.
-    var fspan = this._html.getRelatedFeedbackSpan(span);
     var spid = YUD.getAttribute(span, 'id');
     this._responseIdentifiers.push(this._spanToIdentifierMap[spid]);
 
@@ -282,7 +270,8 @@ AsiItem.Interaction.prototype.processResponse = function (span) {
 
     // Otherwise, provide the feedback for this span.
 
-    if ((fspan) && (this.complete != true)) {
+    var fspan = this._html.getRelatedFeedbackSpan(span);
+    if (fspan && (this.complete != true)) {
         var fid = YUD.getAttribute(fspan, 'id');
         this._html.showFeedbackHideResponse(fspan, span);
 
@@ -358,7 +347,7 @@ AsiItem.Interaction.handleEndFeedbackAudio = function (spid, instance) {
     AsiItem.EventLog('handleEndFeedbackAudio');
     instance._isFeedbackPlaying = false;
 
-    if ((!instance.complete) && (instance.responsesLeft > 0)) {
+    if (!instance.complete && (instance.responsesLeft > 0)) {
         instance.populateResponseAudio(instance._playbackInfo);
         instance._html.setStopIcon(instance.audioWidget);
         instance.playAudio(instance._playbackInfo);
@@ -402,14 +391,31 @@ AsiItem.Interaction.handleResponseAudioButton = function (ev, instance) {
 
     if (instance.complete)
         return;
+
     AsiItem.EventLog('handleResponseAudioButton');
-    var responseIndex = instance._html.getResponseIndex(this);
     var playbackInfo = {
         stemId: null,
         stemAudio: null,
         responseAudio: []
     };
+
     // Set up the audio cue where the audio manager expects it.
+    var responseChoice = instance._html.getResponseChoice(this);
+    var responseIndex = -1;
+    var choices = instance._parser.asiContent.choices;
+    for (var i = 0; i < choices.length; ++i) {
+        var choice = choices[i];
+        if (choice.identifier == responseChoice) {
+            responseIndex = i;
+            break;
+        }
+    }
+
+    if (responseIndex < 0) {
+        AsiItem.EventLog('handleResponseAudioButton - Error: Could not find responseIndex for choice ' + responseChoice);
+        return;
+    }
+
     var audioObject = {
         audioCue: instance._parser.asiContent.choices[responseIndex].audioCue,
         spanId: YUD.getAttribute(this, 'id')
@@ -420,11 +426,11 @@ AsiItem.Interaction.handleResponseAudioButton = function (ev, instance) {
     instance._html.subduePlayIcon(instance.audioWidget);
 
     // Subdue the other responses so the student knows what we are doing.
-    var responseId = instance._html.createSpanId('response-' + responseIndex);
+    var responseId = instance._html.createSpanId('response-' + responseChoice);
     YUD.addClass(responseId, 'asi-response-emphasis');
     YUD.removeClass(responseId, 'asi-response-subdued');
 
-    instance.populateResponseAudio(playbackInfo, responseIndex);
+    instance.populateResponseAudio(playbackInfo, responseChoice);
     instance.playAudioResponse(playbackInfo);
 };
 
@@ -457,8 +463,7 @@ AsiItem.Interaction.prototype.playAudioResponse = function (audioArray) {
     for (var i = 0; i < audioArray.responseAudio.length; ++i) {
         var responseInfo = audioArray.responseAudio[i];
         if (responseInfo.audioCue) {
-            var responseSpanId = responseInfo.spanId;
-            var responseSpan = YUD.get(responseSpanId);
+            var responseSpan = YUD.get(responseInfo.spanId);
             if (responseSpan && (YUD.getStyle(responseSpan, 'display') != 'none')) {
                 this._responsePlayer.add(responseInfo.audioCue, responseInfo.spanId, startPlaying, stopPlaying);
             }
@@ -513,6 +518,23 @@ AsiItem.Interaction.prototype.playAudio = function (audioArray) {
 
     this._html.subdueResponses(this._responseSpanIds);
 
+    var startAudioCallback = function (id) {
+        var span = YUD.get(id);
+        if (/asiStem/.test(id)) {
+            AsiItem.EventLog('playAudio - starting stem');
+            return;
+        }
+        AsiItem.EventLog('playAudio - starting a response ' + id);
+        if (span) {
+            self._html.emphasizeResponse(span);
+
+            var responseAudioSpan = self._html.getAudioSpanFromResponseSpan(span);
+            if (responseAudioSpan) {
+                self._html.subduePlayIcon(responseAudioSpan);
+            }
+        }
+    };
+
     var stopAudioCallback = function (id) {
         if (self._isPlaying == false) {
             // Race condition, don't do anything just stop playing
@@ -521,48 +543,32 @@ AsiItem.Interaction.prototype.playAudio = function (audioArray) {
             return;
         }
         AsiItem.EventLog('playAudio - stopAudioCallback');
-        var span = YUD.get(id);
         if (/asiStem/.test(id)) {
             if (audioArray.responseAudio.length == 0) {
-                AsiItem.EventLog('playAudio - finished palying stem and no responses');
+                AsiItem.EventLog('playAudio - finished playing stem and no responses');
                 self._isPlaying = false;
                 self._html.enableResponses(self._responseSpanIds);
                 self._html.setPlayIcon(self.audioWidget);
             }
-            AsiItem.EventLog('playAudio - finished palying stem');
+            AsiItem.EventLog('playAudio - finished playing stem');
             return;
         }
+
+        var span = YUD.get(id);
         if (span) {
             AsiItem.EventLog('playAudio - finished playing response ' + id + ', remove emphasis');
             YUD.removeClass(span, 'asi-response-emphasis');
         }
-        var idx = self._html.getResponseIndex(id);
-        if (audioArray.highestIndexToPlay == idx) {
+
+        if (audioArray.lastChoiceToPlay == self._html.getResponseChoice(id)) {
             AsiItem.EventLog('playAudio - playing last response ' + id + ', enabling');
             self._isPlaying = false;
             self._html.enableResponses(self._responseSpanIds);
             self._html.setPlayIcon(self.audioWidget);
             self.hasPlayedOnce = true;
-
         } else {
             AsiItem.EventLog('playAudio - finished playing response ' + id + ', subdue');
             YUD.addClass(span, 'asi-response-subdued');
-        }
-    };
-    var startAudioCallback = function (id) {
-        var span = YUD.get(id);
-        if (/asiStem/.test(id)) {
-            AsiItem.EventLog('playAudio - starting stem');
-            return;
-        }
-        AsiItem.EventLog('playAudio - starting a response  ' + id);
-        if (span) {
-            self._html.emphasizeResponse(span);
-
-            var responseAudioSpan = self._html.getAudioSpanFromResponseSpan(span);
-            if (responseAudioSpan) {
-                self._html.subduePlayIcon(responseAudioSpan);
-            }
         }
     };
 
@@ -575,8 +581,7 @@ AsiItem.Interaction.prototype.playAudio = function (audioArray) {
     for (var i = 0; i < audioArray.responseAudio.length; ++i) {
         var responseInfo = audioArray.responseAudio[i];
         if (responseInfo.audioCue) {
-            var responseSpanId = responseInfo.spanId;
-            var responseSpan = YUD.get(responseSpanId);
+            var responseSpan = YUD.get(responseInfo.spanId);
             if (responseSpan && ((this.hasPlayedOnce == false) || YUD.getStyle(responseSpan, 'display') != 'none')) {
                 this._player.add(responseInfo.audioCue, responseInfo.spanId, startAudioCallback, stopAudioCallback);
             }
@@ -608,17 +613,17 @@ AsiItem.Interaction.prototype.hasResponseBeenChosen = function (spid) {
 // Repopulate the response audio with the options that are left.
 AsiItem.Interaction.prototype.populateResponseAudio = function (audioObject, responseId) {
     var ar = [];
-    audioObject.highestIndexToPlay = 0;
+    audioObject.lastChoiceToPlay = 'A';
     for (var i = 0; i < this._responseSpanIds.length; ++i) {
         var spid = this._responseSpanIds[i];
         var span = YUD.get(spid);
-        var index = this._html.getResponseIndex(spid);
-        if ((responseId == null) || (responseId == index)) {
-            if (this.hasResponseBeenChosen(spid) == false) {
+        var choice = this._html.getResponseChoice(spid);
+        if ((responseId == null) || (responseId == choice)) {
+            if (!this.hasResponseBeenChosen(spid)) {
                 if (audioObject.responseAudio[i]) {
                     ar.push(audioObject.responseAudio[i]);
-                    if (index > audioObject.highestIndexToPlay) {
-                        audioObject.highestIndexToPlay = index;
+                    if (choice > audioObject.lastChoiceToPlay) {
+                        audioObject.lastChoiceToPlay = choice;
                     }
                 }
             }
@@ -630,86 +635,89 @@ AsiItem.Interaction.prototype.populateResponseAudio = function (audioObject, res
 
 // Populate the responses part of the ASI item.
 AsiItem.Interaction.prototype.populateResponses = function (parentDiv) {
-    // all choices content
-    var choiceContent = this._parser.asiContent.choices;
-    var answerCell = document.createElement('div');
-    this._html.setSpanId(answerCell, 'responses');
 
-    this._playbackInfo.highestIndexToPlay = 0;
+    var choices = this._parser.asiContent.choices;
 
-    for (var i = 0; i < choiceContent.length; i++) {
+    //var answerCell = document.createElement('div');
+    //this._html.setSpanId(answerCell, 'responses');
 
-        // Create the span that contains all the responses
-        var responseContent = choiceContent[i].content.htmlContent;
-        var responseSpan = document.createElement('div');
-        //var responseSpanContainer = document.createElement('div');
+    this._playbackInfo.lastChoiceToPlay = 'A';
+
+    for (var i = 0; i < choices.length; i++) {
+
+        var choice = choices[i];
+
+        // Find the span that contains this choice's response
+        var responseSpan = document.getElementById(choice.id); //document.createElement('div');
         if (!this._voiceGuidance) {
-            YUD.addClass(responseSpan, 'asi-response-shown asi-response-enable');
+            YUD.addClass(responseSpan, 'asi-response-shown');
+            YUD.removeClass(responseSpan, 'asi-response-hidden');
         }
-        var spanId = this._html.createSpanId('response-' + i.toString());
-        this._spanToIdentifierMap[spanId] = choiceContent[i].identifier;
+        //var spanId = this._html.createSpanId('response-' + choice.identifier);
+        this._spanToIdentifierMap[choice.id] = choice.identifier;
 
         // Store the response span ids for easy enable/disable while playing.
-        this._responseSpanIds.push(spanId);
+        this._responseSpanIds.push(choice.id);
 
         // Store the audio tags in the responses for the 'auto-play' feature.
-        var audioTag = choiceContent[i].audioCue;
-        var audioObject = {
-            audioCue: audioTag,
-            spanId: spanId
-        };
-        if (audioObject.audioCue) {
+        var audioTag = choice.audioCue;
+        if (audioTag) {
+            var audioObject = {
+                audioCue: audioTag,
+                spanId: choice.id
+            };
             this._playbackInfo.responseAudio.push(audioObject);
 
-            if (i > this._playbackInfo.highestIndexToPlay) {
-                this._playbackInfo.highestIndexToPlay = i;
+            if (choice.identifier > this._playbackInfo.lastChoiceToPlay) {
+                this._playbackInfo.lastChoiceToPlay = choice.identifier;
             }
         }
 
         // Indicate if this is the 'correct' answer that completes the question.
-        if (/true/i.test(choiceContent[i].complete)) {
-            this._terminalSpanIds[spanId] = true;
+        if (choice.complete) { // if (/true/i.test(choice.complete)) {
+            this._terminalSpanIds[choice.id] = true;
         }
 
         // Populate the initial response part.
-        this._html.setSpanId(responseSpan, 'response-' + i.toString());
-        responseSpan.innerHTML = Util.Xml.serializeToString(responseContent);
-        YUD.setAttribute(responseSpan, 'tabIndex', '0');
+        //this._html.setSpanId(responseSpan, 'response-' + i.toString());
+        //responseSpan.innerHTML = Util.Xml.serializeToString(choice.content.htmlContent);
+        //YUD.setAttribute(responseSpan, 'tabIndex', '0');
         if (this._voiceGuidance) {
             YUD.addClass(responseSpan, 'asi-response-hidden');
         }
 
         // Add playback button for the response audio per requirements
-        var responseAudioButton = this._html.createAudioButton();
-        this._html.setPlayIcon(responseAudioButton);
-        this._html.setSpanId(responseAudioButton, 'audioResponse-' + i.toString());
-        YUE.addListener(responseAudioButton, 'click', AsiItem.Interaction.handleResponseAudioButton, this);
         if (this._voiceGuidance) {
+            var responseAudioButton = this._html.createAudioButton();
+            this._html.setPlayIcon(responseAudioButton);
+            this._html.setSpanId(responseAudioButton, 'audioResponse-' + choice.identifier);
+            YUE.addListener(responseAudioButton, 'click', AsiItem.Interaction.handleResponseAudioButton, this);
             responseSpan.appendChild(responseAudioButton);
             this._responseButtons.push(responseAudioButton);
         }
 
         // Create the feedback span (might be empty) and make it hidden after the response part.
-        var feedbackContent = choiceContent[i].content.feedback; // feedback of choice
-        var feedbackSpan = document.createElement('div');
+        var feedbackContent = choice.feedback; // feedback of choice
+        var feedbackSpan = document.getElementById(this._html.createSpanId('feedback-' + choice.identifier)); // document.createElement('div');
         YUD.addClass(feedbackSpan, 'asi-feedback-hidden');
-        this._html.setSpanId(feedbackSpan, 'feedback-' + i.toString());
-
+        //this._html.setSpanId(feedbackSpan, 'feedback-' + i.toString());
 
         // Feedback might have an audio cue.  Save the cue so we can play it
         // if we end up displaying this feedback span.
         if (feedbackContent.audioCue) {
-            this._feedbackCues[this._html.createSpanId('feedback-' + i.toString())] = feedbackContent.audioCue;
+            this._feedbackCues[this._html.createSpanId('feedback-' + choice.identifier)] = feedbackContent.audioCue;
             this._playbackInfo.playStemAudio = false;
         }
 
         // Populate the feedback span with content, if it exsists.
-        if (feedbackContent.feedbackContainer)
-            feedbackSpan.innerHTML = Util.Xml.serializeToString(feedbackContent.feedbackContainer);
+        //if (feedbackContent.feedbackContainer) {
+        //    feedbackSpan.innerHTML = Util.Xml.serializeToString(feedbackContent.feedbackContainer);
+        //}
 
         // Add them to the layout
-        answerCell.appendChild(responseSpan);
-        answerCell.appendChild(feedbackSpan);
+        //answerCell.appendChild(responseSpan);
+        //answerCell.appendChild(feedbackSpan);
+
         // Set the callback on the response
         if (this._voiceGuidance) {
             YUE.addListener(responseSpan, 'click', AsiItem.Interaction.handleResponseCallback, this);
@@ -717,5 +725,5 @@ AsiItem.Interaction.prototype.populateResponses = function (parentDiv) {
             YUE.addListener(responseSpan, 'click', AsiItem.Interaction.handleResponseCallback_noVoiceGuidance, this);
         }
     }
-    this._html.getParentDiv().appendChild(answerCell);
+    //this._html.getParentDiv().appendChild(answerCell);
 };

@@ -48,7 +48,7 @@ LoginShell.init = function() {
 
     // load any login info
     this.setupLoginInfo();
-
+    
     // create workflow
     this.workflow = LoginShell.createWorkflow();
     this.start();
@@ -194,7 +194,8 @@ LoginShell.setupSatelliteWorkflow = function (wf) {
     // "Is This Your Test?"
     wf.addTransition('sectionTestVerify', 'back', function() {
         // if there is no proctor or if this is a proxy app then return to test selection
-        if (LoginShell.session.isGuest || TDS.isProxyLogin) {
+        var session = TDS.Student.Storage.getTestSession();
+        if ((session && session.isGuest) || TDS.isProxyLogin) {
             return 'sectionTestSelection';
         }
 
@@ -338,19 +339,13 @@ LoginShell.setLoginInfo = function(loginInfo) {
     this.info = loginInfo;
 
     // add proctor login info to loginInfo to pass it to Satellite
-    if (this.proctor) {
-        this.info.proctor = this.proctor;
+    if (this.getProctor()) {
+        loginInfo.proctor = this.getProctor();
     }
 
     if (loginInfo.proctor) {
-        // keep login browser key to close out sessions on the login site.
-        Storage.setProctorLoginBrowserKey(loginInfo.proctor.loginBrowserKey);
-
-        // keep sat browser key to perform satellite actions - creating session, opening session, etc.
-        Storage.setProctorSatBrowserKey(loginInfo.proctor.satBrowserKey);
-
-        // keep track of return url for logging out of non-standard login systems (OpenAM/QueryString)
-        Storage.setProctorReturnUrl(loginInfo.proctor.returnUrl);
+        // ensure that the proctor info is stored
+        this.setProctor(loginInfo.proctor);
     }
 
     if (loginInfo.returnUrl) {
@@ -400,13 +395,26 @@ LoginShell.setLoginInfo = function(loginInfo) {
     TDS.Student.UI.sync();
 };
 
-// storing the proctor login info here temporarily before adding it to loginInfo when testee logs in.
 LoginShell.setProctor = function (proctor) {
-    this.proctor = proctor;
+    this._proctor = proctor;
+
+    // we persist the proctor info now, rather than waiting until they have selected a student
+    // this allows us to close the proctor session at anytime, included before they select a testee
+    TDS.Student.Storage.setProctor(proctor);
+};
+
+LoginShell.getProctor = function () {
+    if (!this._proctor) {
+        this._proctor = TDS.Student.Storage.getProctor();
+    }
+
+    return this._proctor;
 };
 
 LoginShell.getProxySessionID = function () {
-    return this.proctor.sessionID;
+    var proctor = this.getProctor();
+    // TODO: if (!proctor) log(error)
+    return (proctor && proctor.sessionID) || null;
 };
 
 LoginShell.setSessionLabel = function(sessionID) {
@@ -611,7 +619,7 @@ LoginShell.setMozillaPreferences = function () {
         }
 
         // if the browser is Mac OS 10.8 or higher, disable screenshots
-        if (Util.Browser.isMac() && (Util.Browser.getOSXVersion() >= 10.8) && (Util.Browser.getSecureVersion() <= 6.2)) {
+        if (Util.Browser.isMac() && Util.Browser.osxVersionIsAtLeast(10, 8) && (Util.Browser.getSecureVersion() <= 6.2)) {
             var screenshotsDisabled = Mozilla.disableScreenshots();
             if (screenshotsDisabled) {
                 Util.log('Screenshots are disabled.');

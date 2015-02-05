@@ -21,6 +21,7 @@
 
         <!-- test shell -->
         <input>Libraries/YUI/menu/menu-min.js</input>
+        <input>Libraries/YUI/menu/menuariaplugin-min.js</input>
         <input>Libraries/YUI/tabview/tabview-min.js</input>
         <input>Libraries/YUI/slider/slider-min.js</input>
 
@@ -49,11 +50,16 @@
 
         <!-- test shell -->
         <input>Libraries/YUI/menu/menu.js</input>
+        <input>Libraries/YUI/menu/menuariaplugin.js</input>
         <input>Libraries/YUI/tabview/tabview.js</input>
         <input>Libraries/YUI/slider/slider.js</input>
 
     </fileSet>
 
+	<fileSet name="libs-mathjax" compress="false">
+		<input>Libraries/MathJax/2.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full</input>		
+	</fileSet>
+	
     <fileSet name="libs-rangy" compress="false">
         <input>Libraries/rangy/rangy-core.js</input> <!-- BUG: Needs to have a semicolon added to the end of file -->
         <input>Libraries/rangy/rangy-cssclassapplier.js</input>
@@ -123,9 +129,14 @@
         <input>Libraries/jwplayer/jwplayer.js</input>
     </fileSet>
 
+    <!-- usage:exclude tracekit from libs for iat conf -->
+    <fileSet name="libs-tracekit" compress="false">
+      <input>Libraries/TraceKit/tracekit.js</input>
+    </fileSet>
+  
     <!-- Basic 3rd party libraries -->
-    <fileSet name="libs" compress="false">
-        <input>Libraries/TraceKit/tracekit.js</input>
+    <fileSet name="libs" compress="false">        
+        <reference set="libs-tracekit" />
         <reference set="libs-YUI" />
         <reference set="libs-jQuery" />
         <input>Libraries/soundmanager2/script/soundmanager2-nodebug-jsmin.js</input>
@@ -194,7 +205,7 @@
         <input>Utilities/util_cookies.js</input>
         <input>Utilities/util_java.js</input>
         <input>Utilities/util_querystring.js</input>
-        <input>Utilities/util_mobile.js</input>
+        <input>Utilities/util_yui.js</input>
         <input>Utilities/util_mozilla.js</input>
         <input>Utilities/util_statistics.js</input>
         <input>Utilities/util_network.js</input>
@@ -225,6 +236,7 @@
         <input>Tools/tds_timeout.js</input> <!-- test shell -->
         <input>Tools/tds_shell.js</input> <!-- test shell -->
         <input>Tools/tds_shell_notification.js</input> <!-- test shell -->
+        <input>Tools/tds_unload.js</input>
     </fileSet>
 
     <fileSet name="systemDialog">
@@ -320,6 +332,7 @@
         <input>Audio2/Player/plugins/queue.js</input>
         <input>Audio2/Player/plugins/closedcaptioning.js</input>
         <input>Audio2/ui.js</input>
+        <input>Audio2/ui.scrubber.js</input>
     </fileSet>
 
     <fileSet name="content-audio2">
@@ -354,6 +367,7 @@
 
         <!-- Addons -->
         <input>Content/content_events.js</input>
+        <input>Content/content_transforms.js</input>
         <input>Content/content_keyboard.js</input>
         <input>Content/content_zoom.js</input>
         <input>Content/content_menu.js</input>
@@ -390,6 +404,7 @@
         <input>Content/Plugins/media.js</input>
         <input>Content/Plugins/caretbrowser.js</input>
         <input>Content/Plugins/strikethrough.js</input>
+		<input>Content/Plugins/mathjax.js</input>
 
     </fileSet>
 
@@ -428,14 +443,22 @@
         <input>Libraries/ckeditor/4.4/lang/en.js</input>
         <input>Libraries/ckeditor/4.4/styles.js</input>
         <input>Libraries/ckeditor/4.4/plugins/table/dialogs/table.js</input>
-        <input>Libraries/ckeditor/4.4/plugins/specialchar/dialogs/specialchar.js</input>
-        <input>Libraries/ckeditor/4.4/plugins/specialchar/dialogs/lang/en.js</input>
 
         <input>HTMLEditor2/plugins/spellchecker/plugin.js</input>
         <input>HTMLEditor2/plugins/clipboard/plugin.js</input>
         <input>HTMLEditor2/plugins/clipboard/lang/en.js</input>
         <input>HTMLEditor2/plugins/keymaphelp/plugin.js</input>
+        <input>HTMLEditor2/plugins/keymaphelp/dialogs/keymaphelp.js</input>
+        <input>HTMLEditor2/plugins/keymaphelp/dialogs/lang/en.js</input>
+        <input>HTMLEditor2/plugins/keymaphelp/dialogs/lang/es.js</input>
+        <input>HTMLEditor2/plugins/tdsspecialchar/plugin.js</input>
+        <input>HTMLEditor2/plugins/tdsspecialchar/lang/en.js</input>
+        <input>HTMLEditor2/plugins/tdsspecialchar/lang/es.js</input>
+        <input>HTMLEditor2/plugins/tdsspecialchar/dialogs/lang/en.js</input>
+        <input>HTMLEditor2/plugins/tdsspecialchar/dialogs/lang/es.js</input>
+        <input>HTMLEditor2/plugins/tdsspecialchar/dialogs/tdsspecialchar.js</input>
         <input>HTMLEditor2/base.js</input>
+        <input>HTMLEditor2/dialog.js</input>
         <input>HTMLEditor2/table.js</input>
         <input>HTMLEditor2/widget.js</input>
 
@@ -663,6 +686,12 @@
         <input>Slideshow/sm2-show.js</input>
         <input>Content/Modules/module_slideshow.js</input>
     </fileSet>
+    
+    <!-- Slideshow2 -->
+    <fileSet name="content-slideshow2">
+        <input>Slideshow2/slideshow.js</input>
+        <input>Slideshow2/module.js</input>
+    </fileSet>
 
     <!-- Word List -->
     <fileSet name="content-wl">
@@ -734,9 +763,9 @@
     </fileSet>
 
     <fileSet name="content-scratchpad">
-        <input>Scratchpad/zwibbler2.js</input>
-        <input>Scratchpad/speqeditor.js</input>
-        <input>Scratchpad/widget.js</input>
+        <input>ScratchPad/zwibbler2.js</input>
+        <input>ScratchPad/speqeditor.js</input>
+        <input>ScratchPad/widget.js</input>
     </fileSet>
 
     <fileSet name="content-linereader">

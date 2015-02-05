@@ -9,6 +9,7 @@ This is the code for the final section of the test that shows the results.
         this._pollAttempts = 5; // how many times we check for display scores
         this._pollDelay = 60000; // the delay between each display score check
         this.addClick('btnScoreLogout', this.logout);
+        this.addClick('btnChangeStudent', this.logoutOfTest);
         this.addClick('btnEnterMoreScores', this.redirectToTestSelectionSection); // Enter more scores for this student
     }
 
@@ -205,9 +206,13 @@ This is the code for the final section of the test that shows the results.
         }.bind(this));
     };
 
-    TestResults.prototype.logout = function() {
+    TestResults.prototype.logout = function(event, logoutFromTestOnly) {
         TDS.Dialog.showProgress();
-        TDS.logout();
+        TDS.logout(logoutFromTestOnly);
+    };
+
+    TestResults.prototype.logoutOfTest = function (event) {
+        this.logout(event, true);
     };
 
     TestResults.prototype.redirectToTestSelectionSection = function () {
@@ -221,6 +226,7 @@ This is the code for the final section of the test that shows the results.
 
             TDS.Dialog.showPrompt(message, function() {
                 //this logic may be useful also for SIRVE and that is why the check above is for isProxyLogin rather than isDataEntry.
+                TDS.unloader.disable();
                 TDS.redirect('Pages/LoginShell.aspx?section=sectionTestSelection');
             });
         } else {

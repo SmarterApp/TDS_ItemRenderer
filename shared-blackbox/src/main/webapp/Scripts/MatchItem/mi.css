@@ -138,6 +138,9 @@
 	opacity: 0;
 	margin-top: 0px !important;
 }
+.platform_ios .matchItemDemoAccesible-Ideal input {
+    pointer-events:none;
+}
 .TDS_PS_L0 .matchItemDemoAccesible-Ideal input.contextAreaFocus {
 	margin-bottom: -30px;
 }

@@ -12,12 +12,12 @@
     }
 
     Renderer.prototype.getContainer = function() {
-        var containerId = 'accs-container-' + this._accs.getId();
+        var containerId = 'accs-container-' + this._accs.getDomId();
         return document.getElementById(containerId);
     };
 
     Renderer.prototype.getForm = function() {
-        var formId = 'accs-form-' + this._accs.getId();
+        var formId = 'accs-form-' + this._accs.getDomId();
         return document.forms[formId];
     };
     
@@ -42,7 +42,7 @@
         // create container
         var container = this.getContainer();
         if (!container) {
-            var containerId = 'accs-container-' + this._accs.getId();
+            var containerId = 'accs-container-' + this._accs.getDomId();
             container = HTML.DIV({ id: containerId });
         }
 
@@ -51,7 +51,7 @@
         // create form
         var form = this.getForm();
         if (!form) {
-            var formId = 'accs-form-' + this._accs.getId();
+            var formId = 'accs-form-' + this._accs.getDomId();
             form = HTML.FORM({ id: formId, name: formId });
         }
 
@@ -162,18 +162,39 @@
             $(containerEl).addClass('dependency');
         }
 
+        // adding aria-labelledby attribute to the container
+        $(containerEl).attr({ 'aria-labelledby': 'containerLabel_' + accType.getControlId() });
+
         return containerEl;
 
     };
     
     // create label for the control
-    Renderer.prototype.createLabel = function(accType, reviewMode) {
-        var labelEl = document.createElement(reviewMode ? 'span' : 'label');
+    // WCAG Note: for multiselected options (group checkboxes), use <div> instead of <label>
+    Renderer.prototype.createLabel = function (accType, reviewMode) {
+
+        var isMultiselect = accType.isMultiSelect(),
+
+            // for multiple selection, we are using div and aria-labelledby attribute in parent container 
+            // instead of label since label is more for form
+            // while we need label for the entire container here
+            tagName = isMultiselect ? 'div' : 'label',
+
+            labelEl = document.createElement(reviewMode ? 'span' : tagName);
+
         labelEl.className = 'label';
+
         if (!reviewMode) {
-            labelEl.setAttribute('for', accType.getId());
+            if (!isMultiselect) {
+                labelEl.setAttribute('for', accType.getId());
+            }
             labelEl.setAttribute('i18n-text', accType.getId());
         }
+
+        if (isMultiselect) {
+            $(labelEl).attr({ 'id': 'containerLabel_' + accType.getControlId() });
+        }
+
         var labelText = document.createTextNode(accType.getLabel() + ': ');
         labelEl.appendChild(labelText);
         return labelEl;
@@ -231,17 +252,15 @@
     // render this accommodation as a series of checkboxes with logic for if combinations of values are possible
     Renderer.prototype.createCheckboxes = function (accType, disabled) {
 
-        var accs = this._accs;
-        var form = this.getForm();
-
-        var valueContainer = document.createElement('div');
-        valueContainer.className = 'values';
+        var accs = this._accs,
+            form = this.getForm(),
+            typeId = accType.getId();
 
         // figuring out what to do with the checkboxes when they are clicked
         function clickEvent(clickedCheckbox, clickedValue) {
 
             // get all the checkboxes for this type
-            var checkboxes = form[accType.getId()];
+            var checkboxes = form[typeId];
 
             // check if anything else else is selected
             if (!clickedCheckbox.checked) {
@@ -282,54 +301,42 @@
         };
 
         // add check boxes
-        var accValues = accType.getValues();
+        var accValues = accType.getValues(),
+            $valueUl = $('<ul></ul>').addClass('values control'),
+            isDisabled = !accType.isSelectable();
 
-        accValues.forEach(function(accValue) {
-            // <label>Value goes here<input name="acc_TTS" type="checkbox" value="TTS_Item">
-
-            // <label>
-            var valueLabel = document.createElement('label');
-            if (!accType.isSelectable()) {
-                valueLabel.className = 'disabled';
-            }
-            valueContainer.appendChild(valueLabel);
-
-            // <input type="checkbox">
-            var valueCB = document.createElement('input');
-            valueCB.setAttribute('name', accType.getId()); // accValue.browserID
-            valueCB.setAttribute('type', 'checkbox');
-            valueCB.value = accValue.getCode();
-
-            if (accValue.allowCombine()) {
-                valueCB.className = 'allowCombine';
-            }
-
-            // if this value is selected and represents "true" then check the checkbox
-            if (accValue.isSelected()) {
-                valueCB.checked = true;
-            }
-
-            // check if accommodation is selectable and if it isn't then disable form element
-            if (disabled) {
-                valueCB.disabled = true;
-            }
+        accValues.forEach(function(accValue, i) {
+            
+            var $valueLi = $('<li></li>').addClass('value-option'),
+                boxId = 'valueCb_' + typeId + '_' + i,
+                $valueCb = $('<input />').addClass(accValue.allowCombine() ? 'allowCombine' : '').attr({
+                    type: 'checkbox',
+                    name: typeId,
+                    id: boxId,
+                    value: accValue.getCode()
+                }).prop({
+                    checked: accValue.isSelected() ? true : false,
+                    disabled: disabled ? true : false
+                }),
+                $valueLabel = $('<label></label>')
+                                .html(accValue.getLabel())
+                                .addClass(isDisabled ? 'disabled' : '')                                        
+                                .attr({
+                                    'for': boxId
+                                });
 
             // click events
-            YUE.on(valueCB, 'click', function() {
-                clickEvent(valueCB, accValue);
+            YUE.on($valueCb[0], 'click', function () {
+                clickEvent($valueCb[0], accValue);
                 this.save();
             }.bind(this));
 
-            // add checkbox to the label
-            valueLabel.appendChild(valueCB);
-
-            // add text to the label
-            var labelText = document.createTextNode(accValue.getLabel());
-            valueLabel.appendChild(labelText);
+            $valueLi.append($valueCb).append($valueLabel);
+            $valueUl.append($valueLi);
 
         }.bind(this));
 
-        return valueContainer;
+        return $valueUl[0];
     };
 
     // render this accommodation as dropdown select box

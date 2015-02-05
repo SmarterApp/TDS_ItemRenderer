@@ -764,11 +764,11 @@
                                           } else if (rowEls[j].childNodes[k].childNodes[idx].nodeName === 'key') {
                                               itObj.key = rowEls[j].childNodes[k].childNodes[idx].textContent;
                                               itObj.arialabel = rowEls[j].childNodes[k].childNodes[idx].firstChild.nodeValue;
-                                          } else if (rowEls[j].childNodes[k].childNodes[idx].nodeName === 'text') {
+                                          } else if (rowEls[j].childNodes[k].childNodes[idx].nodeName === 'text' && rowEls[j].childNodes[k].childNodes[idx].firstChild != null) {
                                               itObj.text = rowEls[j].childNodes[k].childNodes[idx].firstChild.nodeValue;
-                                          } else if (rowEls[j].childNodes[k].childNodes[idx].nodeName === 'value') {
+                                          } else if (rowEls[j].childNodes[k].childNodes[idx].nodeName === 'value' && rowEls[j].childNodes[k].childNodes[idx].firstChild != null) {
                                               itObj.value = rowEls[j].childNodes[k].childNodes[idx].firstChild.nodeValue;
-                                          } else if (rowEls[j].childNodes[k].childNodes[idx].nodeName === 'css') {
+                                          } else if (rowEls[j].childNodes[k].childNodes[idx].nodeName === 'css' && rowEls[j].childNodes[k].childNodes[idx].firstChild != null) {
                                               itObj.css = rowEls[j].childNodes[k].childNodes[idx].firstChild.nodeValue;
                                           }
                                       });
@@ -862,38 +862,37 @@
       }
   };
     //preview formatter obj
-  MathEditorContent.Config.PreviewFormatter = {
-      getPreviewXmlDoc: function (configXml) {
-          var MATHQUILL_PLACEHOLDER_TAG = '##';
-          var newXmlDoc = $.parseXML(configXml);
-          var cdotRows = $(newXmlDoc).find("item[title='cdot']").each(function () {
-              if (!$(this).attr('class')) {
-                  $(this).text('∙');
-                  $(this).attr('class', 'mje_button_dot');
-              }
-          });
-          var rows = $(newXmlDoc).find('editorconfig editorRow');//newXmlDoc.getElementsByTagName('editorRow');
-          for (var i = 0, len = rows.length; i < len; i++) {
-              var mathml = $(rows[i]).find('math')//rows[i].getElementsByTagName("math")
-                  , latexCmd = '';
-              if (mathml.length > 0) {
-                  //mathml = $.parseXML(mathml[0]);
-                  latexCmd = window.MathEditorWidget.convertMathMlToLatex(mathml);
-                  if (latexCmd.indexOf(MATHQUILL_PLACEHOLDER_TAG) != -1) {
-                      latexCmd = latexCmd.replace(/##/g, "\\MathQuillMathField{}");//window.EquationReviewWidget.MATHQUILL_PLACEHOLDER_TAG
-                  } else {
-                      latexCmd = "\\MathQuillMathField{" + latexCmd + "}";
-                  }
-              } else {
-                  latexCmd = "\\MathQuillMathField{}";
-              }
+    MathEditorContent.Config.PreviewFormatter = {
+        getPreviewXmlDoc: function (configXml) {
+            var MATHQUILL_PLACEHOLDER_TAG = '##';
+            var newXmlDoc = $.parseXML(configXml);
+            var cdotRows = $(newXmlDoc).find("item[title='cdot']").each(function () {
+                if (!$(this).attr('class')) {
+                    $(this).text('∙');
+                    $(this).attr('class', 'mje_button_dot');
+                }
+            });
+            var rows = $(newXmlDoc).find('editorconfig editorRow');//newXmlDoc.getElementsByTagName('editorRow');
+            for (var i = 0, len = rows.length; i < len; i++) {
+                var mathml = $(rows[i]).find('math')//rows[i].getElementsByTagName("math")
+                    , latexCmd = '';                
+                if (mathml.length > 0) {                    
+                    latexCmd = window.MathEditorWidget.convertMathMlToLatex(mathml[0]);
+                    if (latexCmd.indexOf(MATHQUILL_PLACEHOLDER_TAG) != -1) {
+                        latexCmd = latexCmd.replace(/##/g, "\\MathQuillMathField{}");//window.EquationReviewWidget.MATHQUILL_PLACEHOLDER_TAG
+                    } else {
+                        //latexCmd = "\\MathQuillMathField{" + latexCmd + "}";
+                    }
+                } else {
+                    //latexCmd = "\\MathQuillMathField{}";
+                }
 
-              var labels = $(rows[i]).find('editorLabels')//rows[i].getElementsByTagName("editorLabels")
+              //find editorlabels for backward compatibility
+              var labels = $(rows[i]).find('editorLabels')
                   , labelVal = (labels.length > 0 ? labels[0].textContent : '');
-
-              //var rowText = newXmlDoc.createTextNode(labelVal + latexCmd);
               labelVal = labelVal.replace(/ /g, '\\space ');
-              rows[i].textContent = labelVal + latexCmd;
+              if (labelVal != '') rows[i].textContent = labelVal + '\\MathQuillMathField{}';
+              else rows[i].textContent = labelVal + latexCmd;
           }
           return newXmlDoc;
       }

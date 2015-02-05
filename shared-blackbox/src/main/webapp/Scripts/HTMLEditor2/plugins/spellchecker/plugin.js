@@ -34,6 +34,13 @@
         if (this.enabled) return;
         console.log('SpellCheck Enabled "' + editor.name + '": ' + this.language);
 
+        // Position cursor at the beginning of the editor area... IE 10 in particular seems to have problems
+        // with old ranges causing crashes if the cursor is in the midst of DOM elements that changed
+        editor.getSelection().removeAllRanges();
+        var range = editor.createRange();
+        range.moveToPosition(range.root.getFirst() ? range.root.getFirst() : range.root, CKEDITOR.POSITION_AFTER_START);
+        editor.getSelection().selectRanges([range]);
+
         // disable any other spell checks
         disableSpellChecks();
 
@@ -53,7 +60,9 @@
         editor.setReadOnly(true);
 
         // fetch words async and highlight mistakes
+        var bookmarks = editor.getSelection().createBookmarks2();
         editor.spellCheck.check();
+        editor.getSelection().selectBookmarks(bookmarks);
 
         // set button as on
         this.setState(CKEDITOR.TRISTATE_ON);
@@ -66,11 +75,20 @@
         if (!this.enabled) return;
         console.log('SpellCheck Disabled "' + editor.name + '"');
 
+        // Position cursor at the beginning of the editor area... IE 10 in particular seems to have problems
+        // with old ranges causing crashes if the cursor is in the midst of DOM elements that changed
+        editor.getSelection().removeAllRanges();
+        var range = editor.createRange();
+        range.moveToPosition(range.root.getFirst() ? range.root.getFirst() : range.root, CKEDITOR.POSITION_AFTER_START);
+        editor.getSelection().selectRanges([range]);
+
         // mark as disabled
         this.enabled = false;
 
         // disable highlighted mistakes
+        var bookmarks = editor.getSelection().createBookmarks2();
         editor.spellCheck.done();
+        editor.getSelection().selectBookmarks(bookmarks);
 
         // turn off read only
         editor.setReadOnly(false);
@@ -89,7 +107,10 @@
 
     // this is event handler for when clicking on a replacement word in the context menu
     function replaceWord(editor, node, word, replacement) {
+        // fetch words async and highlight mistakes
+        var bookmarks = editor.getSelection().createBookmarks2();
         editor.spellCheck.replaceWord(node, word, replacement);
+        editor.getSelection().selectBookmarks(bookmarks);
     }
 
     // this is event handler for when clicking on a misspelled word in CKEditor
@@ -234,13 +255,26 @@
 
         // add to CKEditor context menu
         if (editor.contextMenu) {
-            editor.addMenuGroup('spellCheckGroup');
-            editor.addMenuItem('spellCheckItem', {
-                label: 'Spell Check',
-                icon: 'spellchecker',
-                command: cmdName,
-                group: 'spellCheckGroup'
+
+            // FB 152116 - Check if spell checker is on before adding to context menu
+            var spellcheckOn = false;
+            editor.config.toolbar.forEach(function(elements) {
+                elements.forEach(function(element) {
+                    if (element == 'SpellChecker') {
+                        spellcheckOn = true;
+                    }
+                });
             });
+
+            if (spellcheckOn) {
+                editor.addMenuGroup('spellCheckGroup');
+                editor.addMenuItem('spellCheckItem', {
+                    label: 'Spell Check',
+                    icon: 'spellchecker',
+                    command: cmdName,
+                    group: 'spellCheckGroup'
+                });
+            }
 
             editor.contextMenu.addListener(function (element) {
                 return { spellCheckItem: CKEDITOR.TRISTATE_ON };

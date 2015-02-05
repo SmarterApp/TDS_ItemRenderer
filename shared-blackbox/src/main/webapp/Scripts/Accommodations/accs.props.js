@@ -122,6 +122,14 @@
         return this.isSelected('Print on Request', 'TDS_PoD_Stim');
     };
 
+    PropsProto.hasEmbossItem = function () {
+        return this.isSelected('Emboss', 'TDS_Emboss_Item');
+    };
+
+    PropsProto.hasEmbossStimulus = function () {
+        return this.isSelected('Emboss', 'TDS_Emboss_Stim');
+    };
+
     PropsProto.getPrintSize = function() {
         return this.getSelectedCode('Print Size');
     };
@@ -340,6 +348,11 @@
     // check if audio rewind is set
     PropsProto.isAudioRewindEnabled = function() {
         return this.isSelected('Audio Playback Controls', 'TDS_APC_PSP');
+    };
+
+    // check if audio rewind is set
+    PropsProto.isAudioScrubberEnabled = function () {
+        return this.isSelected('Audio Playback Controls', 'TDS_APC_SCRUBBER');
     };
 
     // check if paginate item groups is enabled

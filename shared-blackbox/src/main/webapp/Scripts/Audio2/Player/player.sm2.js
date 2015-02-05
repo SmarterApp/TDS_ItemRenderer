@@ -26,6 +26,9 @@
     // fired when audio resume
     Player.onResume = createEvent();
 
+    // fired when audio play or resume
+    Player.onStart = createEvent();
+
     // fired when sound is manually stopped
     Player.onStop = createEvent();
 
@@ -76,6 +79,7 @@
     function _onPlay() {
         console.log('AUDIO PLAY: ' + this.id);
         YAHOO.lang.later(0, Player.onPlay, Player.onPlay.fire, this.id);
+        YAHOO.lang.later(0, Player.onStart, Player.onStart.fire, this.id);
     }
 
     function _onPause() {
@@ -86,6 +90,7 @@
     function _onResume() {
         console.log('AUDIO RESUME: ' + this.id);
         YAHOO.lang.later(0, Player.onResume, Player.onResume.fire, this.id);
+        YAHOO.lang.later(0, Player.onStart, Player.onStart.fire, this.id);
     };
 
     function _onStop() {
@@ -235,6 +240,23 @@
 
     Player.stopAll = function () {
         SM.stopAll();
+    };
+
+    Player.getDuration = function (id) {
+        // convert msec to sec
+        return SM.getSoundById(id).durationEstimate / 1000;
+    };
+
+    Player.setPosition = function (id, time) {
+        SM.setPosition(id, Math.floor(time * 1000));
+    };
+
+    Player.getPosition = function (id) {
+        var sound = SM.getSoundById(id);
+
+        return sound
+            ? sound.position / 1000
+            : 0;
     };
 
     Player.isSupported = function () {

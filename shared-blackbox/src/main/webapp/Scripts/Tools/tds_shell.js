@@ -147,7 +147,8 @@ TDS.Shell = (function (TDS) {
         }
 
         YUD.setAttribute(linkEl, 'href', '#');
-        
+        YUD.setAttribute(linkEl, 'role', 'button');
+
         liEl.appendChild(linkEl);
 
         // create icon <span>

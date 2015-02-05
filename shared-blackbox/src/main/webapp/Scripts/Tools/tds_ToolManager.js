@@ -164,7 +164,7 @@
 
         // create html
         var htmlBody = [];
-        htmlBody.push('<iframe id="frame-' + id + '" frameborder="0" marginheight="0" marginwidth="0" height="100%" width="100%"></iframe>'); // scrolling="yes"
+        htmlBody.push('<iframe id="frame-' + id + '" frameborder="0" title="' + header + '" marginheight="0" marginwidth="0" height="100%" width="100%"></iframe>'); // scrolling="yes"
         htmlBody.push('<div class="yui-panel-mask"></div>');
 
         // add html

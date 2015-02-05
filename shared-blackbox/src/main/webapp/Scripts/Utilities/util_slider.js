@@ -12,6 +12,7 @@ TODO: Add support for vertical.
         this._max = max;
         this._element = null; // container element
         this._instance = null; // YUI instance
+        this._value = this._min;
         this._tickSize = 0;
 
         this.onStart = new Util.Event.Custom(this);
@@ -28,15 +29,23 @@ TODO: Add support for vertical.
         return this._element;
     };
 
-    Slider.prototype.getValue = function () {
-        if (this._instance) {
-            var rawValue = this._instance.getValue();
-            return Math.floor((rawValue / this._tickSize) + this._min);
-        }
-        return -1;
+    Slider.prototype.getValue = function (fromUserInterface) {
+        return fromUserInterface
+            ? this._instance.getValue() / this._tickSize + this._min
+            : this._value;
     };
 
+    // set internal value
+    Slider.prototype._setValue = function (realValue) {
+        realValue = Math.min(realValue, this._max);
+        realValue = Math.max(realValue, this._min);
+        this._value = realValue;
+        return realValue;
+    };
+
+    // set slider value
     Slider.prototype.setValue = function (realValue) {
+        realValue = this._setValue(realValue);
         if (this._instance) {
             this._instance.setValue((realValue - this._min) * this._tickSize, true);
         }
@@ -44,18 +53,12 @@ TODO: Add support for vertical.
 
     // increment the current value (moves right)
     Slider.prototype.increment = function () {
-        if (this._instance) {
-            var value = this._instance.getValue() + this._tickSize;
-            this._instance.setValue(value);
-        }
+        this.setValue(this.getValue() + this._tickSize);
     };
 
     // decrement the current value (moves left)
     Slider.prototype.decrement = function () {
-        if (this._instance) {
-            var value = this._instance.getValue() - this._tickSize;
-            this._instance.setValue(value);
-        }
+        this.setValue(this.getValue() - this._tickSize);
     };
 
     Slider.prototype.render = function (sliderWidth, thumbWidth) {
@@ -85,21 +88,62 @@ TODO: Add support for vertical.
 
         // Create YUI slider control
         this._element = container;
-        this._tickSize = Math.floor(maxThumbPos / (this._max - this._min));
+        this._tickSize = maxThumbPos / (this._max - this._min);
+
         this._instance = YAHOO.widget.Slider.getHorizSlider(bgSlider, thumbSlider, 0, maxThumbPos, this._tickSize);
         this._instance.keyIncrement = this._tickSize; // number of pixels the arrow keys will move the slider
 
+        // the animation is glitchy
+        this._instance.animate = false;
+
+        // override tick pixel-position calculation to be more tolerant of floating point rounding errors
+        this._instance.getThumb().setXTicks = function (iStartX, iTickSize) {
+            this.xTicks = [];
+            this.xTickSize = iTickSize;
+
+            var range = Math.max(this.maxX, this.minX) - Math.min(this.maxX, this.minX),
+                tickCount = range / iTickSize;
+
+            for (var i = 0, x = this.minX; i < tickCount; ++i, x += iTickSize) {
+                this.xTicks[this.xTicks.length] = x;
+            }
+
+            this.xTicks[this.xTicks.length] = this.maxX;
+        };
+
         // subscribe to events
-        this._instance.subscribe('slideStart', function () {
-            this.onStart.fire(this.getValue());
-        }.bind(this));
+        var isDragging = false;
 
+        var sliderBeginMove = function () {
+            if (!isDragging) {
+                var fromUserInterface = this._instance.valueChangeSource === 1;
+                this.onStart.fire(this.getValue(fromUserInterface), fromUserInterface);
+                isDragging = true;
+            }
+        }.bind(this);
+
+        // for clicking thumb
+        this._instance.thumb.subscribe('mouseDownEvent', sliderBeginMove);
+
+        // for clicking on the slider bar outside the thumb
+        this._instance.subscribe('slideStart', sliderBeginMove);
+
+        var sliderMoved = function (event) {
+            var fromUserInterface = this._instance.valueChangeSource === 1;
+            var value = this.getValue(fromUserInterface);
+            value = this._setValue(value);
+            event.fire(value, fromUserInterface);
+        }.bind(this);
+
+        // for dragging or moving the thumb
         this._instance.subscribe('change', function () {
-            this.onChange.fire(this.getValue());
+            sliderMoved(this.onChange);
         }.bind(this));
 
+        // for releasing the thumb
         this._instance.subscribe('slideEnd', function () {
-            this.onEnd.fire(this.getValue());
+            sliderMoved(this.onEnd);
+            isDragging = false;
         }.bind(this));
 
         return container;

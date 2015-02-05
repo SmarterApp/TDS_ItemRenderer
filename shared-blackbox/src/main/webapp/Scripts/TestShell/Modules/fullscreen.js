@@ -7,12 +7,12 @@ This test shell module is used for the fullscreen button.
     var CSS_ENABLED = 'fs-enabled';
 
     function getPassword() {
-        var info = $('.studentInfo').text();
-        if (info) {
-            // parse first name from html (TODO: find better way to do this)
-            return info.split(',')[1].split('(')[0].trim();
+        var testee = TDS.Student.Storage.getTestee();
+        if (testee) {
+            return testee.firstName;
+        } else {
+            return '';
         }
-        return '';
     }
 
     // show the password dialog

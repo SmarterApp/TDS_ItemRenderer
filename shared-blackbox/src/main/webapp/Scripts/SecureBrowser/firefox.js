@@ -51,6 +51,29 @@ The Desktop version of the secure browser built on top of the firefox platform.
         this.disableSecurityBreachDetection();
     };
 
+    Firefox.prototype.canEnvironmentBeSecured = function () {
+        var result = { 'canSecure': true, 'messageKey': null };
+        if (this.isAssistXRequired() && !this.isAssistXRunning()) {
+            // mark environment cannot be secured if AssistX is required but not running on the device.
+            result.canSecure = false;
+            result.messageKey = 'LoginShell.Alert.AssistXNotRunning';
+        }
+
+        return result;
+    };
+
+    Firefox.prototype.isEnvironmentSecure = function () {
+        var result = { 'secure': true, 'messageKey': null };
+        if (!this.isPermissiveModeEnabled() && this.isAssistXRequired() && !this.isAssistXInTestMode()) {
+            // mark environment as insecure if AssistX is required and permissive mode is disabled but 
+            // the secure browser is not locked in test mode during a test session.
+            result.secure = false;
+            result.messageKey = 'LoginShell.Alert.AssistXNotLockedInTestMode';
+        }
+
+        return result;
+    };
+
     Firefox.prototype._hasAPI = function() {
         return (typeof (SecureBrowser) != 'undefined');
     };
@@ -215,7 +238,7 @@ The Desktop version of the secure browser built on top of the firefox platform.
     Firefox.prototype.close = function() {
 
         // if the browser is Mac OS 10.8 or higher, re-enable screenshots
-        if (Util.Browser.isMac() && (Util.Browser.getOSXVersion() >= 10.8) && (Util.Browser.getSecureVersion() <= 6.2)) {
+        if (Util.Browser.isMac() && Util.Browser.osxVersionIsAtLeast(10, 8) && (Util.Browser.getSecureVersion() <= 6.2)) {
             var screenshotsEnabled = Mozilla.enableScreenshots();
 
             // check if disabling screenshot is successful
@@ -225,21 +248,50 @@ The Desktop version of the secure browser built on top of the firefox platform.
                 Util.log('Screenshots are not enabled.');
             }
         }
-        
-        // simulate page unload so that all the listeners can gracefully cleanup
-        try {            
-            window.dispatchEvent(new Event('beforeunload'));
-        } catch(ex) {            
-        }
 
-        // We are putting this in a setTimeout so that listeners to the beforeunload event have a chance to clean up gracefully
-        setTimeout(function() {
-            try {
-                SecureBrowser.CloseWindow();
-            } catch(ex) {
-            }
-        }, 1000);
+        var that = this;
+        // closing the secure browser takes three steps. In step 1, we check if we are safe to unlock the browser if it is
+        // still locked down. In step 2, we unlock the secure browser, and then wait for it to be completed before proceeding
+        // to the next step. In step 3. we fire the "beforeunload" event and then close the browser.
+        try {
+            var deferredCheckEndTestMode = Util.Promise.defer();
 
+            var checkEndTestMode = function () {
+                if (that.prepareUnLock()) {
+                    clearInterval(checkEndTestMode);
+                    deferredCheckEndTestMode.resolve();
+                }
+            };
+
+            setInterval(checkEndTestMode, 1000);
+
+            deferredCheckEndTestMode.promise.then(function () {
+                if (Util.Browser.isWindows()) {
+                    that.restoreKeyboardLayoutSettings();
+                }
+                if (that.isAssistXRequired() && that.isAssistXInTestMode()) {
+                    that.runtime.endTestMode();
+                }
+                var deferredCheckCloseBrowser = Util.Promise.defer();
+                var checkCloseBrowser = function () {
+                    if (that.prepareCloseBrowser()) {
+                        clearInterval(checkCloseBrowser);
+                        deferredCheckCloseBrowser.resolve();
+                    }
+                };
+                setInterval(checkCloseBrowser, 1000);
+                deferredCheckCloseBrowser.promise.then(function () {
+                    // simulate page unload so that listeners can gracefully cleanup
+                    $(window).trigger('beforeunload');
+
+                    // We are putting this in a setTimeout so that listeners to the beforeunload event have a chance to clean up gracefully
+                    setTimeout(function () {
+                        SecureBrowser.CloseWindow();
+                    }, 1000);
+                });
+            });
+        } catch (ex) {
+        };
     };
 
     // Get the start time of when the app was launched
@@ -262,10 +314,107 @@ The Desktop version of the secure browser built on top of the firefox platform.
         return null;
     };
 
+    // check if AssistX is required
+    Firefox.prototype.isAssistXRequired = function () {
+        // we only need AssistX on Windows 8.0 and 8.1
+        return (TDS.getAppSetting('sb.assistxRequired', false) && Util.Browser.isWindows() && ((Util.Browser.getWindowsNTVersion() == 6.2) || (Util.Browser.getWindowsNTVersion() == 6.3)));
+    };
+
+    // check if AssistX is running on the device
+    Firefox.prototype.isAssistXRunning = function () {
+        if (this._hasRuntime()) {
+            // if AssistX is not supported on the Secure Browser or is not running on the deivce, return false
+            if (typeof this.runtime.testModeStatus == 'undefined' || this.runtime.testModeStatus == 'TM_NOT_RUN') {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    };
+
+    // check if AssistX is running in test mode
+    Firefox.prototype.isAssistXInTestMode = function () {
+        if (this._hasRuntime()) {
+            // check the test mode status
+            if (this.runtime.testModeStatus == 'TM_LOCKED' || this.runtime.testModeStatus == 'TM_STANDALONE_LOCKED') {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    Firefox.prototype.enableLockDown = function (lockDown, whitelist) {
+        try {
+            var that = this;
+            if (lockDown) {
+                // disable the capability for language and keyboard layout switch
+                this.disableKeyboardLayoutChanges();
+                // lock dow the secure browser using AssistX if it is required
+                if (this._hasRuntime() && this.isAssistXRequired()) {
+                    if (!that.isAssistXInTestMode()) {
+                        that.runtime.beginTestMode(whitelist);
+                        // store the timestamp for locking down the secure browser
+                        Mozilla.setPreference("tds.lasttime.lockdown", (new Date()).getTime() / 1000);
+                    }
+                }
+            }
+        } catch (ex) {
+            console.error(ex);
+        }
+    };
+
+    // this function checks if the secure browser is ready to be unlocked
+    Firefox.prototype.prepareUnLock = function () {
+
+        // if AssistX is not required or not running, then always safe to close the browser
+        if (!this.isAssistXRequired() || !this.isAssistXRunning()) {
+            return true;
+        }
+
+        // check the last time the secure browser is locked down, if the secure browser has never
+        // been locked down, we should be safe to unlock the secure browser
+        var timeStampLastLockDown = Mozilla.getPreference("tds.lasttime.lockdown") * 1000;
+        if (timeStampLastLockDown == null) {
+            return true;
+        }
+
+        var currentTimeStamp = (new Date()).getTime();
+        // if the last lockdown time was more than 10 seconds ago, or the browser has been already locked down, we consider it safe to unlock the browser
+        if (((currentTimeStamp - timeStampLastLockDown) > 10000) || this.isAssistXInTestMode()) {
+            return true;
+        }
+
+        return false;
+    };
+
+    // this function checks if the secure browser has exited test mode, and is ready to proceed to be closed
+    Firefox.prototype.prepareCloseBrowser = function () {
+
+        // if AssistX is not required or not running, then always safe to close the browser
+        if (!this.isAssistXRequired() || !this.isAssistXRunning()) {
+            return true;
+        }
+
+        // if the secure browser is no longer in test mode, then it is safe to close
+        if (!this.isAssistXInTestMode()) {
+            return true;
+        }
+
+        return false;
+    };
+
     // check if native system mute capabilities is supported on the system
     Firefox.prototype._hasNativeMute = function() {
         var winVer = Util.Browser.getWindowsNTVersion();
         return (winVer >= 6.0 && typeof this.runtime.systemMute == 'boolean');
+    };
+    
+    // set Runtime system volume
+    Firefox.prototype._setRuntimeVolume = function (volume) {
+        this.runtime.systemVolume = volume;
+        
+        // Fire onSetVolume event
+        this.Events.onSetVolume.fire();
     };
 
     // mute system audio
@@ -279,7 +428,7 @@ The Desktop version of the secure browser built on top of the firefox platform.
                 } else if (this.runtime.systemVolume != null) {
                     console.log('mute volume');
                     Util.Storage.set('tds-mutedVolume', this.runtime.systemVolume); // store the system volume, will be restored after unmute
-                    this.runtime.systemVolume = 0;
+                    this._setRuntimeVolume(0);
                     return true;
                 }
             }
@@ -301,7 +450,7 @@ The Desktop version of the secure browser built on top of the firefox platform.
                     var mutedVolume = Util.Storage.get('tds-mutedVolume');
                     if (mutedVolume) { // restore previous volume
                         console.log('unmute volume: ' + mutedVolume);
-                        this.runtime.systemVolume = mutedVolume;
+                        this._setRuntimeVolume(mutedVolume);
                         return true;
                     }
                 }
@@ -351,7 +500,7 @@ The Desktop version of the secure browser built on top of the firefox platform.
                 // convert percentage to raw value and set
                 var level = Math.round(percent / 10);
                 console.log('set volume: ' + level);
-                this.runtime.systemVolume = level;
+                this._setRuntimeVolume(level);
 
                 // if we are setting the volume then unmute
                 if (checkMute && percent > 0 && this.isMuted()) {
@@ -394,6 +543,20 @@ The Desktop version of the secure browser built on top of the firefox platform.
         }
 
         return changed;
+    };
+
+    Firefox.prototype.isPermissiveModeEnabled = function () {
+
+        try {
+            if (this._hasRuntime() &&
+                typeof this.runtime.permissive == 'boolean') {
+                return this.runtime.permissive;
+            }
+        } catch (ex) {
+            return false;
+        }
+
+        return false;
     };
 
     Firefox.prototype.enableChromeMode = function(enabled) {
@@ -462,6 +625,60 @@ The Desktop version of the secure browser built on top of the firefox platform.
         }
     };
 
+    // disable keyboard layout changes using shortcut keys
+    // the solution is to modify certain registry key values to disable the feature
+    Firefox.prototype.disableKeyboardLayoutChanges = function () {
+        // change the registry key value only if this is the first time the login page is loaded after the browser is launched
+        if (Mozilla.getPreference("windows.previouslanguagehotkeyvalue") == null) {
+            var languageHotKeyValue = this.readRegistryValue(Util.SecureBrowser.HKEY_CURRENT_USER, "Keyboard Layout\\toggle", "Language Hotkey");
+            if (languageHotKeyValue == null || languageHotKeyValue != '3') {
+                // set the new registry key value
+                this.writeRegistryValue(Util.SecureBrowser.HKEY_CURRENT_USER, "Keyboard Layout\\toggle", "Language Hotkey", "string", "3");
+            }
+            // use local storage to keep the previous value, we need to restore to this value when we close the browser
+            if (languageHotKeyValue == null) {
+                Mozilla.setPreference("windows.previouslanguagehotkeyvalue", "");
+            } else {
+                Mozilla.setPreference("windows.previouslanguagehotkeyvalue", languageHotKeyValue);
+            }
+        }
+        // if (localStorage.previousLayoutHotKeyValue == null) {
+        if (Mozilla.getPreference("windows.previouslayouthotkeyvalue") == null) {
+            var layoutHotKeyValue = this.readRegistryValue(Util.SecureBrowser.HKEY_CURRENT_USER, "Keyboard Layout\\toggle", "Layout Hotkey");
+            if (layoutHotKeyValue == null || layoutHotKeyValue != '3') {
+                // set the new registry key value
+                this.writeRegistryValue(Util.SecureBrowser.HKEY_CURRENT_USER, "Keyboard Layout\\toggle", "Layout Hotkey", "string", "3");
+            }
+            // use local storage to keep the previous value, we need to revert to this value when we close the browser
+            if (layoutHotKeyValue == null) {
+                Mozilla.setPreference("windows.previouslayouthotkeyvalue", "");
+            } else {
+                Mozilla.setPreference("windows.previouslayouthotkeyvalue", layoutHotKeyValue);
+            }
+        }
+    };
+
+    // restore the registry key values for keyboard layout capability using shortcut keys
+    // this function is called when the secure browser is being closed
+    Firefox.prototype.restoreKeyboardLayoutSettings = function () {
+        // remove the registry key value or restore it to previous value
+        if (Mozilla.getPreference('windows.previouslanguagehotkeyvalue') == '') {
+            this.removeRegistryValue(Util.SecureBrowser.HKEY_CURRENT_USER, "Keyboard Layout\\toggle", "Language Hotkey");
+        } else if (Mozilla.getPreference('windows.previouslanguagehotkeyvalue') != '3') {
+            this.writeRegistryValue(Util.SecureBrowser.HKEY_CURRENT_USER, "Keyboard Layout\\toggle", "Language Hotkey", "string", Mozilla.getPreference('windows.previouslanguagehotkeyvalue'));
+        }
+        // remove the value from the local storage
+        Mozilla.setPreference('windows.previouslanguagehotkeyvalue', null);
+        // remove the registry key value or restore it to previous value
+        if (Mozilla.getPreference('windows.previouslayouthotkeyvalue') == '') {
+            this.removeRegistryValue(Util.SecureBrowser.HKEY_CURRENT_USER, "Keyboard Layout\\toggle", "Layout Hotkey");
+        } else if (Mozilla.getPreference('windows.previouslayouthotkeyvalue') != '3') {
+            this.writeRegistryValue(Util.SecureBrowser.HKEY_CURRENT_USER, "Keyboard Layout\\toggle", "Layout Hotkey", "string", Mozilla.getPreference('windows.previouslayouthotkeyvalue'));
+        }
+        // remove the value from the local storage
+        Mozilla.setPreference('windows.previouslayouthotkeyvalue', null);
+    };
+
     // parse a registry key value into JS value type
     function parseRegistryValue(wrk, value) {
         switch (wrk.getValueType(value)) {
@@ -504,6 +721,68 @@ The Desktop version of the secure browser built on top of the firefox platform.
             }
         });
         return value;
+    };
+
+    // write a registry key value
+    function writeRegistryValuebyType(wrk, valueName, type, value) {
+        switch (type) {
+            case 'string':
+                wrk.writeStringValue(valueName, value);
+                break;
+            case 'binary':
+                wrk.writeBinaryValue(valueName, value);
+                break;
+            case 'int':
+                wrk.writeIntValue(valueName, value);
+                break;
+            case 'int64':
+                wrk.writeInt64Value(valueName, value);
+        }
+    }
+
+    // write a new value to a registry key
+    // https://developer.mozilla.org/en-US/docs/Accessing_the_Windows_Registry_Using_XPCOM
+    // http://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
+    function writeRegistryValue(hkey, key, valueName, type, value) {
+        var regClass = Components.classes["@mozilla.org/windows-registry-key;1"];
+        var registry = regClass.createInstance(Components.interfaces.nsIWindowsRegKey);
+        // NOTE: may need to create a key first before writing a new value
+        registry.open(hkey, key, registry.ACCESS_WRITE);
+        writeRegistryValuebyType(registry, valueName, type, value);
+        registry.close();
+    }
+
+    // write windows registry key value
+    Firefox.prototype.writeRegistryValue = function (hkey, key, valueName, type, value) {
+        Mozilla.execPrivileged(function () {
+            try {
+                writeRegistryValue(hkey, key, valueName, type, value);
+            } catch (ex) {
+            }
+        });
+    };
+
+    // remove a registry key value
+    // https://developer.mozilla.org/en-US/docs/Accessing_the_Windows_Registry_Using_XPCOM
+    // http://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
+    function removeRegistryValue(hkey, key, valueName) {
+        var regClass = Components.classes["@mozilla.org/windows-registry-key;1"];
+        var registry = regClass.createInstance(Components.interfaces.nsIWindowsRegKey);
+        registry.open(hkey, key, registry.ACCESS_ALL);
+        if (registry.hasValue(valueName)) {
+            registry.removeValue(valueName);
+        }
+        registry.close();
+    }
+
+    // remove windows registry key value
+    Firefox.prototype.removeRegistryValue = function (hkey, key, valueName) {
+        Mozilla.execPrivileged(function () {
+            try {
+                removeRegistryValue(hkey, key, valueName);
+            } catch (ex) {
+            }
+        });
     };
 
     SB.Firefox = Firefox;

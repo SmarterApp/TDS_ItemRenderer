@@ -773,6 +773,36 @@
         D.stopAllEvents(el, 'drop');
     };
 
+    // rename the tagName of an element
+    D.renameTag = function(el, tag) {
+
+        // create replacement element
+        var replacementEl = el.ownerDocument.createElement(tag);
+
+        // copy over attributes
+        $.each(el.attributes, function(idx, attrib) {
+            replacementEl.setAttributeNode(attrib.cloneNode(true));
+        });
+
+        var $el = $(el);
+        var $replacement = $(replacementEl);
+
+        // get all the kids, with data and events
+        var contents = $el.children().clone(true);
+
+        // copy children
+        $replacement.append(contents);
+
+        // copy the data
+        $replacement.data($el.data());
+
+        // swap it out
+        $el.replaceWith($replacement);
+
+        // and we're done
+        return replacementEl;
+    };
+
     Util.Dom = D;
 
 })(window.Util);

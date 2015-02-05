@@ -21,16 +21,18 @@
     CKEDITOR.on('instanceCreated', function (ev) {
         var clipPath = HTMLEditor.resolveBaseUrl('Scripts/HTMLEditor2/plugins/clipboard/icons/');
         var spellPath = HTMLEditor.resolveBaseUrl('Scripts/HTMLEditor2/plugins/spellchecker/icons/');
-        var keymapPath = HTMLEditor.resolveBaseUrl('Scripts/HTMLEditor2/plugins/keymaphelp/icons/');
+        var keymapPath = HTMLEditor.resolveBaseUrl('Scripts/HTMLEditor2/plugins/keymaphelp/dialogs/icons/');
+        var specharPath = HTMLEditor.resolveBaseUrl('Scripts/HTMLEditor2/plugins/tdsspecialchar/icons/');
         CKEDITOR.skin.addIcon('cut', clipPath + 'cut.png', 0, true);
         CKEDITOR.skin.addIcon('copy', clipPath + 'copy.png', 0, true);
         CKEDITOR.skin.addIcon('paste', clipPath + 'paste.png', 0, true);
         CKEDITOR.skin.addIcon('spellchecker', spellPath + 'spellchecker.png', 0, true);
         CKEDITOR.skin.addIcon('keymaphelp', keymapPath + 'keymaphelp.png', 0, true);
+        CKEDITOR.skin.addIcon('tdsspecialchar', specharPath + 'tdsspecialchar.png', 0, true);
     });
 
     // fix paths
-    function fixPaths() {
+    function fixPaths(config) {
 
         // version of ckeditor (should match what is in scripts_shared.xml)
         var version = '4.4';
@@ -50,6 +52,9 @@
             CKEDITOR.plugins.basePath = pluginsPath;
         }
 
+        // set base path for plugins
+        CKEDITOR.plugins.customPath = customPath;
+
         // manually fix plugin paths since they are registered early with the wrong path
         var pluginName;
         for (pluginName in CKEDITOR.plugins.registered) {
@@ -58,6 +63,11 @@
             // check if the base path is not correct
             if (plugin.path.indexOf(pluginsPath) == -1) {
                 plugin.path = CKEDITOR.plugins.getPath(pluginName);
+            }
+
+            // for TDS owned/refactored plugin, using TDS path instead of CKEDITOR's
+            if (config.extraPlugins.indexOf(pluginName)) {
+                plugin.path = customPath + pluginName + '/';
             }
         }
 
@@ -85,7 +95,7 @@
         'undo': ['Undo', 'Redo'],
         'spellchecker': ['SpellChecker', 'Languages'],
         'table': ['Table'],
-        'specialchar': ['SpecialChar']
+        'specialchar': ['TDSSpecialChar']
     };
 
     function createToolbar(responseType, addGroups, removeGroups) {
@@ -114,7 +124,7 @@
             ['NumberedList', 'BulletedList', 'Outdent', 'Indent'],
             ['Cut', 'Copy', 'Paste', 'Undo', 'Redo'],
             ['SpellChecker', 'Languages'],
-            ['Table', 'SpecialChar']
+            ['Table', 'TDSSpecialChar']
         ];
 
         // always remove table if we aren't using table or custom response type
@@ -174,8 +184,8 @@
             baseFloatZIndex: 50, // allow showAlert dialogs to be higher than cke_dialog_background_cover and dialogs
             dialog_noConfirmCancel: true,
             //tabSpaces: 4,  // Please see FB 147852 before changing this
-            extraPlugins: 'clipboard,spellchecker,keymaphelp',
-            removePlugins: 'sharedSpaces,floatingspace,resize,tableresize,wordcount',
+            extraPlugins: 'clipboard,spellchecker,keymaphelp,tdsspecialchar',
+            removePlugins: 'sharedSpaces,floatingspace,resize,tableresize,wordcount,specialchar',
             disableNativeSpellChecker: true,
             disableNativeTableHandles: true,
             height: '' // removes height attribute
@@ -246,12 +256,17 @@
 
     function createEditor(containerEl, responseType, configOverride) {
 
+        // If we're in print mode and the mode wasn't manually set
+        if (ContentManager.isPrintMode() && !mode) {
+            useInline = true;
+        }
+
         // clear editor div
         containerEl.innerHTML = '';
 
         // create editor and add it to the container element 
-        fixPaths();
         var config = createConfig(responseType, configOverride.addGroups, configOverride.removeGroups);
+        fixPaths(config);
         if (configOverride) {
             for (var property in configOverride){
                 config[property] = configOverride[property];
@@ -335,6 +350,15 @@ Any patches or hacks for CKEditor.
             element.on('contextmenu', function (ev) {
                 ev.data.preventDefault(true);
             });
+
+            // FB 142682 - On iOS isolate touchstart events to the editor... if this propagates outside
+            //  of the editor then content_manager.js will cause the item itself to become active and the
+            //  editor will lose focus such that we can't use toolbar buttons when the editor has focus
+            if (Util.Browser.isIOS()) {
+                ev.editor.element.on('touchstart', function (evt) {
+                    evt.data.stopPropagation();
+                });
+            }
         });
 
         // for debugging setting response...
@@ -380,7 +404,7 @@ Any patches or hacks for CKEditor.
     But we can still get the selection. Otherwise we will return null and cause problems.
     You can find original code in \ckeditor\core\selection.js.
     */
-    if (Util.Browser.getFirefoxVersion() < 10) {
+    if (Util.Browser.getFirefoxVersion() && Util.Browser.getFirefoxVersion() < 10) {
         CKEDITOR.editor.prototype.getSelection = function (forceRealSelection) {
 
             // Check if there exists a locked or fake selection.

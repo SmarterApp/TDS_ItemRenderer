@@ -16,10 +16,15 @@ EBSR.QTI = function (interactionXml, itemKey, contentOptionClass, interactionKey
     // Multiselection based on maxChoice
     var options;
     this.responseId = interactionXml.getAttribute('responseIdentifier');
-    this.maxChoice = interactionXml.getAttribute('maxChoice');
-    if (this.maxChoice && (this.maxChoice != "1")) {
+    
+    //Historical EBSR items in ITS were defined with maxChoice attribute, QTI is maxChoices attribute
+    var maxChoices = (interactionXml.getAttribute('maxChoice') || interactionXml.getAttribute('maxChoices')) * 1;
+    var minChoices = interactionXml.getAttribute('minChoices') * 1;
+    if (maxChoices != 1) {
         this.type = "MS";
         options = new ContentMSGroup();
+        options.setMinChoices(minChoices);
+        options.setMaxChoices(maxChoices);
     } else {
         this.type = "MC";
         options = new ContentMCGroup();

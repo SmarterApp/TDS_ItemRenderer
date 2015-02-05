@@ -18,6 +18,15 @@
     function engageAutomute() {
         Player.onPlay.subscribe(attemptPlay);
         Player.onResume.subscribe(attemptPlay);
+        
+        // Re-activate automute after changing the system volume setting
+        if (Util.SecureBrowser.Events && Util.SecureBrowser.Events.onSetVolume) {
+            Util.SecureBrowser.Events.onSetVolume.subscribe(function () {
+                if (TestShell.muted) { //not currently playing audio prompt
+                    doMute();
+                }
+            });
+        }
         doMute();
         Util.log('Automute engaged');
     }

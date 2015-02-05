@@ -1,4 +1,4 @@
-﻿if (typeof TDS != 'object') TDS = {};
+﻿window.TDS = window.TDS || {};
 
 /*
 SB JAWS FIX:
@@ -7,49 +7,29 @@ OaksSecureBrowser5.0=firefox
 JAWS user setting is an option in the program list
 */
 
-TDS.ARIA = {};
+TDS.ARIA = (function() {
 
-// create log section on the page
-TDS.ARIA.createLog = function()
-{
-    var logDiv = YUD.get('log');
-    if (logDiv) return logDiv;
+    var aria = {};
 
-    logDiv = HTML.DIV(
-    {
-        'id': 'log',
-        'className': 'element-invisible',
-        'role': 'log'
-    });
-
-    logDiv.setAttribute('aria-live', 'polite');
-    logDiv.setAttribute('aria-relevant', 'additions text');
-    logDiv.setAttribute('aria-atomic', 'true');
-
-    document.body.appendChild(logDiv);
-    return logDiv;
-};
-
-TDS.ARIA.writeLog = function(msg)
-{
-    var logDiv = YUD.get('log');
-
-    if (logDiv == null)
-    {
-        logDiv = this.createLog();
+    function getStatus() {
+        var statusEl = YUD.get('tdsStatus');
+        if (!statusEl) {
+            statusEl = document.createElement('div');
+            statusEl.id = 'tdsStatus';
+            statusEl.className = 'element-invisible';
+            statusEl.setAttribute('role', 'status');
+            statusEl.setAttribute('aria-live', 'assertive');
+            $(document.body).prepend(statusEl);
+        }
+        return statusEl;
     }
 
-    var currentMsgDiv = YUD.getFirstChild(logDiv);
-    var msgDiv = HTML.P(null, msg);
+    aria.setStatus = function (msg) {
+        var statusEl = getStatus();
+        $(statusEl).text(msg);
+    };
 
-    if (currentMsgDiv)
-    {
-        logDiv.replaceChild(msgDiv, currentMsgDiv);
-    }
-    else
-    {
-        logDiv.appendChild(msgDiv);
-    }
+    return aria;
 
-    Util.log('ARIA LOG: ' + msg);
-};
+})();
+

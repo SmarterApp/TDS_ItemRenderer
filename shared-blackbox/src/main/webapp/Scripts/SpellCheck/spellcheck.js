@@ -33,7 +33,7 @@ SpellCheck.WordStatus =
     CORRECTED: 4 // Temporary status, not stored in cache
 };
 
-SpellCheck.WORD_BOUNDARY_CHARS = '\t\r\n\u00A0 !\"#$%&()*+,\-.\/:;<=>?@\[\\\]^_`{|}~';
+SpellCheck.WORD_BOUNDARY_CHARS = '\t\r\n\u00A0 !\"#$%&()*+,\-.\/:;<=>?@\[\\\]^_`{|}~\u200b';
 
 SpellCheck._KEY_PREFIX = ':';
 

@@ -100,7 +100,7 @@ TTS.Config.UI.prototype.buildSliders = function(){
         'volumeThumb', 
         0,
         this.cfg.LengthInPixels, 
-        25 //this.cfg.TickSize
+        this.cfg.TickSize
     );
     this.subscribeToEvents('Volume', this.volumeSlider);
 
@@ -167,7 +167,7 @@ TTS.Config.UI.prototype.calculateValue = function (property, inputValue){
     var returnValue = inputValue;
     switch (property) {
         case 'Volume':
-            returnValue = parseInt(2 + (inputValue / 25)); // volume is never supposed to be allowed to go to 0 so we establish a floor of 2. Max volume is restricted to 10
+            returnValue = parseInt(inputValue / this.cfg.TickSize); // volume has a range from 0-10
             break;
         case 'Pitch':
             returnValue = parseInt(inputValue / this.cfg.TickSize * 2); // divide by 2 because the rate has a range from 0-20

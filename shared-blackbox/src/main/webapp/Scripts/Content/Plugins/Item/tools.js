@@ -34,7 +34,7 @@ Setup item tools container
 
         // create new container for item tools
         toolsEl = document.createElement('div');
-        toolsEl.className = 'itemTools markComment';
+        toolsEl.className = 'toolsContainer itemTools markComment';
 
         // insert new tools container right after span
         $(markCommentEl).after(toolsEl);

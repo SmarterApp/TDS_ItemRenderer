@@ -77,27 +77,30 @@ Widget for CKEditor HTML editor
 
         var targetNode = YUE.getTarget(evt); // Get node where click came from
 
-        // This handles the special case of being an iFrame and clicking outside of the body
-        //  as the 'targetNode' will be the HTML document node so we compensate by adjusing the
-        // 'targetNode' to be the document's body before checking for a 'cke_editable' below...
-        if (targetNode.tagName == 'HTML') {
-            var children = targetNode.childNodes;
-            for (var i = 0; i < children.length; ++i) {
-                targetNode = children[i];
-                if (targetNode.tagName == 'BODY') {
-                    break;
+        if (targetNode) { // Ensure the click came from a node and not a keyboard event
+
+            // This handles the special case of being an iFrame and clicking outside of the body
+            //  as the 'targetNode' will be the HTML document node so we compensate by adjusing the
+            // 'targetNode' to be the document's body before checking for a 'cke_editable' below...
+            if (targetNode.tagName == 'HTML') {
+                var children = targetNode.childNodes;
+                for (var i = 0; i < children.length; ++i) {
+                    targetNode = children[i];
+                    if (targetNode.tagName == 'BODY') {
+                        break;
+                    }
                 }
             }
-        }
-            
-        // Check to see if 'targetNode' or any of its parents are cke_editable aka
-        //  'Did the click come from CKEditor?'
-        while (targetNode) {
-            if (YUD.hasClass(targetNode, 'cke_editable')) {
-                contentMenu.cancel = true;
-                break;
-            } else {
-                targetNode = targetNode.parentNode;
+
+            // Check to see if 'targetNode' or any of its parents are cke_editable aka
+            //  'Did the click come from CKEditor?'
+            while (targetNode) {
+                if (YUD.hasClass(targetNode, 'cke_editable')) {
+                    contentMenu.cancel = true;
+                    break;
+                } else {
+                    targetNode = targetNode.parentNode;
+                }
             }
         }
     };
@@ -165,6 +168,7 @@ Widget for CKEditor HTML editor
 
         // check when editor is focused
         editor.on('focus', function (ev) {
+            ContentManager.Menu.hide(); // FB 153609 - Ensure no context menus left open when editor gains focus
             item.setActiveComponent(editor);
         });
 
@@ -179,6 +183,9 @@ Widget for CKEditor HTML editor
 
         // add menu fixes to the editors iframe
         CM.Menu.applyDocFix(win);
+
+        // Add title to iFrame for WCAG
+        $(editor.container.$).find('iframe').attr('title', 'Rich Text Editor');
 
         // add content manager events into editor
         CM.addMouseEvents(item, doc);

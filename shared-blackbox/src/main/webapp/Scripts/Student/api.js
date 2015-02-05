@@ -214,7 +214,10 @@
             loginBrowserKey: loginBrowserKey,
             satBrowserKey: satBrowserKey
         };
-        return xhr.sendPromise('logoutProctor', data);
+        return xhr.sendPromise('logoutProctor', data, null, {
+            showProgress: false,
+            showDialog: false
+        });
     };
 
     Student.API = API;

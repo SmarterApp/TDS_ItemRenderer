@@ -42,8 +42,10 @@ TDS.Student = TDS.Student || {};
     UI.getTesteeLabel = getTesteeLabel;
     Student.UI = UI;
 
-    // do this automatically for all pages
-    $().ready(sync);
+    // queue the sync() function to be called after all DOM ready events have been processed
+    $().ready(function () {
+        // Bug #150899 - IE 10 was calling sync() too soon... delay until other DOM ready fcn's fire
+        setTimeout(UI.sync, 0);
+    });
 
 })(TDS.Student);
-

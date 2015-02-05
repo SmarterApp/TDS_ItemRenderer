@@ -90,17 +90,28 @@
         var contextMenu = new YAHOO.widget.ContextMenu(menuId, {
             zindex: 1000, // NOTE: the highest z-index in elpa.css is 4
             iframe: false,
-            shadow: false
+            shadow: false,
+            usearia: true
         });
 
         // save context menu instance
         menuInstance = contextMenu;
+
+        // check if the focus left
+        function checkFocusLeft(evt) {
+            var targetEl = YUE.getTarget(evt);
+            if (!YUD.hasClass(targetEl, 'yuimenuitemlabel')) {
+                MenuManager.hide();
+            }
+        }
 
         // event handler for when menu is shown
         contextMenu.showEvent.subscribe(function() {
             // this delay is to fix menu closing on ipad
             setTimeout(function() {
                 this.cfg.setProperty('clicktohide', true);
+                // listen for focus to close menu
+                YUE.onFocus(document, checkFocusLeft);
             }.bind(this), 500);
         });
 
@@ -128,6 +139,8 @@
         contextMenu.hideEvent.subscribe(function () {
             // disable click to hide until we show the menu again
             this.cfg.setProperty('clicktohide', false);
+            // listen for focus to close menu
+            YUE.removeFocusListener(document, checkFocusLeft);
         });
 
         // apply text select fix
@@ -278,8 +291,11 @@
         // add the new menu items
         menuInstance.addItems(menuItems);
 
+        // get menu container.. for accessibility use tools container so tabbing works
+        var menuContainer = (CM.isAccessibilityEnabled() && entity && entity.getToolsElement()) || document.body;
+
         // render and show menu
-        menuInstance.render(document.body);
+        menuInstance.render(menuContainer);
         menuInstance.show();
 
         return true;

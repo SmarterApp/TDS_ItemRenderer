@@ -34,7 +34,7 @@ Used to create the container for passage controls
         var passage = this.entity;
         var passageEl = passage.getElement();
         var controlsEl = document.createElement('div');
-        controlsEl.className = 'passageTools';
+        controlsEl.className = 'toolsContainer passageTools';
         // $(passageEl).before(controlsEl); (append
         $(passageEl).prepend(controlsEl);
 

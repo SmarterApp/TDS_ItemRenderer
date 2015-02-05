@@ -18,7 +18,7 @@
 	font-size: 2.5em;
 	line-height: 1.3em;
 	overflow: auto;
-	background-color: rgba(0,0,0,0.8);
+	background-color: #000;
 	color: #fff;
 	position: fixed;
 	z-index: 15;
@@ -45,4 +45,26 @@
 }
 .TDS_PS_L4 .tdsClosedCaptioning {
 	min-height: 150px;
+}
+.TDS_CCYellowB .tdsClosedCaptioning {
+	color: #FC0;
+	background-color: #002a83;
+	border: solid 1px #FC0;
+	-moz-box-shadow: 0 0 3px 2px rgba(0,0,0,.7);
+   	-webkit-box-shadow: 0 0 3px 2px rgba(0,0,0,.7);
+	box-shadow: 0 0 3px 2px rgba(0,0,0,.7);
+}
+.TDS_CCInvert .tdsClosedCaptioning {
+	background-color: #1c1a1b;
+	border: solid 1px #FFF;
+	-moz-box-shadow: 0 0 3px 2px rgba(209,209,209,.7);
+   	-webkit-box-shadow: 0 0 3px 2px rgba(209,209,209,.7);
+	box-shadow: 0 0 3px 2px rgba(209,209,209,.7);
+}
+.TDS_CCWhiteN .tdsClosedCaptioning {
+	background-color: #002248;
+	border: solid 1px #FFF;
+	-moz-box-shadow: 0 0 3px 2px rgba(0,0,0,.7);
+   	-webkit-box-shadow: 0 0 3px 2px rgba(0,0,0,.7);
+	box-shadow: 0 0 3px 2px rgba(0,0,0,.7);
 }

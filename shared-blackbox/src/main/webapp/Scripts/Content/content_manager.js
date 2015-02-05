@@ -17,7 +17,10 @@
         _debug: true,
 
         // ContentZoom object
-        _zoom: null
+        _zoom: null,
+
+        // Flag to rendering for printing
+        _printMode: false
     };
 
     Util.Event.Emitter(CM);
@@ -143,34 +146,6 @@
     
     /******************************************************************************************/
 
-    // response type support
-    var supportHandlerLookup = {};
-
-    CM.registerSupportHandler = function (responseType, check) {
-        supportHandlerLookup[responseType.toLowerCase()] = check;
-    };
-
-    CM.getSupportHandler = function (responseType) {
-        return supportHandlerLookup[responseType.toLowerCase()];
-    };
-
-    CM.getSupportHandlers = function () {
-        return Util.Object.getValues(supportHandlerLookup);
-    };
-
-    CM.removeSupportHandler = function (responseType) {
-        return Util.Object.remove(supportHandlerLookup, responseType);
-    };
-
-    CM.removeSupportHandlers = function () {
-        var responseTypes = Util.Object.keys(supportHandlerLookup);
-        for (var i = 0; i < responseTypes.length; i++) {
-            CM.removeSupportHandler(responseTypes[i]);
-        }
-    };
-
-    /******************************************************************************************/
-
     // attach mouse events to an element for a specific item
     CM.addMouseEvents = function (entity, element) {
 
@@ -186,14 +161,19 @@
 
         function setActive(evt) {
 
-            // ignore setting active element if we are editing
-            // if (Util.Dom.isTextInput(document.activeElement)) return;
+            var targetEl = YUE.getTarget(evt);
+
+            // ignore setting active element if activeElement is an editor AND the target is in the same editor
+            if (Util.Dom.isTextInput(document.activeElement) && $.contains(document.activeElement, targetEl)) {
+                return;
+            }
 
             // set focus to this entity
-            var entityChanged = entity.setActive(evt);
+            var entityChanged = entity.setActive({
+                component: false // don't set default component
+            });
 
             // get the clicked component
-            var targetEl = YUE.getTarget(evt);
             var clickedComponent = entity.findComponent(targetEl);
 
             // if a component was found then set it as active
@@ -294,11 +274,22 @@
     };
 
     // Clear CM of any plugins or widgets. This is helpful for unit testing. 
-    CM.clear = function () {
+    CM.clear = function() {
         CM._zoom.setLevel(CM._zoom.defaultLevel);
         CM.clearPagePlugins();
         CM.clearEntityPlugins(); // plugins and item widgets
-    }
+        CM.clearTransforms();
+    };
+
+    // Print mode is used to detect if content is being rendered for printing in the
+    //  event that rendering for print is different that rendering for a screen.
+    CM.enablePrintMode = function() {
+        this._printMode = true;
+    };
+
+    CM.isPrintMode = function() {
+        return this._printMode;
+    };
 
     window.ContentManager = CM;
 

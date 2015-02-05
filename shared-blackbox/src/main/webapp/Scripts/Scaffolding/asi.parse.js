@@ -27,66 +27,56 @@ AsiItem.Parse = function (item) {
         this.stem = stem;
 
         // Process the choices and associated feedback spans.
-        this.asiContent = this.processNodes(stem, answers);
+        this.asiContent = this.processNodes(this.mid, stem, answers);
         
         // THis is a unique item type.  We assume for now that there is only one
         // correct answser that completes the question, and n-1 possible wrong answers.
         // Ideally this would be passed in the item format but for now ITS doesn't have a place
         // for it.
         this.minSelection = 1; 
-        this.maxAttempts = (this.asiContent.choices.length) - 1;
+        this.maxAttempts = this.asiContent.choices.length - 1;
         
         // Wipe out the entire div, because the renderer is going to re-render it
         // in the div.  This is pretty inefficient and eventually we should get rid of
         // it.
-        answers.innerHTML = '';
+        //answers.innerHTML = '';
     };
 };
 
-// Process the HTML. and render into the special format for alt-scaffolding.
-AsiItem.Parse.prototype.processNodes = function (aStem, aAnswers) {
+// Process the HTML and return an object that contains the stem and
+//  various provided choices that the student can select.
+AsiItem.Parse.prototype.processNodes = function (itemId, aStem, aAnswers) {
 
+    // Get the stem's audio file
     aStem.audioCue = this.processSoundLinks(this.stem);
-    var choiceAr = [];
-    var feedbackAr = [];
-    var choiceElems = aAnswers.getElementsByTagName('div');
 
-    // server-side control puts some data attributes in the html to indicate
-    // where the content and feedback elements are.  We go through and  
-    // process the feedback elements first.
+    // Process the HTML to gather feedback info
+    var choiceAr = [];
+    var choiceElems = aAnswers.childNodes; //getElementsByTagName('div');
     for (var j = 0; j < choiceElems.length; ++j) {
-        var choice = choiceElems[j];
-        var id = YUD.getAttribute(choice, 'data-asi-identifier');
-        if (id && id.length > 0) {
-            var feedback = this.readFeedbackContent(choice, j);
-            if (feedback) {
-                feedbackAr[feedback.identifier] = feedback;
+        var choiceNode = choiceElems[j];
+        if (choiceNode.nodeType == Util.Dom.NodeType.ELEMENT) {
+            var id = YUD.getAttribute(choiceNode, 'data-asi-identifier');
+            // Process <div> elements with a 'data-asi-identifier' attribute
+            if (id && id.length > 0) {
+                var audioCue = this.processSoundLinks(choiceNode);
+
+                // Ignore responses with no audio for this item type
+                if (audioCue != null) {
+                    var choiceContent = {
+                        id: 'asi-' + itemId + '-response-' + id,
+                        identifier: id,
+                        complete: /true/i.test(choiceNode.getAttribute('data-asi-complete')),
+                        audioCue: audioCue,
+                        //    htmlContent: this.readChoiceContent(choiceNode, j),
+                        feedback: this.readFeedbackContent(choiceElems, j)
+                    };
+                    choiceAr.push(choiceContent);
+                }
             }
         }
     }
     
-    // Parse the item DOM a second time to get the information we need from the 
-    // content.
-    for (j = 0; j < choiceElems.length; ++j) {
-        choice = choiceElems[j];
-        id = YUD.getAttribute(choice, 'data-asi-identifier');
-        if (id && id.length > 0)
-        {
-            var choiceContent = {
-                identifier: id,
-                complete: choice.getAttribute('data-asi-complete'),
-                audioCue: this.processSoundLinks(choice),
-                content: {
-                    htmlContent: this.readChoiceContent(choice, j),
-                    feedback: feedbackAr[id]
-                }
-            };
-            
-            // Ignore responses with no audio for this item type.
-            if (choiceContent.audioCue != null)
-                choiceAr.push(choiceContent);
-        }
-    }
     return {
         stem: this.stem,
         choices: choiceAr
@@ -94,8 +84,9 @@ AsiItem.Parse.prototype.processNodes = function (aStem, aAnswers) {
 };
 
 
-// Sound links are handled specially in this item.  We dont' just autoplay.  
-// Remove the audio anchors, but preserve the address.  
+// Sound links are handled specially in this item.  We don't just autoplay.  
+// Find the first sound link in this parentSpan, remove the link's anchors and return the url
+//  or return null if no sound link is found.
 AsiItem.Parse.prototype.processSoundLinks = function (parentSpan) {
     var anchors = parentSpan.getElementsByTagName('a');
     for (var i = 0; i < anchors.length; ++i) {
@@ -110,68 +101,66 @@ AsiItem.Parse.prototype.processSoundLinks = function (parentSpan) {
     return null;
 };
 
-// Parse the choice, similar to a multiple choice question.
-AsiItem.Parse.prototype.readChoiceContent = function (choice, index) {
+// Parse the choice (similar to a multiple choice question) and return it as an HTML document fragment
+AsiItem.Parse.prototype.readChoiceContent = function (choiceNode, index) {
+
     // Read the content of a choice
 
-    var choiceChildNodes = choice.childNodes;
     var htmlContent;
     var htmlContentString = '';
 
+    // Build a string with the HTML from all childNodes that do NOT have a 'data-feedback-identifier' attribute
+    /*
+    var choiceChildNodes = choiceNode.childNodes;
     for (var k = 0; k < choiceChildNodes.length; ++k) {
-        if (choiceChildNodes[k].nodeType == 1) {
+        if (choiceChildNodes[k].nodeType == Util.Dom.NodeType.ELEMENT) {
             var childNode = choiceChildNodes[k];
             var feedbackId = YUD.getAttribute(childNode, 'data-feedback-identifier');
-            if (feedbackId && feedbackId.length > 0) {
-                continue;
-            }
-            else {
-                htmlContentString = htmlContentString + Util.Xml.serializeToString(choiceChildNodes[k]);
-                //htmlContent = choiceChildNodes[k];
+            if (!(feedbackId && feedbackId.length > 0)) { // Skip data-feedback-identifier nodes
+                htmlContentString = htmlContentString + Util.Xml.serializeToString(childNode);
             }
         }
     }
-    htmlContent = document.createElement('div');
+    */
+    // The 'choice content' is the node's child's child's child's child
+    var choiceChildNodes = choiceNode.getElementById('');
+    for (var k = 0; k < choiceChildNodes.length; ++k) {
+        var childNode = choiceChildNodes[k];
+        if (choiceNode.nodeType == Util.Dom.NodeType.ELEMENT) {
+            htmlContentString = htmlContentString + Util.Xml.serializeToString(childNode);
+        }
+    }
 
     // Response span looks like this:
-    // asi-4-response-0 where the last number is the index of the response
+    // <div id='asi-4-response-0' /> where the last number is the index of the response
     // Renderer and interaction logic looks for this span by this name.        
-    AsiItem.Html.setSpanId(htmlContent,this.mid, index);
-        
+    htmlContent = document.createElement('div');
+    AsiItem.Html.setSpanId(htmlContent, this.mid, index);
+
     htmlContent.innerHTML = htmlContentString;
+
     return htmlContent;
 };
 
-// Feedback elements are contained within the content elements.  Parse those first
-// and remove the audio, and store the identifier.
-AsiItem.Parse.prototype.readFeedbackContent = function (choice, index) {
-    var choiceChildNodes = choice.childNodes;
-    var feedback = null;
+// Find the 'data-feedback-identifier' node and return an object with its info
+AsiItem.Parse.prototype.readFeedbackContent = function (nodes, index) {
 
-    for (var k = 0; k < choiceChildNodes.length; ++k) {
-        if (choiceChildNodes[k].nodeType == 1) {
-            var childNode = choiceChildNodes[k];
+    for (var k = index; k < nodes.length; ++k) {
+        if (nodes[k].nodeType == Util.Dom.NodeType.ELEMENT) {
+            var childNode = nodes[k];
             var feedbackId = YUD.getAttribute(childNode, 'data-feedback-identifier');
-            if (feedbackId && feedbackId.length > 0) {
-                feedback = this.getFeedback(childNode, feedbackId);
+            if (feedbackId && feedbackId.length > 0) { // Only include 'data-feedback'identifier' nodes
+                //var feedbackContainer = document.createElement('div');
+                //feedbackContainer.appendChild(childNode);
+                var feedback = {
+                    identifier: feedbackId,
+                    audioCue: this.processSoundLinks(childNode)
+                    //feedbackContainer: feedbackContainer
+                };
+                return feedback;
             }
         }
     }
-    return feedback;
+
+    return null;
 };
-
-// We've found a feedback element.  Process it.
-AsiItem.Parse.prototype.getFeedback = function (feedbackElement, identifier) {
-    // fetch feedback
-    var feedbackContainer = document.createElement('div');
-
-    feedbackContainer.appendChild(feedbackElement);
-
-    var feedback = {
-        identifier: identifier,
-        audioCue: this.processSoundLinks(feedbackElement),
-        feedbackContainer: feedbackContainer
-    };
-    return feedback;
-};
-

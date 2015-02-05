@@ -99,9 +99,6 @@ Test shell general user interface functionality.
 
         // add button events
         TDS.Button.init();
-
-        // add aria log
-        TDS.ARIA.createLog();
     };
 
     UI.loadDomNodes = function() {
@@ -117,6 +114,7 @@ Test shell general user interface functionality.
         this.Nodes.btnNext = YUD.get('btnNext');
         this.Nodes.btnEnd = YUD.get('btnEnd');
         this.Nodes.btnResults = YUD.get('btnResults');
+        this.Nodes.btnHelp = YUD.get('btnHelp'); // required for global context menu
 
         this.Nodes.testName = YUD.get('lblTestName');
         this.Nodes.tools = YUD.get('studentTools');
@@ -179,15 +177,19 @@ Test shell general user interface functionality.
             return;
         }
 
+        var ariaDisabled = el.attributes['aria-disabled'];
+
         // enable/disable button?
         if (enabled) {
             YUD.addClass(el.parentNode, 'active');
             YUD.removeClass(el.parentNode, 'inactive');
             el.removeAttribute('disabled');
+            ariaDisabled && (ariaDisabled.value = 'false');
         } else {
             YUD.removeClass(el.parentNode, 'active');
             YUD.addClass(el.parentNode, 'inactive');
             el.setAttribute('disabled', 'disabled');
+            ariaDisabled && (ariaDisabled.value = 'true');
         }
     }
     

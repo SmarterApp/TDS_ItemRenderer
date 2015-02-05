@@ -326,28 +326,83 @@ This is used for the ELPA player and recorder widgets.
 
     var playerCount = 0;
 
-    // create a widget from an audio tag and return the id
-    function createPlayerWidget(id) {
+    function createPlayerControls(id, options) {
+        var soundElement = getSoundElement(id),
+            container = createPlayerContainer(soundElement);
 
+        if (options.scrubber) {
+            container.classList.add('audio-layout-scrubber');
+        } else if (options.playStop) {
+            container.classList.add('audio-layout-single');
+        } else {
+            container.classList.add('audio-layout-multi');
+        }
+
+        return {
+            container:  container,
+
+            playStop:   options.playStop  ? createPlayStopButton(container, soundElement) : null,
+            playPause:  options.playPause ? createPlayPauseButton(container, soundElement) : null,
+            rewind:     options.rewind    ? createRewindButton(container, soundElement) : null,
+            scrubber:   options.scrubber  ? createScrubber(container, soundElement) : null
+        };
+    }
+
+    function getSoundElement(id) {
         // check if element exists
-        var linkEl = YUD.get(id);
-        if (!linkEl) return null;
+        var soundElement = YUD.get(id);
+        if (!soundElement) return null;
 
         // create unique id for this sound
         var id;
-        if (linkEl.id) {
-            id = linkEl.id;
+        if (soundElement.id) {
+            id = soundElement.id;
         } else {
             id = 'sound-' + (++playerCount);
-            linkEl.id = id;
+            soundElement.id = id;
         }
 
+        return soundElement;
+    }
+
+    function createPlayerContainer(soundElement) {
+
+        // check for existing container
+        var container = $(soundElement).parent('.audioControls').get(0);
+
+        // create container
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'audioControls ' + CSS_DISABLED;
+        }
+
+        container.id = soundElement.id;
+
+        // wait for player to be ready
+        Player.onReady(function () {
+            // create sound
+            if (Player.createSoundFromElement(soundElement)) {
+                // add to list and remove disabled
+                widgetList.push(container.id);
+                YUD.removeClass(container, CSS_DISABLED);
+            }
+        });
+
+        // replace <a> or <audio> with new <a> 
+        if (container.parentNode) {
+            $(container).empty();
+        } else {
+            $(soundElement).replaceWith(container);
+        }
+
+        return container;
+    }
+
+    function createPlayStopButton(container, soundElement) {
         // create play/stop button
         var playStopEl = document.createElement('a');
-        playStopEl.id = id;
-        playStopEl.className = 'playPause';
+        playStopEl.className = 'sound_repeat';
         playStopEl.setAttribute('href', '#');
-        playStopEl.className = linkEl.className + ' ' + CSS_DISABLED;
 
         // set link events to play/stop sound
         YUE.addListener(playStopEl, 'click', function (ev) {
@@ -356,65 +411,31 @@ This is used for the ELPA player and recorder widgets.
             YUE.stopEvent(ev);
 
             // don't do anything if widget is disabled
-            if (YUD.hasClass(playStopEl, CSS_DISABLED)) return;
+            if (YUD.hasClass(container, CSS_DISABLED)) return;
 
             // don't do anything if recorder is capturing/playing
             if (Recorder.isCapturing() || Recorder.isPlaying()) return;
 
             // check if audio is playing
-            if (YUD.hasClass(playStopEl, 'playing_start')) {
-                Player.stop(playStopEl.id);
+            if (YUD.hasClass(container, 'playing_start')) {
+                Player.stop(container.id);
             } else {
-                Player.play(playStopEl.id);
+                Player.play(container.id);
             }
 
         });
 
-        // make link disabled until player is ready 
-        YUD.addClass(playStopEl, CSS_DISABLED);
+        container.appendChild(playStopEl);
 
         // BUG 119152: add title
         playStopEl.setAttribute('title', 'Play or stop recorded audio.');
 
-        // wait for player to be ready
-        Player.onReady(function () {
-            // create sound
-            if (Player.createSoundFromElement(linkEl)) {
-                // add to list and remove disabled
-                widgetList.push(playStopEl.id);
-                YUD.removeClass(playStopEl, CSS_DISABLED);
-            }
-        });
-
-        // replace <a> or <audio> with new <a> 
-        $(linkEl).replaceWith(playStopEl);
-
-        return {
-            id: playStopEl.id,
-            controls: [playStopEl]
-        };
+        return playStopEl;
     }
 
-    // create a audio player with rewind widget from an audio tag and return the id
-    function createPlayerRewindWidget(target) {
+    function createPlayPauseButton(container, soundElement) {
 
-        // check if element exists
-        var linkEl = YUD.get(target);
-        if (!linkEl) return null;
-
-        // create unique id for this sound
-        var id;
-        if (linkEl.id) {
-            id = linkEl.id;
-        } else {
-            id = 'sound-' + (++playerCount);
-            linkEl.id = id;
-        }
-
-        // create container
-        var audioControlsEl = document.createElement('div');
-        audioControlsEl.id = id;
-        audioControlsEl.className = 'audioControls ' + CSS_DISABLED;
+        var id = container.id;
 
         // create play/pause button
         var playPauseEl = document.createElement('a');
@@ -430,21 +451,21 @@ This is used for the ELPA player and recorder widgets.
             YUE.stopEvent(ev);
 
             // don't do anything if widget is disabled
-            if (YUD.hasClass(audioControlsEl, CSS_DISABLED)) return;
+            if (YUD.hasClass(container, CSS_DISABLED)) return;
 
             // don't do anything if recorder is capturing/playing
             if (Recorder.isCapturing() || Recorder.isPlaying()) return;
 
             //Player is playing/paused
-            if (YUD.hasClass(audioControlsEl, 'playing_start') ||
-                YUD.hasClass(audioControlsEl, 'playing_resume')) {
+            if (YUD.hasClass(container, 'playing_start') ||
+                YUD.hasClass(container, 'playing_resume')) {
                 Player.pause(id);
             }
-            else if (YUD.hasClass(audioControlsEl, 'playing_pause')) {
+            else if (YUD.hasClass(container, 'playing_pause')) {
                 Player.resume(id);
             }
-            else if (YUD.hasClass(audioControlsEl, 'playing_done') ||
-                    (!YUD.hasClass(audioControlsEl, 'playing_start') || !YUD.hasClass(audioControlsEl, 'playing_resume'))) {
+            else if (YUD.hasClass(container, 'playing_done') ||
+                    (!YUD.hasClass(container, 'playing_start') || !YUD.hasClass(container, 'playing_resume'))) {
                 Player.play(id);
             }
             else {
@@ -452,7 +473,14 @@ This is used for the ELPA player and recorder widgets.
             }
         });
 
-        audioControlsEl.appendChild(playPauseEl);
+        container.appendChild(playPauseEl);
+
+        return playPauseEl;
+    }
+
+    function createRewindButton(container, soundElement) {
+
+        var id = container.id;
 
         // create rewind button
         var rewindEl = document.createElement('a');
@@ -464,29 +492,59 @@ This is used for the ELPA player and recorder widgets.
 
         YUE.addListener(rewindEl, 'click', function (ev) {
             YUE.stopEvent(ev);
-            if (!YUD.hasClass(audioControlsEl, 'playing_done')) {
+            if (!YUD.hasClass(container, 'playing_done')) {
                 Player.stop(id);
             }
         });
 
-        audioControlsEl.appendChild(rewindEl);
+        container.appendChild(rewindEl);
 
-        // wait for player to be ready
-        Player.onReady(function () {
-            // create sound from original link
-            if (Player.createSoundFromElement(linkEl)) {
-                // add to list and remove disabled
-                widgetList.push(id);
-                YUD.removeClass(audioControlsEl, CSS_DISABLED);
-            }
+        return rewindEl;
+    }
+
+    function createScrubber(container, soundElement) {
+        var scrubber = Audio.Widget.createScrubber(container.id);
+
+        scrubber.render(container);
+
+        return scrubber.getElement();
+    }
+
+    // create a widget from an audio tag and return the id
+    function createPlayerWidget(id) {
+        var controls = createPlayerControls(id, {
+            playStop: true
         });
 
-        // replace <a> or <audio> with new <div> 
-        $(linkEl).replaceWith(audioControlsEl);
+        return {
+            id: controls.container.id,
+            controls: [controls.playStop]
+        };
+    }
+
+    // create a audio player with rewind widget from an audio tag and return the id
+    function createPlayerRewindWidget(id) {
+        var controls = createPlayerControls(id, {
+            playPause: true,
+            rewind: true
+        });
 
         return {
-            id: id,
-            controls: [playPauseEl, rewindEl]
+            id: controls.container.id,
+            controls: [controls.playPause, controls.rewind]
+        };
+    }
+
+    // create a audio player with play/pause and scrubber
+    function createPlayerScrubberWidget(id) {
+        var controls = createPlayerControls(id, {
+            playPause: true,
+            scrubber: true
+        });
+
+        return {
+            id: controls.container.id,
+            controls: [controls.playPause, controls.scrubber]
         };
     }
 
@@ -499,7 +557,7 @@ This is used for the ELPA player and recorder widgets.
         return _closedCaptioningContainer;
     }
 
-    function renderTracksForSound(id, fireCueChange) {
+    function renderTracksForSound(id) {
 
         var visibleTracks = Player.getTextTracks(id).filter(function (track) {
             return track.mode === captionator.TextTrack.SHOWING;
@@ -528,31 +586,27 @@ This is used for the ELPA player and recorder widgets.
                 wrapper.html(visibleCues);
             };
 
-            if (fireCueChange) {
-                track.oncuechange();
-            }
+            track.oncuechange();
         });
     }
 
     function createClosedCaptionWidget() {
 
-        Player.onStop.subscribe(function (id) {
+        function hideCaptions(id) {
             // hide the captions
             getClosedCaptioningContainer().toggleClass('tdsClosedCaptioningActive', false);
-        });
+        }
+
+        Player.onStop.subscribe(hideCaptions);
+        Player.onPause.subscribe(hideCaptions);
 
         Player.onFinish.subscribe(function (id) {
             // hide the captions after a few seconds
             getClosedCaptioningContainer().delay(3000, 'closedCaptionQueue').toggleClass('tdsClosedCaptioningActive', false);
         });
 
-        Player.onPlay.subscribe(function (id) {
-            renderTracksForSound(id, false);
-        });
-
-        Player.onResume.subscribe(function (id) {
-            renderTracksForSound(id, true);
-        });
+        Player.onPlay.subscribe(renderTracksForSound);
+        Player.onResume.subscribe(renderTracksForSound);
     }
 
     function createSourceSelect(id, onselect) {
@@ -790,6 +844,7 @@ This is used for the ELPA player and recorder widgets.
         setupPlayerEvents();
         TDS.Audio.Widget.createPlayer = createPlayerWidget;
         TDS.Audio.Widget.createPlayerRewind = createPlayerRewindWidget;
+        TDS.Audio.Widget.createPlayerScrubber = createPlayerScrubberWidget;
         TDS.Audio.Widget.getPlayer = function (id) {
             return playerLookup[id];
         };

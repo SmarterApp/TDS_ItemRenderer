@@ -17,6 +17,8 @@ Simulator.Animation.HTML5Shell = function(sim, theSimID) {
     var statusReturnInterval = 1 * 1000; // in milliseconds
 //    var animationFinishedDelayTimer = null;
     var animationFinishedDelay = 1000; // 1 second
+    var simLanguage = null;
+    var accessibilityMode = null;
 
     var dbg = function() {
         return sim.getDebug();
@@ -47,6 +49,8 @@ Simulator.Animation.HTML5Shell = function(sim, theSimID) {
                 simHeight = iFrame.height;
                 simCallback = parameters.callback;
                 outputOnReq = parameters.outputOnReq;
+                simLanguage = parameters.simLanguage;
+                accessibilityMode = parameters.accessibilityMode; // this is a STRING: 'true' or 'false'
 
                 debug('In initialize');
                 simWidth1 = simWidth;
@@ -58,11 +62,15 @@ Simulator.Animation.HTML5Shell = function(sim, theSimID) {
                         behavior : behavior,
                         callback : this.fromAnimationInterface,
                         simHeight: simHeight,
-                        simWidth: simWidth
+                        simWidth: simWidth,
+                        simLanguage: simLanguage,
+                        accessibilityMode: accessibilityMode
                     };
                     debug('animationParams.behavior = '+ animationParams.behavior);
                     debug('animationParams.simHeight = '+ animationParams.simHeight);
-                    debug('animationParams.simWidth = '+ animationParams.simWidth);
+                    debug('animationParams.simWidth = ' + animationParams.simWidth);
+                    debug('animationParams.simLanguage = ' + animationParams.simLanguage);
+                    debugf('animationParams.accessibilityMode = ' + animationParams.accessibilityMode);
                     debug('Calling init in the animation interface');
                     var status = iFrame.contentWindow.init(this, animationParams);
                     if (status === Simulator.Constants.SUCCESS) {
@@ -151,7 +159,8 @@ Simulator.Animation.HTML5Shell = function(sim, theSimID) {
                     iFrame.contentWindow.updateInputs(inputs);
                     //sendInfo(Simulator.Constants.ANIMATION_STARTED);
                     iFrame.contentWindow.playAnimation();
-                    if (behavior === Simulator.Constants.INTERACTIVE_ANIMATION) {
+                    if (behavior === Simulator.Constants.INTERACTIVE_ANIMATION ||
+                        accessibilityMode == true) {
                             setTimeout(function() {
                                 sendInfo(Simulator.Constants.ANIMATION_FINISHED);
                               }, animationFinishedDelay);
@@ -203,6 +212,13 @@ Simulator.Animation.HTML5Shell = function(sim, theSimID) {
             debug("Received data from formatOutput: " + data);
             sendOutputToSimulator(Simulator.Constants.PARAM_OUTPUT, data);
             break;
+        case Simulator.Constants.ALT_TEXT_REQ_CMD: // ALT TEXT
+            var altText = getAltText();
+            debug("HTML5Shell.processCommand() with Simulator.Constants.ALT_TEXT_REQ_CMD, altText = "
+                    + altText);
+            var data = altText;
+            sendOutputToSimulator(Simulator.Constants.PARAM_ALT_TEXT, data);
+            break;
         case Simulator.Constants.ANIMATION_REPORT_STATUS:
             sendStatusRequest();
             break;
@@ -248,6 +264,13 @@ Simulator.Animation.HTML5Shell = function(sim, theSimID) {
     var reStart = function() {
         iFrame.contentWindow.gotoAndStop(Simulator.Constants.START_FRAME);
         iFrame.contentWindow.playAnimation();
+    };
+
+    var getAltText = function () {
+        if (iFrame.contentWindow.getAltText)
+            return iFrame.contentWindow.getAltText();
+        else
+            return '';
     };
 
     var formatOutput = function(dataArray) {

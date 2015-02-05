@@ -5,12 +5,13 @@ Plugin/Widget manager for passage and items
 (function (CM) {
 
     // list of plugins and widgets
+    var regCount = 0;
     var registrations = [];
 
     // sort plugins and widgets by priority
     function sort(arr) {
         Util.Array.sort(arr, function (obj1, obj2) {
-            return Util.Array.numericSort(obj1.priority, obj2.priority);
+            return (obj1.priority - obj2.priority) || (obj1.order - obj2.order);
         });
     }
 
@@ -19,7 +20,8 @@ Plugin/Widget manager for passage and items
         var reg = {
             name: name,
             cls: cls,
-            match: match
+            match: match,
+            order: regCount++
         }
         // set options
         if (opts) {
@@ -44,7 +46,7 @@ Plugin/Widget manager for passage and items
     function extendWidget(cls) {
         YAHOO.lang.extend(cls, CM.ItemWidget);
     }
-   
+
     function registerPlugin(name, cls, match, opts) {
         extendPlugin(cls);
         addRegistration(name, cls, match, opts, {
@@ -73,6 +75,31 @@ Plugin/Widget manager for passage and items
 
         return instance;
     }
+
+    // this function can perform any postprocessing on the widget config
+    function processWidgetConfig(reg, config) {
+        // make non-input a role of group
+        if (!Util.Dom.isTextInput(config.element)) {
+            // check for existing role
+            var existingRole = config.element.getAttribute('role');
+            if (!existingRole) {
+                // add new role
+                config.element.setAttribute('role', 'group');
+            }
+        }
+        // check for existing label
+        var label = config.element.getAttribute('aria-label');
+        if (!label) {
+            // add aria-label
+            var labelKey = 'cm.widget.label.' + reg.name;
+            if (Messages.has(labelKey)) {
+                label = Messages.get(labelKey);
+            } else {
+                label = reg.name;
+            }
+            config.element.setAttribute('aria-label', label);
+        }
+    }
     
     // find plugin/widget matches in a registration list
     // return instances of the matches created
@@ -91,6 +118,7 @@ Plugin/Widget manager for passage and items
             // make sure widgets get a special config
             if (reg.widget) {
                 Util.Assert.isInstanceOf(CM.WidgetConfig, config, 'The match() function must return a WidgetConfig.');
+                processWidgetConfig(reg, config);
             }
             var instance = create(reg.cls, page, entity, config);
             instances.push(instance);

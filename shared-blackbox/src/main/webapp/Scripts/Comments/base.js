@@ -104,6 +104,7 @@ TestShell.Comments.Base.prototype.render = function() {
     var input = this._createInput();
 
     if (input != null) {
+        $(input).attr('aria-labelledby', dialog.header.id);
         dialog.form.appendChild(input);
     }
 };

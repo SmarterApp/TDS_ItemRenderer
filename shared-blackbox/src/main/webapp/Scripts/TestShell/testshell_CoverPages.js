@@ -45,6 +45,10 @@ ContentManager.onPageEvent('rendering', function(contentPage)
     {
         // TODO: add preloading of cover pages
         coverPage = new TestShell.PageResource(cpInfo.bankKey, cpInfo.itemKey, contentPage.segmentID);
+        coverPage.getPageTitle = function() { //set page title to generic "Cover Page", since no pageNum assigned by ITS
+            return "Cover Page";
+        };
+        
         TestShell.CoverPages.add(coverPage); // add to collection
     }
 

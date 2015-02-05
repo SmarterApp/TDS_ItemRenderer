@@ -92,6 +92,28 @@
         return null;
     };
 
+    // move next or back
+    MC.prototype.navigate = function(dir) {
+        // check if mc option is focused
+        var focusedOption = this.getFocusedOption();
+        if (!focusedOption) {
+            return null;
+        }
+        // move to the next/prev option
+        var iter = new Util.Iterator(this.getOptions());
+        iter.jumpTo(focusedOption);
+        var option;
+        if (dir == 'prev') {
+            option = iter.prev();
+        } else {
+            option = iter.next();
+        }
+        if (option) {
+            this.getItem().setActiveComponent(option.getElement());
+        }
+        return option;
+    };
+
     // render options into a container element
     MC.prototype.render = function (el) {
         if (el) {

@@ -70,22 +70,38 @@
 
     YAHOO.lang.extend(ClosedCaptioningPlugin, audio.PlayerPlugin);
 
+    function getPropertyOrAttributeValue(element, name) {
+        // we may get a <track> element which is an instance of TextTrack,
+        // or we may get a <track> element which is just a ad-hoc element (like when it is a child of a <div>)
+        // so we need to check the property AND the attribute values
+        return element[name] || element.getAttribute(name);
+    }
+
     ClosedCaptioningPlugin.prototype.parseSource = function (element, source) {
-        var haveTextTrack = false;
+        var haveTextTrack = false,
+            tracksElements = element.getElementsByTagName('track');
 
-        if (element instanceof HTMLAudioElement) {
+        if (tracksElements.length) {
 
-            source.tracks = Array.prototype.map.call(element.getElementsByTagName('track'), function (track) {
+            source.tracks = Array.prototype.map.call(tracksElements, function (track) {
                 return {
-                    src: track.src,
-                    kind: track.kind,
-                    lang: track.srclang,
-                    label: track.label,
-                    isDefault: track.default
+                    src:        getPropertyOrAttributeValue(track, 'src'),
+                    kind:       getPropertyOrAttributeValue(track, 'kind'),
+                    lang:       getPropertyOrAttributeValue(track, 'srclang'),
+                    label:      getPropertyOrAttributeValue(track, 'label'),
+                    isDefault:  getPropertyOrAttributeValue(track, 'default')
                 };
             });
 
-        } else if (element instanceof HTMLAnchorElement && element.getAttribute('texttrack') !== null) {
+            var haveDefault = source.tracks.some(function (track) {
+                return track.isDefault;
+            });
+
+            if (!haveDefault && source.tracks.length) {
+                source.tracks[0].isDefault = true;
+            }
+
+        } else if (element.getAttribute('texttrack') !== null) {
 
             source.tracks = [{
                 src: source.url.replace(/(file=\w+.)(?:\w+)/, '$1vtt'),

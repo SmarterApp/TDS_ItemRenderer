@@ -37,16 +37,16 @@ EditItem.InteractionSet = function () {
     };
 
     // Return the response for scoring
-    this.getXmlResponse = function () {
+    this.getResponse = function () {
+        var isValid = false;
         var responseBody = '';
         this.forEachInteraction(function (interaction) {
-            responseBody = responseBody + interaction.getXmlResponse();
+            isValid = isValid || interaction.getResponse().isValid; // if isValid is true when any interaction is answered in the case of multiple interactions in an item
+            responseBody = responseBody + interaction.getResponse().responseBody;
         });
 
-        if (responseBody.length == 0)
-            return '';
         var rv = '<testeeResponse>' + responseBody + '</testeeResponse>';
-        return rv;
+        return { isValid: isValid, responseBody: rv };
     };
 
     // Parse the XML from the server, and update the object 
@@ -144,20 +144,25 @@ EditItem.Interaction.Choice = function (parentId, identifier, shuffle, inlineCho
         
     };
     
-    this.getXmlResponse = function () {
+    this.getResponse = function () {
         var responseBody = '';
+        var nonDefaultChosen = false;
+        var defaultChoice = this.getDefaultChoice();
         this.forEachInlineChoice(function (choice) {
-            if ((choice.selected === true) && (choice.showDefault === false))
-                responseBody = '<value responseIdentifier="' + this.getId() + '" choiceIdentifier="' + choice.identifier + '">' + choice.identifier + '</value>\n';
+            if ((choice.selected === true) && (choice.showDefault === false)) {
+                responseBody = '<value responseIdentifier="' + this.getId() + '" choiceIdentifier="' + defaultChoice.identifier + '">' + choice.identifier + '</value>\n';
+                nonDefaultChosen = true;
+            }
         });
-        return responseBody;
+        if (!nonDefaultChosen) {
+            responseBody = '<value responseIdentifier="' + this.getId() + '"/>\n';
+        }
+        return { isValid: nonDefaultChosen, responseBody: responseBody };
     };
-
 };
 
 // ctor for the open text interaction.  This is simpler than the drop-down one so not much here.
 EditItem.Interaction.Text = function (parentId, identifier, content) {
-    var self = this;
     this.responseValue = '';
     EditItem.Interaction.call(this, parentId, identifier);
 
@@ -173,11 +178,12 @@ EditItem.Interaction.Text = function (parentId, identifier, content) {
         return content;
     };
 
-    this.getXmlResponse = function () {
-        if (self.responseValue && /\S/.test(self.responseValue))
-            return '<value responseIdentifier="' + this.getId() + '">' + self.responseValue + '</value>\n';
-
-        return '';
+    this.getResponse = function () {
+        if (this.responseValue && /\S/.test(this.responseValue)) {
+            return { isValid: true, responseBody: '<value responseIdentifier="' + this.getId() + '">' +this.responseValue + '</value>\n' };
+        } else {
+            return { isValid: false, responseBody: '<value responseIdentifier="' + this.getId() + '"/>\n' };
+        }
     };
 };
 

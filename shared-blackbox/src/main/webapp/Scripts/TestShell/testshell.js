@@ -21,7 +21,7 @@ The main test shell entry code.
 
         muted: false, // did we mute the volume for this test?
 
-        allowUnloading: false // indicates when to allow user to navigate away from test shell
+        isUnloading: false  // Flag indicating that the testshell is currently in the process of unloading (due to pause or end test). Timers can inspect this to determine if they should run or stop
     };
 
     // gets loaded from TestShellScripts.ascx code behind AddTestConfig()
@@ -70,17 +70,21 @@ The main test shell entry code.
         }
     };
 
-    // this function to unload the test shell
+    // let the user confirm they want to exit the test
     TS.unload = function (event) {
-        // Check if the navigation away from this page is allowed. If not, give the user a warning
-        if (!TS.allowUnloading) {
+
+        if (TDS.unloader.initiateUnload()) {
+            // navigation away from this page is not allowed, give the user a warning
             return Messages.getAlt('TestShell.Label.leavingPageAlert', 'You are attempting to leave the test. If you select OK, the test will be paused. Select cancel to continue your test.');
         }
+
+        // Set the unload state
+        TS.isUnloading = true;
 
         // always try and stop TTS before leaving a page
         TTS.Manager.stop();
     };
-    
+
     // this function helps with unloading the SecureBrowser
     TS.unloadSB = function (event) {
         // check if we muted the test during start and it is still muted
@@ -101,6 +105,11 @@ The main test shell entry code.
 
         // initialize the TDS object and load global configs
         TDS.init();
+        
+        // set lang tag on <html>
+        if (TDS.getLanguage() == 'ESN') {
+            $('html').attr('lang', 'es'); // set <html> lang to Spanish, otherwise default to English
+        }
 
         // check if enhanced accessibility mode is enabled
         var accProps = TDS.getAccProps();
@@ -170,9 +179,10 @@ The main test shell entry code.
 
         // let everyone know the test shell has been initialized
         TS.Events.fire('init');
+		// We don't need to override anything from testshell this time 01/27/2015
         //TODO Sajib/Shiva: May be we can call sbacossChanges on "init" event.
         //that way we will not have any code modifications.
-        sbacossChanges();
+        //sbacossChanges();
     };
 
     // attach DOM events to the test shell
@@ -494,18 +504,18 @@ The main test shell entry code.
     };
 
     TS.redirectProxyLogout = function () {
-        TS.allowUnloading = true;
+        TDS.unloader.disable();
         TDS.logoutProctor(false);
     };
 
     TS.redirectLogin = function () {
-        TS.allowUnloading = true;
+        TDS.unloader.disable();
         TS.UI.showLoading('');
         top.location.href = TDS.getLoginUrl();
     };
 
     TS.redirectReview = function () {
-        TS.allowUnloading = true;
+        TDS.unloader.disable();
         TS.UI.showLoading('');
         var url = TDS.baseUrl + 'Pages/ReviewShell.aspx';
         top.location.href = url;
@@ -513,7 +523,7 @@ The main test shell entry code.
 
     // redirect to the error page
     TS.redirectError = function (text) {
-        TS.allowUnloading = true;
+        TDS.unloader.disable();
         var url = TDS.baseUrl + 'Pages/Notification.aspx';
 
         if (YAHOO.util.Lang.isString(text)) {
@@ -532,6 +542,9 @@ The main test shell entry code.
         if (!(TS.Config.forbiddenAppsInterval > 0)) {
             return false;
         }
+        
+        if (TS.isUnloading)
+            return false;  // TS is unloading. No need to show an alert fb# 152367 (similar)
 
         // check if this school is excluded
         if (Util.Browser.readCookie('TDS-Student-ExcludeSchool') == 'True') {
@@ -564,9 +577,13 @@ The main test shell entry code.
             return false;
         }
 
+        if (TS.isUnloading) return false;  // TS is unloading. No need to show an alert fb# 152367
+
         // if the environment security has been breached, alert user and log them out
-        if (!Util.SecureBrowser.isEnvironmentSecure()) {
-            var error = Messages.getAlt('TestShell.Alert.EnvironmentInsecure', 'Environment is not secure. Your test will be paused.');
+        var securityCheckResult = Util.SecureBrowser.isEnvironmentSecure();
+        if (securityCheckResult != null && (!securityCheckResult.secure)) {
+            var errorMessageKey = (securityCheckResult.messageKey != null) ? securityCheckResult.messageKey : 'TestShell.Alert.EnvironmentInsecure';
+            var error = Messages.getAlt(errorMessageKey, 'Environment is not secure. Your test will be paused.');
             TS.UI.showAlert('Error', error, function () {
                 TS._pauseInternal(true, 'Environment Security', TS.Config.disableSaveWhenEnvironmentCompromised);
             });

@@ -9,9 +9,11 @@
 
 .asi-stem {
     margin-bottom: 1em;
+	position: relative;
+	min-height: 6.5em;
 }
 .asi-stem p {
-	padding:0.2em;
+	padding: 0.2em 0.2em 0.2em 7em;
 }
 /*.asi-stem p img {
 	height: 200px;
@@ -200,8 +202,11 @@
 
 /*  Multiple Choice rebuild */
 .stemContainer.asi-stem button.asi-playback-span{
-	width: 20em;
+	width: 6em;
 	height: 6em;
+	position: absolute;
+	top: 0.5em;
+	left: 0.5em;
 }
 
 .asi-complete-span{
@@ -219,9 +224,13 @@
 	line-height: 2em;
 	background: url(arrow.png) no-repeat center center #fff;
 }
-.layout25 .asi-complete-span{
-	left: 45%;  /*Changed to accomodate Hawaii Alt.  Was 25% */
-	width: 30em; /* Changed to accomodate hawaii Alt.  Was 50% */
+/*.layout25 .asi-complete-span{ I think we want this disabled with the moving of the Next Item window in 2015 */
+	/* left: 45%;  Changed to accomodate Hawaii Alt.  Was 25% */
+	/* width: 30em;  Changed to accomodate hawaii Alt.  Was 50% */
+/*}*/
+
+.itemContainer.hiding .asi-complete-span {
+    visibility: hidden;
 }
 
 

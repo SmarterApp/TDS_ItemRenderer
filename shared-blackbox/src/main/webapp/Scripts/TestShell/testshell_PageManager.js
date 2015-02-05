@@ -510,19 +510,10 @@ TestShell.PageManager.Events.subscribe('onShow', function(page) {
     setTimeout(function() {
         // if this is a content page and ARIA is enabled then focus on the content div
         if (isPageContent && ContentManager.enableARIA) {
-            var contentFocuser = YUD.get('contentsFocuser');
-            if (!contentFocuser) {
-                contentFocuser = document.createElement('a');
-                contentFocuser.id = 'contentsFocuser';
-                contentFocuser.className = 'element-invisible';
-                contentFocuser.setAttribute('tabindex', '-1');
-                document.body.appendChild(contentFocuser);
-            }
-            // set text to speak and focus on it (this triggers JAWS to read the text)
+            // set text to speak for JAWS
             var screenReaderText = page.getScreenReaderText();
             if (screenReaderText) {
-                contentFocuser.innerHTML = screenReaderText;
-                contentFocuser.focus();
+                TDS.ARIA.setStatus(screenReaderText);
             }
         } else {
             // BUG #22684: Focus stays on NEXT button

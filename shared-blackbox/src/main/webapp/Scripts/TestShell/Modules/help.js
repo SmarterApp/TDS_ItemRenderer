@@ -14,6 +14,7 @@ Code used for showing help popup.
         if (panel == null) {
             var headerText = window.Messages.getAlt('TestShell.Label.HelpGuide', 'Help');
             panel = TM.createPanel(id, 'helpguide', headerText, null, key);
+            $(panel.close).attr('href', '#');
         }
 
         TM.toggle(panel);

@@ -45,7 +45,7 @@ Sections.Accommodations.prototype.load = function (segmentsAccommodations)
         segmentsContainer.appendChild(segmentContainer);
 
         // create segment header
-        var segmentHeader = HTML.H3(null, segmentAccommodations.getLabel());
+        var segmentHeader = HTML.H2(null, segmentAccommodations.getLabel());
         segmentContainer.appendChild(segmentHeader);
 
         // create segment accommodations

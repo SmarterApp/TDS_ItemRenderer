@@ -394,14 +394,14 @@
 
         this._imagesLoading.push(image);
 
-        // Internet Explorer doesn't reliably raise LOAD events on images, so we must use READY_STATE_CHANGE.
+        // Internet Explorer prior to IE 11 doesn't reliably raise LOAD events on images, so we must use READY_STATE_CHANGE.
         // If the image is cached locally, IE won't fire the LOAD event while the
         // onreadystate event is fired always. On the other hand, the ERROR event
         // is always fired whenever the image is not loaded successfully no matter
         // whether it's cached or not.
 
         // add dom events
-        var loadEvent = YAHOO.env.ua.ie ? 'readystatechange' : 'load';
+        var loadEvent = (YAHOO.env.ua.ie && YAHOO.env.ua.ie < 11) ? 'readystatechange' : 'load';
         YUE.addListener(image, loadEvent, this._onImageEvent, image, this);
         YUE.addListener(image, 'abort', this._onImageEvent, image, this);
         YUE.addListener(image, 'error', this._onImageEvent, image, this);
@@ -497,7 +497,7 @@
         // this._log('image ' + evt.type + ' - ' + image.src);
 
         // remove dom events
-        var loadEvent = YAHOO.env.ua.ie ? 'readystatechange' : 'load';
+        var loadEvent = (YAHOO.env.ua.ie && YAHOO.env.ua.ie < 11) ? 'readystatechange' : 'load';
         YUE.removeListener(image, loadEvent, this._onImageEvent);
         YUE.removeListener(image, 'abort', this._onImageEvent);
         YUE.removeListener(image, 'error', this._onImageEvent);

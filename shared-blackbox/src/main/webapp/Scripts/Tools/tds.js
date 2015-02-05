@@ -2,239 +2,268 @@
 var TDS = window.TDS || {};
 var tds = TDS; // alias
 
-TDS._initialized = false;
-TDS.buildNumber = 0;
-TDS.baseUrl = '';
-TDS.messages = null; // messageSystem instance
-TDS.globalAccommodations = null;
-TDS.testeeCheckin = null;
-TDS.clientStylePath = null;
+(function(TDS) {
 
-// app flags
-TDS.isProxyLogin = false;
-TDS.isDataEntry = false;
-TDS.isReadOnly = false;
-TDS.isSIRVE = false;
-TDS.inPTMode = false;
-TDS.showItemScores = false;
+    TDS._initialized = false;
+    TDS.buildNumber = 0;
+    TDS.baseUrl = '';
+    TDS.messages = null; // messageSystem instance
+    TDS.globalAccommodations = null;
+    TDS.testeeCheckin = null;
+    TDS.clientStylePath = null;
 
-// global app settings 
-TDS.Settings = {};
+    // app flags
+    TDS.isProxyLogin = false;
+    TDS.isDataEntry = false;
+    TDS.isReadOnly = false;
+    TDS.isSIRVE = false;
+    TDS.inPTMode = false;
+    TDS.showItemScores = false;
 
-// global debug settings
-TDS.Debug = {
-    showExceptions: false,
-    ignoreForbiddenApps: false,
-    ignoreBrowserChecks: false
-};
+    // global app settings 
+    TDS.Settings = {};
 
-TDS.init = function () {
+    // global debug settings
+    TDS.Debug = {
+        showExceptions: false,
+        ignoreForbiddenApps: false,
+        ignoreBrowserChecks: false
+    };
 
-    if (TDS._initialized) {
-        return;
-    }
+    TDS.init = function () {
 
-    // loads configs
-    if (TDS.Config) {
-        TDS.Config.load();
-    }
-
-    if (TDS.messages) {
-        // set message system language callback
-        TDS.messages._getLanguage = TDS.getLanguage;
-
-        // update i18n messages on the page
-        TDS.Messages.Template.processLanguage();
-    }
-
-    TDS._initialized = true;
-    Util.log('TDS INIT');
-};
-
-// get current accommodations 
-// NOTE: one stop shop to get accommodations no matter where we are
-TDS.getAccommodations = function () {
-
-    // check if login shell
-    if (typeof LoginShell == 'object' && LoginShell.segmentsAccommodations != null) {
-        return LoginShell.segmentsAccommodations[0];
-    }
-
-    // check if test shell
-    if (typeof ContentManager == 'object') {
-        var page = ContentManager.getCurrentPage();
-        if (page) {
-            return page.getAccommodations();
+        if (TDS._initialized) {
+            return;
         }
-    }
 
-    // check accommodations manager
-    var accommodations = Accommodations.Manager.getCurrent();
-    if (accommodations) {
-        return accommodations;
-    }
+        // loads configs
+        if (TDS.Config) {
+            TDS.Config.load();
+        }
 
-    // finally try global accommodations
-    return TDS.globalAccommodations;
-};
+        if (TDS.messages) {
+            // set message system language callback
+            TDS.messages._getLanguage = TDS.getLanguage;
 
-TDS.getAccs = TDS.getAccommodations;
+            // update i18n messages on the page
+            TDS.Messages.Template.processLanguage();
+        }
 
-// get current accommodation properties
-TDS.getAccommodationProperties = function() {
-    var accommodations = TDS.getAccommodations();
-    return new Accommodations.Properties(accommodations);
-};
+        if (TDS.unloader && TDS.isProxyLogin) {
+            TDS.unloader.promptToDisablePopupBlocker();
+        }
 
-TDS.getAccProps = TDS.getAccommodationProperties;
+        TDS._initialized = true;
+        Util.log('TDS INIT');
+    };
 
-// get all the languages for this client
-TDS.getLanguages = function() {
-    var accGlobalProps = new Accommodations.Properties(TDS.globalAccommodations);
-    return accGlobalProps.getLanguages();
-};
+    // get current accommodations 
+    // NOTE: one stop shop to get accommodations no matter where we are
+    TDS.getAccommodations = function () {
 
-// get the currently selected language
-TDS.getLanguage = function() {
-    var accProps = TDS.getAccommodationProperties();
-    return accProps.getLanguage();
-};
+        // check if login shell
+        if (typeof LoginShell == 'object' && LoginShell.segmentsAccommodations != null) {
+            return LoginShell.segmentsAccommodations[0];
+        }
 
-// resolve a path to the base of the site
-TDS.resolveBaseUrl = function(path) {
-    var url = TDS.baseUrl + (path || '');
-    return Util.Browser.resolveUrl(url);
-};
+        // check if test shell
+        if (typeof ContentManager == 'object') {
+            var page = ContentManager.getCurrentPage();
+            if (page) {
+                return page.getAccommodations();
+            }
+        }
 
-// call this function to redirect to another url
-TDS.redirect = function(url) {
-    if (TDS.Dialog) {
-        TDS.Dialog.showProgress();
-    }
+        // check accommodations manager
+        var accommodations = Accommodations.Manager.getCurrent();
+        if (accommodations) {
+            return accommodations;
+        }
 
-    // if raw is to true then don't include base url
-    var raw = Util.String.isHttpProtocol(url);
-    if (raw !== true) {
-        url = this.baseUrl + url;
-    }
+        // finally try global accommodations
+        return TDS.globalAccommodations;
+    };
 
-    setTimeout(function() {
-        top.window.location.href = url;
-    }, 1);
-};
+    TDS.getAccs = TDS.getAccommodations;
 
-TDS.redirectError = function(key, header, context) {
-    var url = TDS.baseUrl + 'Pages/Notification.aspx';
+    // get current accommodation properties
+    TDS.getAccommodationProperties = function () {
+        var accommodations = TDS.getAccommodations();
+        return new Accommodations.Properties(accommodations);
+    };
 
-    if (YAHOO.lang.isString(key)) {
-        var message = Messages.get(key);
-        url += '?messageKey=' + encodeURIComponent(message);
-    }
+    TDS.getAccProps = TDS.getAccommodationProperties;
 
-    if (YAHOO.lang.isString(header)) {
-        //add header key if one has been passed.
-        url = url + "&header=" + encodeURIComponent(header);
-    }
+    // get all the languages for this client
+    TDS.getLanguages = function () {
+        var accGlobalProps = new Accommodations.Properties(TDS.globalAccommodations);
+        return accGlobalProps.getLanguages();
+    };
 
-    if (YAHOO.lang.isString(context)) {
-        //add header key context. 
-        url = url + "&context=" + encodeURIComponent(context);
-    }
+    // get the currently selected language
+    TDS.getLanguage = function () {
+        var accProps = TDS.getAccommodationProperties();
+        return accProps.getLanguage();
+    };
 
-    top.location.href = url;
-};
+    // resolve a path to the base of the site
+    TDS.resolveBaseUrl = function (path) {
+        var url = TDS.baseUrl + (path || '');
+        return Util.Browser.resolveUrl(url);
+    };
 
-// redirects to the test shell
-TDS.redirectTestShell = function (pageNum, itemNum) {
-    var redirectUrl;
-    var accProps = TDS.getAccommodationProperties();
+    // call this function to redirect to another url
+    TDS.redirect = function (url) {
+        if (TDS.Dialog) {
+            TDS.Dialog.showProgress();
+        }
 
-    // figure out url
-    if (accProps.isTestShellModern()) {
-        redirectUrl = 'Pages/TestShell.aspx?name=modern';
-    } else {
-        redirectUrl = 'Pages/TestShell.aspx';
-    }
+        // if raw is to true then don't include base url
+        var raw = Util.String.isHttpProtocol(url);
+        if (raw !== true) {
+            url = this.baseUrl + url;
+        }
 
-    // add optional page 
-    if (pageNum > 0) {
-        redirectUrl += (redirectUrl.indexOf('?') != -1) ? '&' : '?';
-        redirectUrl += 'page=' + pageNum;
-    }
+        setTimeout(function () {
+            top.window.location.href = url;
+        }, 1);
+    };
 
-    // add optional item
-    if (itemNum > 0) {
-        redirectUrl += (redirectUrl.indexOf('?') != -1) ? '&' : '?';
-        redirectUrl += 'item=' + itemNum;
-    }
+    TDS.redirectError = function (key, header, context) {
+        var url = TDS.baseUrl + 'Pages/Notification.aspx';
 
-    TDS.redirect(redirectUrl);
-};
+        if (YAHOO.lang.isString(key)) {
+            var message = Messages.get(key);
+            url += '?messageKey=' + encodeURIComponent(message);
+        }
 
-TDS.getLoginUrl = function() {
+        if (YAHOO.lang.isString(header)) {
+            //add header key if one has been passed.
+            url = url + "&header=" + encodeURIComponent(header);
+        }
 
-    var url;
+        if (YAHOO.lang.isString(context)) {
+            //add header key context. 
+            url = url + "&context=" + encodeURIComponent(context);
+        }
 
-    // check for return url
-    if (typeof TDS.Student == 'object') {
-        url = TDS.Student.Storage.getReturnUrl();
-    }
+        top.location.href = url;
+    };
 
-    // if proxy and a return url is specified, we will go here instead
-    if (TDS.isProxyLogin) {
-        url = TDS.Student.Storage.getProctorReturnUrl() || url ;
-    }
+    // redirects to the test shell
+    TDS.redirectTestShell = function (pageNum, itemNum) {
+        var redirectUrl;
+        var accProps = TDS.getAccommodationProperties();
 
-    // if there is no return url use base url
-    if (url == null) {
-        url = TDS.baseUrl;
-        url += 'Pages/LoginShell.aspx?logout=true';
-    }
+        // figure out url
+        if (accProps.isTestShellModern()) {
+            redirectUrl = 'Pages/TestShell.aspx?name=modern';
+        } else {
+            redirectUrl = 'Pages/TestShell.aspx';
+        }
 
-    return url;
-};
+        // add optional page 
+        if (pageNum > 0) {
+            redirectUrl += (redirectUrl.indexOf('?') != -1) ? '&' : '?';
+            redirectUrl += 'page=' + pageNum;
+        }
 
-TDS.logout = function () {
-    var url = TDS.getLoginUrl();
+        // add optional item
+        if (itemNum > 0) {
+            redirectUrl += (redirectUrl.indexOf('?') != -1) ? '&' : '?';
+            redirectUrl += 'item=' + itemNum;
+        }
 
-    // if proxy, send a request to close out the proctor session
-    if (TDS.isProxyLogin) {
-        var proctor = (window.LoginShell) ? LoginShell.proctor : null;
-        var storage = TDS.Student.Storage;
-        var testSession = storage.getTestSession();
+        TDS.unloader.disable();
+        TDS.redirect(redirectUrl);
+    };
+
+    TDS.getLoginUrl = function () {
+
+        var url;
+
+        // check for return url
+        if (typeof TDS.Student == 'object') {
+            url = TDS.Student.Storage.getReturnUrl();
+        }
+
+        // if there is no return url use base url
+        if (url == null) {
+            url = TDS.baseUrl;
+            url += 'Pages/LoginShell.aspx?logout=true';
+        }
+
+        return url;
+    };
+
+    TDS.redirectLogin = function () {
+        var url = TDS.getLoginUrl();
+        TDS.redirect(url);
+    };
+
+    TDS.logoutProctor = function (onlyLogoutOfTest, redirect) {
+
+        TDS.unloader.disable();
+
+        if (arguments.length < 2) {
+            redirect = true;
+        }
+
+        var proctor = TDS.Student.Storage.getProctor();
+
+        if (!proctor) {
+            var deferred = Util.Promise.defer();
+            // TODO: deferred.reject();
+            return deferred.promise;
+        }
 
         // check if we're still on login site with proctor login data.  Otherwise, we are on satellite and should be using data from storage.
-        var sessionKey = (proctor) ? proctor.sessionKey : testSession.key;
-        var proctorKey = (proctor) ? proctor.proctorKey : testSession.proctorKey;
-        var loginBrowserKey = (proctor) ? proctor.loginBrowserKey : storage.getProctorLoginBrowserKey();
+        var sessionKey = proctor.sessionKey;
+        var proctorKey = proctor.proctorKey;
+        var proctorLogoutUrl = proctor.returnUrl;
+        var loginBrowserKey = proctor.loginBrowserKey;
         // sat browser key is only set on satellite, this will be an empty guid if logging out on login site
-        var satBrowserKey = (proctor) ? proctor.satBrowserKey : storage.getProctorSatBrowserKey(); 
-        var logoutProctorCallback = function() {
-            TDS.redirect(url);
+        var satBrowserKey = proctor.satBrowserKey;
+
+        // close the test session
+        var promise = TDS.Student.API.logoutProctor(sessionKey, proctorKey, loginBrowserKey, satBrowserKey);
+
+        if (!onlyLogoutOfTest && proctorLogoutUrl) {
+            // optionally log the proctor out
+            promise = promise.then(function () {
+                return Util.Frame.loadInBackground(proctorLogoutUrl);
+            });
         }
-        TDS.Student.API.logoutProctor(sessionKey, proctorKey, loginBrowserKey, satBrowserKey).then(logoutProctorCallback);
-    } else {
-        TDS.redirect(url);
-    }
-};
 
-TDS.logoutProctor = function(exl) {
-    TDS.redirect('Pages/Proxy/logout.aspx?exl=' + exl, false);
-};
-
-// lookup a client side app setting
-TDS.getAppSetting = function (name, defaultValue /*[boolean|number|string]*/) {
-    if (TDS.Config && TDS.Config.appSettings) {
-        var value = TDS.Config.appSettings[name];
-        if (value !== undefined) {
-            return value;
+        if (redirect) {
+            // do not need to update the promise, because the redirect will wipe out this script
+            promise.then(TDS.redirectLogin);
         }
-    }
-    return defaultValue;
-};
 
-// event stuff
-(function () {
+        return promise;
+    };
+
+    TDS.logout = function (onlyLogProctorOfTest) {
+
+        TDS.unloader.disable();
+
+        if (TDS.isProxyLogin) {
+            TDS.logoutProctor(onlyLogProctorOfTest);
+        } else {
+            TDS.redirectLogin();
+        }
+    };
+
+    // lookup a client side app setting
+    TDS.getAppSetting = function (name, defaultValue /*[boolean|number|string]*/) {
+        if (TDS.Config && TDS.Config.appSettings) {
+            var value = TDS.Config.appSettings[name];
+            if (value !== undefined) {
+                return value;
+            }
+        }
+        return defaultValue;
+    };
 
     // run init when all scripts are done loading
     YAHOO.util.Event.onDOMReady(TDS.init);
@@ -247,4 +276,5 @@ TDS.getAppSetting = function (name, defaultValue /*[boolean|number|string]*/) {
         Util.Dom.stopDragEvents();
     }
 
-})();
+})(window.TDS);
+

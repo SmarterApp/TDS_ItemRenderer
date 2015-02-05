@@ -43,7 +43,7 @@ ContentManager.onPageEvent('loaded', function(contentPage)
 
     // create sound cue if needed
     group.createSoundCue();
-    
+
     // check if the pages window object is different than the current window
     if (window != pageWin) {
         
@@ -301,6 +301,16 @@ ContentManager.onPageEvent('beforeShow', function(contentPage) {
             }
         }
     }
+    
+    // WCAG Requirement - Update page title
+    var page = TestShell.PageManager.get(contentPage.id);
+
+    var title = Messages.getAlt(TestShell.UI.PageTitle, "Student: Test");
+    var text = page.getPageTitle();
+    if (text) {
+        title = title + ', ' + text;
+    }
+    document.title = title;
 
     return true;
 

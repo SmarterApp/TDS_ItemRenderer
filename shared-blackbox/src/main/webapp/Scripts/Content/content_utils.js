@@ -50,18 +50,21 @@ Utilities used for content manager or widgets.
         return value;
     };
 
-    CM.focus = function (obj) {
-        if (CM.enableARIA) {
+    // set focus on element
+    CM.focus = function (el) {
+        // ignore focus if already active
+        if (el.ownerDocument && el.ownerDocument.activeElement == el) {
             return false;
         }
-        return Util.Dom.focus(obj);
+        return Util.Dom.focus(el);
     };
 
-    CM.blur = function (obj) {
-        if (CM.enableARIA) {
+    CM.blur = function (el) {
+        // ignore blur if not active
+        if (el.ownerDocument && el.ownerDocument.activeElement != el) {
             return false;
         }
-        return Util.Dom.blur(obj);
+        return Util.Dom.blur(el);
     };
 
     // call this to prevent focus on an element
@@ -101,14 +104,6 @@ Utilities used for content manager or widgets.
         }
     };
 
-    // Does this browser require the Mac OS X secure browser selection hack
-    CM.requiresSelectionFix = function () {
-        // check if mac and SB is less than 4.0
-        return (Util.Browser.isMac() &&
-                Util.Browser.getSecureVersion() > 0 &&
-                Util.Browser.getSecureVersion() < 4.0);
-    };
-
     // call this function on an iframe that is used in the content (e.x., html editor, simulator)
     CM.fixItemFrame = function (item, win, doc) {
 
@@ -121,17 +116,6 @@ Utilities used for content manager or widgets.
 
         // stop right click on regular browsers
         Util.Dom.stopAllEvents(doc, 'contextmenu');
-
-        // BUG #12516: Mac OS X secure browser selection hack
-        if (CM.requiresSelectionFix()) {
-            YUE.addListener(doc, 'mousedown', function (e) {
-                CM.focus(top);
-            });
-
-            YUE.addListener(doc, 'mouseup', function (e) {
-                CM.focus(win);
-            });
-        }
 
         var page = item.getPage();
 

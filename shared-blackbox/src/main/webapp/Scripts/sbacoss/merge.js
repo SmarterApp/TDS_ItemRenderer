@@ -128,7 +128,7 @@ function sbacossChanges() {
 
 			top.location.href = url;
 		};
-
+/*
 		// redirects to the test shell
 		TDS.redirectTestShell = function(page) {
 			var redirectUrl;
@@ -153,7 +153,7 @@ function sbacossChanges() {
 
 			TDS.redirect(redirectUrl);
 		};
-
+*/
 		TDS.getLoginUrl = function() {
 
 			var url;
@@ -182,6 +182,11 @@ function sbacossChanges() {
 		};
 	}
 	// testShell.js
+	//Sajib: We now have the CaseInsensitiveFileNameFilter on this path and it automatically
+	//handles mapping from aspx to xhtml without code changes. So we do not need this block.
+	//But also a lot of the functions that have been overridden in the block below now have additional
+	//functionality in the proprietary version and so we want to use the proprietaty version.
+	/*
 	if (typeof TestShell != 'undefined') {
 		// set up all URLs
 		(function() {
@@ -210,6 +215,7 @@ function sbacossChanges() {
 			top.location.href = url;
 		};
 	}
+	*/
 
 	/*
 	 * TODO: it's not working //mastershell.js if(typeof MasterShell !=

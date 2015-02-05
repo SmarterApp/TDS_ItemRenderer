@@ -43,13 +43,14 @@ This module is used for loading Alt Scaffolding items (QTI).
 
         var onTerminate = function(type, args, instance) {
 
-            var questionSpan = containerEl;
+            // Find 'theQuestions' node in the DOM
+            var itemContainer = containerEl;
 
-            while (questionSpan) {
-                if ((/div/i.test(questionSpan.tagName)) && (YUD.hasClass(questionSpan, 'theQuestions'))) {
+            while (itemContainer) {
+                if ($(itemContainer).hasClass('itemContainer')) {
                     break;
                 } else {
-                    questionSpan = questionSpan.parentNode;
+                    itemContainer = itemContainer.parentNode;
                 }
             }
 
@@ -57,10 +58,10 @@ This module is used for loading Alt Scaffolding items (QTI).
             // container in order to show when the question is done.  The reason we put it
             // on the 'questions' part of the div has to do with the MC baggage which we've 
             // inherited.
-            if (questionSpan) {
+            if (itemContainer) {
                 var completeDiv = document.createElement('div');
                 YUD.addClass(completeDiv, 'asi-complete-span');
-                questionSpan.parentNode.insertBefore(completeDiv, questionSpan);
+                itemContainer.appendChild(completeDiv);
 
                 // The big 'complete' button should advance to the next item
                 var nextFunction = ContentManager.setItemCompleted;
@@ -75,9 +76,9 @@ This module is used for loading Alt Scaffolding items (QTI).
         var asi = new AsiItem.Parse(item);
         asi.createAsiChoices();
 
-        // get the container and create ASI]
+        // get the container and create ASI
         var html = new AsiItem.Html(asi, containerEl);
-        this.scaffolding = new AsiItem.Interaction(html, asi,hasASIVoiceGuidance);
+        this.scaffolding = new AsiItem.Interaction(html, asi, hasASIVoiceGuidance);
         this.scaffolding.isReadOnly = item.isReadOnly;
         this.scaffolding.onTerminate(onTerminate);
 

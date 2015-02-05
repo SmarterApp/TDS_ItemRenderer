@@ -9,7 +9,6 @@ EditItem.Html.Choice = function () {
     EditItem.Html.call(this);
     var self = this;
     var addComponentArray = [];
-    this.keyHandlerArray = [];
 
     // FOr all the choices in all the items, do stuff.
     var forAllInlineChoices = function (ftor) {
@@ -45,16 +44,23 @@ EditItem.Html.Choice = function () {
                 YUD.addClass(aDiv, 'TDS_EDIT_SPAN ');
                 YUD.addClass(aDiv, 'edit-originaltext');    // add background-color to choice word
                 YUE.addListener(aDiv, "click", clickOnChoiceItem, this);
+                
+                // listen for space bar or enter keys
+                var boundClick = clickOnChoiceItem.bind(aDiv);
+                this.setKeyHandlers(aDiv, this, boundClick);
 
-                self.keyHandlerArray[aDiv.id] = function () {
-                    clickOnChoiceItem.call(aDiv);
-                };
                 addComponentArray.push(aDiv);
                 
                 //silence this from TTS
                 YUD.addClass(aDiv, "TTS speakAs");
                 aDiv.setAttribute("ssml", "sub");
                 aDiv.setAttribute("ssml_alias", "{silence:1000}");
+
+                // set aria role="button"
+                aDiv.setAttribute('role', 'button');
+                
+                // set title
+                aDiv.setAttribute('title', 'click to correct');
             }
         });
 
@@ -72,6 +78,11 @@ EditItem.Html.Choice = function () {
 
     // Handle click event for the word span.  The student can edit the word.
     var clickOnChoiceItem = function (ev) {
+
+        if (self.isReadOnly()) {
+            return;
+        }
+
         var span = this;
 
         // Only allow one dialog a at a time.
@@ -201,3 +212,4 @@ EditItem.Html.Choice = function () {
     };
 };
 
+EditItem.Html.Choice.prototype.isReadOnly = function () { return false; };

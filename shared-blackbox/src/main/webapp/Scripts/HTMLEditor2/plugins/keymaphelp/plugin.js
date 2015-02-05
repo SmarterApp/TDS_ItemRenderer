@@ -1,23 +1,63 @@
-﻿(function () {
+﻿/**
+ * This is copied and pasted from CKEditor Plugin a11yHelp, and we are doing this because of this 
+ * bug: https://bugz.airast.org/default.asp?149238#848097, 
+ * which requires <h4> instead of <h1>
 
-    var cmdName = 'a11yHelp';   // reusing the a11yHelp module
-    var pluginName = 'keymaphelp';
-    // initialize the CKEditor a11yhelp plugin (called for each editor instance)
-    function initPlugin(editor) {
 
-        // add a button that runs our custom command
-        var button = editor.ui.addButton('KeyMapHelp', {
-            label: 'KeyMapHelp',
-            icon: 'keymaphelp',
-            command: cmdName, // calls a11yhelp's command exec
-            toolbar: 'keymaphelp,11'
-        });
+ * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
 
-    }
+/**
+ * @fileOverview Plugin definition for the a11yhelp, which provides a dialog
+ * with accessibility related help.
+ */
 
-    CKEDITOR.plugins.add(pluginName, {
-        requires: 'dialog',
-        init: initPlugin
-    });
+( function() {
+	var pluginName = 'keymaphelp',
+		commandName = 'keymapHelp';
 
-})();
+	CKEDITOR.plugins.add( pluginName, {
+		requires: 'dialog',
+
+		// List of available localizations.
+		availableLangs: { ar:1,bg:1,ca:1,cs:1,cy:1,da:1,de:1,el:1,en:1,'en-gb':1,eo:1,es:1,et:1,fa:1,fi:1,fr:1,'fr-ca':1,gl:1,gu:1,he:1,hi:1,hr:1,hu:1,id:1,it:1,ja:1,km:1,ko:1,ku:1,lt:1,lv:1,mk:1,mn:1,nb:1,nl:1,no:1,pl:1,pt:1,'pt-br':1,ro:1,ru:1,si:1,sk:1,sl:1,sq:1,sr:1,'sr-latn':1,sv:1,th:1,tr:1,tt:1,ug:1,uk:1,vi:1,zh:1,'zh-cn':1 },
+
+		init: function( editor ) {
+		    var plugin = this;
+			editor.addCommand( commandName, {
+				exec: function() {
+					var langCode = editor.langCode;
+					langCode =
+						plugin.availableLangs[ langCode ] ? langCode :
+						plugin.availableLangs[ langCode.replace( /-.*/, '' ) ] ? langCode.replace( /-.*/, '' ) :
+						'en';
+
+					CKEDITOR.scriptLoader.load(CKEDITOR.getUrl(plugin.path + 'dialogs/lang/' + langCode + '.js'), function () {
+						editor.lang.keymaphelp = plugin.langEntries[ langCode ];
+						editor.openDialog( commandName );
+					} );
+				},
+				modes: { wysiwyg: 1, source: 1 },
+				readOnly: 1,
+				canUndo: false
+			});
+
+		    // add a button that runs our custom command
+		    editor.ui.addButton('KeyMapHelp', {
+		        label: 'KeyMapHelp',
+		        icon: 'keymaphelp',
+		        command: commandName,
+		        toolbar: 'keymaphelp,11'
+		    });
+
+			//editor.setKeystroke( CKEDITOR.ALT + 48 /*0*/, 'a11yHelp' );   // disabling the keyboard shortcut to avoid conflict with original a11yHelp module
+		    //CKEDITOR.dialog.add( commandName, this.path + 'dialogs/keymaphelp.js' );  // Redirect the path to prevent from loading the original a11yhelp.js file, which contains <h1> we do not want
+			CKEDITOR.dialog.add(commandName, plugin.path + 'keymaphelp.js');
+
+			editor.on( 'ariaEditorHelpLabel', function( evt ) {
+				evt.data.label = editor.lang.common.editorHelp;
+			} );
+		}
+	} );
+} )();

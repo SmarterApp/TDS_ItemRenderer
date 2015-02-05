@@ -89,7 +89,12 @@ TestShell.PageReview.prototype.show = function()
     TestShell.PageManager.Events.fire('onShow', this);
 };
 
-TestShell.PageReview.prototype.setConfirmed = function() { this._confirmed = true; };
+// get the page specific page title to show user
+TestShell.PageReview.prototype.getPageTitle = function () {
+    return 'Review Page';
+};
+
+TestShell.PageReview.prototype.setConfirmed = function () { this._confirmed = true; };
 TestShell.PageReview.prototype.isConfirmed = function() { return this._confirmed; };
 
 // check if this segment is considered completed which unlocks the next group in the next segment

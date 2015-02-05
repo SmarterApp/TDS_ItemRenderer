@@ -191,31 +191,21 @@ TDS.Student = TDS.Student || {};
     };
 
     // PROXY Functions BEGIN
-    Storage.setProctorReturnUrl = function (proctorReturnUrl) {
-        set('proctorReturnUrl', proctorReturnUrl);  // for non-standard login systems (OpenAM/QueryString)
+    Storage.setProctor = function (proctor) {
+        set('proctor', proctor);
     };
 
-    Storage.getProctorReturnUrl = function () {
-        return get('proctorReturnUrl');
+    Storage.getProctor = function () {
+        return get('proctor');
     };
 
-    // for closing sessions on the login site
-    Storage.setProctorLoginBrowserKey = function (proctorLoginBrowserKey) {
-        set('proctorLoginBrowserKey', proctorLoginBrowserKey);
-    }
+    Storage.setPopupsEnabled = function (popupsEnabled) {
+        set('popups-enabled', popupsEnabled);
+    };
 
-    Storage.getProctorLoginBrowserKey = function() {
-        return get('proctorLoginBrowserKey');
-    }
-
-    // for performing session actions on the satellite site
-    Storage.setProctorSatBrowserKey = function (proctorSatBrowserKey) {
-        set('proctorSatBrowserKey', proctorSatBrowserKey);
-    }
-
-    Storage.getProctorSatBrowserKey = function() {
-        return get('proctorSatBrowserKey');
-    }
+    Storage.getPopupsEnabled = function () {
+        return get('popups-enabled');
+    };
     // PROXY Function END
 
     Storage.Events = Events;

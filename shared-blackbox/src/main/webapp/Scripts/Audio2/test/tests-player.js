@@ -153,6 +153,21 @@
         assert.ok(ret);
     });
 
+    test('returns true if sound was paused', function (assert) {
+
+        var id = createId(),
+            url = 'Item_18_v4_sound1129581336036e054301d.ogg',
+            ret;
+
+        service.createSoundFromSource(id, createSource(url));
+        service.play(id);
+        service.pause(id);
+
+        ret = service.stop(id);
+
+        assert.ok(ret);
+    });
+
     //#endregion
 
     //#region pause
@@ -910,6 +925,38 @@
         }, 200);
     });
 
+    asyncTest('fired if sound was paused', function (assert) {
+        expect(1);
+
+        var id = createId(),
+            url = 'Item_18_v4_sound1129581336036e054301d.ogg',
+            executed = false;
+
+        service.createSoundFromSource(id, createSource(url));
+        service.onStop.subscribe(onStop);
+
+        service.play(id);
+        service.pause(id);
+
+        service.stop(id);
+
+        // happy path
+        function onStop() {
+            executed = true;
+
+            assert.ok(true);
+            start();
+        }
+
+        // sad path
+        setTimeout(function () {
+            if (!executed) {
+                assert.ok(false);
+                start();
+            }
+        }, 200);
+    });
+
     asyncTest('not fired after pause', function (assert) {
         expect(1);
 
@@ -1140,6 +1187,38 @@
         service.onIdle.subscribe(onIdle);
 
         service.play(id);
+        service.stop(id);
+
+        // happy path
+        function onIdle() {
+            executed = true;
+
+            assert.ok(true);
+            start();
+        }
+
+        // sad path
+        setTimeout(function () {
+            if (!executed) {
+                assert.ok(false);
+                start();
+            }
+        }, 200);
+    });
+
+    asyncTest('fired after stop if sound was paused', function (assert) {
+        expect(1);
+
+        var id = createId(),
+            url = 'Item_18_v4_sound1129581336036e054301d.ogg',
+            executed = false;
+
+        service.createSoundFromSource(id, createSource(url));
+        service.onIdle.subscribe(onIdle);
+
+        service.play(id);
+        service.pause(id);
+
         service.stop(id);
 
         // happy path

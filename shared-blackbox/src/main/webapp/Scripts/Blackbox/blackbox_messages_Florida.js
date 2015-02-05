@@ -5690,96 +5690,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 12047,
-                    "m": "EBSR.Header.Part1",
-                    "t_a": [
-                        {
-                            "t": "Part A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12048,
-                    "m": "EBSR.Header.Part2",
-                    "t_a": [
-                        {
-                            "t": "Part B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12049,
-                    "m": "EBSR.Header.Part3",
-                    "t_a": [
-                        {
-                            "t": "Part C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12215,
-                    "m": "TDS_F_MO_alg1",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/mo_alg1.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12216,
-                    "m": "TDS_F_MO_alg2",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/mo_alg2.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12217,
-                    "m": "TDS_F_MO_geo",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/mo_geo.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12218,
-                    "m": "TDS_F_MO_math_eoc",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/mo_eoc_math.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12219,
-                    "m": "TDSCKE.Alert.InvalidHeight.lang",
-                    "t_a": [
-                        {
-                            "t": "The table height you have entered is invalid. You may enter a number in pixels (e.g., 300) or a percentage (e.g., 100%). You may also choose to leave the height value blank. If you leave the value blank, the browser will automatically adjust the table size.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12220,
-                    "m": "TDSCKE.Alert.InvalidWidth.lang",
-                    "t_a": [
-                        {
-                            "t": "The table width you have entered is invalid. You may enter a number in pixels (e.g., 300) or a percentage (e.g., 100%). You may also choose to leave the width value blank. If you leave the value blank, the browser will automatically adjust the table size.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 12060,
                     "m": "TI.InvalidInput.alphaOnly",
                     "t_a": [
@@ -5968,6 +5878,336 @@ TDS.Config.messages={
                             "l": "ENU"
                         }
                     ]
+                },
+                {
+                    "id": 12047,
+                    "m": "EBSR.Header.Part1",
+                    "t_a": [
+                        {
+                            "t": "Part A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12048,
+                    "m": "EBSR.Header.Part2",
+                    "t_a": [
+                        {
+                            "t": "Part B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12049,
+                    "m": "EBSR.Header.Part3",
+                    "t_a": [
+                        {
+                            "t": "Part C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12215,
+                    "m": "TDS_F_MO_alg1",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/mo_alg1.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12216,
+                    "m": "TDS_F_MO_alg2",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/mo_alg2.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12217,
+                    "m": "TDS_F_MO_geo",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/mo_geo.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12218,
+                    "m": "TDS_F_MO_math_eoc",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/mo_eoc_math.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12219,
+                    "m": "TDSCKE.Alert.InvalidHeight.lang",
+                    "t_a": [
+                        {
+                            "t": "The table height you have entered is invalid. You may enter a number in pixels (e.g., 300) or a percentage (e.g., 100%). You may also choose to leave the height value blank. If you leave the value blank, the browser will automatically adjust the table size.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12220,
+                    "m": "TDSCKE.Alert.InvalidWidth.lang",
+                    "t_a": [
+                        {
+                            "t": "The table width you have entered is invalid. You may enter a number in pixels (e.g., 300) or a percentage (e.g., 100%). You may also choose to leave the width value blank. If you leave the value blank, the browser will automatically adjust the table size.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12240,
+                    "m": "cm.widget.label.audio.recorder",
+                    "t_a": [
+                        {
+                            "t": "Record your response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12241,
+                    "m": "cm.widget.label.qti.textentry",
+                    "t_a": [
+                        {
+                            "t": "Type your response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12242,
+                    "m": "cm.widget.label.qti.inlinechoice",
+                    "t_a": [
+                        {
+                            "t": "Reorder text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12243,
+                    "m": "cm.widget.label.qti.choice",
+                    "t_a": [
+                        {
+                            "t": "Multiple select - choose one or more response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12244,
+                    "m": "cm.widget.label.htmleditor",
+                    "t_a": [
+                        {
+                            "t": "Rich text editor - type your response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12245,
+                    "m": "cm.widget.label.grid",
+                    "t_a": [
+                        {
+                            "t": "Grid Item.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12246,
+                    "m": "cm.widget.label.qti.grid",
+                    "t_a": [
+                        {
+                            "t": "Grid Item.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12247,
+                    "m": "cm.widget.label.qti.hottext",
+                    "t_a": [
+                        {
+                            "t": "Select text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12248,
+                    "m": "cm.widget.label.qti.order",
+                    "t_a": [
+                        {
+                            "t": "Reorder text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12249,
+                    "m": "cm.widget.label.select",
+                    "t_a": [
+                        {
+                            "t": "Reorder text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12250,
+                    "m": "cm.widget.label.order",
+                    "t_a": [
+                        {
+                            "t": "Drag and drop.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12251,
+                    "m": "cm.widget.label.dragdrop",
+                    "t_a": [
+                        {
+                            "t": "Drag and drop.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12252,
+                    "m": "cm.widget.label.matchitem",
+                    "t_a": [
+                        {
+                            "t": "Table of check boxes.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12253,
+                    "m": "cm.widget.label.simulator",
+                    "t_a": [
+                        {
+                            "t": "Simulator item.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12254,
+                    "m": "cm.widget.label.equationeditor",
+                    "t_a": [
+                        {
+                            "t": "Math response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12255,
+                    "m": "cm.widget.label.equationeditor.text",
+                    "t_a": [
+                        {
+                            "t": "Math response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12256,
+                    "m": "cm.widget.label.edittask",
+                    "t_a": [
+                        {
+                            "t": "Edit text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12257,
+                    "m": "cm.widget.label.scratchpad",
+                    "t_a": [
+                        {
+                            "t": "Scratchpad.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12258,
+                    "m": "cm.widget.label.scaffolding",
+                    "t_a": [
+                        {
+                            "t": "Choose a response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12259,
+                    "m": "cm.widget.label.tableinput",
+                    "t_a": [
+                        {
+                            "t": "Fill in the table.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12260,
+                    "m": "cm.widget.label.mc",
+                    "t_a": [
+                        {
+                            "t": "Multiple choice.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12261,
+                    "m": "cm.widget.label.ebsr",
+                    "t_a": [
+                        {
+                            "t": "Two part multple choice and\/or multiple select.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12262,
+                    "m": "cm.widget.label.wordbuilder",
+                    "t_a": [
+                        {
+                            "t": "Fill in the blank.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12263,
+                    "m": "cm.widget.label.plaintext",
+                    "t_a": [
+                        {
+                            "t": "Type your response.",
+                            "l": "ENU"
+                        }
+                    ]
                 }
             ]
         },
@@ -5975,21 +6215,21 @@ TDS.Config.messages={
             "c": "AccType",
             "m_a": [
                 {
-                    "id": 12044,
-                    "m": "American Sign Language",
-                    "t_a": [
-                        {
-                            "t": "American Sign Language",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 12053,
                     "m": "Scaffolding Voice Guidance",
                     "t_a": [
                         {
                             "t": "Voice Guidance",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12044,
+                    "m": "American Sign Language",
+                    "t_a": [
+                        {
+                            "t": "American Sign Language",
                             "l": "ENU"
                         }
                     ]
@@ -7330,26 +7570,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 12051,
-                    "m": "TDS_ASIGuide0",
-                    "t_a": [
-                        {
-                            "t": "Off",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12052,
-                    "m": "TDS_ASIGuide1",
-                    "t_a": [
-                        {
-                            "t": "On",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 12045,
                     "m": "TDS_ASL0",
                     "t_a": [
@@ -7405,6 +7625,26 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "UT HS Science",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12051,
+                    "m": "TDS_ASIGuide0",
+                    "t_a": [
+                        {
+                            "t": "Off",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12052,
+                    "m": "TDS_ASIGuide1",
+                    "t_a": [
+                        {
+                            "t": "On",
                             "l": "ENU"
                         }
                     ]
@@ -8545,16 +8785,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 12232,
-                    "m": "SoundCheck.Label.RecordingProblem",
-                    "t_a": [
-                        {
-                            "t": "Problem Recording Audio",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11965,
                     "m": "SoundCheck.RecorderRequired.Header",
                     "t_a": [
@@ -8570,6 +8800,16 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "<p>The recorder requires a plug-in to be installed when using Firefox. <\/p>\u000d\u000a<p>You may use the secure browser instead of Firefox to access the sound check and recorder check.<\/p>",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12232,
+                    "m": "SoundCheck.Label.RecordingProblem",
+                    "t_a": [
+                        {
+                            "t": "Problem Recording Audio",
                             "l": "ENU"
                         }
                     ]

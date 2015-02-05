@@ -10,7 +10,12 @@ Widget for simulator.
         var simulator = null;
 
         // begins loading the simulators resources (images and flash)
-        var simImageFiles = SimulationLoader.parseImages(simXml);
+        var simImageFiles = SimulationLoader.parseImages(simXml /*, translationXml*/);
+
+        // FOR TESTING: when translations are appended to simXml
+        // !! make sure URL redirects are set-up for this: set "testMode = true" in UrlResolver.ResolveSpecXmlUrls(), found in TDS.ItemRenderer\Processing\ITSUrlResolver.cs
+        // var simImageFiles = SimulationLoader.parseImages(simXml, 'TEST MODE');
+
 
         // add resources to loader
         for (var i = 0; i < simImageFiles.length; i++) {
@@ -42,7 +47,10 @@ Widget for simulator.
         Simulator.Animation.FlashAnimationInterface.MapInstance(simulator);
         simulator.setAnimationShellPath(CM.resolveBaseUrl('Scripts/Simulator2/Renderer/SWF/SimulationShell.swf'));
         simulator.setAnimationExternalScriptsPath(CM.resolveBaseUrl('Scripts/Libraries'));
-        simulator.loadXml(simXml, responseXml);
+        simulator.presetLanguage(CM.getLanguage()); // set language to display
+        
+        simulator.loadXml(simXml, responseXml/*, translationXml*/);
+
 
         // NOTE: This is hack for student code.
         item.simulator = simulator;
@@ -77,6 +85,14 @@ Widget for simulator.
             }
         };
 
+        // dynamically loaded images need to be re-zoomed; this updates the zoom level of all images within the simulator
+        var updateZoom = function () {
+            var zoom = page.getZoom();
+            if (zoom) {
+                zoom.updateElements(containerEl);
+            }
+        };
+
         // Check all images.
         YUD.batch(simDoc.getElementsByTagName('img'), function (img) {
             // Check if image has loaded already.
@@ -97,6 +113,11 @@ Widget for simulator.
         // check for when flash gets added
         simulator.subscribe('info', 'animationEmbedded', function (evt) {
             VideoManager.SWF.stopRightClick(evt.data);
+        });
+
+        // check for images that get added after instantiation (post-animation posters...)
+        simulator.subscribe('info', 'imageEmbedded', function (evt) {
+            updateZoom();
         });
 
         // check for state changes

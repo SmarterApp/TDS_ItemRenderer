@@ -38,7 +38,7 @@ widget's can match against the QTI xml and DOM element.
             interactionEl.setAttribute('data-qti-identifier', interactionId);
             var customData = itemBodyChild.getAttribute('class');
             if (customData) {
-                interactionEl.setAttribute('data-qti-custom', customData);
+                interactionEl.setAttribute('class', customData);
             }
 
             // swap out interaction node
@@ -49,6 +49,13 @@ widget's can match against the QTI xml and DOM element.
             if (itemBodyChild.nodeName == 'customInteraction') {
                 scriptEl.setAttribute('type', 'text/xml');
                 scriptEl.appendChild($(itemBodyChild).children().get(0));
+                // we use the first class name as the custom interaction name
+                if (customData) {
+                    var customList = customData.split(' ');
+                    if (customList[0]) {
+                        interactionEl.setAttribute('data-qti-custom', customList[0]);
+                    }
+                }
             } else {
                 scriptEl.setAttribute('type', 'text/qti');
                 scriptEl.appendChild(itemBodyChild);

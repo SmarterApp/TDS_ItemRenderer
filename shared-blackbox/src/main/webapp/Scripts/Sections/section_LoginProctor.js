@@ -28,6 +28,17 @@ Sections.LoginProctor.prototype.setLoginInput = function (loginProctorControl, v
 
 Sections.LoginProctor.prototype.load = function ()
 {
+    // if the proctor info is already available, we can immediately proceed to the next section
+    if (window.tdsProctorInfo) {
+        LoginShell.setProctor(window.tdsProctorInfo);
+
+        setTimeout(function () {
+            this.request('next', window.tdsProctorInfo);
+        }.bind(this), 0);
+
+        return;
+    }
+
     var loginForm = YUD.get('loginProctorForm');
 
     loginForm.onsubmit = function () {

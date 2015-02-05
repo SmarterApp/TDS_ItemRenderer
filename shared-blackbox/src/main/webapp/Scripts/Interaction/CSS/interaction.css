@@ -274,3 +274,10 @@ ol.insteraction, ul.insteraction {
 .compound .stemContainer  {
 	-ms-user-select:text !important;
 }
+/*prevent overflow selection when item is hiden */
+.questionAnswerGroup.hiding .interaction, 
+.questionAnswerGroup.hiding .edit-container *, 
+.questionAnswerGroup.hiding .format_etc .stemContainer *, 
+.questionAnswerGroup.hiding  .compound .stemContainer * {
+	-webkit-user-select: none !important;
+}

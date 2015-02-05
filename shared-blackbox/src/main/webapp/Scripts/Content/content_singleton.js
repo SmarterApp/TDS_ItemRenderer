@@ -91,13 +91,11 @@ NOTE: This file needs to be last so everyone can listen for 'createPages' event.
         if (!item) return;
         // fire completed event for this item
         CM.fireEntityEvent('completed', item);
-        // fire completed event for this page if it only has one item
+        // fire completed event for this page
+        // HACK: We always fire completed for the page even if there are multiple items.
+        // This was required for scaffolding and we need to find a better way of doing this.
         var page = item.getPage();
-        var items = page.getItems();
-        if (items.length == 1) {
-            // BUG: What about greater than one item? In the future we should track 'completed'. 
-            CM.firePageEvent('completed', page);
-        }
+        CM.firePageEvent('completed', page);
     };
 
 })(ContentManager);

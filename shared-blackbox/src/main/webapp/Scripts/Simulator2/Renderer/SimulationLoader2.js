@@ -23,6 +23,8 @@ SimulationLoader._regex_images2 = /src[\s]*=[\s]*".*(.jpg | .png | .gif)\s*"/g;
 SimulationLoader._regex_flash1 = /flash[\s]*=[\s]*\".*\"/g;
 SimulationLoader._regex_flash2 = /src[\s]*=[\s]*\".*(swf)\s*\"/g;
 SimulationLoader._regex_flash3 = /altSrc[\s]*=[\s]*\".*(swf)\s*\"/g;
+SimulationLoader._regex_translationImageElement = /^.*(languageElement id="trans\..*\.image[^"]*").*$/gm; // returns whole line with image file in it
+SimulationLoader._regex_translationImageFile = /value[\s]*=[\s]*".*"/g; // used on result of _regex_translationImageElement to extract value attribute
 
 // generic function for parsing xml attributes with the regex above
 SimulationLoader._parse = function(xmlText, regex) 
@@ -41,10 +43,29 @@ SimulationLoader._parse = function(xmlText, regex)
                  
             return cleanStr;
         }
-        
-        for(var i = 0; i < matches.length; i++)
+
+        var extractFileFromTranslationImageElement = function(str)
         {
-            values.push(extractFile(matches[i]));
+            // when checking for images in translation elements, we first match the whole line (b/c js does not support regex lookbehind...)
+            // and then extract value attribute from that, hence this extra step
+            var valueMatch = str.match(SimulationLoader._regex_translationImageFile)[0];
+
+            return extractFile(valueMatch);
+        }
+
+        if (regex == this._regex_translationImageElement)
+        {
+            for (var i = 0; i < matches.length; i++)
+            {
+                values.push(extractFileFromTranslationImageElement(matches[i]));
+            }
+        }
+        else
+        {
+            for(var i = 0; i < matches.length; i++)
+            {
+                values.push(extractFile(matches[i]));
+            }
         }
     }
     
@@ -52,13 +73,22 @@ SimulationLoader._parse = function(xmlText, regex)
 };
 
 // get all the image file names in the xml
-SimulationLoader.parseImages = function(xmlText)
+SimulationLoader.parseImages = function(xmlText, translationText)
 {
     var imageFiles = [];
 
-    imageFiles = imageFiles.concat(this._parse(xmlText, this._regex_images1));
-    imageFiles = imageFiles.concat(this._parse(xmlText, this._regex_images2));
-    
+    if (translationText == null) // pre-i18n version: image names are in simXml itself
+    {
+        imageFiles = imageFiles.concat(this._parse(xmlText, this._regex_images1));
+        imageFiles = imageFiles.concat(this._parse(xmlText, this._regex_images2));
+    }
+    else if (translationText == 'TEST MODE') { // for testing when translation xml is simply appended to simXml - remove when no longer needed!
+        imageFiles = imageFiles.concat(this._parse(xmlText, this._regex_translationImageElement));
+    }
+    else { // i18n-compliant version: image names are in the translationXml
+        imageFiles = imageFiles.concat(this._parse(translationText, this._regex_translationImageElement));
+    }
+
     // resolve urls
     for (var i = 0; i < imageFiles.length; i++)
     {

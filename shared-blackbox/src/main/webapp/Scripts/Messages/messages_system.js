@@ -206,9 +206,7 @@ TDS.Messages.MessageSystem.prototype.getTextByContext = function(context, defaul
 // get simple json
 TDS.Messages.MessageSystem.prototype.getTemplateData = function()
 {
-    //var language = this._getLanguage(); //commented out for SB-350
-	var language = TDS.getLanguage(); //updated for SB-350 to use current language selected
-	
+    var language = this._getLanguage();
     var templateData = {};
 
     // build lookup for each message

@@ -170,7 +170,7 @@ This module hooks up the grid renderer.
         grid.subscribe('onAreaChange', function(gridEvt) {
 
             if (gridEvt.name != null) {
-                item.setActive(gridEvt); // NOTE: Must pass in object or scrollTo get triggered on page
+                item.setActive(); // NOTE: Must pass in object or scrollTo get triggered on page
                 item.setActiveComponent(gridComponents[gridEvt.name]);
             }
 
@@ -207,9 +207,8 @@ This module hooks up the grid renderer.
     function match_ITS(page, item, content) {
         var id = 'GridContainer_' + item.position;
         var el = document.getElementById(id);
-        //SB-1128
-        var gridSpec=item.gridAnswerSpace||item.rendererSpec;
-		if (el && gridSpec) {
+        var gridSpec = item.gridAnswerSpace || item.rendererSpec;
+        if (el && gridSpec) {
             return new CM.WidgetConfig(id, el, gridSpec);
         }
         return false;

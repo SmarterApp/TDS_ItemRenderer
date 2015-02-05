@@ -41,6 +41,8 @@ Accommodations.Dialog = (function() {
             self.onCancel.fire();
         };
 
+        this._parentContainer.style['overflow-y'] = 'scroll';
+
         // Instantiate the Dialog // this._parentContainer
         yuiDialog = new YAHOO.widget.Dialog(this._parentContainer, {
             // height: '400px',

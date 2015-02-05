@@ -52,6 +52,36 @@ https://github.com/faisalman/ua-parser-js/
         return value || 0;
     };
 
+    function getOSXMajorMinorVersion() {
+        var matches = navigator.userAgent.match(/Mac OS X (\d+)\.(\d+)/);
+
+        var version = {
+            major: 0,
+            minor: 0
+        };
+
+        if (matches) {
+            version.major = +matches[1] || Infinity;
+            version.minor = +matches[2] || Infinity;
+        }
+
+        return version;
+    }
+
+    Browser.osxVersionIsAtLeast = function (minMajor, minMinor) {
+        var version = getOSXMajorMinorVersion();
+
+        return minMajor < version.major
+           || (minMajor === version.major && minMinor <= version.minor);
+    };
+
+    Browser.osxVersionIsAtMost = function (maxMajor, maxMinor) {
+        var version = getOSXMajorMinorVersion();
+
+        return maxMajor > version.major
+           || (maxMajor === version.major && maxMinor >= version.minor);
+    };
+
     // Is this Mac based on the PPC architecture
     Browser.isMacPPC = function () {
         return navigator.userAgent.indexOf('PPC Mac') != -1;
@@ -103,7 +133,7 @@ https://github.com/faisalman/ua-parser-js/
     };
 
     Browser.isMobile = function () {
-        return (YAHOO.env.ua.mobile != null);
+        return (YAHOO.env.ua.mobile != null || YAHOO.env.ua.ios > 0 || YAHOO.env.ua.android > 0);
     };
 
     Browser.isIOS = function () {
@@ -140,6 +170,37 @@ https://github.com/faisalman/ua-parser-js/
         } else {
             return false;
         }
+    };
+
+    // Call this to check if browser supports MathML.
+    // Summary of Browser Support for MathML: https://vismor.com/documents/site_implementation/viewing_mathematics/S1.SS2.php
+    // For future: https://github.com/Modernizr/Modernizr/blob/master/feature-detects/mathml.js
+    Browser.supportsMathML = function () {
+
+        // if we are using ipad or android SB then disable MathML
+        if (Browser.isSecure() && (YAHOO.env.ua.android || YAHOO.env.ua.ios)) {
+            return false;
+        }
+
+        // check firefox
+        if (Util.Browser.getFirefoxVersion() > 0) {
+            return (Util.Browser.getFirefoxVersion() >= 4.0); // Firefox 4.0+
+        }
+
+        // check chrome
+        if (YAHOO.env.ua.chrome > 0) {
+            // Chrome 24 added MathML but Chrome 25+ disabled it...
+            // https://code.google.com/p/chromium/issues/detail?id=174455
+            return false;
+        }
+
+        // check safari
+        if (YAHOO.env.ua.webkit >= 534) {
+            return true; // Safari 5.1+
+        }
+
+        // no browsers match
+        return false;
     };
 
     // Determines if Ctrl/Alt/Meta keys are available for this browser. Currently iOS is the only one we can't trust

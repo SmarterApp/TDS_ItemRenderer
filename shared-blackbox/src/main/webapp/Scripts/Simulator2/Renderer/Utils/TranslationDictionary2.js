@@ -15,8 +15,8 @@ Simulator.Utils.TranslationDictionary = function (sim) {
 
     var dbg = function () { return sim.getDebug(); };
 
-    var supportedLanguages = ['en'];
-    var currentLanguage = 'en';
+    var supportedLanguages = ['ENU'];
+    var currentLanguage = 'ENU';
     var dictionaryLoaded = false;
 
     // public functions
@@ -52,6 +52,7 @@ Simulator.Utils.TranslationDictionary = function (sim) {
     this.setCurrentLanguage = function (languageString) {
         if (getLanguageIndex(languageString) > -1) {
             currentLanguage = languageString;
+            debug('Language set to ' + languageString);
         } else
             languageNotFoundAction(languageString);
     }
@@ -70,11 +71,19 @@ Simulator.Utils.TranslationDictionary = function (sim) {
         return this.translateToLanguage(tag, langIndex);
     }
 
+    this.translateToEnglish = function (tag) {
+        // for now, if translation dictionary not loaded, or tag not found, simply pass through
+        if (!dictionaryLoaded || !this.keyExists(tag))
+            return tag;
+        // otherwise, return translation
+        return this.lookup(tag)[getLanguageIndex('ENU')];
+    }
+
     this.translateToLanguage = function (tag, lang) {
         // can pass in language index (integer) (for testing purposes, at least)
         if (!isNaN(lang)) {
             return this.lookup(tag)[lang];
-        } else { // or tag ("en", "es", etc.)
+        } else { // or tag ("ENU", "ESN", etc.)
             return this.lookup(tag)[getLanguageIndex(lang)];
         }
     }
@@ -127,6 +136,83 @@ Simulator.Utils.TranslationDictionary = function (sim) {
         return valid;
     }
 
+    this.isLoaded = function () {
+        return dictionaryLoaded;
+    }
+
+    // translate internationalization tags in evaluation output into english strings (for animation)
+    this.translateEvaluationOutput = function(data) {
+        var oldData = data;
+        if (data != null && this.isLoaded()) { // if translation dictionary is dormant, simply bypass
+            translatedData = [];
+            data = data.split(Simulator.Constants.PAIR_DELIMITTER);
+            if (data != undefined && data != null && data != '') {
+                for (var i = 0; i < data.length; i++) {
+                    var parts = data[i].split(Simulator.Constants.KEY_VALUE_DELIMITTER);
+                    if (parts[1]) {
+                        var quoted = (parts[1][0] == '"' && parts[1][parts[1].length - 1] == '"');
+                        if (quoted)
+                            parts[1] = parts[1].substring(1, parts[1].length - 1);
+                        parts[1] = this.translateToEnglish(parts[1]); // translate here
+                        if (quoted)
+                            parts[1] = '"' + parts[1] + '"';
+                    }
+                    translatedData.push(parts.join(Simulator.Constants.KEY_VALUE_DELIMITTER));
+                }
+            }
+            data = translatedData.join(Simulator.Constants.PAIR_DELIMITTER);
+        }
+        //for testing:
+        //if (!this.isLoaded()) // safety check - if translation dictionary is dormant, data should look the same as when it came in
+        //    if (oldData != data)
+        //        dbg.logError(source, 'Evaluation output data may have been corrupted.  If translation dictionary is not loaded, animation output should have passed through internationalization step intact, but the strings are not equal.\nBefore: ' + oldData + ' After: ' + data);
+        return data;
+    }
+
+    // replace strings in animation output with internationalization tags
+    this.internationalizePreparsedAnimationOutput = function(data) {
+        var oldData = data;
+        if (data != null) {
+            translatedData = [];
+            data = data.split(Simulator.Constants.PAIR_DELIMITTER);
+            if (data != undefined && data != null && data != '') {
+                for (var i = 0; i < data.length; i++) {
+                    var parts = data[i].split(Simulator.Constants.KEY_VALUE_DELIMITTER);
+                    if (parts[1]) parts[1] = this.internationalizeAnimationOutputPart(parts[1]); // create tag here
+                    translatedData.push(parts.join(Simulator.Constants.KEY_VALUE_DELIMITTER));
+                }
+            }
+            data = translatedData.join(Simulator.Constants.PAIR_DELIMITTER);
+        }
+        if (!this.isLoaded()) // safety check - if translation dictionary is dormant, data should look the same as when it came in
+            if (oldData != data)
+                dbg.logError(source, 'Animation output data may have been corrupted.  If translation dictionary is not loaded, animation output should have passed through internationalization step intact, but the strings are not equal.\nBefore: ' + oldData + ' After: ' + data);
+        return data;
+    }
+
+    // create tag for animation output - if it is not in the dictionary, we add the english version at least
+    this.internationalizeAnimationOutputPart = function(outputValue) {
+        if (!this.isLoaded())
+            return outputValue;
+        if (!isNaN(outputValue))
+            return outputValue;
+        // else, make translation tag!
+        var value = outputValue.trim();
+        var tag = 'trans.animation.output.' + value;
+        if (!this.keyExists(tag)) {
+            // if this is not in our translation dictionary, note it, but at least we can store the english version
+            dbg.logWarning('Unable to match animation output with translation dictionary entry: ' + value + '\nAdding the English version to the dictionary...');
+            var newEntry = [];
+            newEntry[getLanguageIndex('ENU')] = value;
+            // if it turns out we are not in english mode, that's a problem
+            if (!this.getCurrentLanguage() != 'ENU') {
+                dbg.logError('Unable to translate unrecognized animation output into desired language. Falling back to English value');
+                newEntry[getLanguageIndex(this.getCurrentLanguage())] = value; // put english in current language's slot for now...
+            }
+            this.setValue(tag, newEntry);
+        }
+        return tag;
+    }
 
     // private functions
 
@@ -141,7 +227,7 @@ Simulator.Utils.TranslationDictionary = function (sim) {
     function languageNotFoundAction(lang) {
         // put some error/debug message here
         debugf('Error: requested language not found: ' + lang);
-        this.setCurrentLanguage('en'); // default, for now...
+        this.setCurrentLanguage('ENU'); // default, for now...
     }
 
 

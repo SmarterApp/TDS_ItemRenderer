@@ -39,9 +39,6 @@ EditItem.Html = function () {
         var crossoutSpan = document.createElement('span');
         var replacementSpan = document.createElement('span');
         crossoutSpan.innerHTML = crossoutContent;
-        parentDiv.setAttribute('role', 'button');
-        parentDiv.setAttribute('aria-haspopup', 'true');
-        parentDiv.setAttribute('title', 'click to correct');
 
         // Restore the item if the student has blanked out the response.
         if (replaceContent) {
@@ -91,22 +88,20 @@ EditItem.Html = function () {
         }
     };
 
-    this.handleKeyEvent = function(span, evt) {
-        if ((span) && (evt)) {
-                if (evt.key == 'Enter') {
-                    if (typeof this.keyHandlerArray[span.id] == 'function') {
-                        evt.stopPropagation();
-                        evt.preventDefault();
-                        YUD.addClass(span, 'TDS_EDIT_SPAN_HOVER');
-                        this.keyHandlerArray[span.id]();
-                    }
-                } else if (evt.key == 'Esc') {
-                    evt.stopPropagation();
-                    EditItem.Dialog._handleCancelButton(evt);
-                }
-        }
+    this.setKeyHandlers = function(target, scope, clickHandler) {
+        new YAHOO.util.KeyListener(target, {
+            keys: [32, 13]
+        }, {
+            fn: function (evtName, args) {
+                //stop event to prevent Enter key event from closing ET modal
+                YUE.stopEvent(args[1]);
+                clickHandler();
+            },
+            scope: scope,
+            correctScope: true
+        }).enable();
     };
-    
+
     // We render the dialog boxes on YUI panes.  Populate the header and body of them here.
     this.populateDialogBox = function (dialog, interaction) {
         //populate dialog box header
@@ -153,27 +148,37 @@ EditItem.Dialog = {
     _handleCancelButton: function (ev) {
         // Bug 114596 - it is possible that we get here b4 the dialog is set up,
         // due to a keyboard shortcut.  If so, just ignore the event.
-        if (EditItem.Html._activeDbInstance.panelWidget)  {
-            EditItem.Html._activeDbInstance.choiceSpans = [];
-            EditItem.Html._activeDbInstance.panelWidget.hide();
-            YUD.removeClass(EditItem.Html._activeDbInstance.activeSpan, 'TDS_EDIT_SPAN_HOVER');
+        var activeInst = EditItem.Html._activeDbInstance;
+        if (activeInst.panelWidget) {
+            activeInst.choiceSpans = [];
+            activeInst.panelWidget.hide();
+	        var span = activeInst.activeSpan;
+            if (span) {
+                YUD.removeClass(span, 'TDS_EDIT_SPAN_HOVER');
+                span.focus();
+            }
         }
-        EditItem.Html._activeDbInstance.interaction = null;
+        activeInst.interaction = null;
     },
 
     // Private method to handle the OK button and call the item-specific logic
     _handleOkButton : function (ev) {
         // Bug 114596 - it is possible that we get here b4 the dialog is set up,
         // due to a keyboard shortcut.  If so, just ignore the event.
-        if (EditItem.Html._activeDbInstance.interaction &&
-            EditItem.Html._activeDbInstance.panelWidget &&
-            EditItem.Html._activeDbInstance.okHandler) {
-            var interaction = EditItem.Html._activeDbInstance.interaction;
-            EditItem.Html._activeDbInstance.okHandler(interaction);
-            EditItem.Html._activeDbInstance.choiceSpans = [];
-            EditItem.Html._activeDbInstance.textSpan = null;
-            EditItem.Html._activeDbInstance.panelWidget.hide();
-            YUD.removeClass(EditItem.Html._activeDbInstance.activeSpan, 'TDS_EDIT_SPAN_HOVER');
+        var activeInst = EditItem.Html._activeDbInstance;
+        if (activeInst.interaction &&
+            activeInst.panelWidget &&
+            activeInst.okHandler) {
+            var interaction = activeInst.interaction;
+            activeInst.okHandler(interaction);
+            activeInst.choiceSpans = [];
+            activeInst.textSpan = null;
+            activeInst.panelWidget.hide();
+	        var span = activeInst.activeSpan;
+            if (span) {
+                YUD.removeClass(span, 'TDS_EDIT_SPAN_HOVER');
+                span.focus();
+            }
         }
         // Bug 114996 - always remove the active Db instance if we are dismissing the db.
         EditItem.Html._activeDbInstance.interaction = null;
@@ -193,6 +198,15 @@ EditItem.Dialog = {
     // Private method for creating dialog boxes for EditItem
     _buildEditDialog : function(label) {
         var buttons = this._addOkCancel();
+
+        var escKeyListener = new YAHOO.util.KeyListener(document, {
+            keys: [27]
+        }, {
+            fn: this._handleCancelButton,
+            scope: this,
+            correctScope: true
+        });
+
         var editDialog = new YAHOO.widget.Dialog(label,
         {
             width: "320px",
@@ -202,8 +216,9 @@ EditItem.Dialog = {
             draggable: true,
             close: false,
             postmethod: 'none',
-            usearia: true,
+            usearia: false,
             buttons: buttons,
+            keylisteners: escKeyListener,
             role: 'dialog' // 'alertdialog'
             // labelledby: 'testby'
             // describedby: 'testby'
@@ -224,7 +239,7 @@ EditItem.Dialog = {
 
         // set tab index on dialog
         this._setTabIndexOnDialog(editDialog);
-
+        
         return editDialog;
 
     },

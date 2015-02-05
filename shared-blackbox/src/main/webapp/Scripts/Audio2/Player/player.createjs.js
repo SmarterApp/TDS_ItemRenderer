@@ -1,41 +1,9 @@
-﻿(function (audio) {
+﻿/*
+Audio player abstraction implementation for createjs.
+NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems with recorder. 
+*/
 
-    createjs.Sound.initializeDefaultPlugins();
-
-
-    function _parseSources(el) {
-
-        var sources = [];
-
-        if (el.nodeName == 'A') {
-            var url = decodeURIComponent(el.href);
-            sources.push(url);
-        } else if (el.nodeName == 'AUDIO') {
-            for (var i = 0; i < el.children.length; ++i) {
-                var source = el.children[i];
-                sources.push(decodeURIComponent(source.src));
-            }
-        }
-
-        return sources;
-    };
-
-    function _findPlayableSource(element) {
-
-        var sources = _parseSources(element);
-
-        for (var i = 0; i < sources.length; i++) {
-
-            var source = sources[i];
-
-            // check if this browser can play the url or type
-            if (source) {
-                return source;
-            }
-        }
-
-        return null;
-    };
+(function (audio) {
 
     //#region createjs error notification extensions
 
@@ -62,24 +30,25 @@
 
     //#region createjs timeupdate extensions
 
-    function WebAudioTimeUpdateNode(inputNode, soundId) {
+    function WebAudioTimeUpdateNode(inputNode, soundId, sound) {
 
         var context = inputNode.context,
             createScriptProcessor = context.createScriptProcessor || context.createJavaScriptNode,
-            self = this;
+            lastPosition = null;
 
-        // to correctly determine current position, we need to track the position of each pause
-        // initialized to null, but maintained in start/stop and used in calculations in the
-        // onaudioprocess event
-        this._lastStopPosition = null;
+        // some old implementations of Web Audio API don't have channelCount, so we need
+        // to get it from the sound's AudioBuffer
+        var inputChannelCount = inputNode.channelCount || sound.sourceNode.buffer.numberOfChannels,
+            outputChannelCount = 1;
 
-        this._processor = createScriptProcessor.call(context, this._selectBufferSize(context.sampleRate), inputNode.channelCount, 1);
+        this._processor = createScriptProcessor.call(context, this._selectBufferSize(context.sampleRate), inputChannelCount, outputChannelCount);
 
         this._processor.onaudioprocess = function (event) {
             var eventEmitter = player.onTimeUpdate[soundId];
-            if (eventEmitter) {
-                var timeSinceStarted = context.currentTime - self._startTime;   // playback position, in seconds
-                eventEmitter.fire(self._lastStopPosition + timeSinceStarted);
+            var position = sound.getPosition() / 1000;
+            if (eventEmitter && lastPosition !== position) {
+                eventEmitter.fire(position);
+                lastPosition = position;
             }
         };
 
@@ -109,20 +78,14 @@
         return size;
     };
 
-    WebAudioTimeUpdateNode.prototype.start = function (sourceNode, resume) {
+    WebAudioTimeUpdateNode.prototype.start = function (sourceNode) {
         this._sourceNode = sourceNode;
-        this._startTime = this._processor.context.currentTime;
-        if (!resume || !this._lastStopPosition) {
-            this._lastStopPosition = 0;
-        }
         this._sourceNode.connect(this._inputNode);
         this._inputNode.connect(this._processor);
         this._processor.connect(this._processor.context.destination);
     };
 
     WebAudioTimeUpdateNode.prototype.stop = function () {
-        this._lastStopPosition = this._lastStopPosition + this._processor.context.currentTime - this._startTime;
-
         this._processor.disconnect();
         this._inputNode.disconnect();
 
@@ -177,12 +140,13 @@
             sound.on('succeeded', function (event, id) {
 
                 // bind the timeupdate event to this sound
-                // the sound's webaudio nodes are initialized until the sounds starts playing
-                sound.timeupdateNode = new WebAudioTimeUpdateNode(sound.panNode, id);
+                // the sound's webaudio nodes are not initialized until the sounds starts playing
+                sound.timeupdateNode = new WebAudioTimeUpdateNode(sound.panNode, id, sound);
 
                 // the sound is playing, so fire the onPlay event
                 // NOTE: this must happen after setting up the timeupdateNode; one of the onPlay events uses timeupdateNode
                 this.onPlay.fire(id);
+                this.onStart.fire(id);
             }, this, false, id);
 
             sound.on('complete', function (event, id) {
@@ -206,11 +170,9 @@
         _initializeTimeUpdateEvent: function () {
             var self = this;
 
-            function makeStartTimeUpdateCallback(resume) {
-                return function startTimeUpdate(id) {
-                    var sound = self._sounds[id];
-                    sound.timeupdateNode.start(sound.sourceNode, resume);
-                };
+            function startTimeUpdate(id) {
+                var sound = self._sounds[id];
+                sound.timeupdateNode.start(sound.sourceNode);
             }
 
             function stopTimeUpdate(id) {
@@ -219,16 +181,19 @@
             }
 
             // start (play and resume) stop and finish (idle) and pause (pause)
-            this.onPlay.subscribe(makeStartTimeUpdateCallback(false));
-            this.onResume.subscribe(makeStartTimeUpdateCallback(true));
+            this.onPlay.subscribe(startTimeUpdate);
+            this.onResume.subscribe(startTimeUpdate);
             this.onIdle.subscribe(stopTimeUpdate);
             this.onPause.subscribe(stopTimeUpdate);
         },
 
+        // this function is mainly for isolation during unit testing
         teardown: function () {
-            // this function is mainly for isolation during unit testing
 
-            createjs.Sound.removeAllSounds();
+            if (createjs.Sound.activePlugin) {
+                createjs.Sound.removeAllSounds();
+            }
+
             createjs.Sound.removeAllEventListeners();
 
             this.onBeforePlay.unsubscribeAll();
@@ -236,6 +201,7 @@
             this.onPause.unsubscribeAll();
             this.onBeforeResume.unsubscribeAll();
             this.onResume.unsubscribeAll();
+            this.onStart.unsubscribeAll();
             this.onStop.unsubscribeAll();
             this.onFinish.unsubscribeAll();
             this.onFail.unsubscribeAll();
@@ -258,9 +224,9 @@
             this._onReady.subscribe(callback);
         },
 
+        // check if web audio api is supported
         isSupported: function () {
-            // createjs is missing error handling for file load/parse with <audio>, so we will only use createjs when webaudio is available
-            return createjs.Sound.isReady() && createjs.Sound.activePlugin instanceof createjs.WebAudioPlugin;
+            return !!(window.AudioContext || window.webkitAudioContext);
         },
 
         play: function (id) {
@@ -294,19 +260,27 @@
                 return false;
             }
 
-            var wasPlaying;
+            var wasPlaying, wasPaused;
 
             if (sound.loading) {
                 var lastCommand = sound.commands[sound.commands.length - 1];
                 wasPlaying = lastCommand === 'play' || lastCommand === 'resume';
                 sound.commands.push('stop');
             } else {
-                // stop always returns true if it succeeds
+                // stop always returns true, but we need to know if sound was actually playing (for firing events below)
                 // pause only returns true if the sound was playing and it succeeds
-                wasPlaying = sound.pause();
-                sound.stop();
+                wasPlaying = sound.air_playState === 'playing' && sound.pause();
+                wasPaused = sound.air_playState === 'paused';
 
-                if (wasPlaying) {
+                // createjs does not safely stop a WebAudio sound when it is already paused
+                // we force the sound to play so that we can stop it and leave it in a consistent state
+                // note: this proplem appears to be fixed in soundjs 0.6.0
+
+                (wasPlaying || wasPaused) && (sound.resume(), sound.stop());
+
+                this.onTimeUpdate[id].fire(0);
+
+                if (wasPlaying || wasPaused) {
                     this.onStop.fire(id);
                     this.onIdle.fire(id);
                 }
@@ -348,6 +322,7 @@
 
                 if (ret) {
                     this.onResume.fire(id);
+                    this.onStart.fire(id);
                 }
             }
 
@@ -378,7 +353,7 @@
                 }
             }
 
-            sound.air_playState = '';
+            sound.air_playState = 'paused';
 
             return wasPlaying;
         },
@@ -397,17 +372,42 @@
             // MM - I don't see anyone using this. If you can confirm this as well I think we should get rid of it. 
         },
 
+        getDuration: function (id) {
+            var sound = this._sounds[id];
+            return sound ? (sound.getDuration() / 1000) : 0;
+        },
+
+        setPosition: function (id, time) {
+            var sound = this._sounds[id];
+            if (sound) {
+                sound.setPosition(Math.floor(time * 1000));
+                if (sound.air_playState !== 'playing') {
+                    this.onTimeUpdate[id].fire(time);
+                }
+            }
+        },
+
+        getPosition: function (id) {
+            var sound = this._sounds[id];
+            return sound ? (sound.getPosition() / 1000) : 0;
+        },
+
         canPlaySource: function (source) {
+
             // regex will help treat mime types and file extensions the same way
-            var m = source.type.match(/^(?:(?:audio|video)\/)?(\w+)$/);
+            // optional handling of RFC4281 "codecs parameter"
+            var m = source.type.match(/^(?:(?:audio|video)\/)?(\w+)(?:; codecs\*?=[\"%'\., \w]+)?$/);
 
             if (!m) {
                 return false;
             }
 
-            return createjs.Sound.getCapability(m[1]);
+            // initialize plugins (which generates capabilities) and check media type
+            return createjs.Sound.initializeDefaultPlugins() && 
+                   createjs.Sound.getCapability(m[1]);
         },
 
+        // create sound from source element
         createSoundFromSource: function (id, source, options) {
 
             if (this._sounds[id]) {
@@ -460,6 +460,8 @@
         onBeforeResume: new Util.Event.Custom(),
 
         onResume: new Util.Event.Custom(),
+
+        onStart: new Util.Event.Custom(),
 
         onStop: new Util.Event.Custom(),
 

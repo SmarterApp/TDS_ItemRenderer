@@ -13,6 +13,9 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
         this.Events = {
             // Event to fire if security breach is detected. Subscribers can decide what to do with the breach
             onSecurityBreach: new YAHOO.util.CustomEvent('onSecurityBreach', this, false, YAHOO.util.CustomEvent.FLAT),
+
+            // Event to fire when system volume is changed
+            onSetVolume: new YAHOO.util.CustomEvent('onSetVolume', this, false, YAHOO.util.CustomEvent.FLAT),
         };
         
         // Adding events
@@ -30,9 +33,16 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
 
     Base.prototype.dispose = function() { };
 
+    // Check if the environment is can be secured before testing
+    Base.prototype.canEnvironmentBeSecured = function () {
+        var result = { 'canSecure': true, 'messageKey': null };
+        return result;
+    };
+
     // Check if the environment is secure for testing
-    Base.prototype.isEnvironmentSecure = function() {
-        return true;
+    Base.prototype.isEnvironmentSecure = function () {
+        var result = { 'secure': true, 'messageKey': null };
+        return result;
     };
 
     // Clear all cached resources
@@ -185,6 +195,10 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
     };
 
     Base.prototype.enablePermissiveMode = function(enabled) {};
+
+    Base.prototype.isPermissiveModeEnabled = function() {
+        return false;
+    };
 
     Base.prototype.enableChromeMode = function(enabled) {
     };

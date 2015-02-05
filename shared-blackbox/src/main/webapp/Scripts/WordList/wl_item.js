@@ -43,21 +43,43 @@ function WordListItem () {
     // We have fetched word list data for this span and this student, and 
     // there is some data for it so we will tag the span to be interactive and
     // pop up the word list when the student clicks on it.
+    //
+    // We now also (for WCAG) convert the <span> to an <a> (anchor) tag
     this.TagSingleSpan = function (span) {
-        
-        // Add the tag to the span and add click/hover events.
-        YUD.addClass(span, WordListItem.ClassNameString);
+
+        // Create new anchor with same inner HTML as the span
+        var anchor = document.createElement('a');
+        $(anchor).html($(span).html());
+
+        // Copy attributes
+        $.each(span.attributes, function(i, attrib) {
+            $(anchor).attr(attrib.name, attrib.value);
+        });
+
+        // Add the attributes to the span and add click/hover events
+        $(anchor).addClass(WordListItem.ClassNameString);
         var spanid = 'word-list-' + WordListItem.CTag;
         WordListItem.CTag++;
-        YUD.setAttribute(span, 'id', spanid);
+        $(anchor).attr('id', spanid);
+        $(anchor).attr('tabindex', '0');
+        $(anchor).attr('aria-label', 'lookup word');
+        $(anchor).attr('role', 'button');
 
-        // WordList.hoverClear = div.style.backgroundColor;
-        YAHOO.util.Event.addListener(span, 'mouseenter', WordListItem.mouseOver, this);
-        YAHOO.util.Event.addListener(span, 'mouseleave', WordListItem.mouseOut, this);
-        YAHOO.util.Event.addListener(span, 'click', WordListItem.clickHandler, this);
+        YAHOO.util.Event.addListener(anchor, 'mouseenter', WordListItem.mouseOver, this);
+        YAHOO.util.Event.addListener(anchor, 'mouseleave', WordListItem.mouseOut, this);
+        YAHOO.util.Event.addListener(anchor, 'click', WordListItem.clickHandler, this);
+
+        var accProps = Accommodations.Manager.getCurrentProps();
+        if (accProps.isStreamlinedMode()) {
+            YAHOO.util.Event.addListener(anchor, 'keyup', WordListItem.clickHandler, this);
+        }
+
+        // Replace the span with our newly created button in the DOM
+        $(span).after(anchor);
+        $(span).remove();
         
         // Update the tabbing array
-        myPageSpans[spanCount] = span;
+        myPageSpans[spanCount] = anchor;
         ++spanCount;
         myPageZOrders.total = spanCount;
     };
@@ -70,7 +92,6 @@ function WordListItem () {
         //var elements = item.getElement();
 
         var spans = [];
-        var dupSpans = [];
         var tmpSpanCount = 0;
 
         // Before we can tag the spans for real, we need to retag the HTML
@@ -96,46 +117,50 @@ function WordListItem () {
 
         var itemKey = this.wl_res.itemKey;
         var baseKey = this.wl_res.bankKey + '-' + this.wl_res.itemKey + '-';
-        WordListPanel.requestQ[itemKey] = [];
-        // for every span or div in the new item...
-        for (var i = 0; i < WordListItem.tagType.length; ++i) {
-            divs = elements.getElementsByTagName(WordListItem.tagType[i]);
-            for (var j = 0; divs != null && j < divs.length; ++j) {
-                
-                // See if the span has the word list attribute.
-                div = divs[j];
-                var index = YUD.getAttribute(div, WordListItem.attributeName);
-                if (index != null) {
-                    var key = baseKey + index.toString();
-                    WordListPanel.requestQ[itemKey].push({ wl_item: this, span: div, key: key });
-                    
-                    if (!dupSpans[parseInt(index)]) {
-                        var indexString = WordListPanel.indexHdr + "=" + index.toString();
-                        if (WordListPanel.indices == "") WordListPanel.indices = indexString;
-                        else WordListPanel.indices = WordListPanel.indices + '&' + indexString;
-                        dupSpans[parseInt(index)] = true;
-                    }
-                }
-            }
+        WordListPanel.requestQ[itemKey] = {};
+        if (!WordListPanel.tagQ[itemKey]) { // Init empty array
+            WordListPanel.tagQ[itemKey] = [];
         }
+
+        // for every span or div in the new item...
+        var self = this;
+        WordListItem.tagType.forEach(function(tagType) {
+            divs = elements.getElementsByTagName(tagType);
+            if (divs != null) {
+                $.each(divs, function(i, div) {
+                    var index = YUD.getAttribute(div, WordListItem.attributeName);
+                    if (index != null) {
+                        var key = baseKey + index.toString();
+
+                        // Need to tag the span
+                        WordListPanel.tagQ[itemKey].push({ wl_item: self, span: div, key: key });
+
+                        // May need to lookup the word
+                        if ((WordListPanel.requestQ[itemKey][key] == null) &&
+                        (WordListPanel.contentWordCache[key] == null)) {
+                            WordListPanel.requestQ[itemKey][key] = index;
+                        }
+                    }
+                });
+            }            
+        });
 
         // If this is the first word list item, start the XHR process off.
         WordListPanel.sendRequest(this);
-        WordListPanel.indices = '';
     });
 
-    // Some key events allow the shortcuts, handle them. For now we use:
-    // ctrl-x to tab between word list spans.  Last selected span is 
-    // displayed as if it were clicked.  The tabbing is done in whichever
-    // item has the focus.  esc dismisses the word list panel.  ctrl-x also
-    // tabs between tabs in the panel itself.
+    // Some key events allow for shortcuts so handle them. For now we use:
+    // Ctrl-X to tab between word list spans when not in streamlined mode.
+    // Last selected span is displayed as if it were clicked.  The tabbing
+    // is done in whichever item has the focus.  esc dismisses the word
+    // list panel. Ctrl-X also tabs between tabs in the panel itself.
     //
     // returns true if the key event was handled here.
     this.HandleKey = function (evt) {
         var isHandled = false;
         
         // key has been released - is a word list term selected
-        if ((evt.type == 'keyup') && (!evt.ctrlKey)) {
+        if ((evt.type == 'keyup') && !evt.ctrlKey) {
             if (myPageZOrders != null) {
                 zo = myPageZOrders;
                 spans = myPageSpans;
@@ -143,10 +168,8 @@ function WordListItem () {
                     var div = spans[zo.current];
                     var entry = { wl_item: this, span: div };
 
-                    WordListPanel.processClick(entry,
-                        this.getGroupHtml(div));
-                    this.AddClassToGroup(div,
-                        WordListItem.ClassNameString, WordListItem.ClassNameStringHover); 
+                    WordListPanel.processClick(entry, this.getGroupHtml(div));
+                    this.AddClassToGroup(div, WordListItem.ClassNameString, WordListItem.ClassNameStringHover); 
                     // Don't reset the zo on each click, take up where we left off
                     // because some of these items have quite a few.
                     // zo.current = -1;
@@ -154,36 +177,39 @@ function WordListItem () {
                 }            
             }
         }
-    
+
         if (evt.keyCode == 27) // esc, dismiss
         {
-            if (WordListPanel.panel != null)
+            if (WordListPanel.panel != null) {
                 WordListPanel.panel.hide();
+            }
             return isHandled;
         }
         
-        if (!(evt.type == 'keydown'))
+        if (evt.type != 'keydown') {
             return isHandled;
-    
-        if (!evt.ctrlKey) return;
+        }
 
-        if (evt.keyCode != 88) // Ctrl-x
+        if (!evt.ctrlKey) { // Everything else we look at must be a Ctrl-key combo for a keydown event
             return isHandled;
+        }
+
+        if (evt.keyCode != 88) { // Ctrl-x
+            return isHandled;
+        }
 
         // Indicate that this even was for us, so we stop propagation.
         isHandled = true;
         
         // If word list is displayed, use tab shortcutto tab between
         // tabs in the word list.
-        if ((WordListPanel.panel != null)  && 
-             (WordListPanel.panel.cfg.getProperty('visible') == true) &&
-             (WordListPanel.tabView != null) &&
-             (WordListPanel.tabCount > 0)) {
+        if ((WordListPanel.panel != null) && WordListPanel.IsVisible() &&
+        (WordListPanel.tabView != null) && (WordListPanel.tabCount > 0)) {
             WordListPanel.tabCurrent = (WordListPanel.tabCurrent + 1) % WordListPanel.tabCount;
             WordListPanel.tabView.selectTab(WordListPanel.tabCurrent);
             return isHandled;
         }
-    
+
         // ctrl-x, tab to the next word list span.  If the last one on the 
         // page, select none
         var spanGroupAttr = "";
@@ -191,24 +217,23 @@ function WordListItem () {
             var zo = myPageZOrders;
             var spans = myPageSpans;
             if (zo.current >= 0) {
-                spanGroupAttr = YUD.getAttribute(spans[zo.current],WordListItem.groupAttributeName);
-                this.AddClassToGroup(
-                    spans[zo.current],WordListItem.ClassNameString, WordListItem.ClassNameStringHover);
+                spanGroupAttr = YUD.getAttribute(spans[zo.current], WordListItem.groupAttributeName);
+                this.AddClassToGroup(spans[zo.current], WordListItem.ClassNameString, WordListItem.ClassNameStringHover);
             }
-            zo.current = zo.current + 1;
+            ++zo.current;
             // There might be multiple spans for the same word list, so advance the 
             // counter twice if we need to.
-            while ((zo.current < zo.total) && 
-                (YUD.getAttribute(spans[zo.current],WordListItem.groupAttributeName) == spanGroupAttr)) {
-                zo.current = zo.current + 1;
+            while ((zo.current < zo.total) && (YUD.getAttribute(spans[zo.current], WordListItem.groupAttributeName) == spanGroupAttr)) {
+                ++zo.current;
             }
             if (zo.current == zo.total) {
                 zo.current = -1;
                 return isHandled;
             }
-            this.AddClassToGroup(spans[zo.current],WordListItem.ClassNameStringHover, WordListItem.ClassNameString); 
+            this.AddClassToGroup(spans[zo.current], WordListItem.ClassNameStringHover, WordListItem.ClassNameString); 
             ContentManager.log("wordlist: focus span " + zo.current + " out of " + zo.total + " evt is " + evt.type);
         }
+
         return isHandled;
     };
     
@@ -216,7 +241,7 @@ function WordListItem () {
     this.AddClassToGroup = function(div, classToAdd, classToRemove) {
         var groupTag = YAHOO.util.Dom.getAttribute(div,WordListItem.groupAttributeName);
         for (var j = 0; j < myPageSpans.length; ++j) {
-            if (YAHOO.util.Dom.getAttribute(myPageSpans[j],WordListItem.groupAttributeName) == groupTag) {
+            if (YAHOO.util.Dom.getAttribute(myPageSpans[j], WordListItem.groupAttributeName) == groupTag) {
                 YAHOO.util.Dom.removeClass(myPageSpans[j], classToRemove);
                 YAHOO.util.Dom.addClass(myPageSpans[j], classToAdd);
             }
@@ -243,26 +268,27 @@ function WordListItem () {
 
 ///////////////// Event Handlers  ////////////////
 
-// Change class of span and other spans in gropu to hover
+// Change class of span and other spans in group to hover
 WordListItem.mouseOver = (function (event, wl) {
     var div = this;
-    wl.AddClassToGroup(div,
-        WordListItem.ClassNameStringHover, WordListItem.ClassNameString);
+    wl.AddClassToGroup(div, WordListItem.ClassNameStringHover, WordListItem.ClassNameString);
 });
 
 // Change class of span and other spans in gropu to normal
 WordListItem.mouseOut = (function (event, wl) {
     var div = this;
-    wl.AddClassToGroup(div, 
-        WordListItem.ClassNameString, WordListItem.ClassNameStringHover);
+    wl.AddClassToGroup(div, WordListItem.ClassNameString, WordListItem.ClassNameStringHover);
 });
 
-// Use has clicked on one of the word list activated spans.  Get required information
-// from the span/item and send it to the panel click handler.
-WordListItem.clickHandler = (function(event, wl) {
-    var div = this;
-    var entry = { wl_item: wl, span: div };
-    var headerText = wl.getGroupHtml(div);
-    WordListPanel.processClick(entry, headerText);
+// Use has clicked on one of the word list activated spans (where a click is either a mouse click
+// or a press of the enter key/space bar when the word list item is focused in streamlined mode).
+// When not in streamlined mode keyboard input is handled in the HandleKey function above.
+// Get required information from the span/item and send it to the panel click handler.
+WordListItem.clickHandler = (function (event, wl) {
+    if (event.type == 'click' || (event.type == 'keyup' && (event.keyCode == 13 || event.keyCode == 32))) {
+        var div = this;
+        var entry = { wl_item: wl, span: div };
+        var headerText = wl.getGroupHtml(div);
+        WordListPanel.processClick(entry, headerText);
+    }
 });
-

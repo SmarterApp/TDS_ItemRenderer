@@ -1,195 +1,195 @@
 <resources>
+    
+    <import>scripts_shared.xml</import>
 
-	<import>scripts_shared.xml</import>
-
-	<fileSet name="student">
-		<input>Student/xhr.js</input>
-		<input>Student/storage.js</input>
-		<input>Student/api.js</input>
-		<input>Student/ui.js</input>
+    <fileSet name="student">
+        <input>Student/xhr.js</input>
+        <input>Student/storage.js</input>
+        <input>Student/api.js</input>
+        <input>Student/ui.js</input>
 	</fileSet>
+	
+    <!-- Base -->
+    <fileSet name="base" output="combined/tds_base.js">
+        <reference set="libs" />
+        <reference set="utilities" />
+        <reference set="loader" />
+        <reference set="messages" />
+        <reference set="accommodations" />
+        <reference set="tts2" />
+        <reference set="tools" />
+        <reference set="audio2" />
+        <reference set="student" />
+	<input>sbacoss/merge.js</input>
+    </fileSet>
 
-	<!-- Base -->
-	<fileSet name="base" output="combined/tds_base.js">
-		<reference set="libs" />
-		<reference set="utilities" />
-		<reference set="loader" />
-		<reference set="messages" />
-		<reference set="accommodations" />
-		<reference set="tts2" />
-		<reference set="tools" />
-		<reference set="audio2" />
-		<reference set="student" />
-		<input>sbacoss/merge.js</input>
-	</fileSet>
+    <!-- MasterShell -->
+    <fileSet name="mastershell">
+        <input>Sections/section.js</input>
+        <input>Sections/section_Logout.js</input>
+        <input>Shells/mastershell.js</input>
+    </fileSet>
 
-	<!-- MasterShell -->
-	<fileSet name="mastershell">
-		<input>Sections/section.js</input>
-		<input>Sections/section_Logout.js</input>
-		<input>Shells/mastershell.js</input>
-	</fileSet>
+    <!-- LoginShell -->
+    <fileSet name="loginshell" output="combined/tds_loginshell.js">
+        <reference set="mastershell" />
+        <input>Shells/loginshell.js</input>
+	<input>Sections/section_LoginProctor.js</input>
+	<input>Sections/section_Login.js</input>
+	<input>Sections/section_LoginVerify.js</input>
+        <input>Sections/section_TestSelection.js</input>
+        <input>Sections/section_TestApproval.js</input>
+        <input>Sections/section_Accommodations.js</input>
+        <input>Sections/section_TestVerify.js</input>
+        <input>Sections/section_Instructions.js</input>
+        <input>Sections/section_SoundCheck.js</input>
+        <input>Sections/section_TTSCheck.js</input>
+    </fileSet>
 
-	<!-- LoginShell -->
-	<fileSet name="loginshell" output="combined/tds_loginshell.js">
-		<reference set="mastershell" />
-		<input>Shells/loginshell.js</input>
-		<input>Sections/section_LoginProctor.js</input>
-		<input>Sections/section_Login.js</input>
-		<input>Sections/section_LoginVerify.js</input>
-		<input>Sections/section_TestSelection.js</input>
-		<input>Sections/section_TestApproval.js</input>
-		<input>Sections/section_Accommodations.js</input>
-		<input>Sections/section_TestVerify.js</input>
-		<input>Sections/section_Instructions.js</input>
-		<input>Sections/section_SoundCheck.js</input>
-		<input>Sections/section_TTSCheck.js</input>
-	</fileSet>
+    <!-- ReviewShell -->
+    <fileSet name="reviewshell" output="combined/tds_reviewshell.js">
+        <reference set="mastershell" />
+        <input>Shells/reviewshell.js</input>
+        <input>Sections/section_TestReview.js</input>
+        <input>Sections/section_TestResults.js</input>
+    </fileSet>
 
-	<!-- ReviewShell -->
-	<fileSet name="reviewshell" output="combined/tds_reviewshell.js">
-		<reference set="mastershell" />
-		<input>Shells/reviewshell.js</input>
-		<input>Sections/section_TestReview.js</input>
-		<input>Sections/section_TestResults.js</input>
-	</fileSet>
+    <!-- *************************************************************************************** -->
 
-	<!-- *************************************************************************************** -->
+    <!-- Test Shell Core -->
+    <fileSet name="testshell-base">
 
-	<!-- Test Shell Core -->
-	<fileSet name="testshell-base">
+        <input>TestShell/testshell.js</input>
+        <input>TestShell/testshell_UI.js</input>
+        <input>TestShell/testshell_Keyboard.js</input>
+        <input>TestShell/testshell_Menu.js</input>
+        <input>TestShell/testshell_CoverPages.js</input>
+        <input>TestShell/testshell_ContentManager.js</input>
+        <input>TestShell/testshell_Xml.js</input>
+        <input>TestShell/testshell_Xhr.js</input>
 
-		<input>TestShell/testshell.js</input>
-		<input>TestShell/testshell_UI.js</input>
-		<input>TestShell/testshell_Keyboard.js</input>
-		<input>TestShell/testshell_Menu.js</input>
-		<input>TestShell/testshell_CoverPages.js</input>
-		<input>TestShell/testshell_ContentManager.js</input>
-		<input>TestShell/testshell_Xml.js</input>
-		<input>TestShell/testshell_Xhr.js</input>
+        <input>TestShell/testshell_ResponseManager.js</input>
+        <input>TestShell/testshell_Item.js</input>
+        <input>TestShell/testshell_Page.js</input>
+        <input>TestShell/testshell_PageContent.js</input>
+        <input>TestShell/testshell_PageGroup.js</input>
+        <input>TestShell/testshell_PageResource.js</input>
+        <input>TestShell/testshell_PageReview.js</input>
+        <input>TestShell/testshell_PageManager.js</input>
+        <input>TestShell/testshell_ContentLoader.js</input>
+        <input>TestShell/testshell_SegmentManager.js</input>
+        <input>TestShell/testshell_Validation.js</input>
+        <input>TestShell/testshell_Navigation.js</input>
+        <input>TestShell/testshell_Audit.js</input>
 
-		<input>TestShell/testshell_ResponseManager.js</input>
-		<input>TestShell/testshell_Item.js</input>
-		<input>TestShell/testshell_Page.js</input>
-		<input>TestShell/testshell_PageContent.js</input>
-		<input>TestShell/testshell_PageGroup.js</input>
-		<input>TestShell/testshell_PageResource.js</input>
-		<input>TestShell/testshell_PageReview.js</input>
-		<input>TestShell/testshell_PageManager.js</input>
-		<input>TestShell/testshell_ContentLoader.js</input>
-		<input>TestShell/testshell_SegmentManager.js</input>
-		<input>TestShell/testshell_Validation.js</input>
-		<input>TestShell/testshell_Navigation.js</input>
-		<input>TestShell/testshell_Audit.js</input>
+        <!--SIRVE specific script file-->
+        <input>TestShell/testShell_SIRVE.js</input>
 
-		<!--SIRVE specific script file -->
-		<input>TestShell/testShell_SIRVE.js</input>
-
-		<input>TestShell/testshell_Modules.js</input>
-
-		<!-- modules -->
-		<input>TestShell/Modules/automute.js</input>
-		<input>TestShell/Modules/calculator.js</input>
-		<input>TestShell/Modules/dictionary.js</input>
-		<input>TestShell/Modules/formula.js</input>
-		<input>TestShell/Modules/rubric.js</input>
-		<input>TestShell/Modules/fullscreen.js</input>
-		<input>TestShell/Modules/help.js</input>
-		<input>TestShell/Modules/idle.js</input>
-		<input>TestShell/Modules/linereader.js</input>
-		<input>TestShell/Modules/logging.js</input>
-		<input>TestShell/Modules/masking.js</input>
-		<input>TestShell/Modules/periodictable.js</input>
-		<input>TestShell/Modules/print.js</input>
-		<!-- <input>TestShell/Modules/proxy.js</input> -->
-		<input>TestShell/Modules/tools.js</input>
-		<input>TestShell/Modules/tts.js</input>
-		<input>TestShell/Modules/zoom.js</input>
-		<input>TestShell/Modules/mt.js</input>
+        <input>TestShell/testshell_Modules.js</input>
+        
+        <!-- modules -->
+        <input>TestShell/Modules/automute.js</input>
+        <input>TestShell/Modules/calculator.js</input>
+        <input>TestShell/Modules/dictionary.js</input>
+        <input>TestShell/Modules/formula.js</input>
+        <input>TestShell/Modules/rubric.js</input>
+        <input>TestShell/Modules/fullscreen.js</input>
+        <input>TestShell/Modules/help.js</input>
+        <input>TestShell/Modules/idle.js</input>
+        <input>TestShell/Modules/linereader.js</input>
+        <input>TestShell/Modules/logging.js</input>
+        <input>TestShell/Modules/masking.js</input>
+        <input>TestShell/Modules/periodictable.js</input>
+        <input>TestShell/Modules/print.js</input>
+        <!-- <input>TestShell/Modules/proxy.js</input> -->
+        <input>TestShell/Modules/tools.js</input>
+        <input>TestShell/Modules/tts.js</input>
+        <input>TestShell/Modules/zoom.js</input>
+        <input>TestShell/Modules/mt.js</input>
 		<input>TestShell/Modules/securitybreach.js</input>
 		<input>TestShell/Modules/audit.js</input>
 
-		<!-- Comments -->
-		<input>Comments/comments.js</input>
-		<input>Comments/base.js</input>
-		<input>Comments/item.js</input>
-		<input>Comments/global.js</input>
-		<input>Comments/module.js</input>
+        <!-- Comments -->
+        <input>Comments/comments.js</input>
+        <input>Comments/base.js</input>
+        <input>Comments/item.js</input>
+        <input>Comments/global.js</input>
+        <input>Comments/module.js</input>
+        
+        <!-- System Dialog -->
+        <reference set="systemDialog" />
+        
+    </fileSet>
 
-		<!-- System Dialog -->
-		<reference set="systemDialog" />
-
-	</fileSet>
-
-	<!-- Test Shell Modern -->
-	<fileSet name="testshell" output="combined/tds_testshell.js">
-		<reference set="content-manager" />
-		<reference set="content-audio2" />
-		<reference set="content-tts2" />
-		<reference set="content-qti" />
-		<reference set="content-animation" /> <!-- needs to be before video -->
-		<reference set="content-video" />
-		<reference set="content-spell" />
-		<reference set="content-editor2" />
-		<reference set="content-grid2" />
+    <!-- Test Shell Modern -->
+    <fileSet name="testshell" output="combined/tds_testshell.js">
+        <reference set="content-manager" />
+        <reference set="content-audio2" />
+        <reference set="content-tts2" />
+        <reference set="content-qti" />
+        <reference set="content-animation" /> <!-- needs to be before video -->
+        <reference set="content-video" />
+        <reference set="content-spell" />
+        <reference set="content-editor2" />
+        <reference set="content-grid2" />
 		<reference set="content-ht" />
-		<reference set="content-mi" />
-		<reference set="content-mt" />
+        <reference set="content-mi" />
+        <reference set="content-mt" />
 		<reference set="content-sim2" />
-		<reference set="content-eq3" />
-		<reference set="content-linereader" />
-		<reference set="content-slideshow" />
+        <reference set="content-eq3" />
+        <reference set="content-linereader" />
+        <reference set="content-slideshow2" />
 		<reference set="content-mask" />
-		<reference set="content-edittask" />
+        <reference set="content-edittask" />
 		<reference set="content-notes" />
 		<reference set="content-scratchpad" />
-		<reference set="content-scaffolding" />
-		<reference set="content-ti" />
+        <reference set="content-scaffolding" />
+        <reference set="content-ti" />
 		<reference set="content-moogle" />
-		<reference set="content-modules" />
+        <reference set="content-modules" />
 
-		<reference set="testshell-base" />
+        <reference set="testshell-base" />
 
-	</fileSet>
+    </fileSet>
 
-	<!-- Test Shell Accessibility (same as Test Shell Modern) -->
-	<fileSet name="testshell-accessibility" output="combined/tds_testshell_accessibility.js">
-		<reference set="content-video" />
-		<reference set="content-manager" />
-		<reference set="content-animation" />
-		<reference set="content-spell" />
-		<reference set="content-editor2" />
-		<reference set="content-grid2" />
-		<reference set="content-mi" />
-		<reference set="content-mt" />
-		<reference set="content-eq3-accessibility" />
-		<reference set="content-ht" />
-		<reference set="content-sim2" />
-		<reference set="content-linereader" />
-		<reference set="content-slideshow" />
-		<reference set="content-edittask" />
-		<reference set="content-scaffolding" />
+    <!-- Test Shell Accessibility (same as Test Shell Modern) -->
+    <fileSet name="testshell-accessibility" output="combined/tds_testshell_accessibility.js">
+        <reference set="content-video" />
+        <reference set="content-manager" />
+        <reference set="content-animation" />
+        <reference set="content-spell" />
+        <reference set="content-editor2" />
+        <reference set="content-grid2" />
+        <reference set="content-mi" />
+        <reference set="content-mt" />
+        <reference set="content-eq3-accessibility" />
+        <reference set="content-ht" />
+        <reference set="content-sim2" />
+        <reference set="content-linereader" />
+        <reference set="content-slideshow2" />
+        <reference set="content-edittask" />
+        <reference set="content-scaffolding" />
 		<reference set="content-ti" />
-		<reference set="content-modules" />
+        <reference set="content-modules" />
 
-		<reference set="testshell-base" />
+        <reference set="testshell-base" />
+        
+    </fileSet>
 
-	</fileSet>
-
-	<fileSet name="TDSCalculator" output="combined/tds_calculator.js">
-		<input>Calculator/tds_calc_config.js</input>
-		<input>Calculator/sylvester.src.js</input>
-		<input>Calculator/tds_calc_main.js</input>
-		<input>Calculator/tds_calc_arithmetic.js</input>
-		<input>Calculator/tds_calc_regression.js</input>
-		<input>Calculator/tds_calc_matrices.js</input>
-		<input>Calculator/tds_calc_graphing.js</input>
-		<input>Calculator/yahoo-dom-event.js</input>
-		<input>Calculator/tds_calc_env.js</input>
-		<input>Calculator/shortcut.js</input>
-		<input>Calculator/textCanvas.js</input>
-		<input>Calculator/excanvas.js</input>
-		<input>Calculator/css_browser_selector.js</input>
-	</fileSet>
+    <fileSet name="TDSCalculator" output="combined/tds_calculator.js">
+        <input>Calculator/tds_calc_config.js</input>
+        <input>Calculator/sylvester.src.js</input>
+        <input>Calculator/tds_calc_main.js</input>
+        <input>Calculator/tds_calc_arithmetic.js</input>
+        <input>Calculator/tds_calc_regression.js</input>
+        <input>Calculator/tds_calc_matrices.js</input>
+        <input>Calculator/tds_calc_graphing.js</input>
+        <input>Calculator/yahoo-dom-event.js</input>
+        <input>Calculator/tds_calc_env.js</input>
+        <input>Calculator/shortcut.js</input>
+        <input>Calculator/textCanvas.js</input>
+        <input>Calculator/excanvas.js</input>
+        <input>Calculator/css_browser_selector.js</input>
+    </fileSet>
 
 </resources>

@@ -400,7 +400,7 @@
     Page.prototype.collapseSelection = function () {
         var pageDoc = this.getActiveDoc();
         var pageSelection = CM.getSelection(pageDoc);
-        if (pageSelection && pageSelection.rangeCount > 0) {
+        if (pageSelection && !pageSelection.isCollapsed && pageSelection.rangeCount > 0) {
             pageSelection.collapseToStart();
         }
     };
@@ -603,31 +603,38 @@
             entity.show();
         });
 
-        // check all plugins to see if they want to override what the active entity should be
-        var activeEntity = Util.Array.findWhere(plugins, function(plugin) {
-            return plugin.getEntityForFocus();
-        });
+        // check if we should select an entity
+        if (!CM.isAccessibilityEnabled()) {
 
-        // figure out the best entity to make active
-        if (!activeEntity) {
-            if (this._lastEntity && this._lastEntity.isShowing()) {
-                activeEntity = this._lastEntity;
-            } else {
-                var items = this.getItems(true);
-                if (items.length > 0) {
-                    activeEntity = items[0]; // first item
+            // check all plugins to see if they want to override what the active entity should be
+            var activeEntity = Util.Array.findWhere(plugins, function (plugin) {
+                return plugin.getEntityForFocus();
+            });
+
+            // figure out the best entity to make active
+            if (!activeEntity) {
+                if (this._lastEntity && this._lastEntity.isShowing()) {
+                    activeEntity = this._lastEntity;
                 } else {
-                    var passage = this.getPassage(true);
-                    if (passage) {
-                        activeEntity = passage; // passage
+                    var items = this.getItems(true);
+                    if (items.length > 0) {
+                        activeEntity = items[0]; // first item
+                    } else {
+                        var passage = this.getPassage(true);
+                        if (passage) {
+                            activeEntity = passage; // passage
+                        }
                     }
                 }
             }
-        }
 
-        // set entity as active (fires entity focus event)
-        if (activeEntity) {
-            activeEntity.setActive(null, true);
+            // set entity as active (fires entity focus event)
+            if (activeEntity) {
+                activeEntity.setActive({
+                    force: true
+                });
+            }
+
         }
 
         // fire show event

@@ -206,6 +206,23 @@ Simulator.Animation.AnimationThread = function (sim, panel, section, animationSe
             debug('In renderNextThreadElement - currentElement = ' + currentElement.getName());
             currentElementName = currentElement.getName();
             if (!currentElementName) dbg().logWarning(source, 'Name is null for current AnimationElement in AnimationThread = ' + this.getName());
+
+            // fb-155397: if flash was specified as the primary format, there was no way to resort to HTML5 if flash was not supported
+            // so, we will always try the HTML5 animation first, and only resort to flash if it is missing or unsupported
+            var html5Src = null,
+                flashSrc = null;
+            var self = this;
+            function tryHTML5AnimationFirst(html5Src, flashSrc) {
+                if (html5Src && util().canPlayHtml5()) { // if there is an HTML5 animation and the browser supports it
+                    renderer().renderAnimation(currentElement, 'animationPanel', html5Src,
+                                util().getFileName(html5Src), currentThreadElement.getMaxTime(), self);
+                }
+                else if (flashSrc) { // html5 not playable/available: try flash format
+                    renderer().renderFlash(currentElement, 'animationPanel', flashSrc,
+                                util().getFileName(flashSrc), currentElement.getControls(),
+                                currentElementName, currentThreadElement.getMaxTime(), self);
+                }
+            }
             switch (currentElement.getType()) {
                 case Simulator.Constants.IMAGE_ANIMATION:
                     debug('In renderNextThreadElement - rendering image ' + currentElement.getSrc());
@@ -214,21 +231,16 @@ Simulator.Animation.AnimationThread = function (sim, panel, section, animationSe
                     break;
                 case 'animation':  // Deprecated! use Simulator.Constants.HTML5_ANIMATION instead
                 case Simulator.Constants.HTML5_ANIMATION:
-                    //if html5 playable
-                    if (util().canPlayHtml5()) {
-                        renderer().renderAnimation(currentElement, 'animationPanel', currentElement.getSrc(),
-                                    util().getFileName(currentElement.getSrc()), currentThreadElement.getMaxTime(), this);
-                    }
-                    else if (currentElement.getAltSrcType() == Simulator.Constants.FLASH_ANIMATION) { // html5 not playable alt src provided
-                        renderer().renderFlash(currentElement, 'animationPanel', currentElement.getAltSrc(),
-                                    util().getFileName(currentElement.getAltSrc()), currentElement.getControls(),
-                                    currentElementName, currentThreadElement.getMaxTime(), this);
-                    }
+                    html5Src = currentElement.getSrc();
+                    if (currentElement.getAltSrcType() == Simulator.Constants.FLASH_ANIMATION)
+                        flashSrc = currentElement.getAltSrc();
+                    tryHTML5AnimationFirst(html5Src, flashSrc);
                     break;
                 case Simulator.Constants.FLASH_ANIMATION:
-                    renderer().renderFlash(currentElement, 'animationPanel', currentElement.getSrc(),
-                                    util().getFileName(currentElement.getSrc()), currentElement.getControls(),
-                                    currentElementName, currentThreadElement.getMaxTime(), this);
+                    flashSrc = currentElement.getSrc();
+                    if (currentElement.getAltSrcType() == Simulator.Constants.HTML5_ANIMATION)
+                        html5Src = currentElement.getAltSrc();
+                    tryHTML5AnimationFirst(html5Src, flashSrc);
                     break;
                 case Simulator.Constants.HOTTEXT_ANIMATION:
                     renderer().renderHotText(currentElement, 'animationPanel', currentElement.getSrc(),

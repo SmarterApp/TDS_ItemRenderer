@@ -11,6 +11,12 @@ TDS.Audio.Player.createQueue = function() {
     return null;
 };
 
+var Messages = {
+    has: function() {
+        return false;
+    }
+}
+
 // run tests sequentially, you cannot run them atomically
 QUnit.config.autostart = false;
 QUnit.config.reorder = false;
@@ -697,6 +703,31 @@ asyncTest('Plugin/Widget ordered', function () {
     function onAvailable() {
         page.once('show', onShow);
         page.show();
+    }
+
+    page.render();
+    page.once('available', onAvailable);
+
+});
+
+asyncTest('Transform html', function () {
+
+    CM.addTransform({
+        match: function(page, content, xmlStr) {
+            return xmlStr.indexOf('Page_sample1') != -1;
+        },
+        execute: function (page, content, xmlDoc) {
+            $('div#Item_1', xmlDoc).text('ITEM 100');
+            return true;
+        }
+    });
+
+    var page = pages.create(contents['sample1']);
+
+    function onAvailable() {
+        var value = $('div#Item_1').text();
+        equal(value, 'ITEM 100');
+        start();
     }
 
     page.render();

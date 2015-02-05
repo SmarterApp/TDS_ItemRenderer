@@ -12,7 +12,6 @@ TDS.Student = TDS.Student || {};
         this._shell = shell;
 
         this.Events.subscribe('onShowProgress', function () {
-            TDS.ARIA.writeLog('Please wait.');
             TDS.Dialog.showProgress();
         });
 

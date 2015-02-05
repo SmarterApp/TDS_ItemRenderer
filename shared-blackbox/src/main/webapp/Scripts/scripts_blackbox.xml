@@ -40,7 +40,7 @@
     <reference set="content-sim2" />
     <reference set="content-eq3" />
     <reference set="content-linereader" />
-    <reference set="content-slideshow" />
+    <reference set="content-slideshow2" />
     <reference set="content-mask" />
     <reference set="content-edittask" />
     <reference set="content-notes" />
@@ -64,17 +64,34 @@
 
   <!-- Files for LPN -->
   <fileSet name="navigator" output="combined/blackbox_lpn.js">
-    <reference set="modern" />
-    <exclude set="content-eq3" />
-    <reference set="content-eq2" />
+    <reference set="modern" />    
+    <exclude set="libs-jQuery" />
+    <!--<exclude set="content-eq3" />-->
+    <!--<reference set="content-eq2" />-->
     <exclude set="content-editor2" />
     <exclude set="content-linereader" />
-    <exclude set="content-slideshow" />
+    <exclude set="content-slideshow2" />
     <exclude set="content-notes" />
     <exclude set="content-scaffolding" />
     <exclude set="content-ti" />
     <exclude set="content-mask" />
   </fileSet>
+  
+  <!-- Files for IAT -->
+  <fileSet name="iat" output="combined/blackbox_iat.js">  
+    <reference set="modern" />    
+    <exclude set="libs-jQuery" />
+    <exclude set="libs-tracekit" />
+    <exclude set="content-editor2" />
+    <exclude set="content-linereader" />
+    <exclude set="content-slideshow2" />
+    <exclude set="content-notes" />
+    <exclude set="content-scaffolding" />
+    <exclude set="content-ti" />
+    <exclude set="content-mask" />
+    <exclude set="content-mt" />
+
+  </fileSet>  
 
   <!-- Files for ITS -->
   <fileSet name="its" output="combined/blackbox_its.js">

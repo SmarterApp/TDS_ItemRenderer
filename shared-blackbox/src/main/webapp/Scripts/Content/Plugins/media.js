@@ -93,6 +93,25 @@ NOTE: For this to work you need to be using ITSUrlResolver2
         return false;
     };
     
+    /*
+    JAWS HTML support:
+    If you wrap the <math> in a <span> and make it aria-hidden=true then it won’t play. 
+    On the first <span> the role=math is useless, but since all specs say to add it I went ahead. 
+    And the role=group/aria-label combo does not work if you hide things inside of it (bug?). 
+    We are left with an additional <span> which we have to move off the screen.
+    <body>
+        This is some math: 
+        <span role="math">
+            <span class="hidden">READ THIS</span>
+            <span role="presentation" aria-hidden="true">
+                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                    <mtext>DON'T READ THIS</mtext>
+                </math>
+            </span>
+        </span>
+    </body>
+    */
+
     // this cleans up mathml dom object
     var processMathML = function (mathMLDoc) {
 
@@ -124,38 +143,8 @@ NOTE: For this to work you need to be using ITSUrlResolver2
         });
     };
 
-    // Call this to check if browser supports MathML.
-    // Summary of Browser Support for MathML: https://vismor.com/documents/site_implementation/viewing_mathematics/S1.SS2.php
-    var supportsMathML = function() {
-
-        // if we are using ipad or android SB then disable MathML
-        if (Util.Browser.isSecure() && (YAHOO.env.ua.android || YAHOO.env.ua.ios)) {
-            return false;
-        }
-
-        // check firefox
-        if (Util.Browser.getFirefoxVersion() > 0) {
-            return (Util.Browser.getFirefoxVersion() >= 4.0); // Firefox 4.0+
-        }
-        
-        // check chrome
-        if (YAHOO.env.ua.chrome > 0) {
-            // Chrome 24 added MathML but Chrome 25+ disabled it...
-            // https://code.google.com/p/chromium/issues/detail?id=174455
-            return false; 
-        }
-        
-        // check safari
-        if (YAHOO.env.ua.webkit >= 534) {
-            return true; // Safari 5.1+
-        }
-
-        // no browsers match
-        return false;
-    };
-
     // process a image node that is going to be replaced by xml
-    var processPageImageXml = function(pageXmlDoc, imgNode, mediaResource) {
+    var processPageImageXml = function (page, pageXmlDoc, imgNode, mediaResource) {
 
         var mediaData = mediaResource.data;
 
@@ -163,7 +152,24 @@ NOTE: For this to work you need to be using ITSUrlResolver2
         if (mediaData.indexOf('MathML') != -1) {
 
             // check if browser supports MathML
-            if (!supportsMathML()) return false;
+            if (!Util.Browser.supportsMathML()) {
+                return false;
+            }
+
+            // we need to disable MathML if we think they are using a screen reader (e.x., JAWS)
+            var pageAccs = page.getAccProps();
+            if (pageAccs) {
+                // in braille mode they are probably using a screen reader and braille display
+                if (pageAccs.hasBraille()) {
+                    return false;
+                }
+                // in streamlined mode and permissive mode we assume they are allowing a screen reader to run
+                if (pageAccs.isStreamlinedMode() &&
+                    pageAccs.isPermissiveModeEnabled()) {
+                    return false;
+                }
+                // TODO: How about an actual screen reader accommodation?
+            }
 
             // cleanup MathML
             mediaData = cleanMathML(mediaData);
@@ -196,29 +202,23 @@ NOTE: For this to work you need to be using ITSUrlResolver2
         return true;
     };
     
-    var processPageImageBase64 = function(pageXmlDoc, imgNode, mediaResource) {
+    var processPageImageBase64 = function (page, pageXmlDoc, imgNode, mediaResource) {
 
         // set the images base64 data
         imgNode.src = 'data:' + mediaResource.type + ';base64,' + mediaResource.data;
         return true;
     };
 
-    // This serializes to HTML.
-    // Use this in place of serializeToString otherwise some browsers collapse <span>'s.
-    var serializeToHtmlString = function(node) {
-        var div = document.createElement('div');
-        div.appendChild(node);
-        return div.innerHTML;
-    };
-
     // call this to process the media on any xml document
-    var processXml = function (xmlDoc, content) {
+    var processImages = function (page, content, xmlDoc) {
 
         // find all the images
         var imageNodes = xmlDoc.getElementsByTagName('img');
 
         // NOTE: node collection is an iterator so we need to clone it or it will shrink during removal of images
         imageNodes = Util.Array.slice(imageNodes);
+
+        var changed = false;
 
         for (var i = 0; i < imageNodes.length; i++) {
 
@@ -234,85 +234,51 @@ NOTE: For this to work you need to be using ITSUrlResolver2
 
             // process xml
             if (mediaResource.type == 'application/mathml+xml') {
-                processPageImageXml(xmlDoc, imgNode, mediaResource);
+                if (processPageImageXml(page, xmlDoc, imgNode, mediaResource)) {
+                    changed = true;
+                }
             }
             else if (mediaResource.type == 'image/png') {
-                processPageImageBase64(xmlDoc, imgNode, mediaResource);
+                if (processPageImageBase64(page, xmlDoc, imgNode, mediaResource)) {
+                    changed = true;
+                }
             }
         }
 
+        return changed;
+
     };
 
-    // call this on a page you want to process the pages html media resources
-    var processPageMedia = function(page, content) {
+    // add image transform
+    CM.addTransform({
+        match: function (page, content, xmlStr) {
+            // ignore IE for now (issues..)
+            if (YAHOO.env.ua.ie) return false;
 
-        // ignore IE for now (issues..)
-        if (YAHOO.env.ua.ie) return;
+            // check if this page has any media resources
+            return getMediaResources(content).length > 0;
+        },
+        execute: processImages
+    });
 
-        // check if this page has any media resources
-        if (getMediaResources(content).length == 0) return;
-
-        // get the pages current html (hasn't been rendered yet)
-        var pageRenderer = page.getRenderer();
-        var pageHtml = pageRenderer.getHtml();
-        pageHtml = YAHOO.lang.trim(pageHtml);
-
-        // parse html into a xmldoc object 
-        var pageXmlDoc = null;
-
-        try {
-            pageXmlDoc = Util.Xml.parseFromString(pageHtml, 'application/xml');
-        } catch(ex) {
-            console.error(ex);
-            return;
+    // add audio transform
+    CM.addTransform({
+        match: function (page, content, xmlStr) {
+            return xmlStr.indexOf('<audio') != -1;
+        },
+        execute: function (page, content, xmlDoc) {
+            $('audio', xmlDoc).each(function (idx, audioNode) {
+                var newEl = Util.Dom.renameTag(audioNode, 'div');
+                var currentClass = newEl.getAttribute('class');
+                if (!currentClass) {
+                    newEl.setAttribute('class', 'tds-audio');
+                }  else if (currentClass.indexOf('tds-audio') === -1) {
+                    newEl.setAttribute('class', currentClass + ' tds-audio');
+                }
+            });
+            return true;
         }
-
-        processXml(pageXmlDoc, content);
-
-        // NOTE: This didn't work very well:
-        // var importedDiv = document.importNode(pageXmlDoc.documentElement, true);
-        // page.setHtml(importedDiv);
-
-        // write html back
-        pageHtml = serializeToHtmlString(pageXmlDoc.documentElement);
-        pageRenderer.setHtml(pageHtml);
-    };
-
-    var processQTI = function(qti, content) {
-
-        // ignore IE for now (issues..)
-        if (YAHOO.env.ua.ie) return;
-
-        // check if this page has any media resources
-        if (getMediaResources(content).length == 0) return;
-
-        // parse html into a xmldoc object 
-        var qtiXmlDoc = null;
-
-        try {
-            qtiXmlDoc = Util.Xml.parseFromString(qti.xml, 'application/xml');
-        } catch (ex) {
-            console.error(ex);
-            return;
-        }
-
-        processXml(qtiXmlDoc, content);
-
-        // write xml back
-        qti.xml = Util.Xml.serializeToString(qtiXmlDoc.documentElement);
-    };
-
-    // call this on a item you want to process the widgets resources
-    var processItemMedia = function(page, item, content) {
-        if (item.qti && item.qti.xml) {
-            processQTI(item.qti, content);
-        }
-    };
-
-    CM.onPageEvent('init', processPageMedia);
-    CM.onItemEvent('init', processItemMedia);
-
-
+    });
 
 })(window.ContentManager);
 

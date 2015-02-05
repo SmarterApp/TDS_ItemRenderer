@@ -112,7 +112,7 @@ AsiItem.Html.prototype.enableResponses = function (responseArray) {
     }
 };
 
-// Emphasize the resposne while we are playing some audio
+// Emphasize the response while we are playing some audio
 AsiItem.Html.prototype.emphasizeResponse = function(span) {
     YUD.addClass(span, 'asi-response-emphasis');
     YUD.addClass(span, 'asi-response-shown');
@@ -172,9 +172,8 @@ AsiItem.Html.setSpanId = function (spanId, itemId, purpose) {
 };
 
 // Response span looks like this:
-// asi-4-response-0 where the last number is the 
-// response index.
-AsiItem.Html.prototype.getResponseIndex = function (span) {
+// asi-4-response-A where the last character is the response choice.
+AsiItem.Html.prototype.getResponseChoice = function (span) {
     var id = '';
     if (typeof (span) == "string") {
         id = span;
@@ -192,7 +191,7 @@ AsiItem.Html.prototype.getResponseIndex = function (span) {
 // Given a response span, return the feedback span, if any.
 // Based on the span ID naming convention.
 AsiItem.Html.prototype.getRelatedFeedbackSpan = function (span) {
-    var fid = AsiItem.Html.createSpanId(this._parser.mid, 'feedback-' + this.getResponseIndex(span));
+    var fid = AsiItem.Html.createSpanId(this._parser.mid, 'feedback-' + this.getResponseChoice(span));
     var fspan = YUD.get(fid);
     return fspan;
 };
@@ -204,7 +203,7 @@ AsiItem.Html.prototype.getResponseSpanFromIdentifier = function (identifier) {
     for (var i = 0; i < choiceContent.length; i++) {
         var choice = choiceContent[i];
         if (choice.identifier == identifier) {
-            var spid = this.createSpanId('response-' + i.toString());
+            var spid = this.createSpanId('response-' + identifier);
             return YUD.get(spid);
         }
     }
@@ -217,11 +216,8 @@ AsiItem.Html.prototype.getAudioSpanFromResponseSpan = function (responseSpan) {
     if (typeof (responseSpan) == 'object') {
         id = responseSpan.id;
     }
-    var rindex = this.getResponseIndex(id);
+    var rindex = this.getResponseChoice(id);
     var responseAudioSpanIndex = this.createSpanId('audioResponse-' + rindex);
     var responseAudioSpan = YUD.get(responseAudioSpanIndex);
     return responseAudioSpan;
 };
-
-
-

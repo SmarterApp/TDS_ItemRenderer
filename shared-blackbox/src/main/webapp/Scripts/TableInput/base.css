@@ -69,3 +69,8 @@ table.tableItem {
 }
 
 /* @end */
+
+/* prevent clear button from showing up in IE */
+table.tableItem input.ti-input::-ms-clear {
+    display: none;
+}

@@ -4,6 +4,7 @@
     function Accs(id, label) {
         this._position = null;
         this._id = null;
+        this._DOMId = null;
         this._label = null;
         this._types = [];
         this._typeLookup = new Util.Structs.Map();
@@ -41,10 +42,15 @@
         if (id) {
             // set ID passed in
             this._id = id;
+            this._DOMId = id.replace(/\s+/g, '-');
         } else if (!this._id) {
             // set default ID
             this._id = 'default';
         }
+    };
+    
+    AccsProto.getDomId = function () {
+        return this._DOMId;
     };
 
     AccsProto.getLabel = function() {

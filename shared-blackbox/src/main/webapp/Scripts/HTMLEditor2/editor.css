@@ -130,16 +130,26 @@
 .cke_browser_ios .cke_contents.cke_reset iframe {
 	height: 99% !important
 }
-/* hide help button in standard rendering, show in Streamlined mode */
-.cke_button.cke_button__keymaphelp {
-	height: 0px;
-	width: 0px;
-	overflow: hidden;
-	padding: 0px;
+
+.cke_accessibility_legend h4 {
+    font-size: 20px;
+    border-bottom: 1px solid #AAA;
+    margin: 5px 0px 15px;
 }
-.layout_wai .cke_button.cke_button__keymaphelp {
-	height: inherit;
-	width: inherit;
-	overflow: inherit;
-	padding: 4px 6px;
+
+span.cke_tdsspecialchar_instruction {
+	padding-bottom: 10px;
+	display: block;
 }
+
+/* @group table conversion */
+.cke_single_page div.cke_dialog_contents {
+    padding: 0px;
+}
+div.cke_dialog_contents_body {
+    margin-top: 0px;
+    padding: 10px;
+    min-height: 315px;
+}
+
+/* @end */

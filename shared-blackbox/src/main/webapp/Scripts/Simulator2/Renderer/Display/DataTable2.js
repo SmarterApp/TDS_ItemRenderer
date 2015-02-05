@@ -99,6 +99,7 @@ Simulator.Display.DataTable = function (sim, panel) {
         if (sim.getAccessibilityIFActive()) { // WCAG
             var rowHeader = document.createElement('th');
             rowHeader.innerHTML = rowHeaderText() + ' ' + nRows;
+            rowHeader.scope = 'row'; // fb-153485: add scope to column/row headers
             newRow.appendChild(rowHeader);
         }
         for (var i = table.getZerothColumn() ; i < table.getNumColumnsPlusHeader() ; i++) {  // WCAG
@@ -348,6 +349,7 @@ Simulator.Display.DataTable = function (sim, panel) {
                 var rowHeader = document.createElement('th');
                 var printedRowNumber = j + 1; // row 0 --> 'row 1', etc.
                 rowHeader.innerHTML = rowHeaderText() + ' ' + printedRowNumber;
+                rowHeader.scope = 'row'; // fb-153485: add scope to column/row headers
                 row.appendChild(rowHeader);
             }
             for (var i = tbl.getZerothColumn(); i < tbl.getNumColumnsPlusHeader(); i++) { // WCAG
@@ -486,7 +488,7 @@ Simulator.Display.DataTable = function (sim, panel) {
             tHead.appendChild(row);
 
             if (sim.getAccessibilityIFActive()) { // WCAG
-                var blankHeaderCell = simDocument().createElement('th');
+                var blankHeaderCell = simDocument().createElement('td'); // fb-153485: make empty 'header' cell a td
                 blankHeaderCell.setAttribute('id', this.getColumnHeaderID(0)); // WCAG
                 row.appendChild(blankHeaderCell);
             }
@@ -498,6 +500,7 @@ Simulator.Display.DataTable = function (sim, panel) {
                         k += 1;
                         if (k <= numColumns) {
                             cell = simDocument().createElement('th');
+                            cell.scope = 'col'; // fb-153485: add scope to column/row headers
                             cell.setAttribute('id', this.getColumnHeaderID(k + this.getZerothColumn())); // WCAG
                             row.appendChild(cell);
                             indexStr = 'text';
@@ -661,6 +664,7 @@ Simulator.Display.DataTable = function (sim, panel) {
                 var cell = simDocument().createElement('th');
                 row.appendChild(cell);
                 cell.innerHTML = clearRowText();
+                cell.scope = 'col'; // fb-153485: add scope to column/row headers
             }
 
 

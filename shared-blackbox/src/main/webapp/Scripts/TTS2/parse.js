@@ -371,7 +371,11 @@ TTS.Parse.ParseNode = function (lang, node, offset, startIndex, endOffset, doNot
 };
 
 TTS.Parse.ParseNode.classifyTTSNode = function (node, offset, isFirst) {
+
+    // check element
     if (node.nodeType == Node.ELEMENT_NODE) {
+
+        // check class and attributes
         if (node.className && node.className.indexOf("TTS speakAs") >=0) {
             return TTS.Parse.TTSNodeTypes.Alt;
         } else {
@@ -380,6 +384,8 @@ TTS.Parse.ParseNode.classifyTTSNode = function (node, offset, isFirst) {
                 return TTS.Parse.TTSNodeTypes.DoNotSpeak;
             }
         }
+
+        // check node name
         var nme = node.nodeName.toLowerCase();
         switch (nme) {
             case 'td':
@@ -394,8 +400,12 @@ TTS.Parse.ParseNode.classifyTTSNode = function (node, offset, isFirst) {
             case 'img':
             case 'math':
                 return TTS.Parse.TTSNodeTypes.Image;
+            case 'script':
+                return TTS.Parse.TTSNodeTypes.DoNotSpeak;
         }
     }
+
+    // check text
     if (node.nodeType == 3) {
         var idx = node.nodeValue.substring(offset).search(/\s{2,}\S/);
         if ((idx > -1) && isFirst) {
@@ -403,6 +413,8 @@ TTS.Parse.ParseNode.classifyTTSNode = function (node, offset, isFirst) {
         } //multiple embedded spaces are removed by the speech engine and can cause you to lose track of where you are. Just remove them here and make them unspeakable
         return TTS.Parse.TTSNodeTypes.Speak; //should check this AFTER you check for things like speak alternate, I think
     }
+
+    // unknown
     return TTS.Parse.TTSNodeTypes.Other;
 };
 

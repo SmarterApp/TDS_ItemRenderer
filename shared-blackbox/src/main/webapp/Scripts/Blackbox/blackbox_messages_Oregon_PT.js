@@ -50,6 +50,16 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 11961,
+                    "m": "Login.Label.Error",
+                    "t_a": [
+                        {
+                            "t": "Error logging in. Please try again or check with your Test Administrator.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 11963,
                     "m": "LoginShell.Alert.EnvironmentInsecureiOSVolumeControl",
                     "t_a": [
@@ -65,16 +75,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Warning: You cannot adjust the volume of your iPad during the test. If you need to adjust the volume, please turn off Guided Access. Adjust the volume using the volume control buttons on the iPad, and then activate Guided Access.  If you need help, please ask your proctor.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11961,
-                    "m": "Login.Label.Error",
-                    "t_a": [
-                        {
-                            "t": "Error logging in. Please try again or check with your Test Administrator.",
                             "l": "ENU"
                         }
                     ]
@@ -375,41 +375,101 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11479,
-                    "m": "Global.Prompt.Button.TryAgain",
+                    "id": 11693,
+                    "m": "TDSShellObjectsJS.Label.PageLabel",
                     "t_a": [
                         {
-                            "t": "Try Again",
+                            "t": "page ",
                             "l": "ENU"
                         }
                     ]
                 },
                 {
-                    "id": 11480,
-                    "m": "Global.Prompt.Button.KeepIt",
+                    "id": 11702,
+                    "m": "TDSContentJS.Label.StartSpeaking",
                     "t_a": [
                         {
-                            "t": "Keep  It",
+                            "t": "Start Speaking",
                             "l": "ENU"
                         }
                     ]
                 },
                 {
-                    "id": 11489,
-                    "m": "Global.Label.LoadingNextPage",
+                    "id": 11737,
+                    "m": "Diagnostics.Label.Disclaimer",
                     "t_a": [
                         {
-                            "t": "Getting the next page.",
+                            "t": "(Please note: The throughput estimates include the encryption\/decryption overhead for data transfer. Throughput estimates change as the network conditions change and can vary from run to run.)",
                             "l": "ENU"
                         }
                     ]
                 },
                 {
-                    "id": 11490,
-                    "m": "Global.Label.LoadingPageContent",
+                    "id": 11738,
+                    "m": "Diagnostics.Label.RiskUnknown",
                     "t_a": [
                         {
-                            "t": "Loading the page content.",
+                            "t": "Unable to complete analysis. Please contact the help desk.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11739,
+                    "m": "Diagnostics.Label.RiskNearCertain",
+                    "t_a": [
+                        {
+                            "t": "Given the current load on your system, you cannot successfully test the requested number of students at this location. Please try a number close to {0}.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11740,
+                    "m": "Diagnostics.Label.RiskHigh",
+                    "t_a": [
+                        {
+                            "t": "Given the current load on your system, it is unlikely you will successfully test the requested number of students at this location. Some students can experience disruptions or delays. Please try a number close to {0}.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11741,
+                    "m": "Diagnostics.Label.RiskModerate",
+                    "t_a": [
+                        {
+                            "t": "Given the current load on your system, you should be able to test the requested number of students at this location. You are near capacity for this location.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11742,
+                    "m": "Diagnostics.Label.RiskVeryLow",
+                    "t_a": [
+                        {
+                            "t": "Given the current load on your system, you should be able to test the requested number of students at this location.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11459,
+                    "m": "TDSShellObjectsJS.Label.Marked",
+                    "t_a": [
+                        {
+                            "t": "marked",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11233,
+                    "m": "Global.Label.Warning",
+                    "t_a": [
+                        {
+                            "t": "Warning",
                             "l": "ENU"
                         }
                     ]
@@ -455,16 +515,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11459,
-                    "m": "TDSShellObjectsJS.Label.Marked",
-                    "t_a": [
-                        {
-                            "t": "marked",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 12239,
                     "m": "Global.Path.Help.Streamlined",
                     "t_a": [
@@ -475,11 +525,41 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11233,
-                    "m": "Global.Label.Warning",
+                    "id": 11479,
+                    "m": "Global.Prompt.Button.TryAgain",
                     "t_a": [
                         {
-                            "t": "Warning",
+                            "t": "Try Again",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11480,
+                    "m": "Global.Prompt.Button.KeepIt",
+                    "t_a": [
+                        {
+                            "t": "Keep  It",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11489,
+                    "m": "Global.Label.LoadingNextPage",
+                    "t_a": [
+                        {
+                            "t": "Getting the next page.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11490,
+                    "m": "Global.Label.LoadingPageContent",
+                    "t_a": [
+                        {
+                            "t": "Loading the page content.",
                             "l": "ENU"
                         }
                     ]
@@ -595,26 +675,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11693,
-                    "m": "TDSShellObjectsJS.Label.PageLabel",
-                    "t_a": [
-                        {
-                            "t": "page ",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11702,
-                    "m": "TDSContentJS.Label.StartSpeaking",
-                    "t_a": [
-                        {
-                            "t": "Start Speaking",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11714,
                     "m": "Global.Label.GoBack",
                     "t_a": [
@@ -640,66 +700,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Select",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11737,
-                    "m": "Diagnostics.Label.Disclaimer",
-                    "t_a": [
-                        {
-                            "t": "(Please note: The throughput estimates include the encryption\/decryption overhead for data transfer. Throughput estimates change as the network conditions change and can vary from run to run.)",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11738,
-                    "m": "Diagnostics.Label.RiskUnknown",
-                    "t_a": [
-                        {
-                            "t": "Unable to complete analysis. Please contact the help desk.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11739,
-                    "m": "Diagnostics.Label.RiskNearCertain",
-                    "t_a": [
-                        {
-                            "t": "Given the current load on your system, you cannot successfully test the requested number of students at this location. Please try a number close to {0}.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11740,
-                    "m": "Diagnostics.Label.RiskHigh",
-                    "t_a": [
-                        {
-                            "t": "Given the current load on your system, it is unlikely you will successfully test the requested number of students at this location. Some students can experience disruptions or delays. Please try a number close to {0}.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11741,
-                    "m": "Diagnostics.Label.RiskModerate",
-                    "t_a": [
-                        {
-                            "t": "Given the current load on your system, you should be able to test the requested number of students at this location. You are near capacity for this location.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11742,
-                    "m": "Diagnostics.Label.RiskVeryLow",
-                    "t_a": [
-                        {
-                            "t": "Given the current load on your system, you should be able to test the requested number of students at this location.",
                             "l": "ENU"
                         }
                     ]
@@ -920,21 +920,21 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11237,
-                    "m": "GridJS.Label.HintAddComponent",
-                    "t_a": [
-                        {
-                            "t": "",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11221,
                     "m": "GridSVG.Label.button_Add_Arrow",
                     "t_a": [
                         {
                             "t": "Add Arrow",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11237,
+                    "m": "GridJS.Label.HintAddComponent",
+                    "t_a": [
+                        {
+                            "t": "",
                             "l": "ENU"
                         }
                     ]
@@ -2420,26 +2420,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11225,
-                    "m": "TDSContentEventsJS.Label.PrintItem",
-                    "t_a": [
-                        {
-                            "t": "Print Item",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11226,
-                    "m": "TDSContentEventsJS.Label.HelpItem",
-                    "t_a": [
-                        {
-                            "t": "Tutorial",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11457,
                     "m": "TDSContentEventsJS.Link.EnableTextSelection",
                     "t_a": [
@@ -2460,21 +2440,41 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11245,
-                    "m": "TDSContentEventsJS.Label.UnmarkForReview",
-                    "t_a": [
-                        {
-                            "t": "Unmark Review Item",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11462,
                     "m": "TDSContentEventsJS.Label.CloseComment",
                     "t_a": [
                         {
                             "t": "Close",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11225,
+                    "m": "TDSContentEventsJS.Label.PrintItem",
+                    "t_a": [
+                        {
+                            "t": "Print Item",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11226,
+                    "m": "TDSContentEventsJS.Label.HelpItem",
+                    "t_a": [
+                        {
+                            "t": "Tutorial",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11245,
+                    "m": "TDSContentEventsJS.Label.UnmarkForReview",
+                    "t_a": [
+                        {
+                            "t": "Unmark Review Item",
                             "l": "ENU"
                         }
                     ]
@@ -2495,16 +2495,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Comment",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11967,
-                    "m": "TDSContentEventJS.Label.ASLItem",
-                    "t_a": [
-                        {
-                            "t": "American Sign Language",
                             "l": "ENU"
                         }
                     ]
@@ -2545,6 +2535,16 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Open Guide for Revision",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11967,
+                    "m": "TDSContentEventJS.Label.ASLItem",
+                    "t_a": [
+                        {
+                            "t": "American Sign Language",
                             "l": "ENU"
                         }
                     ]
@@ -2921,6 +2921,46 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 12072,
+                    "m": "TDSTTS.Label.SpeakPassageENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Passage (in Spanish)",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12117,
+                    "m": "TDSTTS.Label.SpeakPassageESN",
+                    "t_a": [
+                        {
+                            "t": "Speak Passage",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12139,
+                    "m": "TDSTTS.Label.SpeakQuestionENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Question (in Spanish)",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12221,
+                    "m": "TDSTTS.Label.SpeakQuestionESN",
+                    "t_a": [
+                        {
+                            "t": "Speak Question",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 11144,
                     "m": "TDSTTS.Label.SpeakTextSecondary",
                     "t_a": [
@@ -3036,26 +3076,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Speak Writing Prompt",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11481,
-                    "m": "TDSTTS.Label.SpeakPromptSecondary",
-                    "t_a": [
-                        {
-                            "t": "Speak Writing Prompt (in English)",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11482,
-                    "m": "TDSTTS.Label.SpeakDirectionsSecondary",
-                    "t_a": [
-                        {
-                            "t": "Speak Instructions (in English)",
                             "l": "ENU"
                         }
                     ]
@@ -3181,11 +3201,21 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 12221,
-                    "m": "TDSTTS.Label.SpeakQuestionESN",
+                    "id": 11481,
+                    "m": "TDSTTS.Label.SpeakPromptSecondary",
                     "t_a": [
                         {
-                            "t": "Speak Question",
+                            "t": "Speak Writing Prompt (in English)",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11482,
+                    "m": "TDSTTS.Label.SpeakDirectionsSecondary",
+                    "t_a": [
+                        {
+                            "t": "Speak Instructions (in English)",
                             "l": "ENU"
                         }
                     ]
@@ -3691,6 +3721,706 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 11872,
+                    "m": "TDSTTS.Label.PauseSpeaking",
+                    "t_a": [
+                        {
+                            "t": "Pause Speaking",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11873,
+                    "m": "TDSTTS.Label.ResumeSpeaking",
+                    "t_a": [
+                        {
+                            "t": "Resume Speaking",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11948,
+                    "m": "TDSTTS.Speak.OptionA.ENU",
+                    "t_a": [
+                        {
+                            "t": "{silence}Option A.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11949,
+                    "m": "TDSTTS.Speak.OptionB.ENU",
+                    "t_a": [
+                        {
+                            "t": "{silence}Option B.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11950,
+                    "m": "TDSTTS.Speak.OptionC.ENU",
+                    "t_a": [
+                        {
+                            "t": "{silence}Option C.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11951,
+                    "m": "TDSTTS.Speak.OptionD.ENU",
+                    "t_a": [
+                        {
+                            "t": "{silence}Option D.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11952,
+                    "m": "TDSTTS.Speak.OptionE.ENU",
+                    "t_a": [
+                        {
+                            "t": "{silence}Option E.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11953,
+                    "m": "TDSTTS.Speak.OptionF.ENU",
+                    "t_a": [
+                        {
+                            "t": "{silence}Option F.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12094,
+                    "m": "TDSTTS.Speak.OptionA.ESN",
+                    "t_a": [
+                        {
+                            "t": "{silence}Opción A.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12095,
+                    "m": "TDSTTS.Speak.OptionB.ESN",
+                    "t_a": [
+                        {
+                            "t": "{silence}Opción B.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12096,
+                    "m": "TDSTTS.Speak.OptionC.ESN",
+                    "t_a": [
+                        {
+                            "t": "{silence}Opción C.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12097,
+                    "m": "TDSTTS.Speak.OptionD.ESN",
+                    "t_a": [
+                        {
+                            "t": "{silence}Opción D.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12098,
+                    "m": "TDSTTS.Speak.OptionE.ESN",
+                    "t_a": [
+                        {
+                            "t": "{silence}Opción E.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12099,
+                    "m": "TDSTTS.Speak.OptionF.ESN",
+                    "t_a": [
+                        {
+                            "t": "{silence}Opción F.{silence}",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12064,
+                    "m": "TDSTTS.Label.SpeakTextENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Selection",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12065,
+                    "m": "TDSTTS.Label.SpeakOptionAENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12066,
+                    "m": "TDSTTS.Label.SpeakOptionBENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12068,
+                    "m": "TDSTTS.Label.SpeakOptionCENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12069,
+                    "m": "TDSTTS.Label.SpeakOptionDENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option D",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12070,
+                    "m": "TDSTTS.Label.SpeakOptionEENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option E",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12071,
+                    "m": "TDSTTS.Label.SpeakOptionFENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option F",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12073,
+                    "m": "TDSTTS.Label.SpeakIllustrationENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Image",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12074,
+                    "m": "TDSTTS.Label.SpeakDirectionsENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Instructions",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12075,
+                    "m": "TDSTTS.Label.SpeakPromptENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Writing Prompt",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12159,
+                    "m": "TDSTTS.Label.Speak.OptionA.ENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12160,
+                    "m": "TDSTTS.Label.Speak.OptionB.ENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12161,
+                    "m": "TDSTTS.Label.Speak.OptionC.ENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12162,
+                    "m": "TDSTTS.Label.Speak.OptionD.ENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option D",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12163,
+                    "m": "TDSTTS.Label.Speak.OptionE.ENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option E",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12164,
+                    "m": "TDSTTS.Label.Speak.OptionF.ENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Option F",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12082,
+                    "m": "TDSTTS.Label.SpeakPartAOptionAENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part A Option A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12083,
+                    "m": "TDSTTS.Label.SpeakPartAOptionBENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part A Option B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12084,
+                    "m": "TDSTTS.Label.SpeakPartAOptionCENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part A Option C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12085,
+                    "m": "TDSTTS.Label.SpeakPartAOptionDENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part A Option D",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12086,
+                    "m": "TDSTTS.Label.SpeakPartAOptionEENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part A Option E",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12087,
+                    "m": "TDSTTS.Label.SpeakPartAOptionFENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part A Option F",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12088,
+                    "m": "TDSTTS.Label.SpeakPartBOptionAENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part B Option A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12089,
+                    "m": "TDSTTS.Label.SpeakPartBOptionBENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part B Option B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12090,
+                    "m": "TDSTTS.Label.SpeakPartBOptionCENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part B Option C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12091,
+                    "m": "TDSTTS.Label.SpeakPartBOptionDENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part B Option D",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12092,
+                    "m": "TDSTTS.Label.SpeakPartBOptionEENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part B Option E",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12093,
+                    "m": "TDSTTS.Label.SpeakPartBOptionFENU",
+                    "t_a": [
+                        {
+                            "t": "Speak Part B Option F",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12110,
+                    "m": "TDSTTS.Label.SpeakTextESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Selection",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12111,
+                    "m": "TDSTTS.Label.SpeakOptionAESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12112,
+                    "m": "TDSTTS.Label.SpeakOptionBESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12113,
+                    "m": "TDSTTS.Label.SpeakOptionCESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12114,
+                    "m": "TDSTTS.Label.SpeakOptionDESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción D",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12115,
+                    "m": "TDSTTS.Label.SpeakOptionEESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción E",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12116,
+                    "m": "TDSTTS.Label.SpeakOptionFESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción F",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12118,
+                    "m": "TDSTTS.Label.SpeakIllustrationESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Image",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12119,
+                    "m": "TDSTTS.Label.SpeakDirectionsESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Instructions",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12120,
+                    "m": "TDSTTS.Label.SpeakPromptESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Writing Prompt",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12121,
+                    "m": "TDSTTS.Label.Speak.OptionA.ESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12122,
+                    "m": "TDSTTS.Label.Speak.OptionB.ESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12123,
+                    "m": "TDSTTS.Label.Speak.OptionC.ESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12124,
+                    "m": "TDSTTS.Label.Speak.OptionD.ESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción D",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12125,
+                    "m": "TDSTTS.Label.Speak.OptionE.ESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción E",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12126,
+                    "m": "TDSTTS.Label.Speak.OptionF.ESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Opción F",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12127,
+                    "m": "TDSTTS.Label.SpeakPartAOptionAESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part A Opción A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12128,
+                    "m": "TDSTTS.Label.SpeakPartAOptionBESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part A Opción B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12129,
+                    "m": "TDSTTS.Label.SpeakPartAOptionCESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part A Opción C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12130,
+                    "m": "TDSTTS.Label.SpeakPartAOptionDESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part A Opción D",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12131,
+                    "m": "TDSTTS.Label.SpeakPartAOptionEESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part A Opción E",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12132,
+                    "m": "TDSTTS.Label.SpeakPartAOptionFESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part A Opción F",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12133,
+                    "m": "TDSTTS.Label.SpeakPartBOptionAESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part B Opción A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12134,
+                    "m": "TDSTTS.Label.SpeakPartBOptionBESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part B Opción B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12135,
+                    "m": "TDSTTS.Label.SpeakPartBOptionCESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part B Opción C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12136,
+                    "m": "TDSTTS.Label.SpeakPartBOptionDESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part B Opción D",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12137,
+                    "m": "TDSTTS.Label.SpeakPartBOptionEESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part B Opción E",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12138,
+                    "m": "TDSTTS.Label.SpeakPartBOptionFESN",
+                    "t_a": [
+                        {
+                            "t": "Hable la Part A Opción F",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 12149,
                     "m": "TDSTTS.Label.SpeakOptionA.ENU",
                     "t_a": [
@@ -3786,66 +4516,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Speak Writing Prompt",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12076,
-                    "m": "TDSTTS.Label.Speak.OptionA.ENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12077,
-                    "m": "TDSTTS.Label.Speak.OptionB.ENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12078,
-                    "m": "TDSTTS.Label.Speak.OptionC.ENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12079,
-                    "m": "TDSTTS.Label.Speak.OptionD.ENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option D",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12080,
-                    "m": "TDSTTS.Label.Speak.OptionE.ENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option E",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12081,
-                    "m": "TDSTTS.Label.Speak.OptionF.ENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option F",
                             "l": "ENU"
                         }
                     ]
@@ -4211,676 +4881,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11872,
-                    "m": "TDSTTS.Label.PauseSpeaking",
-                    "t_a": [
-                        {
-                            "t": "Pause Speaking",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11873,
-                    "m": "TDSTTS.Label.ResumeSpeaking",
-                    "t_a": [
-                        {
-                            "t": "Resume Speaking",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11948,
-                    "m": "TDSTTS.Speak.OptionA.ENU",
-                    "t_a": [
-                        {
-                            "t": "{silence}Option A.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11949,
-                    "m": "TDSTTS.Speak.OptionB.ENU",
-                    "t_a": [
-                        {
-                            "t": "{silence}Option B.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11950,
-                    "m": "TDSTTS.Speak.OptionC.ENU",
-                    "t_a": [
-                        {
-                            "t": "{silence}Option C.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11951,
-                    "m": "TDSTTS.Speak.OptionD.ENU",
-                    "t_a": [
-                        {
-                            "t": "{silence}Option D.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11952,
-                    "m": "TDSTTS.Speak.OptionE.ENU",
-                    "t_a": [
-                        {
-                            "t": "{silence}Option E.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11953,
-                    "m": "TDSTTS.Speak.OptionF.ENU",
-                    "t_a": [
-                        {
-                            "t": "{silence}Option F.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12094,
-                    "m": "TDSTTS.Speak.OptionA.ESN",
-                    "t_a": [
-                        {
-                            "t": "{silence}Opción A.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12095,
-                    "m": "TDSTTS.Speak.OptionB.ESN",
-                    "t_a": [
-                        {
-                            "t": "{silence}Opción B.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12096,
-                    "m": "TDSTTS.Speak.OptionC.ESN",
-                    "t_a": [
-                        {
-                            "t": "{silence}Opción C.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12097,
-                    "m": "TDSTTS.Speak.OptionD.ESN",
-                    "t_a": [
-                        {
-                            "t": "{silence}Opción D.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12098,
-                    "m": "TDSTTS.Speak.OptionE.ESN",
-                    "t_a": [
-                        {
-                            "t": "{silence}Opción E.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12099,
-                    "m": "TDSTTS.Speak.OptionF.ESN",
-                    "t_a": [
-                        {
-                            "t": "{silence}Opción F.{silence}",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12064,
-                    "m": "TDSTTS.Label.SpeakTextENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Selection",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12065,
-                    "m": "TDSTTS.Label.SpeakOptionAENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12066,
-                    "m": "TDSTTS.Label.SpeakOptionBENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12068,
-                    "m": "TDSTTS.Label.SpeakOptionCENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12069,
-                    "m": "TDSTTS.Label.SpeakOptionDENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option D",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12070,
-                    "m": "TDSTTS.Label.SpeakOptionEENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option E",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12071,
-                    "m": "TDSTTS.Label.SpeakOptionFENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Option F",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12072,
-                    "m": "TDSTTS.Label.SpeakPassageENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Passage",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12073,
-                    "m": "TDSTTS.Label.SpeakIllustrationENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Image",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12074,
-                    "m": "TDSTTS.Label.SpeakDirectionsENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Instructions",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12075,
-                    "m": "TDSTTS.Label.SpeakPromptENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Writing Prompt",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12082,
-                    "m": "TDSTTS.Label.SpeakPartAOptionAENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part A Option A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12083,
-                    "m": "TDSTTS.Label.SpeakPartAOptionBENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part A Option B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12084,
-                    "m": "TDSTTS.Label.SpeakPartAOptionCENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part A Option C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12085,
-                    "m": "TDSTTS.Label.SpeakPartAOptionDENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part A Option D",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12086,
-                    "m": "TDSTTS.Label.SpeakPartAOptionEENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part A Option E",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12087,
-                    "m": "TDSTTS.Label.SpeakPartAOptionFENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part A Option F",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12088,
-                    "m": "TDSTTS.Label.SpeakPartBOptionAENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part B Option A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12089,
-                    "m": "TDSTTS.Label.SpeakPartBOptionBENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part B Option B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12090,
-                    "m": "TDSTTS.Label.SpeakPartBOptionCENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part B Option C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12091,
-                    "m": "TDSTTS.Label.SpeakPartBOptionDENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part B Option D",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12092,
-                    "m": "TDSTTS.Label.SpeakPartBOptionEENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part B Option E",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12093,
-                    "m": "TDSTTS.Label.SpeakPartBOptionFENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Part B Option F",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12110,
-                    "m": "TDSTTS.Label.SpeakTextESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Selection",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12111,
-                    "m": "TDSTTS.Label.SpeakOptionAESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12112,
-                    "m": "TDSTTS.Label.SpeakOptionBESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12113,
-                    "m": "TDSTTS.Label.SpeakOptionCESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12114,
-                    "m": "TDSTTS.Label.SpeakOptionDESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción D",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12115,
-                    "m": "TDSTTS.Label.SpeakOptionEESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción E",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12116,
-                    "m": "TDSTTS.Label.SpeakOptionFESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción F",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12117,
-                    "m": "TDSTTS.Label.SpeakPassageESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Passage",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12118,
-                    "m": "TDSTTS.Label.SpeakIllustrationESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Image",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12119,
-                    "m": "TDSTTS.Label.SpeakDirectionsESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Instructions",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12120,
-                    "m": "TDSTTS.Label.SpeakPromptESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Writing Prompt",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12121,
-                    "m": "TDSTTS.Label.Speak.OptionA.ESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12122,
-                    "m": "TDSTTS.Label.Speak.OptionB.ESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12123,
-                    "m": "TDSTTS.Label.Speak.OptionC.ESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12124,
-                    "m": "TDSTTS.Label.Speak.OptionD.ESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción D",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12125,
-                    "m": "TDSTTS.Label.Speak.OptionE.ESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción E",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12126,
-                    "m": "TDSTTS.Label.Speak.OptionF.ESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Opción F",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12127,
-                    "m": "TDSTTS.Label.SpeakPartAOptionAESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part A Opción A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12128,
-                    "m": "TDSTTS.Label.SpeakPartAOptionBESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part A Opción B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12129,
-                    "m": "TDSTTS.Label.SpeakPartAOptionCESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part A Opción C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12130,
-                    "m": "TDSTTS.Label.SpeakPartAOptionDESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part A Opción D",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12131,
-                    "m": "TDSTTS.Label.SpeakPartAOptionEESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part A Opción E",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12132,
-                    "m": "TDSTTS.Label.SpeakPartAOptionFESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part A Opción F",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12133,
-                    "m": "TDSTTS.Label.SpeakPartBOptionAESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part B Opción A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12134,
-                    "m": "TDSTTS.Label.SpeakPartBOptionBESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part B Opción B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12135,
-                    "m": "TDSTTS.Label.SpeakPartBOptionCESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part B Opción C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12136,
-                    "m": "TDSTTS.Label.SpeakPartBOptionDESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part B Opción D",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12137,
-                    "m": "TDSTTS.Label.SpeakPartBOptionEESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part B Opción E",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12138,
-                    "m": "TDSTTS.Label.SpeakPartBOptionFESN",
-                    "t_a": [
-                        {
-                            "t": "Hable la Part A Opción F",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12139,
-                    "m": "TDSTTS.Label.SpeakQuestionENU",
-                    "t_a": [
-                        {
-                            "t": "Speak Question",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 12238,
                     "m": "TDSTTS.Label.SpeakOption",
                     "t_a": [
@@ -4976,6 +4976,16 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 11250,
+                    "m": "TestShell.Label.Initializing",
+                    "t_a": [
+                        {
+                            "t": "Initializing",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 11231,
                     "m": "NavigateAudioPlaying",
                     "t_a": [
@@ -4996,91 +5006,11 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 10878,
-                    "m": "TDS_F_HI_11Sci",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/hi_11_science.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10879,
-                    "m": "TDS_F_HI_8Math",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/hi_8_math.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10880,
-                    "m": "TDS_FOR6_8Math",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/or_6_8_math.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10881,
-                    "m": "TDS_PT_Basic",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/periodic\/2010\/hi_7_science.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10882,
-                    "m": "TDS_PT_Expanded",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/periodic\/2010\/hi_11_science.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11521,
                     "m": "TDSShellJS.Label.FrameLogout",
                     "t_a": [
                         {
                             "t": "The content request requires user authentication. Please log back in and try again.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11250,
-                    "m": "TestShell.Label.Initializing",
-                    "t_a": [
-                        {
-                            "t": "Initializing",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11743,
-                    "m": "OptionalUnansweredResponses",
-                    "t_a": [
-                        {
-                            "t": "<p>You have not entered a response to one or more items on this page. <\/p>     <p>If this is correct, click [Yes] to proceed to the next page. <\/p>     <p>If not, click [No] to remain on this page.<\/p>",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11731,
-                    "m": "TDS_F_DE_EOC2Math",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/de_eoc2.html",
                             "l": "ENU"
                         }
                     ]
@@ -5141,6 +5071,16 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "..\/tools\/formulas\/2010\/mn_GRAD_math.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11731,
+                    "m": "TDS_F_DE_EOC2Math",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/de_eoc2.html",
                             "l": "ENU"
                         }
                     ]
@@ -5277,71 +5217,61 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 10878,
+                    "m": "TDS_F_HI_11Sci",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/hi_11_science.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10879,
+                    "m": "TDS_F_HI_8Math",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/hi_8_math.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10880,
+                    "m": "TDS_FOR6_8Math",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/or_6_8_math.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10881,
+                    "m": "TDS_PT_Basic",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/periodic\/2010\/hi_7_science.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10882,
+                    "m": "TDS_PT_Expanded",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/periodic\/2010\/hi_11_science.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 10883,
                     "m": "TDS_PT_HTML",
                     "t_a": [
                         {
                             "t": "..\/tools\/periodic\/2010\/htmlSimple.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10898,
-                    "m": "ForbiddenApps",
-                    "t_a": [
-                        {
-                            "t": "Another program has started, and you will be logged out. Ask your Test Administrator for help.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10901,
-                    "m": "Print",
-                    "t_a": [
-                        {
-                            "t": "Your print request has been sent to the Test Administrator.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10902,
-                    "m": "ContentTimeout",
-                    "t_a": [
-                        {
-                            "t": "The question did not load. Click [Yes] to try again. Click [No] to log out.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10903,
-                    "m": "ContentError",
-                    "t_a": [
-                        {
-                            "t": "The page did not load. Ask your Test Administrator for help.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10904,
-                    "m": "ResponseError",
-                    "t_a": [
-                        {
-                            "t": "Your answer has not been saved. Click [Yes] to try again. Click [No] to log out of your test without saving your answer.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10905,
-                    "m": "ActionError",
-                    "t_a": [
-                        {
-                            "t": "Could not send information over the network.  Click [Yes] to try again. Click [No] to log out.",
                             "l": "ENU"
                         }
                     ]
@@ -5437,6 +5367,396 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 10898,
+                    "m": "ForbiddenApps",
+                    "t_a": [
+                        {
+                            "t": "Another program has started, and you will be logged out. Ask your Test Administrator for help.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10901,
+                    "m": "Print",
+                    "t_a": [
+                        {
+                            "t": "Your print request has been sent to the Test Administrator.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10902,
+                    "m": "ContentTimeout",
+                    "t_a": [
+                        {
+                            "t": "The question did not load. Click [Yes] to try again. Click [No] to log out.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10903,
+                    "m": "ContentError",
+                    "t_a": [
+                        {
+                            "t": "The page did not load. Ask your Test Administrator for help.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10904,
+                    "m": "ResponseError",
+                    "t_a": [
+                        {
+                            "t": "Your answer has not been saved. Click [Yes] to try again. Click [No] to log out of your test without saving your answer.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10905,
+                    "m": "ActionError",
+                    "t_a": [
+                        {
+                            "t": "Could not send information over the network.  Click [Yes] to try again. Click [No] to log out.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12215,
+                    "m": "TDS_F_MO_alg1",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/mo_alg1.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12216,
+                    "m": "TDS_F_MO_alg2",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/mo_alg2.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12217,
+                    "m": "TDS_F_MO_geo",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/mo_geo.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12218,
+                    "m": "TDS_F_MO_math_eoc",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/mo_eoc_math.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12219,
+                    "m": "TDSCKE.Alert.InvalidHeight.lang",
+                    "t_a": [
+                        {
+                            "t": "The table height you have entered is invalid. You may enter a number in pixels (e.g., 300) or a percentage (e.g., 100%). You may also choose to leave the height value blank. If you leave the value blank, the browser will automatically adjust the table size.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12220,
+                    "m": "TDSCKE.Alert.InvalidWidth.lang",
+                    "t_a": [
+                        {
+                            "t": "The table width you have entered is invalid. You may enter a number in pixels (e.g., 300) or a percentage (e.g., 100%). You may also choose to leave the width value blank. If you leave the value blank, the browser will automatically adjust the table size.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12240,
+                    "m": "cm.widget.label.audio.recorder",
+                    "t_a": [
+                        {
+                            "t": "Record your response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12241,
+                    "m": "cm.widget.label.qti.textentry",
+                    "t_a": [
+                        {
+                            "t": "Type your response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12242,
+                    "m": "cm.widget.label.qti.inlinechoice",
+                    "t_a": [
+                        {
+                            "t": "Reorder text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12243,
+                    "m": "cm.widget.label.qti.choice",
+                    "t_a": [
+                        {
+                            "t": "Multiple select - choose one or more response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12244,
+                    "m": "cm.widget.label.htmleditor",
+                    "t_a": [
+                        {
+                            "t": "Rich text editor - type your response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12245,
+                    "m": "cm.widget.label.grid",
+                    "t_a": [
+                        {
+                            "t": "Grid Item.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12246,
+                    "m": "cm.widget.label.qti.grid",
+                    "t_a": [
+                        {
+                            "t": "Grid Item.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12247,
+                    "m": "cm.widget.label.qti.hottext",
+                    "t_a": [
+                        {
+                            "t": "Select text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12248,
+                    "m": "cm.widget.label.qti.order",
+                    "t_a": [
+                        {
+                            "t": "Reorder text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12249,
+                    "m": "cm.widget.label.select",
+                    "t_a": [
+                        {
+                            "t": "Reorder text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12250,
+                    "m": "cm.widget.label.order",
+                    "t_a": [
+                        {
+                            "t": "Drag and drop.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12251,
+                    "m": "cm.widget.label.dragdrop",
+                    "t_a": [
+                        {
+                            "t": "Drag and drop.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12252,
+                    "m": "cm.widget.label.matchitem",
+                    "t_a": [
+                        {
+                            "t": "Table of check boxes.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12253,
+                    "m": "cm.widget.label.simulator",
+                    "t_a": [
+                        {
+                            "t": "Simulator item.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12254,
+                    "m": "cm.widget.label.equationeditor",
+                    "t_a": [
+                        {
+                            "t": "Math response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12255,
+                    "m": "cm.widget.label.equationeditor.text",
+                    "t_a": [
+                        {
+                            "t": "Math response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12256,
+                    "m": "cm.widget.label.edittask",
+                    "t_a": [
+                        {
+                            "t": "Edit text.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12257,
+                    "m": "cm.widget.label.scratchpad",
+                    "t_a": [
+                        {
+                            "t": "Scratchpad.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12258,
+                    "m": "cm.widget.label.scaffolding",
+                    "t_a": [
+                        {
+                            "t": "Choose a response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12259,
+                    "m": "cm.widget.label.tableinput",
+                    "t_a": [
+                        {
+                            "t": "Fill in the table.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12260,
+                    "m": "cm.widget.label.mc",
+                    "t_a": [
+                        {
+                            "t": "Multiple choice.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12261,
+                    "m": "cm.widget.label.ebsr",
+                    "t_a": [
+                        {
+                            "t": "Two part multple choice and\/or multiple select.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12262,
+                    "m": "cm.widget.label.wordbuilder",
+                    "t_a": [
+                        {
+                            "t": "Fill in the blank.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12263,
+                    "m": "cm.widget.label.plaintext",
+                    "t_a": [
+                        {
+                            "t": "Type your response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12201,
+                    "m": "TDSCKE.Alert.InvalidRows.ENU",
+                    "t_a": [
+                        {
+                            "t": "Enter a number between 1 and 100 to define the number of rows.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12202,
+                    "m": "TDSCKE.Alert.InvalidCols.ENU",
+                    "t_a": [
+                        {
+                            "t": "Enter a number between 1 and 10 to define the number of columns.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12203,
+                    "m": "TestShell.Link.SystemSettings",
+                    "t_a": [
+                        {
+                            "t": "System Settings",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 12140,
                     "m": "TDS_F_UT_HS_PT",
                     "t_a": [
@@ -5517,6 +5837,36 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 11962,
+                    "m": "TDS.WordList.glossary",
+                    "t_a": [
+                        {
+                            "t": "Glossary",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11946,
+                    "m": "TDS_F_HI_AlgII",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/hi_Alg_EOC.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11947,
+                    "m": "TDS.WordList.esnGlossary",
+                    "t_a": [
+                        {
+                            "t": "Spanish Glossary",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 11923,
                     "m": "TestShell.Segment.Denied",
                     "t_a": [
@@ -5557,21 +5907,221 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11946,
-                    "m": "TDS_F_HI_AlgII",
+                    "id": 11705,
+                    "m": "Submit and Close",
                     "t_a": [
                         {
-                            "t": "..\/tools\/formulas\/2010\/hi_Alg_EOC.html",
+                            "t": "Save and Close",
                             "l": "ENU"
                         }
                     ]
                 },
                 {
-                    "id": 11947,
-                    "m": "TDS.WordList.esnGlossary",
+                    "id": 11713,
+                    "m": "TestShell.Label.PeriodicTable",
                     "t_a": [
                         {
-                            "t": "Spanish Glossary",
+                            "t": "Periodic Table",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11875,
+                    "m": "TestItemScores",
+                    "t_a": [
+                        {
+                            "t": "Congratulations on finishing your test!  After reviewing your responses, click the [Test Results] button to log out.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11876,
+                    "m": "TestShell.Label.BlockPausing",
+                    "t_a": [
+                        {
+                            "t": "You may not pause the test until all questions on this page have been answered.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11877,
+                    "m": "SimulatorPlayingWhileSaving",
+                    "t_a": [
+                        {
+                            "t": "Please wait for the simulation to finish before saving your response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11879,
+                    "m": "SimulatorPlayingWhileNavigating",
+                    "t_a": [
+                        {
+                            "t": "Please wait for the simulation to finish before continuing.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11881,
+                    "m": "TestShell.Label.RemoveResponseWarning",
+                    "t_a": [
+                        {
+                            "t": "This action will clear all data for this item. Are you sure you want to proceed?<br\/><br\/>Click [Yes] to clear the data for this item.  Click [No] to cancel this action.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11882,
+                    "m": "TestShell.Segment.ImpermeableIncomplete",
+                    "t_a": [
+                        {
+                            "t": "You may not leave this segment until all required questions have a response.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11883,
+                    "m": "TestShell.Segment.LeaveWarning",
+                    "t_a": [
+                        {
+                            "t": "You cannot come back to this part of the test.  Are you sure you want to continue?",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11743,
+                    "m": "OptionalUnansweredResponses",
+                    "t_a": [
+                        {
+                            "t": "<p>You have not entered a response to one or more items on this page. <\/p>     <p>If this is correct, click [Yes] to proceed to the next page. <\/p>     <p>If not, click [No] to remain on this page.<\/p>",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12060,
+                    "m": "TI.InvalidInput.alphaOnly",
+                    "t_a": [
+                        {
+                            "t": "This cell only accepts alpha characters A through Z.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12061,
+                    "m": "TI.InvalidInput.numericOnly",
+                    "t_a": [
+                        {
+                            "t": "This cell only accepts valid numerical data.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12062,
+                    "m": "TI.InvalidInput.alphaNumericOnly",
+                    "t_a": [
+                        {
+                            "t": "This cell only accepts alphanumerical data.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12063,
+                    "m": "TI.InvalidInput.textOnly",
+                    "t_a": [
+                        {
+                            "t": "This cell accepts any type of input.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11992,
+                    "m": "TestShell.Fullscreen.PasswordRequest",
+                    "t_a": [
+                        {
+                            "t": "Please enter the password to exit fullscreen mode:",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12047,
+                    "m": "EBSR.Header.Part1",
+                    "t_a": [
+                        {
+                            "t": "Part A",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12048,
+                    "m": "EBSR.Header.Part2",
+                    "t_a": [
+                        {
+                            "t": "Part B",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12049,
+                    "m": "EBSR.Header.Part3",
+                    "t_a": [
+                        {
+                            "t": "Part C",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11968,
+                    "m": "TDS.WordList.thesaurus",
+                    "t_a": [
+                        {
+                            "t": "Thesaurus",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11974,
+                    "m": "TDS_PT_HTMLv2",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/periodic\/2010\/periodic_standard.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11975,
+                    "m": "TDS_F_OH_HS_Physics",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/oh_hs_physics.html",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11976,
+                    "m": "TDS_F_UT_HS_Physics",
+                    "t_a": [
+                        {
+                            "t": "..\/tools\/formulas\/2010\/ut_hs_physics.html",
                             "l": "ENU"
                         }
                     ]
@@ -5675,316 +6225,6 @@ TDS.Config.messages={
                             "l": "ENU"
                         }
                     ]
-                },
-                {
-                    "id": 11705,
-                    "m": "Submit and Close",
-                    "t_a": [
-                        {
-                            "t": "Save and Close",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11713,
-                    "m": "TestShell.Label.PeriodicTable",
-                    "t_a": [
-                        {
-                            "t": "Periodic Table",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11875,
-                    "m": "TestItemScores",
-                    "t_a": [
-                        {
-                            "t": "Congratulations on finishing your test!  After reviewing your responses, click the [Test Results] button to log out.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11876,
-                    "m": "TestShell.Label.BlockPausing",
-                    "t_a": [
-                        {
-                            "t": "You may not pause the test until all questions on this page have been answered.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11877,
-                    "m": "SimulatorPlayingWhileSaving",
-                    "t_a": [
-                        {
-                            "t": "Please wait for the simulation to finish before saving your response.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11879,
-                    "m": "SimulatorPlayingWhileNavigating",
-                    "t_a": [
-                        {
-                            "t": "Please wait for the simulation to finish before continuing.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11881,
-                    "m": "TestShell.Label.RemoveResponseWarning",
-                    "t_a": [
-                        {
-                            "t": "This action will clear all data for this item. Are you sure you want to proceed?<br\/><br\/>Click [Yes] to clear the data for this item.  Click [No] to cancel this action.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11882,
-                    "m": "TestShell.Segment.ImpermeableIncomplete",
-                    "t_a": [
-                        {
-                            "t": "You may not leave this segment until all required questions have a response.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11883,
-                    "m": "TestShell.Segment.LeaveWarning",
-                    "t_a": [
-                        {
-                            "t": "You cannot come back to this part of the test.  Are you sure you want to continue?",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12201,
-                    "m": "TDSCKE.Alert.InvalidRows.ENU",
-                    "t_a": [
-                        {
-                            "t": "Enter a number between 1 and 100 to define the number of rows.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12202,
-                    "m": "TDSCKE.Alert.InvalidCols.ENU",
-                    "t_a": [
-                        {
-                            "t": "Enter a number between 1 and 10 to define the number of columns.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12203,
-                    "m": "TestShell.Link.SystemSettings",
-                    "t_a": [
-                        {
-                            "t": "System Settings",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12060,
-                    "m": "TI.InvalidInput.alphaOnly",
-                    "t_a": [
-                        {
-                            "t": "This cell only accepts alpha characters A through Z.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12061,
-                    "m": "TI.InvalidInput.numericOnly",
-                    "t_a": [
-                        {
-                            "t": "This cell only accepts valid numerical data.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12062,
-                    "m": "TI.InvalidInput.alphaNumericOnly",
-                    "t_a": [
-                        {
-                            "t": "This cell only accepts alphanumerical data.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12063,
-                    "m": "TI.InvalidInput.textOnly",
-                    "t_a": [
-                        {
-                            "t": "This cell accepts any type of input.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11968,
-                    "m": "TDS.WordList.thesaurus",
-                    "t_a": [
-                        {
-                            "t": "Thesaurus",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11974,
-                    "m": "TDS_PT_HTMLv2",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/periodic\/2010\/periodic_standard.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11975,
-                    "m": "TDS_F_OH_HS_Physics",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/oh_hs_physics.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11976,
-                    "m": "TDS_F_UT_HS_Physics",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/ut_hs_physics.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11962,
-                    "m": "TDS.WordList.glossary",
-                    "t_a": [
-                        {
-                            "t": "Glossary",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11992,
-                    "m": "TestShell.Fullscreen.PasswordRequest",
-                    "t_a": [
-                        {
-                            "t": "Please enter the password to exit fullscreen mode:",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12047,
-                    "m": "EBSR.Header.Part1",
-                    "t_a": [
-                        {
-                            "t": "Part A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12048,
-                    "m": "EBSR.Header.Part2",
-                    "t_a": [
-                        {
-                            "t": "Part B",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12049,
-                    "m": "EBSR.Header.Part3",
-                    "t_a": [
-                        {
-                            "t": "Part C",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12215,
-                    "m": "TDS_F_MO_alg1",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/mo_alg1.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12216,
-                    "m": "TDS_F_MO_alg2",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/mo_alg2.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12217,
-                    "m": "TDS_F_MO_geo",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/mo_geo.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12218,
-                    "m": "TDS_F_MO_math_eoc",
-                    "t_a": [
-                        {
-                            "t": "..\/tools\/formulas\/2010\/mo_eoc_math.html",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12219,
-                    "m": "TDSCKE.Alert.InvalidHeight.lang",
-                    "t_a": [
-                        {
-                            "t": "The table height you have entered is invalid. You may enter a number in pixels (e.g., 300) or a percentage (e.g., 100%). You may also choose to leave the height value blank. If you leave the value blank, the browser will automatically adjust the table size.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12220,
-                    "m": "TDSCKE.Alert.InvalidWidth.lang",
-                    "t_a": [
-                        {
-                            "t": "The table width you have entered is invalid. You may enter a number in pixels (e.g., 300) or a percentage (e.g., 100%). You may also choose to leave the width value blank. If you leave the value blank, the browser will automatically adjust the table size.",
-                            "l": "ENU"
-                        }
-                    ]
                 }
             ]
         },
@@ -6082,21 +6322,21 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11269,
-                    "m": "Student Comments",
-                    "t_a": [
-                        {
-                            "t": "Student Comments",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 12236,
                     "m": "Word List",
                     "t_a": [
                         {
                             "t": "Word List (Glossary)",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11269,
+                    "m": "Student Comments",
+                    "t_a": [
+                        {
+                            "t": "Student Comments",
                             "l": "ENU"
                         }
                     ]
@@ -7361,6 +7601,26 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 11993,
+                    "m": "TDS_TTX_M102",
+                    "t_a": [
+                        {
+                            "t": "M102",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11994,
+                    "m": "TDS_TTX_M101",
+                    "t_a": [
+                        {
+                            "t": "M101",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 12051,
                     "m": "TDS_ASIGuide0",
                     "t_a": [
@@ -7381,21 +7641,11 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11993,
-                    "m": "TDS_TTX_M102",
+                    "id": 11991,
+                    "m": "TDS_F_UT_HS_Science",
                     "t_a": [
                         {
-                            "t": "M102",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11994,
-                    "m": "TDS_TTX_M101",
-                    "t_a": [
-                        {
-                            "t": "M101",
+                            "t": "UT HS Science",
                             "l": "ENU"
                         }
                     ]
@@ -7446,16 +7696,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Medium Gray on Light Gray",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11991,
-                    "m": "TDS_F_UT_HS_Science",
-                    "t_a": [
-                        {
-                            "t": "UT HS Science",
                             "l": "ENU"
                         }
                     ]
@@ -7651,56 +7891,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11725,
-                    "m": "BrowserUnsupported",
-                    "t_a": [
-                        {
-                            "t": "The web browser you are using was recently released and the American Institutes for Research has not finished testing its compatibility with the OAKS practice test. You may take a practice test using this browser if you choose to do so; however, there is a possibility that some features may not function correctly.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10892,
-                    "m": "InvalidFirstName",
-                    "t_a": [
-                        {
-                            "t": "Your first name and student ID do not match State records. Please try again or ask your Test Administrator for help.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 10897,
-                    "m": "ForbiddenApps",
-                    "t_a": [
-                        {
-                            "t": "You cannot log into OAKS Online until the following programs are closed:",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11029,
-                    "m": "StaticContent.Label.OpLoginText",
-                    "t_a": [
-                        {
-                            "t": "<p>Welcome to OAKS Online!<\/p><ol type=\"1\">  <li>Please enter your first name, SSID and the Session ID in the fields above. Your Test Administrator will give you the Session ID.<\/li>  <li>Click [Sign In] to continue.<\/li><\/ol>",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11031,
-                    "m": "StaticContent.Label.PTLink",
-                    "t_a": [
-                        {
-                            "t": "<a href=\"https:\/\/oakspt.tds.airast.org\/student\/\" class=\"goPractice\">Go to the Practice Test Site<\/a>",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 10889,
                     "m": "RequiredFirstName",
                     "t_a": [
@@ -7756,6 +7946,56 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Your login did not work. Please try again or ask your Test Administrator for help.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11725,
+                    "m": "BrowserUnsupported",
+                    "t_a": [
+                        {
+                            "t": "The web browser you are using was recently released and the American Institutes for Research has not finished testing its compatibility with the OAKS practice test. You may take a practice test using this browser if you choose to do so; however, there is a possibility that some features may not function correctly.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10892,
+                    "m": "InvalidFirstName",
+                    "t_a": [
+                        {
+                            "t": "Your first name and student ID do not match State records. Please try again or ask your Test Administrator for help.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 10897,
+                    "m": "ForbiddenApps",
+                    "t_a": [
+                        {
+                            "t": "You cannot log into OAKS Online until the following programs are closed:",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11029,
+                    "m": "StaticContent.Label.OpLoginText",
+                    "t_a": [
+                        {
+                            "t": "<p>Welcome to OAKS Online!<\/p><ol type=\"1\">  <li>Please enter your first name, SSID and the Session ID in the fields above. Your Test Administrator will give you the Session ID.<\/li>  <li>Click [Sign In] to continue.<\/li><\/ol>",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11031,
+                    "m": "StaticContent.Label.PTLink",
+                    "t_a": [
+                        {
+                            "t": "<a href=\"https:\/\/oakspt.tds.airast.org\/student\/\" class=\"goPractice\">Go to the Practice Test Site<\/a>",
                             "l": "ENU"
                         }
                     ]
@@ -7971,26 +8211,6 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11744,
-                    "m": "Browser.Denied.SpacesEnabled",
-                    "t_a": [
-                        {
-                            "t": "Your computer has \"Spaces\" enabled. This feature must be disabled before you can log in. Please ask your Test Administrator for help.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11703,
-                    "m": "Approval.Label.YourTestForm",
-                    "t_a": [
-                        {
-                            "t": "Test Forms:",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11672,
                     "m": "Login.Label.MiscLinks",
                     "t_a": [
@@ -8051,11 +8271,21 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11885,
-                    "m": "Login.TS.DescActive",
+                    "id": 11744,
+                    "m": "Browser.Denied.SpacesEnabled",
                     "t_a": [
                         {
-                            "t": "opportunity {0} of {1}",
+                            "t": "Your computer has \"Spaces\" enabled. This feature must be disabled before you can log in. Please ask your Test Administrator for help.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11703,
+                    "m": "Approval.Label.YourTestForm",
+                    "t_a": [
+                        {
+                            "t": "Test Forms:",
                             "l": "ENU"
                         }
                     ]
@@ -8066,6 +8296,16 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "The wrong secure browser is installed on this computer. Please tell your Test Administrator. For now, you should use another computer.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11885,
+                    "m": "Login.TS.DescActive",
+                    "t_a": [
+                        {
+                            "t": "opportunity {0} of {1}",
                             "l": "ENU"
                         }
                     ]
@@ -8166,26 +8406,6 @@ TDS.Config.messages={
             "c": "Opportunity.aspx",
             "m_a": [
                 {
-                    "id": 11036,
-                    "m": "StaticContent.Label.ChooseTest",
-                    "t_a": [
-                        {
-                            "t": "Select a test.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11037,
-                    "m": "StaticContent.Label.TestOpp",
-                    "t_a": [
-                        {
-                            "t": "<p class=\"selectTest\"> <\/p>",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11120,
                     "m": "Opportunity.Javascript.ValidatingTest",
                     "t_a": [
@@ -8201,6 +8421,26 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Test is starting, please wait…",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11036,
+                    "m": "StaticContent.Label.ChooseTest",
+                    "t_a": [
+                        {
+                            "t": "Select a test.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11037,
+                    "m": "StaticContent.Label.TestOpp",
+                    "t_a": [
+                        {
+                            "t": "<p class=\"selectTest\"> <\/p>",
                             "l": "ENU"
                         }
                     ]
@@ -8901,6 +9141,16 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 11463,
+                    "m": "StudentMaster.Label.SessionID",
+                    "t_a": [
+                        {
+                            "t": "Session ID:",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 11460,
                     "m": "StudentMaster.Label.ChooseAccommodations",
                     "t_a": [
@@ -8916,16 +9166,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "<span class=\"hasTTS\">Select the text you want to hear and click the green button to have it played.<\/span>",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11463,
-                    "m": "StudentMaster.Label.SessionID",
-                    "t_a": [
-                        {
-                            "t": "Session ID:",
                             "l": "ENU"
                         }
                     ]
@@ -9241,6 +9481,16 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 10368,
+                    "m": "StaticContent.Label.NoScoresForPT",
+                    "t_a": [
+                        {
+                            "t": "Scores are not displayed for Practice Tests.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 11040,
                     "m": "StaticContent.Label.NoResultsForYou",
                     "t_a": [
@@ -9341,11 +9591,21 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 10368,
-                    "m": "StaticContent.Label.NoScoresForPT",
+                    "id": 11864,
+                    "m": "ItemScores.Row.Format.GI",
                     "t_a": [
                         {
-                            "t": "Scores are not displayed for Practice Tests.",
+                            "t": "Graphic-Response",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11874,
+                    "m": "ItemResults.Table.NoScore",
+                    "t_a": [
+                        {
+                            "t": "N\/A",
                             "l": "ENU"
                         }
                     ]
@@ -9406,26 +9666,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Equation",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11874,
-                    "m": "ItemResults.Table.NoScore",
-                    "t_a": [
-                        {
-                            "t": "N\/A",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11864,
-                    "m": "ItemScores.Row.Format.GI",
-                    "t_a": [
-                        {
-                            "t": "Graphic-Response",
                             "l": "ENU"
                         }
                     ]
@@ -9511,21 +9751,21 @@ TDS.Config.messages={
             "c": "TestShell.aspx",
             "m_a": [
                 {
-                    "id": 11523,
-                    "m": "TestInstructions.Label.Help",
+                    "id": 11735,
+                    "m": "TestShellScripts.Label.ReviewInstructions",
                     "t_a": [
                         {
-                            "t": "<span class=\"hasTTS\">Select the text you want to hear and click the green button to have it played.<\/span>",
+                            "t": "Please review your answers before you continue testing. You <span style=\"font-weight:bold;\">will not<\/span> be able to come back to these questions later. <br\/><br\/>Click on a question number below to review it.",
                             "l": "ENU"
                         }
                     ]
                 },
                 {
-                    "id": 11664,
-                    "m": "StudentMaster.Button.Logout",
+                    "id": 11523,
+                    "m": "TestInstructions.Label.Help",
                     "t_a": [
                         {
-                            "t": "Log Out",
+                            "t": "<span class=\"hasTTS\">Select the text you want to hear and click the green button to have it played.<\/span>",
                             "l": "ENU"
                         }
                     ]
@@ -9541,21 +9781,21 @@ TDS.Config.messages={
                     ]
                 },
                 {
-                    "id": 11735,
-                    "m": "TestShellScripts.Label.ReviewInstructions",
-                    "t_a": [
-                        {
-                            "t": "Please review your answers before you continue testing. You <span style=\"font-weight:bold;\">will not<\/span> be able to come back to these questions later. <br\/><br\/>Click on a question number on the left to review it.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
                     "id": 11736,
                     "m": "TestShellScripts.Label.Questions",
                     "t_a": [
                         {
                             "t": "Questions:",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11664,
+                    "m": "StudentMaster.Button.Logout",
+                    "t_a": [
+                        {
+                            "t": "Log Out",
                             "l": "ENU"
                         }
                     ]
@@ -9961,6 +10201,76 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 11927,
+                    "m": "TestShell.Link.TestResults",
+                    "t_a": [
+                        {
+                            "t": "Test Results",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11930,
+                    "m": "TestShellModern.Label.Items",
+                    "t_a": [
+                        {
+                            "t": "Questions:",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11945,
+                    "m": "TestShell.Comments.Global",
+                    "t_a": [
+                        {
+                            "t": "Notepad",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11965,
+                    "m": "TestShell.Link.LineReader",
+                    "t_a": [
+                        {
+                            "t": "Line Reader",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11966,
+                    "m": "TestShell.Link.GlobalNotes",
+                    "t_a": [
+                        {
+                            "t": "Notes",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12147,
+                    "m": "TestShell.Label.Rubric",
+                    "t_a": [
+                        {
+                            "t": "Scoring Guide",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 12148,
+                    "m": "TestShell.Link.Rubric",
+                    "t_a": [
+                        {
+                            "t": "Scoring Guide",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 12204,
                     "m": "TDSMoogle.searchResults",
                     "t_a": [
@@ -10069,82 +10379,32 @@ TDS.Config.messages={
                             "l": "ENU"
                         }
                     ]
-                },
-                {
-                    "id": 11965,
-                    "m": "TestShell.Link.LineReader",
-                    "t_a": [
-                        {
-                            "t": "Line Reader",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11966,
-                    "m": "TestShell.Link.GlobalNotes",
-                    "t_a": [
-                        {
-                            "t": "Notes",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11927,
-                    "m": "TestShell.Link.TestResults",
-                    "t_a": [
-                        {
-                            "t": "Test Results",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11930,
-                    "m": "TestShellModern.Label.Items",
-                    "t_a": [
-                        {
-                            "t": "Questions:",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11945,
-                    "m": "TestShell.Comments.Global",
-                    "t_a": [
-                        {
-                            "t": "Notepad",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12147,
-                    "m": "TestShell.Label.Rubric",
-                    "t_a": [
-                        {
-                            "t": "Scoring Guide",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 12148,
-                    "m": "TestShell.Link.Rubric",
-                    "t_a": [
-                        {
-                            "t": "Scoring Guide",
-                            "l": "ENU"
-                        }
-                    ]
                 }
             ]
         },
         {
             "c": "TTSCheck.aspx",
             "m_a": [
+                {
+                    "id": 11862,
+                    "m": "TTSCheck.Label.SliderVolume",
+                    "t_a": [
+                        {
+                            "t": "Volume",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11863,
+                    "m": "TTSCheck.Label.SliderPitch",
+                    "t_a": [
+                        {
+                            "t": "Pitch",
+                            "l": "ENU"
+                        }
+                    ]
+                },
                 {
                     "id": 11886,
                     "m": "TTSCheck.Label.SliderRate",
@@ -10276,6 +10536,76 @@ TDS.Config.messages={
                     ]
                 },
                 {
+                    "id": 11198,
+                    "m": "TTSCheck.Label.DidYouHear",
+                    "t_a": [
+                        {
+                            "t": "Do you hear the voice?",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11201,
+                    "m": "TTSCheck.Label.HeardYesOrNo",
+                    "t_a": [
+                        {
+                            "t": "Select the green button to test your Computer-Based Read Aloud settings. <br \/> You should hear the following phrase: \"This text is being read aloud.\" <br \/> Click [Yes, I heard the voice] if it worked. If it did not work, click [No, I did not hear the voice].",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11204,
+                    "m": "TTSCheck.Label.SkipEnglish",
+                    "t_a": [
+                        {
+                            "t": "Skip this audio check",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11487,
+                    "m": "TTSCheck.Label.NoSpanishVoicePack",
+                    "t_a": [
+                        {
+                            "t": "No appropriate voice pack for Spanish found on this machine.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11488,
+                    "m": "TTSCheck.Label.NoEnglishVoicePack",
+                    "t_a": [
+                        {
+                            "t": "No appropriate voice pack for English found on this machine.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11461,
+                    "m": "TTSCheck.Label.HeardNoSpanish",
+                    "t_a": [
+                        {
+                            "t": "No, I did not hear it.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
+                    "id": 11209,
+                    "m": "TTSCheck.Label.HeardYesOrNoSpanish",
+                    "t_a": [
+                        {
+                            "t": "Click the green button to test your Text-to-Speech settings.<br \/>You should hear the following phrase read out aloud: &#8220;El texto en español se está leyendo en voz alta &#8221;.<br \/> Click [Yes] below if you heard the voice. Click [No] if you did not.",
+                            "l": "ENU"
+                        }
+                    ]
+                },
+                {
                     "id": 11211,
                     "m": "TTSCheck.Label.AudioProblem",
                     "t_a": [
@@ -10331,96 +10661,6 @@ TDS.Config.messages={
                     "t_a": [
                         {
                             "t": "Text-to-Speech is Not Available",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11198,
-                    "m": "TTSCheck.Label.DidYouHear",
-                    "t_a": [
-                        {
-                            "t": "Do you hear the voice?",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11201,
-                    "m": "TTSCheck.Label.HeardYesOrNo",
-                    "t_a": [
-                        {
-                            "t": "Select the green button to test your Computer-Based Read Aloud settings. <br \/> You should hear the following phrase: \"This text is being read aloud.\" <br \/> Click [Yes, I heard the voice] if it worked. If it did not work, click [No, I did not hear the voice].",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11204,
-                    "m": "TTSCheck.Label.SkipEnglish",
-                    "t_a": [
-                        {
-                            "t": "Skip this audio check",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11862,
-                    "m": "TTSCheck.Label.SliderVolume",
-                    "t_a": [
-                        {
-                            "t": "Volume",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11863,
-                    "m": "TTSCheck.Label.SliderPitch",
-                    "t_a": [
-                        {
-                            "t": "Pitch",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11487,
-                    "m": "TTSCheck.Label.NoSpanishVoicePack",
-                    "t_a": [
-                        {
-                            "t": "No appropriate voice pack for Spanish found on this machine.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11488,
-                    "m": "TTSCheck.Label.NoEnglishVoicePack",
-                    "t_a": [
-                        {
-                            "t": "No appropriate voice pack for English found on this machine.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11461,
-                    "m": "TTSCheck.Label.HeardNoSpanish",
-                    "t_a": [
-                        {
-                            "t": "No, I did not hear it.",
-                            "l": "ENU"
-                        }
-                    ]
-                },
-                {
-                    "id": 11209,
-                    "m": "TTSCheck.Label.HeardYesOrNoSpanish",
-                    "t_a": [
-                        {
-                            "t": "Click the green button to test your Text-to-Speech settings.<br \/>You should hear the following phrase read out aloud: &#8220;El texto en español se está leyendo en voz alta &#8221;.<br \/> Click [Yes] below if you heard the voice. Click [No] if you did not.",
                             "l": "ENU"
                         }
                     ]

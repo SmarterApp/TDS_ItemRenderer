@@ -135,7 +135,7 @@ TTS.Config = {
 
     ShowAdjustments: true,
     ShowVolume: true, //Alter the volume
-    MinVolume: 20,
+    MinVolume: 0,
     MaxVolume: 10,
     Volume: 10, //Default
 

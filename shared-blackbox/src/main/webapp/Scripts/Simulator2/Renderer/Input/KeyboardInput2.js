@@ -491,8 +491,10 @@ Simulator.Input.KeyboardInput = function (sim) {
                 if (parts) {
                     // call the corresponding item's method to record item selection
                     parts[ELEMENT].recordKeyboardSelection(parts[KEY], parts[ITEM], itemIndex);
-                    // for option and choice lists, keep focus on current element
-                    if (parts[ELEMENT].getType() == 'optionList' || parts[ELEMENT].getType() == 'choiceList')
+                    // for option lists, choice lists, and buttons: keep focus on current element (fb-97950)
+                    if (parts[ELEMENT].getType() == 'optionList'
+                        || parts[ELEMENT].getType() == 'choiceList'
+                        || parts[ELEMENT].getSourceName() == 'Button')
                         parts[ELEMENT].keyboardNavigateTo(parts[KEY], parts[ITEM], itemIndex);
                     // for droplist, move the focus to the next element once the "enter" key is pressed
                     if (parts[ELEMENT].getType() === 'dropList') {

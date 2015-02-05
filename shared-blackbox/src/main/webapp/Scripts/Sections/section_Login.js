@@ -81,7 +81,15 @@ Sections.Login.prototype.load = function ()
     // and release this lock when they log out; also on iOS browser, we call function enableLockDown to disable
     // the check if the browser has been backgrounded
     if (Util.Browser.isSecure()) {
-        Util.SecureBrowser.enableLockDown(false);
+        if (Util.Browser.isWindows()) {
+            // For Windows, we attempt to lock down while launching the Secure Browser if
+            // AssistX is required. The Secure Browser is locked down the first time we load the
+            // login page, and is unlockd while we close the browser.
+            var whitelist = TDS.getAppSetting('sb.assistxWhitelist', '');
+            Util.SecureBrowser.enableLockDown(true, whitelist);
+        } else {
+            Util.SecureBrowser.enableLockDown(false);
+        }
     }
 
     var loginForm = YUD.get('loginForm');
@@ -204,6 +212,8 @@ Sections.Login.prototype.setControls = function()
         this.Controls.cbSession.checked = false;
     }
 
+    this.setStudentGuestLogin();
+
     // check if score entry app
     if (TDS.isDataEntry || TDS.isReadOnly)
     {
@@ -212,6 +222,29 @@ Sections.Login.prototype.setControls = function()
         // Cannot login as GUEST
         this.disableUserInput(false);
         this.Controls.cbUser.checked = false;
+    }
+};
+
+Sections.Login.prototype.setStudentGuestLogin = function () {
+
+    if (TDS.inPTMode && $(document.body).hasClass('mode_Student')) {
+
+        //show/hide/disable GUEST Session Form
+        var userProp = TDS.getAppSetting('student.login.guestUser'),
+            sessionProp = TDS.getAppSetting('student.login.guestSession');
+
+        if (userProp) {
+            //possible value of userProp:
+            //TDS_Glogin_User_Hide 
+            //TDS_Glogin_User_Disable
+            $(document.body).addClass(userProp);
+        }
+        if (sessionProp) {
+            //possible value of sessionProp:
+            //TDS_Glogin_Session_Hide
+            //TDS_Glogin_Session_Disable
+            $(document.body).addClass(sessionProp);
+        }
     }
 };
 
@@ -258,20 +291,15 @@ Sections.Login.prototype.validate = function ()
 {
     //Check if the environment is secure in case we are using a secure browser
     if (Util.Browser.isSecure() && !TDS.Debug.ignoreBrowserChecks) {
-        if (!Util.SecureBrowser.isEnvironmentSecure()) {
+        var securityCheckResult = Util.SecureBrowser.canEnvironmentBeSecured();
+        if (securityCheckResult && !securityCheckResult.canSecure) {
             var defaultError = 'Environment is not secure. Please notify your proctor';
-            // for iOS brower, also add a notice to adjust the volume before enabling the Guided Access mode
-            if (Util.Browser.isIOS()) {
-                defaultError = 'Guided Access is not turned on. Please notify your proctor. (Before turning on Guided Access, check the volume on your iPad to make sure you can hear the audio.)';
-                TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentInsecureiOSVolumeControl', defaultError));
+            if (securityCheckResult.messageKey) {
+                TDS.Dialog.showWarning(Messages.getAlt(securityCheckResult.messageKey, defaultError));
             } else {
                 TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentInsecure', defaultError));
             }
             return;
-        } else if (Util.Browser.isIOS()) {
-            // for iOS browser, if the environment is safe (guided access moded enabled), notify student that tablet volume cannot be changed during the test while on guided access mode
-            var defaultVolumeWarning = 'Warning: You cannot adjust the volume of your iPad during the test. If you need to adjust the volume, please turn off Guided Access. Adjust the volume using the volume control buttons on the iPad, and then activate Guided Access.  If you need help, please ask your proctor.';
-            TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentSecureiOSVolumeControl', defaultVolumeWarning));
         }
     }
 
@@ -296,8 +324,8 @@ Sections.Login.prototype.validate = function ()
         this.request('next', loginInfo);
 
         // we want to try to force full screen after student logs in and release lock when they log out, and
-        // that applies to secure browsers that implement function enableLockDown
-        if (Util.Browser.isSecure()) {
+        // that applies to secure browsers that implement function enableLockDown (except for Windows Secure Browser)
+        if (Util.Browser.isSecure() && !Util.Browser.isWindows()) {
             Util.SecureBrowser.enableLockDown(true);
         }
     };

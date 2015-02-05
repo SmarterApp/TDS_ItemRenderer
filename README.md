@@ -1,6 +1,6 @@
-# Welcome to the ItemRendererDev Application
+# Welcome to the ItemRenderer Application
 
-The ItemRendererDev project is a group of modules that can be used for rendering items during the student tests.
+The ItemRenderer project is a group of modules that can be used for rendering items during the student tests.
 
 
 ## License ##
@@ -28,12 +28,12 @@ In general, build the code and deploy the JAR file.
 
 If building all components from scratch the following build order is needed:
 
-* sharedmultijardev
+* sharedmultijar
 * ResourceBundler
 
 
 ## Dependencies
-ItemRendererDev has a number of direct dependencies that are necessary for it to function.  These dependencies are already built into the Maven POM files.
+ItemRenderer has a number of direct dependencies that are necessary for it to function.  These dependencies are already built into the Maven POM files.
 
 ### Compile Time Dependencies
 

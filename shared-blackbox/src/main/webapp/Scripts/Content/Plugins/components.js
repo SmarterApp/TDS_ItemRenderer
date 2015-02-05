@@ -52,17 +52,4 @@ Add general entity components (e.x., stem)
 
     }
 
-    // when focusing on an item set the focus to the first component 
-    Plugin_Comp.prototype.focus = function (previousComponent, domEvent) {
-        // don't reset to default if mouse event (content_manger.js setActive() takes care of that)
-        if (!domEvent || domEvent.keyCode) {
-            this.entity.resetComponent();
-        }
-    }
-
-    // when leaving item remove focus from component
-    Plugin_Comp.prototype.blur = function () {
-        this.entity.clearComponent();
-    }
-
 })(ContentManager);

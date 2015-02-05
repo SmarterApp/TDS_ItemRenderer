@@ -70,7 +70,8 @@
     opacity: .5;
     text-decoration: line-through;
 }
-.edit-newtext, .edit-originaltext {
+.edit-newtext, 
+.edit-originaltext {
 	background-color: rgb(172, 211, 115);
 	background-color: rgba(172, 211, 115, 0.3);
 	border-bottom-color: rgb(172, 211, 115);
@@ -84,7 +85,6 @@
     min-width: 2em;
     vertical-align: top;
 }
-
 .TDS_CCGreen .edit-newtext, 
 .TDS_CCGreen .edit-originaltext, 
 .TDS_CCGreen2 .edit-newtext, 
@@ -184,20 +184,60 @@
 	line-height: 1.4em !important;
 }
 
-.TDS_EDIT_SPAN.contextAreaFocus {
-	border: none;
-}
 .TDS_EDIT_SPAN.contextAreaFocus .edit-newtext, 
-.TDS_EDIT_SPAN.contextAreaFocus .edit-originaltext {
+.TDS_EDIT_SPAN.contextAreaFocus .edit-originaltext, 
+.TDS_EDIT_SPAN.contextAreaFocus.edit-originaltext {
 	border-color: #00aeef;
 	background-color: rgba(0, 174, 239, 0.3);
 }
-
+.TDS_EDIT_SPAN:focus {
+	-webkit-box-shadow: inherit !important;
+	-moz-box-shadow: inherit !important;
+	box-shadow: inherit !important; 
+}
 .TDS_CCYellowB .TDS_EDIT_SPAN.contextAreaFocus .edit-newtext, 
-.TDS_CCYellowB .TDS_EDIT_SPAN.contextAreaFocus .edit-originaltext {
+.TDS_CCYellowB .TDS_EDIT_SPAN.contextAreaFocus .edit-originaltext, 
+.TDS_CCYellowB .TDS_EDIT_SPAN.contextAreaFocus.edit-originaltext {
 	border-color: #f07b00;
 	background-color: rgba(238,228,197,0.3);
 }
+.response_edittaskchoice .TDS_EDIT_SPAN, 
+.response_edittaskchoice .TDS_EDIT_SPAN.contextAreaFocus .edit-newtext, 
+.response_edittaskchoice .TDS_EDIT_SPAN.contextAreaFocus .edit-originaltext, 
+.response_edittaskchoice .TDS_EDIT_SPAN.contextAreaFocus.edit-originaltext {
+	background-color: transparent;
+	border: none;
+}
+.response_edittaskchoice .TDS_EDIT_SPAN.edit-originaltext > span:nth-child(1) {
+	background-color: rgba(172, 211, 115, 0.3);
+	border-bottom-color: rgb(172, 211, 115);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-top-color: rgb(172, 211, 115);
+    border-top-style: solid;
+    border-top-width: 1px;
+    display: inline-block;
+}
+.response_edittaskchoice .TDS_EDIT_SPAN.contextAreaFocus.edit-originaltext > span:nth-child(1) {
+	border-color: #00aeef;
+	background-color: rgba(0, 174, 239, 0.3);
+}
+.response_edittaskchoice .TDS_EDIT_SPAN.contextAreaFocus .edit-newtext {
+	border-top: solid 1px #00aeef;
+	border-bottom: solid 1px #00aeef;
+	background-color: rgba(0, 174, 239, 0.3);
+}
+
+.TDS_CCYellowB .response_edittaskchoice .TDS_EDIT_SPAN.contextAreaFocus.edit-originaltext > span:nth-child(1) {
+	border-color: #f07b00;
+	background-color: rgba(238,228,197,0.3);
+}
+.TDS_CCYellowB .response_edittaskchoice .TDS_EDIT_SPAN.contextAreaFocus .edit-newtext {
+	border-top: solid 1px #f07b00;
+	border-bottom: solid 1px #f07b00;
+	background-color: rgba(238,228,197,0.3);
+}
+
 
 .editTaskMessage .bd {
 	padding-bottom: 0px;

@@ -96,8 +96,8 @@ function onglobalkeyevent(evt, type, key, keyCode, charCode) {
 
         // non modifier navigation keys
         if (!Util.Event.hasModifier(evt)) {
-            // enter key
-            if (keyCode == 13) {
+            // enter key and space bar for checkbox and radio button selection bug: 129533
+            if (keyCode == 13 || keyCode == 32) {
                 return true;
             }
 

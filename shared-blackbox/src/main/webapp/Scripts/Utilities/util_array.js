@@ -467,6 +467,38 @@
         Array.prototype.sort.call(arr, opt_compareFn || A.defaultCompare);
     };
 
+    /**
+     * Sorts the specified array into ascending order in a stable way.  If no
+     * opt_compareFn is specified, elements are compared using
+     * <code>goog.array.defaultCompare</code>, which compares the elements using
+     * the built in < and > operators.  This will produce the expected behavior
+     * for homogeneous arrays of String(s) and Number(s).
+     *
+     * Runtime: Same as <code>Array.prototype.sort</code>, plus an additional
+     * O(n) overhead of copying the array twice.
+     *
+     * @param {Array.<T>} arr The array to be sorted.
+     * @param {?function(T, T): number=} opt_compareFn Optional comparison function
+     *     by which the array is to be ordered. Should take 2 arguments to compare,
+     *     and return a negative number, zero, or a positive number depending on
+     *     whether the first argument is less than, equal to, or greater than the
+     *     second.
+     * @template T
+     */
+    A.stableSort = function (arr, opt_compareFn) {
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = { index: i, value: arr[i] };
+        }
+        var valueCompareFn = opt_compareFn || A.defaultCompare;
+        function stableCompareFn(obj1, obj2) {
+            return valueCompareFn(obj1.value, obj2.value) || (obj1.index - obj2.index);
+        };
+        A.sort(arr, stableCompareFn);
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = arr[i].value;
+        }
+    };
+
     // The Fisher-Yates (aka Knuth) shuffle
     // https://github.com/coolaj86/knuth-shuffle
     A.shuffle = function (arr) {

@@ -20,8 +20,10 @@ Passage print menu.
         if (entity instanceof ContentPassage) {
             // check if the print acc is enabled
             var accProps = page.getAccProps();
-            return accProps.hasPrintStimulus();
+            return accProps.hasPrintStimulus() ||
+                   accProps.hasEmbossStimulus();
         }
+
         return false;
     }
 

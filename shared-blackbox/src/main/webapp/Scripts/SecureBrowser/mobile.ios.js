@@ -11,8 +11,13 @@ TDS.SecureBrowser.Mobile.iOS = function () {
 
     TDS.SecureBrowser.Mobile.iOS.superclass.constructor.call(this);
 
-    // initialize the guided access mode as 'unknown'
-    this._guidedAccessMode = 'unknown';
+    // retrieve the guide access status from local storage.
+    this._guidedAccessMode = localStorage.getItem('ios-guidedaccessstatus');
+    // set guided access status to 'unknown' if local storage does not have the data
+    if (this._guidedAccessMode == null) {
+        this._guidedAccessMode = 'unknown';
+    }
+
     this._processes = [];
     this._backgroundThreshold = 5;  // default value is five seconds
 
@@ -46,9 +51,10 @@ TDS.SecureBrowser.Mobile.iOS.prototype.initialize = function () {
     this.getHasBeenBackgrounded = function () { return hasBeenBackgrounded; };
     this.setProcessList = function () { this._processes = secBrowser.device.runningProcesses; };
     var isLockedDown = true; // indicate if a student test session is going on
+    this.isSystemLockedDown = function () { return isLockedDown; };
     var isAutonomousGuidedAccessEnabled;    // we cannot determine whether autonomous guided access is available until the student app is fully loaded
 
-    function checkAutonomousGuidedAccess() {
+    this.checkAutonomousGuidedAccess = function () {
         if (typeof (isAutonomousGuidedAccessEnabled) == 'undefined') {
             // determine whether autonomous guided access is available
             if (Util.Browser.getIOSVersion() >= 7) {
@@ -57,19 +63,11 @@ TDS.SecureBrowser.Mobile.iOS.prototype.initialize = function () {
                 isAutonomousGuidedAccessEnabled = false;
             }
         }
-    }
+        return isAutonomousGuidedAccessEnabled;
+    };
 
     this.getGuidedAccessMode = function () {
-        checkAutonomousGuidedAccess();
-        if (typeof (isAutonomousGuidedAccessEnabled) == 'undefined') {
-            return 'true';
-        } else if (!isAutonomousGuidedAccessEnabled) {
-            return guidedAccessMode;
-        } else if (isLockedDown) {
-            return guidedAccessMode;
-        } else {    // bypass security check while log in (the browser app will be enabled right after log in)
-            return 'true';
-        }
+        return guidedAccessMode;
     };
 
     this.setLockDown = function (lockdown) {
@@ -78,18 +76,22 @@ TDS.SecureBrowser.Mobile.iOS.prototype.initialize = function () {
             hasBeenBackgrounded = false;
             // Disable guided access when lockdown is lifted. Guided access can be disabled autonomously only when it was enabled autonomously
             // by the browser itself. So no need to check if the autonomous guided access is available here.
-            if (guidedAccessMode == 'true') {
+            if (guidedAccessMode == 'enabled') {
                 secBrowser.enableGuidedAccess(lockdown, null, function (enableResults) {
                     if (enableResults.didSucceed) {
-                        guidedAccessMode = 'false';
+                        guidedAccessMode = 'disabled';
+                        // store the guided access status using local storage
+                        localStorage.setItem('ios-guidedaccessstatus', 'disabled');
                     }
                 });
             }
-        } else if (isAutonomousGuidedAccessEnabled && guidedAccessMode == 'false') {
+        } else if (isAutonomousGuidedAccessEnabled && guidedAccessMode == 'disabled') {
             // if autonomous guided access is available, enable guided access when system lockdown
             secBrowser.enableGuidedAccess(lockdown, null, function (enableResults) {
                 if (enableResults.didSucceed) {
-                    guidedAccessMode = 'true';
+                    guidedAccessMode = 'enabled';
+                    // store the guided access status using local storage
+                    localStorage.setItem('ios-guidedaccessstatus', 'enabled');
                 }
             });
         }
@@ -98,20 +100,24 @@ TDS.SecureBrowser.Mobile.iOS.prototype.initialize = function () {
     // check the guided access mode from the API
     secBrowser.checkGuidedAccessStatus(null, function (results) {
         if (results.enabled) {
-            guidedAccessMode = 'true';
+            guidedAccessMode = 'enabled';
         } else {
-            guidedAccessMode = 'false';
+            guidedAccessMode = 'disabled';
         }
+        // store the guided access status using local storage
+        localStorage.setItem('ios-guidedaccessstatus', guidedAccessMode);
         Util.log("access mode recorded is .. " + guidedAccessMode);
     });
 
     // listen and update for guided access changes
     secBrowser.listen(secBrowser.EVENT_GUIDED_ACCESS_CHANGED, document, function () {
         if (secBrowser.device.guidedAccessEnabled) {
-            guidedAccessMode = 'true';
+            guidedAccessMode = 'enabled';
         } else {
-            guidedAccessMode = 'false';
+            guidedAccessMode = 'disabled';
         }
+        // store the guided access status using local storage
+        localStorage.setItem('ios-guidedaccessstatus', guidedAccessMode);
         Util.log("access mode now is changed to ... " + guidedAccessMode);
     });
 
@@ -147,8 +153,26 @@ TDS.SecureBrowser.Mobile.iOS.prototype.enableLockDown = function (lockDown) {
     this.setLockDown(lockDown);
 };
 
+TDS.SecureBrowser.Mobile.iOS.prototype.canEnvironmentBeSecured = function () {
+    var result = { 'canSecure': true, 'messageKey': null };
+
+    if (this.getGuidedAccessMode() == 'enabled') {
+        // if guided access is ON, issue a warning for volume control on iOS devices
+        result.messageKey = 'LoginShell.Alert.EnvironmentSecureiOSVolumeControl';
+        var defaultVolumeWarning = 'Warning: You cannot adjust the volume of your iPad during the test. If you need to adjust the volume, please turn off Guided Access. Adjust the volume using the volume control buttons on the iPad, and then activate Guided Access.  If you need help, please ask your proctor.';
+        TDS.Dialog.showWarning(result.messageKey, defaultVolumeWarning);
+    } else if (!this.checkAutonomousGuidedAccess()) {
+        // the guided access is OFF abd autonomous guided access is not enabled, issue the warning that the security cannot be enabled
+        result.canSecure = false;
+        result.messageKey = 'LoginShell.Alert.EnvironmentInsecureiOSVolumeControl';
+    }
+
+    return result;
+};
+
 TDS.SecureBrowser.Mobile.iOS.prototype.isEnvironmentSecure = function () {
-    return ((this.getGuidedAccessMode() == 'true') && (!this.getHasBeenBackgrounded()));
+    var result = { 'secure': (this.getGuidedAccessMode() == 'enabled') && (!this.getHasBeenBackgrounded()), 'messageKey': null };
+    return result;
 };
 
 // Returns a handle to the native browser engine.

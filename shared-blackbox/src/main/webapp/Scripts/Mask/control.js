@@ -338,9 +338,9 @@ C.prototype.addMouseListener = function (target, name, fn) {
         return value || 0;
     };
 
-    // if this is true then we need to support both mouse/touch
+    // if this is true then we need to support both mouse/touch, win8 and chromebook with touchscreen
     var supportsTouchAndMouse = function () {
-        return (touchScreen && getWindowsNTVersion() >= 6.1);
+        return (touchScreen && (getWindowsNTVersion() >= 6.1 || window.navigator.userAgent.indexOf('CrOS') > -1));
     };
 
     // this fixes a touch event to look like a mouse event

@@ -211,7 +211,12 @@ TestShell.Page.prototype.hasContent = function()
 };
 
 // request the pages content to load
-TestShell.Page.prototype.requestContent = function(reload) {}; // abstract
+TestShell.Page.prototype.requestContent = function (reload) { }; // abstract
+
+// get the page title based on type of page (i.e. content, coverpage, review)
+TestShell.Page.prototype.getPageTitle = function () { // abstract
+    return '';
+};
 
 // get the text to put on the page when the page is done loading
 TestShell.Page.prototype.getScreenReaderText = function()

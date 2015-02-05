@@ -33,7 +33,7 @@
             Util.Array.remove(this.orderedPlugins, widget);
         }.bind(this));
 
-    };
+    }
 
     YAHOO.lang.extend(Item, Entity);
 
@@ -146,9 +146,9 @@
     };
 
     // this gets called when making an item active
-    Item.prototype.setActive = function (domEvent, force) { // parameters optional
+    Item.prototype.setActive = function (opts) {
 
-        var activated = Item.superclass.setActive.call(this, domEvent, force);
+        var activated = Item.superclass.setActive.call(this, opts);
 
         // add css
         if (activated) {
@@ -186,7 +186,7 @@
     
     Item.prototype._log = function (message) {
         if (CM._debug) {
-            CM.log('ITEM I-' + this.bankKey + '-' + this.itemKey + ' (' + this.position + '): ' + message);
+            console.log('ITEM I-' + this.bankKey + '-' + this.itemKey + ' (' + this.position + '): ' + message);
         }
     };
 

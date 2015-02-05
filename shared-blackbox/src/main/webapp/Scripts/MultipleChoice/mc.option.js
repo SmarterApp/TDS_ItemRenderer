@@ -2,7 +2,7 @@
 /* MC OPTION          */
 /**********************/
 
-(function() {
+(function(CM) {
 
     // Single MC option
     function MCOption(options, key) {
@@ -99,11 +99,7 @@
         var group = this._options;
         var item = group.getItem();
         var page = item.getPage();
-
-        if (item.isReadOnly()) {
-            return false;
-        }
-
+        
         // get the current selected MC option
         var currentSelection = group.getSelected();
 
@@ -140,8 +136,8 @@
         optionEl.setAttribute('aria-checked', 'true');
 
         // show feedback
-        var pageAccProps = page.getAccommodationProperties();
-        if (pageAccProps != null && pageAccProps.showFeedback()) {
+        var accProps = page.getAccProps();
+        if (accProps && accProps.showFeedback()) {
             this.showFeedback();
         }
 
@@ -196,10 +192,11 @@
 
     MCOption.prototype.render = function () {
 
-        var item = this._options.getItem();
+        var group = this._options;
+        var item = group.getItem();
 
         var optionEl = this.getElement();
-        optionEl.setAttribute('role', 'radio');
+        optionEl.setAttribute('role', this._role);
         optionEl.setAttribute('aria-checked', this.isSelected());
         optionEl.setAttribute('aria-label', 'Option ' + this.key);
 
@@ -226,40 +223,59 @@
 
         // add click event to option container
         YUE.on(optionEl, 'click', function (evt) {
-            this.select();
+            if (!item.isReadOnly()) {
+                this.select();
+            }
         }, this, true);
 
-        // add click event directly to radio button 
-        // NOTE: radio button events won't be used with universal shell
-        var inputEl = this.getInputElement();
-
-        YUE.on(inputEl, 'click', function (evt) {
-            this.select(true); // HACK: force selection
-        }, this, true);
-
-        YUE.on(inputEl, 'focus', function (evt) {
-            YUD.setStyle(optionEl, 'background-color', 'orange');
-        });
-
-        YUE.on(inputEl, 'blur', function (evt) {
-            YUD.setStyle(optionEl, 'background-color', '');
-        });
-
-        // listen for enter key
+        // listen for spece bar
         new YAHOO.util.KeyListener(optionEl, {
             keys: [32]
         }, {
-            fn: this.select,
+            fn: function(evt) {
+                if (!item.isReadOnly()) {
+                    this.select();
+                }
+            },
             scope: this,
             correctScope: true
         }).enable();
 
-    };
+        // if streamlined mode then enable up/down
+        if (CM.isAccessibilityEnabled()) {
 
+            function navigateWrapper(dir, type, args) {
+                // move next option
+                var option = group.navigate(dir);
+                // prevent scrolling
+                if (option && args && args.length) {
+                    YUE.stopEvent(args[1]);
+                }
+            }
+
+            // listen for up arrow
+            new YAHOO.util.KeyListener(optionEl, {
+                keys: [38]
+            }, {
+                fn: navigateWrapper.bind(null, 'prev')
+            }).enable();
+
+            // listen for down arrow
+            new YAHOO.util.KeyListener(optionEl, {
+                keys: [40]
+            }, {
+                fn: navigateWrapper.bind(null, 'next')
+            }).enable();
+
+        }
+
+    };
+    
     MCOption.prototype.toString = function() {
         return this.key;
     };
 
     // exports
     window.ContentMCOption = MCOption;
-})();
+
+})(window.ContentManager);

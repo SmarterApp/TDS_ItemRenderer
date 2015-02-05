@@ -8,7 +8,6 @@ EditItem.Html.Text = function () {
     EditItem.Html.call(this);
     var self = this;
     var addComponentArray = [];
-    this.keyHandlerArray = [];
 
     this.textDialog = YUD.get('EditTaskTextDialog');
     this.textDialog = (typeof(this.textDialog) == "undefined") ? 'EditTaskTextDialog' : this.textDialog;
@@ -21,18 +20,25 @@ EditItem.Html.Text = function () {
             // aDiv.innerHTML = interaction.getContent();
             this.createCrossoutSpan(interaction.getContent(), null, aDiv);
             YUE.addListener(aDiv, "click", clickOnTextItem, this);
+
+            // listen for space bar or enter keys
+            var boundClick = clickOnTextItem.bind(aDiv);
+            this.setKeyHandlers(aDiv, this, boundClick);
+            
             if (aDiv) {
-                self.keyHandlerArray[aDiv.id] = function() {
-                    clickOnTextItem.call(aDiv);
-                };
                 addComponentArray.push(aDiv);
             }
-            
+
             //silence this from TTS
             YUD.addClass(aDiv, "TTS speakAs");
             aDiv.setAttribute("ssml", "sub");
             aDiv.setAttribute("ssml_alias", "{silence:1000}");
             
+            // set aria role="button"
+            aDiv.setAttribute('role', 'button');   
+
+            // set title
+            aDiv.setAttribute('title', 'click to correct');
         });
     };
 
@@ -139,6 +145,11 @@ EditItem.Html.Text = function () {
 
     // Callback. User has clicked on a word that can be replaced.  SHow the dialog.
     var clickOnTextItem = function (ev) {
+
+        if (self.isReadOnly()) {
+            return;
+        }
+
         var span = this;
 
         // Active Dialog already?
@@ -153,3 +164,5 @@ EditItem.Html.Text = function () {
         }
     };
 };
+
+EditItem.Html.Text.prototype.isReadOnly = function () { return false; };

@@ -36,7 +36,10 @@ Sections.TestVerify = (function (Sections) {
         segmentsContainer.innerHTML = '';
 
         // set student info
-        YUD.get('lblVerifySessionID').innerHTML = LoginShell.session.id;
+        var session = TDS.Student.Storage.getTestSession();
+        if (session) {
+            YUD.get('lblVerifySessionID').innerHTML = session.id;
+        }
 
         // show form selector if proxy mode
         this.renderForms(LoginShell.testForms);
@@ -100,11 +103,12 @@ Sections.TestVerify = (function (Sections) {
         segmentsContainer.appendChild(segmentContainer);
 
         // create segment header
-        var segmentHeader = HTML.H3(null, segmentAccommodations.getLabel());
+        var segmentHeader = HTML.H2(null, segmentAccommodations.getLabel());
         segmentContainer.appendChild(segmentHeader);
 
         // create accommodations
         var accsRenderer = new Accommodations.Renderer(segmentAccommodations, {
+            showLocked: true,
             reviewAll: true
         });
         accsRenderer.bind();
@@ -164,8 +168,9 @@ Sections.TestVerify = (function (Sections) {
     };
 
     // The student clicked the "No" button to reject approved accommodations
-    TestVerify.prototype.deny = function() {
-        if (LoginShell.testee.isGuest) {
+    TestVerify.prototype.deny = function () {
+        var testee = TDS.Student.Storage.getTestee();
+        if (testee && testee.isGuest) {
             this.denyGuest();
         } else {
             this.denyTestee();

@@ -474,6 +474,10 @@ Simulator.Input.SimSlider = function (sim, node, panel, theSection, container) {
         this.mySlider = theSlider;
         this.prevValue = this.getDefaultValue();
 
+        // WCAG - set the keyIncrement (the 'step' used by the keyboard arrow keys) to inc (the quantization enforced when using mouse)
+        // this ensures same functionality when dragging slider with mouse or changing value with keyboard
+        theSlider.keyIncrement = inc;
+
         theSlider.setValue(Math.abs(this.getDefaultValue() - this.getMinValue()) / scaleFactor, false, true, true);
         theSlider.valTxtField = this.txtAreaInput;
         theSlider.jsSlider = this;

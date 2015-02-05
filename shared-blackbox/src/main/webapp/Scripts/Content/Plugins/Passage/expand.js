@@ -34,6 +34,8 @@ Expandable Passages
         // create new expand/collapse link
         var expandLink = document.createElement('a');
         YUD.setAttribute(expandLink, 'href', '#');
+        YUD.setAttribute(expandLink, 'role', 'button');
+        YUD.addClass(expandLink, 'toolButton');
         YUD.addClass(expandLink, 'expand-collapse-passage');
 
         // add event handler to toggle classes

@@ -1389,7 +1389,7 @@
 
 /* @group New theme */
 .simulator input[type="text"] {
-	border: solid 1px #00abf4;
+	border: solid 1px #005D85;
 	-webkit-box-shadow: 0em 0em .2em #666;
 	-moz-box-shadow: 0em 0em .2em #666;
 	box-shadow: 0em 0em .2em #666;
@@ -1403,7 +1403,7 @@
 }
 .simulator .upDown input {
 	background-image: url(../Images/sprites_simulator_next.png);
-	border: solid 1px #00abf4;
+	border: solid 1px #005D85;
 	-webkit-box-shadow: 0em 0em .2em #666;
 	-moz-box-shadow: 0em 0em .2em #666;
 	box-shadow: 0em 0em .2em #666;
@@ -1412,16 +1412,16 @@
 	border-radius: .5em;
 }
 .simulator .upDown input:hover {
-	border-color: #39b54a;
+	border-color: #02601F;
 }
 .simulator .upDown input:focus, 
 .simulator .upDown input.simAreaFocus {
-	border-color: #39b54a !important;
+	border-color: #02601F !important;
 	border-style: dotted !important;
 	background-color: #E0F6FF !important;
 }
 .simulator .actionButton {
-    border: 2px solid #00abf4;
+    border: 2px solid #005D85;
     -moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
     border-radius: 10px;
@@ -1430,21 +1430,21 @@
 	box-shadow: 0em 0em .2em #666;
 }
 .simulator .actionButton:hover {
-	background-color: #00abf4 !important;
+	background-color: #005D85 !important;
 }
 .simulator .actionButton.positive {
-    border-color: #39b54a;
-    color: #39b54a;
+    border-color: #02601F;
+    color: #02601F;
 }
 .simulator .actionButton.positive:hover {
-    background-color: #39b54a !important;
+    background-color: #02601F !important;
 }
 .simulator .actionButton.negative {
-    border-color: #ed1c24;
-    color: #ed1c24;
+    border-color: #990000;
+    color: #990000;
 }
 .simulator .actionButton.negative:hover {
-    background-color: #ed1c24 !important;
+    background-color: #990000 !important;
 }
 .actionButton.image_Trashcan, .simulator .clearRow{
 	background-image: url(../Images/sprites_simulator_next.png);
@@ -1477,7 +1477,7 @@
 
 
 .simulator .dropHolder select {
-    border: 2px solid #00abf4;
+    border: 2px solid #005D85;
     -moz-border-radius:  0.8em 0 0 0.8em;
 	-webkit-border-radius:  0.8em 0 0 0.8em;
     border-radius: 0.8em 0 0 0.8em;
@@ -1497,7 +1497,7 @@
 	-moz-border-radius:  0.6em 0 0 0.6em;
 }
 .simulator .dropHolder select:focus, .simulator .dropHolder select:hover{
-	border-color: #39b54a;
+	border-color: #02601F;
 }
 .simulator .yui-h-slider {
     background: url(../Images/slider_back.gif) repeat-x center center !important;
@@ -1517,13 +1517,13 @@
 }
 
 .simulator .dataTable th, .simulator .dataTable td {
-	border-color: #00abf4;
+	border-color: #005D85;
 }
 
 .sim_divider {
 	display: block;
 	height: 1px;
-	background-color: #00abf4;
+	background-color: #005D85;
 	float: left;
 }
 .sim_divider:after {
@@ -1606,4 +1606,32 @@
     float: left;
     margin-right: 10px;
     margin-bottom: 10px;
+}
+
+.layout_wai .simulator .dataTable thead td {
+	border-bottom: none;
+}
+.layout_wai .simulator .dataTable tbody tr th {
+	border-bottom: solid 1px #005D85;
+	border-top: none;
+}
+.layout_wai .simulator .dataTable tbody tr:nth-child(1) th {
+    border-top: 1px solid #175283;
+}
+.layout_wai .simulator .dataTable tbody td:nth-last-child(1) {
+   border-right: 1px solid #005D85 !important;
+   border-bottom: 1px solid #005D85 !important;
+}
+.layout_wai .simulator .inputPanel .inputpanelrow:nth-child(1) {
+	margin-top: 10px;
+}
+.layout_wai .simulator .inputPanel .inputpanelrow {
+	margin-left: 5px;
+}
+.layout_wai .simulator .dataOutputPanel table {
+	margin-top: 10px;
+}
+.layout_wai .simulator .table_controls .actionButton {
+    font-size: 1em;
+    margin-bottom: 5px;
 }

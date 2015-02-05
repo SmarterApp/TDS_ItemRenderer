@@ -5,6 +5,7 @@ var Sections = {};
 Sections.Base = function(id)
 {
     Sections.Base.superclass.constructor.call(this, id);
+    this._baseTitle = document.title;
 
     var sectionHeader = this.getHeader();
 
@@ -51,7 +52,11 @@ Sections.Base.prototype.getHeader = function()
 Sections.Base.prototype.getHeaderText = function()
 {
     var sectionHeader = this.getHeader();
-    return Util.Dom.getTextContent(sectionHeader);
+    if (sectionHeader) {
+        return Util.Dom.getTextContent(sectionHeader);
+    } else {
+        return '';
+    }
 };
 
 // this function gets called when showing a section
@@ -60,6 +65,8 @@ Sections.Base.prototype.show = function()
     var sectionContainer = this.getContainer();
     if (!sectionContainer) return false;
 
+    document.title = this._baseTitle + ' ' + this.getHeaderText();
+
     YUD.setStyle(sectionContainer, 'display', 'block');
     YUD.setStyle(sectionContainer, 'visibility', 'visible');
     sectionContainer.setAttribute('aria-hidden', 'false');
@@ -67,9 +74,6 @@ Sections.Base.prototype.show = function()
     // focus on sections header
     var sectionHeader = this.getHeader();
     if (sectionHeader) sectionHeader.focus();
-
-    // let user know page is ready
-    TDS.ARIA.writeLog('Page is ready');
 
     return true;
 };

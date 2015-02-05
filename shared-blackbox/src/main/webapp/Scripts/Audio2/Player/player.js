@@ -37,7 +37,27 @@
             });
         }
 
-        if (el.nodeName == 'A') {
+        // first, search for <source> elements as if this were an <audio> element
+        var sourceElements = el.getElementsByTagName('source'),
+            sourceElement;
+
+        for (var i = 0; i < sourceElements.length; ++i) {
+            sourceElement = sourceElements[i];
+
+            // the <source> tag will have usable properties if it is a child of an <audio> tag
+            // otherwise, we'll probably need to use the attribute values instead
+            source = {
+                url: decodeURIComponent(sourceElement.src || sourceElement.getAttribute('src')),
+                type: sourceElement.type || sourceElement.getAttribute('type')
+            };
+
+            parseSourceWithPlugins(source);
+
+            sources.push(source);
+        }
+
+        // if there were no <source> elements, try the href attribute as if it were an <a> element
+        if (!sources.length && el.href) {
             source = {
                 url: decodeURIComponent(el.href),
             };
@@ -47,22 +67,6 @@
             parseSourceWithPlugins(source);
 
             sources.push(source);
-        } else if (el.nodeName == 'AUDIO') {
-            var sourceElements = el.getElementsByTagName('source'),
-                sourceElement;
-
-            for (var i = 0; i < sourceElements.length; ++i) {
-                sourceElement = sourceElements[i];
-
-                source = {
-                    url: decodeURIComponent(sourceElement.src),
-                    type: sourceElement.type
-                };
-
-                parseSourceWithPlugins(source);
-
-                sources.push(source);
-            }
         }
 
         return sources;
@@ -223,7 +227,8 @@
         'onReady',
         'play', 'stop', 'pause', 'resume', 'stopAll',
         'isPlaying', 'isPaused',
-        'canPlaySource', 'createSoundFromSource'
+        'canPlaySource', 'createSoundFromSource',
+        'getDuration', 'setPosition', 'getPosition'
     ];
 
     delegatedFunctions.forEach(function (api) {
@@ -238,7 +243,7 @@
     });
 
     var delegatedProperties = [
-        'onBeforePlay', 'onPlay', 'onStop', 'onPause', 'onBeforeResume', 'onResume', 'onFinish', 'onIdle', 'onFail', 'onTimeUpdate'
+        'onBeforePlay', 'onPlay', 'onStop', 'onPause', 'onBeforeResume', 'onResume', 'onStart', 'onFinish', 'onIdle', 'onFail', 'onTimeUpdate'
     ];
 
     delegatedProperties.forEach(function (api) {

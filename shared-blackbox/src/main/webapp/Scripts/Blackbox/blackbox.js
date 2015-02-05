@@ -107,9 +107,12 @@ Blackbox.init = function() {
         }
     });
 
-    ContentManager.onPageEvent('show', function(page) {
+    ContentManager.onPageEvent('beforeShow', function (page) {
+        // do this before show so when we focus on item the progress dialog doesn't steal focus
         TDS.Dialog.hideProgress();
+    });
 
+    ContentManager.onPageEvent('show', function (page) {
         // start playing any audio that is set to auto play
         page.autoPlayQueue.start();
     });
@@ -249,14 +252,14 @@ Blackbox.loadContent = function (contentRequest, forceReload) {
     // CORS: https://developer.mozilla.org/en-US/docs/HTTP_access_control
 
     // NOTE: We need to use 'text/plain' or request will be preflighted
-    YAHOO.util.Connect.setDefaultPostHeader(false); // allow custom 'Content-Type'
-    YAHOO.util.Connect.initHeader('Content-Type', 'text/plain');
+    // YAHOO.util.Connect.setDefaultPostHeader(false); // allow custom 'Content-Type'
+    // YAHOO.util.Connect.initHeader('Content-Type', 'text/plain');
 
     // NOTE: Don't send custom headers ('X-Requested-With') or request will be preflighted
     YAHOO.util.Connect.setDefaultXhrHeader(false); // 
 
     // send xhr request
-    var requestUrl = TDS.resolveBaseUrl('Pages/API/ContentRequest.axd/load');
+    var requestUrl = TDS.resolveBaseUrl('ContentRequest.axd/load');
     var postData = YAHOO.lang.JSON.stringify(contentRequest);
     YAHOO.util.Connect.asyncRequest('POST', requestUrl, callback, postData);
 

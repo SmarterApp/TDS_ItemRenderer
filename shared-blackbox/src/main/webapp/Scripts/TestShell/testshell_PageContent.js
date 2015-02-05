@@ -73,9 +73,16 @@ Abstract class for inheriting test shell page that contains ITS content and mana
         }
     };
 
+    // get the page specific page title to show user
+    PC.prototype.getPageTitle = function() {
+        return 'Page ' + this.pageNum;
+    };
+    
     // get the text to read to the user when a page is shown
     PC.prototype.getScreenReaderText = function() {
-        var text = 'Page is ready. ';
+        var text = 'Page ';
+        text += this.pageNum;
+        text += ' is ready. ';
 
         var contentPage = this.getContentPage();
         var itemCount = contentPage.getItems().length;

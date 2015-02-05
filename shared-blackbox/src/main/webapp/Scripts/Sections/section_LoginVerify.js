@@ -50,8 +50,8 @@ Sections.LoginVerify.prototype.load = function (loginInfo)
         liEl.appendChild(document.createTextNode(' '));
 
         var selectEl = document.createElement('select');
-        labelEl.id = 'ddlGrades';
-        labelEl.setAttribute('tabindex', '0');
+        selectEl.id = 'ddlGrades';
+        selectEl.setAttribute('tabindex', '0');
         liEl.appendChild(selectEl);
 
         $confirmAttribs.append(liEl);
@@ -172,6 +172,8 @@ Sections.LoginVerify.prototype.redirectToSat = function() {
     
     // submit form
     document.body.appendChild(form);
+
+    TDS.unloader.disable();
     form.submit();
 };
 

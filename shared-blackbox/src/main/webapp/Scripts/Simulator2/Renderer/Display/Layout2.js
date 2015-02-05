@@ -167,6 +167,16 @@ Simulator.Display.Layout = function (sim, container) {
         }
     };
 
+    this.enableStartButton = function () {
+        for (var panel in panelList) {
+            if (panel) {
+                var panelObj = panelList[panel];
+                if (panelObj.enableStartButton)
+                    panelObj.enableStartButton();
+            }
+        }
+    };
+
     this.disableAllInput = function () {
         for (var panel in panelList) {
             if (panel) {

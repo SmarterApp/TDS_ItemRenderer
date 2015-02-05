@@ -110,7 +110,7 @@ var MasterShell = {};
 (function (TDS, MS) {
 
     function isLoginShell() {
-        return Util.String.contains(location.href.toLowerCase(), 'loginshell.xhtml');
+        return Util.String.contains(location.href.toLowerCase(), 'loginshell.aspx');
     }
 
     // this is called when first entering login shell
@@ -169,6 +169,7 @@ var MasterShell = {};
             if (panel == null) {
                 var headerText = Messages.getAlt('StudentMaster.Label.HelpGuider', 'Help');
                 panel = TDS.ToolManager.createPanel(id, 'helpguide', headerText, null, key);
+                $(panel.close).attr('href', '#');
             }
 
             TDS.ToolManager.toggle(panel);
@@ -176,9 +177,6 @@ var MasterShell = {};
 
         // attach buttons events
         TDS.Button.init();
-
-        // write out aria log div
-        TDS.ARIA.createLog();
 
         // setup accommodations
         MS.setupAccs();
@@ -216,6 +214,8 @@ var MasterShell = {};
     // fires before the page gets unloaded
     function onShellUnload() {
 
+        TDS.unloader.initiateUnload();
+
         // always try and stop TTS before leaving a page
         TTS.Manager.stop();
     }
@@ -233,9 +233,11 @@ var MasterShell = {};
 
                 // failsafe timer for shutting down (wait 1 min)
                 YAHOO.lang.later(60000, this, function () {
+                    TDS.Dialog.showProgress();
                     Util.SecureBrowser.close();
                 });
             } else {
+                TDS.Dialog.showProgress();
                 Util.SecureBrowser.close();
             }
         }

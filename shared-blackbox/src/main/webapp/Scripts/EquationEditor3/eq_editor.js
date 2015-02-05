@@ -6280,14 +6280,16 @@
             var $inputs = this.$inputs = $('<div class="inputs"></div>').appendTo(this.$body);
             xml.find('editorRow').each(function (i) {
                 var latexText = $(this).text().trim();
-                if (latexText.replace(/\\MathQuillMathField\{[^\}]*\}/i, '').length == 0) {
-                $('<div class="input"><span class="input-box"></span></div>')
-                  .children().text($(this).text()).end()
-                .appendTo($inputs)
-                .find('.input-box').mathquill();
+                //update dynamic width regex formatter..
+                if (latexText == '' || !/\\MathQuillMathField\{/i.test(latexText)) {
+                    latexText = '\\MathQuillMathField\{' + latexText + '}';
+                    $('<div class="input"><span class="input-box"></span></div>')
+                      .children().text(latexText).end()
+                    .appendTo($inputs)
+                    .find('.input-box').mathquill();
                 } else {
                     $('<div class="input mje_dynamic_inputbox"><span class="input-box"></span></div>')
-                        .children().text($(this).text()).end()
+                        .children().text(latexText).end()
                         .appendTo($inputs)
                         .find('.input-box').mathquill();
                 }
@@ -6803,6 +6805,7 @@
 
             var srcTree = new ActiveXObject("Msxml2.DOMDocument.6.0");
             srcTree.async = false;
+            mathml = (new XMLSerializer()).serializeToString(mathml); //hack for ie
             mathml = $(mathml).children('mstyle')[0];
             if (mathml.transformNode) return mathml.transformNode(xsltTree);
             // So, IE9+ supports DOMParser (which jQuery.parseXML() feature-detects
@@ -6812,9 +6815,8 @@
             // thing that most browsers do is to support XSLTProcessor in addition to
             // DOMParser.) So serialize to a string to convert to MSXML.
             srcTree.loadXML((new XMLSerializer).serializeToString(mathml));
-            fragment = srcTree.transformNode(xsltTree);
-            var latexStr = fragment.textContent;
-            return latexStr.replace(/\\space/g, '\\space ');
+            fragment = srcTree.transformNode(xsltTree);            
+            return fragment.replace(/\\space/g, '\\space ');
 
         }
         else {

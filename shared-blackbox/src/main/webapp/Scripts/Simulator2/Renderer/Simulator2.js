@@ -32,7 +32,7 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
     var source = 'Simulator';  // Used for debugging
     var simID = null;
     var speechEnabled = speechMode;
-    var language = 'english';
+    var language = 'english'; // deprecated: store language in translationDictionary
     var mode = 'operation';  // Simulator can be in 'test' or 'operation mode'
     var xmlns = '';
     var simMgr = null;
@@ -43,6 +43,7 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
     var animationPresent = true;
     //var simElement = container;
     var accessibilityIFActive = assistiveMode;
+    var presetLang = null; // store rendered language before laoding xml
 
     var dataTable = null;
 
@@ -195,9 +196,63 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
         return speechEnabled;
     };
 
-    this.getLanguage = function () {
+    this.presetLanguage = function (lang) {
+        presetLang = lang;
+    }
+
+    // actually sets language once XML is loaded (called internally)
+    this.setCurrentLanguage = function (lang) {
+        if (lang == 'ENU-Braille')
+            lang = 'ENU';
+        if (lang != 'ENU' && !translationDictionary.isLoaded()) {
+            dbg.logFatalError(source, 'Error: Translations have not been loaded. Request for non-English language ("' + lang + '") cannot be supported.');
+            lang = 'ENU'; // default back to english if that is all we have...
+        }
+        translationDictionary.setCurrentLanguage(lang);
+    }
+
+    this.getCurrentLanguage = function () {
+        return translationDictionary.getCurrentLanguage();
+    }
+
+    this.getAnimationDisplayLanguage = function () {
+        return this.getCurrentLanguage();
+    }
+
+    this.getLanguage = function () { // deprecated: use getCurrentLanguage, which is set by widget using accommodations
         return language;
     };
+
+    // ALT TEXT
+    this.getAltText = function () {
+        if (this.getAccessibilityIFActive() == false) {
+            debugf('attempted to access altText when not in accessibility mode');
+            return '';
+        }
+
+        if (this._altText)
+            return this._altText;
+        else
+            return '';
+    }
+
+    this.setAltText = function (altTextString) {
+        var missingAltTextString;
+        var messageLabel = 'Simulator.Animation.MissingAltText';
+        if (typeof (window.Messages) == 'object' && window.Messages.has(messageLabel))
+            missingAltTextString = window.Messages.get(messageLabel);
+        else
+            missingAltTextString = 'Animation alt text not found.';
+
+
+        if (altTextString == '' || altTextString == 'null')
+            this._altText = missingAltTextString;
+        else
+            this._altText = altTextString;
+
+        debugf('Setting simulator alt text to "' + this._altText + '"');
+    }
+
 
     this.getMode = function () {
         return mode;
@@ -247,11 +302,6 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
             debug('Found translation section');
             // load translation dictionary - defaults to english
             translationDictionary.loadTranslations(x);
-
-            /*
-            // TESTING:
-            translationDictionary.setCurrentLanguage('es');
-            */
         }
     }
 
@@ -430,6 +480,16 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
         if (translationXml != null && translationXml.length > 0) {
             this.loadTranslationXmlText(translationXml);
         }
+
+        // *** FOR TESTING ***
+        // when translation xml is sent inside response xml, uncomment the following line:
+        if (translationXml == null) this.loadTranslationXmlText(itemXml);
+        // *******************
+
+        // set language now that translations have been loaded
+        if (presetLang == null)
+            this.presetLanguage('ENU');
+        this.setCurrentLanguage(presetLang);
 
         // load item xml
         this.startSimulationXmlText(itemXml);
@@ -1014,9 +1074,11 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
             }
         }
 
+        /*
+        fb-153487: remove clear all rows aria-labelledBy attribute, per Deque
         if (clearAllRowsButton != undefined) // WCAG - label the clear all rows button with table caption
             clearAllRowsButton.setAttribute('aria-labelledby', dataTable.getCaptionID());
-
+        */
     }
 
     // Create all the control elements (ex, buttons) from the xml file

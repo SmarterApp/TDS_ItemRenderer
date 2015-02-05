@@ -45,7 +45,7 @@
         this._values = [];
 
         // DOM ID's
-        var id = parentAccommodations.getId() + '-' + name.replace(/\s+/g, '').toLowerCase();
+        var id = parentAccommodations.getDomId() + '-' + name.replace(/\s+/g, '').toLowerCase();
 
         this.getControlId = function() {
             return 'accs-control-' + id;

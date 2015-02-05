@@ -62,6 +62,7 @@ Simulator.Animation.AnimationSet = function (sim, panel) {
         eventMgr().registerEvent(new Simulator.Event(instance, 'info', 'animationFinished'));
         eventMgr().registerEvent(new Simulator.Event(instance, 'info', 'animationStarted'));
         eventMgr().registerEvent(new Simulator.Event(instance, 'info', 'animationError'));
+        eventMgr().registerEvent(new Simulator.Event(instance, 'info', 'altTextReceived'));
         //eventMgr().registerEvent(new Simulator.Event(instance, 'command', 'load')); Not required. This is always registered from SAX
     }
 
@@ -204,6 +205,18 @@ Simulator.Animation.AnimationSet = function (sim, panel) {
         }
     };
 
+    // fb-153484: poster alt text
+    this.getPosterAltText = function () {
+        var posterAltText;
+        // need alt text for pre-animation posters - we are just using a generic message
+        var messageLabel = 'Simulator.Animation.PosterAltText';
+        if (typeof (window.Messages) == 'object' && window.Messages.has(messageLabel))
+            posterAltText = window.Messages.get(messageLabel);
+        else
+            posterAltText = 'This image is a placeholder for the animation.  Start a new trial to view the animation.';
+        return posterAltText;
+    };
+
     this.setOutputOnRequest = function (newOutputOnRequest) {
         outputOnRequest = newOutputOnRequest == 'yes' ? true : false;
         return this;
@@ -253,7 +266,7 @@ Simulator.Animation.AnimationSet = function (sim, panel) {
                     case 'animationFinished':
                         lastThreadExecuted = this.getCurrentThread();
                         //AnimationSet.setCurrentThread(null);
-                        if (poster['show'] == 'after' || poster['show'] == 'both') renderer.renderImage(this, 'animationPanel', this.getPosterSrc(), this.getPosterName(), -1, null);
+                        if (poster['show'] == 'after' || poster['show'] == 'both') renderer.renderImage(this, 'animationPanel', this.getPosterSrc(), this.getPosterName(), -1, null, null); // maxTime = -1, thread = null, altText = null (don't worry about post-animation alt text)
                         //this.postStaticEvents();
                         break;
                     case 'animationStarted':
@@ -293,14 +306,20 @@ Simulator.Animation.AnimationSet = function (sim, panel) {
                     default:
                         dbg().logFatalError(source, 'AnimationSet - Unknown command name: ' + event.context + ' received by ' + this.getName());
                         break;
+                    case 'altTextReceived':
+                        // when the animation returns alt text, tell renderer to retrieve the latest and display it
+                        this.getRenderer().updateAltText();
+                        break;
                 }
                 break;
             case 'command':
                 switch (event.context) {
                     case 'load':
                         if(!animationLoaded) {
-                            if (poster['show'] == 'before' || poster['show'] == 'both')
-                                renderer.renderImage(this, 'animationPanel', this.getPosterSrc(), this.getPosterName(), -1, null);  // maxTime = -1
+                            if (poster['show'] == 'before' || poster['show'] == 'both') {
+                                var posterAltText = this.getPosterAltText(); // fb-153484: get alt text for posters (pre-animation only)
+                                renderer.renderImage(this, 'animationPanel', this.getPosterSrc(), this.getPosterName(), -1, null, posterAltText);  // maxTime = -1, thread = null
+                            }
                             else if (util().assocArrayIsEmpty(poster)) eventMgr().postEvent(new Simulator.Event(instance, "info", "allMediaLoaded"));
                             animationLoaded = true;
                         }
@@ -408,7 +427,7 @@ Simulator.Animation.AnimationSet = function (sim, panel) {
     };
 
     this.storeInputs = function (backupInputs) {
-        var inputs = whiteboard().getCategory('animationInput');
+        var inputs = whiteboard().getEnglishTranslatedCategory('animationInput'); // translate tags to strings
         if (inputs != null) {
             if (Object.size(inputs) > 0) {
                 if (backupInputs) this.setPrevInputs();
@@ -487,11 +506,17 @@ Simulator.Animation.AnimationSet = function (sim, panel) {
                 break;
             case Simulator.Constants.PARAM_OUTPUT:
             case Simulator.Constants.PARAM_DATA:
-                whiteboard().setItem('animationOutput', 'output', data, key);
+                whiteboard().setItem('animationOutput', 'output', transDictionary().internationalizePreparsedAnimationOutput(data), key); // convert strings back to tags
                 //if (this.getCurrentThread()) set = this.getCurrentThread().getAnimationSet();
                 //else set = lastThreadExecuted.getAnimationSet();
                 instance.recordOutputs();
                 eventMgr().postEvent(new Simulator.Event(instance, 'info', 'animationOutputAvailable'));
+                break;
+            case Simulator.Constants.PARAM_ALT_TEXT:
+            case Simulator.Constants.ALT_TEXT_REQ_CMD:
+                // when the animation sends back alt text, we store it (in the Simulator object) and send an event saying it has been updated
+                sim.setAltText(data);
+                eventMgr().postEvent(new Simulator.Event(instance, 'info', 'altTextReceived'));
                 break;
             case Simulator.Constants.PARAM_DEBUG_OUTPUT:
                 break;

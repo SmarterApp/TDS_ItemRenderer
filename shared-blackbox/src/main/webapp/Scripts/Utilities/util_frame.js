@@ -624,3 +624,20 @@ Util.Frame.createHtml = function(bodyHtml, options)
     return html.join('');
 };
 
+Util.Frame.loadInBackground = function (src, parent) {
+    var iframe = $('<iframe>').attr({
+        src: src,
+        style: 'display:none;'
+    });
+
+    var deferred = Util.Promise.defer();
+
+    iframe.load(function () {
+        // pass the iframe to the handler
+        deferred.resolve(iframe);
+    });
+
+    iframe.appendTo(parent || document.body);
+
+    return deferred.promise;
+};

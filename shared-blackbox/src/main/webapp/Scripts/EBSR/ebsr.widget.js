@@ -112,25 +112,6 @@ Contains the TDS module code for hooking up EBSR widget.
             ttsMenu.addOptions(menuCfg, domToParse);
         }
 
-        //If we focused only the option, speak only the option (note this stomps other menu options)
-        if (focusedOption && focusedOption.key) { //If options are focused then we disable selections
-            menuCfg.SEL_PRI = false; //Disables the two selection options if focused
-            menuCfg.SEL_SEC = false;
-
-            //Hacky, but if a component level menu shows up, it stomps anything except component level.
-            //Not a fan of this model....  You have no idea if something else has altered the 'level'
-            //of the menu that is passed in so we have to hack it based on types that do.
-            //WHY ISN"T IT IN A LOOP or config setting Justin?  Because only _some_ of these need to
-            //show up in the MC hacks, this is that list.
-            menuCfg.PRI.level = 'component';
-            menuCfg.SEC.level = 'component';
-            menuCfg.STOP.level = 'component';
-            menuCfg.PAUSE.level = 'component';
-            menuCfg.RESUME.level = 'component';
-
-            ttsMenu.addFocusedOption(menuCfg, item.getActiveComponent());
-        }
-
         TTS.MenuSystem.addMenuSetup(menu, menuCfg);
         TTS.Config.Debug && console.log("TTS On Item Menushow config", menuCfg);
     }

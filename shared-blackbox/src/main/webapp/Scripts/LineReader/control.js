@@ -1,4 +1,4 @@
-﻿9/// <reference path="Libraries/yahoo.js" />
+﻿/// <reference path="Libraries/yahoo.js" />
 /// <reference path="Libraries/dom.js" />
 /// <reference path="Libraries/event.js" />
 /// <reference path="Libraries/selector.js" />
@@ -144,6 +144,7 @@ TDS.LineReader = function (el) {
 	this._parentWindow = window;    //THE WINDOW OBJECT
 	this._activeLineIndex = -1;     //THE ACTIVE INDEX OF THE _linesList[]
 	this._savedBackgroundColor = 'transparent';//SAVED BG COLOR OF ACTIVE OBJECT
+	this._bgActiveClassName = 'TDS_Line_Reader_bgActive';//ELEMENT HAS CHILDNODE OF IMG OR MATH, WE HIGHLIGHT THE BACKGROUND OF IT INSTEAD OF ADDING THE LINE ELEMENT
 	//*********END PROPERTIES*********//
 
 
@@ -171,15 +172,49 @@ TDS.LineReader = function (el) {
 	};
 	//*********END OBJECTS*********//
 
-	//*********PROCESS METHODS*********//
+    //*********PROCESS METHODS*********//
+
+    // the paragragh element has one single image/math element, or at most with a <br> with it
+	this._hasSingleImageOrMath = function (parEl) {
+
+	    var imgLen = $('img', parEl).length,
+            mathLen = $('math', parEl).length,
+	        brCount = $('br', parEl).length,
+            childrenCount = $(parEl).children().length;
+
+	    if ($(parEl).is('p') && (childrenCount == 1 || (childrenCount == 2 && brCount == 1)) && (imgLen == 1 || mathLen == 1)) {
+	        return true;
+	    } else {
+	        return false;
+	    }
+	};
+
+    // image/math element size is reasonable forthe line reader (between line height and 2 * ling height)
+	this._hasFitImageOrMath = function (parEl, lnHeight) {
+
+	    var img = $('img', parEl),
+	        math = $('math', parEl),
+	        imgLen = img.length,
+            mathLen = math.length,
+	        imgHeight = imgLen == 1 ? img[0].clientHeight : null,
+	        mathHeight = mathLen == 1 ? math[0].clientHeight : null,
+            heightLimit = lnHeight * 2;
+
+        if (imgHeight > heightLimit || mathHeight > heightLimit) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+    
 	//SEARCH SUBMITTED ELEMENT FOR TEXT CONTAINERS
 	this._findElements = function (el) {
         
 		var _foundElementsArray = [];
 		var _criteria = function (x) {
 
-		    // make sure CM hasn't hidden the item container
-		    if ($(x).closest('div.itemContainer.hiding').length) {
+		    if ($(x).closest('div.itemContainer.hiding').length ||  // make sure CM hasn't hidden the item container
+                $(x).closest('.lr-skip').length > 0) {    // make sure to exclude the 'lr-skip' widget
 		        return false;
 		    }
 
@@ -208,11 +243,11 @@ TDS.LineReader = function (el) {
 
 		//SEARCH AND SAVE
 		YAHOO.util.Dom.getElementsBy(
-        _criteria,	 //SEARCH CRITERIA
-				'',					 //ALT ROOT ELEMENT
-				el,					 //ROOT ELEMENT
-				_saveElementToTextContainers
-    );//SAVE ALL MATCHING ELEMENTS
+            _criteria,	//SEARCH CRITERIA
+            '',			//ALT ROOT ELEMENT
+            el,			//ROOT ELEMENT
+			_saveElementToTextContainers
+        );              //SAVE ALL MATCHING ELEMENTS
 
 		return _foundElementsArray;
 	};
@@ -227,43 +262,68 @@ TDS.LineReader = function (el) {
 
 	};
     this._selectLineAt = function(index){
-    if(this._linesList){
-      if(index >= 0 && index < this._linesList.length){
-         var l = this._linesList[index];
-			   this._activeLineIndex = this._linesList.indexOf(l);
-			   this._moveLine(l);
-      }
-    }
-  };
+        if(this._linesList){
+            if(index >= 0 && index < this._linesList.length){
+                var l = this._linesList[index];
+			    this._activeLineIndex = this._linesList.indexOf(l);
+			    this._moveLine(l);
+            }
+        }
+    };
 	//GIVEN A TEXT CONTAINER AND A "Y" COORD, RETURN A LINE FROM _linesList[]
 	this._findLine = function (el, Y) {
 		for (var i = 0; i < this._linesList.length; i++) {
 			var l = this._linesList[i];
-			if (l.element === el && (l.top < Y && l.bottom > Y)) {
+			if ((l.element === el ||
+                (($(el).is('img') || $(el).is('math')) && $(l.element).has(el).length == 1))
+                && (l.top < Y && l.bottom > Y)) {
 				return l;
 			}
 		}
 		return null;
 	};
-	//GIVEN A LINE OBJECT, APPLY TO DOM LINE OBJECT this.TheLine
+
+    //GIVEN A LINE OBJECT, APPLY TO DOM LINE OBJECT this.TheLine
+    // @direction: indicate if the line is going 'up' or 'down', when click or other case without up/down key press, it will be undefined
 	this._moveLine = function (line) {
-		if (line) {
-			var elY = YAHOO.util.Dom.getXY(line.element)[1];
+	    if (line) {
+	        var le = $(line.element);
 
-			YAHOO.util.Dom.setStyle(this.TheLine, 'top', line.top + 'px');
-			YAHOO.util.Dom.setStyle(this.TheLine, 'left', '0');
-			YAHOO.util.Dom.setStyle(this.TheLine, 'height', line.height + 'px');
-			YAHOO.util.Dom.setStyle(this.TheLine, 'width', line.width);
-            YAHOO.util.Dom.addClass(this.TheLine, 'TDS_Line_Reader_Active');
+            // if there is only one <img>/<math> element in the current paragraph, then deal with the <p> element instead of using that line <div>
+	        if (this._hasSingleImageOrMath(line.element)) {
 
-		    if (YAHOO.util.Dom.getStyle(this.TheLine, 'display') === 'none') {
-		        YAHOO.util.Dom.setStyle(this.TheLine, 'display', 'block');
-		    }
+	            // hide current line <div>
+	            if ($(this.TheLine).is(':visible')) {
+	                $(this.TheLine).hide();
+	            }                     
 
-		    line.element.appendChild(this.TheLine);
+                // remove the highlighten line and hightlight 'this' line
+                $('.' + this._bgActiveClassName).removeClass(this._bgActiveClassName);
+                le.addClass(this._bgActiveClassName);
 
-			//FIRE CUSTOME EVENT
-			this._onLineMove.fire();
+	        } else {
+                var elY = YAHOO.util.Dom.getXY(line.element)[1];
+
+                $('.' + this._bgActiveClassName).removeClass(this._bgActiveClassName);
+
+                YAHOO.util.Dom.setStyle(this.TheLine, 'top', line.top + 'px');
+                YAHOO.util.Dom.setStyle(this.TheLine, 'left', '0');
+                YAHOO.util.Dom.setStyle(this.TheLine, 'height', line.height + 'px');
+                YAHOO.util.Dom.setStyle(this.TheLine, 'width', line.width);
+                YAHOO.util.Dom.addClass(this.TheLine, 'TDS_Line_Reader_Active');
+
+
+	            // hide current line
+                if (YAHOO.util.Dom.getStyle(this.TheLine, 'display') === 'none') {
+                    YAHOO.util.Dom.setStyle(this.TheLine, 'display', 'block');
+                }
+
+                line.element.appendChild(this.TheLine);
+	        }
+
+	        //FIRE CUSTOME EVENT
+	        this._onLineMove.fire();
+			
 		}
 	};
 	//HIDE LINES - A GENERAL WAY TO HIDE DEFAULT LINE TYPES 
@@ -276,8 +336,6 @@ TDS.LineReader = function (el) {
 	            YAHOO.util.Dom.setStyle(that.TheLine, 'display', 'none');
 	        }
 	    }
-
-
 	};
 	//CALLED ONLOAD - INITIALIZES THE ENTIRE OBJECT, IS ALSO CALLED FROM .Refresh()
 	this._initialize = function () {
@@ -292,12 +350,12 @@ TDS.LineReader = function (el) {
 
 		//FIND CONTAINERS IN SUBMITTED PARENT CONTAINERS
 		var textContArray = [];
-    for(var i = 0; i < this._parentContainers.length; ++i){
-        var els = this._findElements.call(this, this._parentContainers[i]);
-        if(els && els.length){
-            textContArray = textContArray.concat(els);
+        for(var i = 0; i < this._parentContainers.length; ++i){
+            var els = this._findElements.call(this, this._parentContainers[i]);
+            if(els && els.length){
+                textContArray = textContArray.concat(els);
+            }
         }
-    }
 
 		//ADD FILTER CONTAINERS IF NECESSARY
 		for (var j = 0; j < textContArray.length; j++) {
@@ -322,12 +380,12 @@ TDS.LineReader = function (el) {
 
 		//ADD KEYDOWN EVENT HANDLER
 		this._onKeyDownRef = YAHOO.util.Event.on(
-        this._parentContainers[0].ownerDocument, 
-        'keydown', 
-        this._onArrowKeyPress, 
-        null, 
-        this
-    );
+            this._parentContainers[0].ownerDocument, 
+            'keydown', 
+            this._onArrowKeyPress, 
+            null, 
+            this
+        );
 
 
 		//SUBSCRIBE TO ONLINEMOVE EVENT
@@ -380,19 +438,21 @@ TDS.LineReader = function (el) {
 			}
 		}
 		//ON KEY DOWNS
-		YAHOO.util.Event.removeListener(this._parentContainers[0].ownerDocument, 
-        'keydown', 
-        this._onArrowKeyPress
-    );
+		YAHOO.util.Event.removeListener(
+            this._parentContainers[0].ownerDocument,
+            'keydown', 
+            this._onArrowKeyPress
+        );
 
-    //Remove the lines that we added into the page.
-    var elements = YAHOO.util.Selector.query('.TDS_Line_Reader');
-    for(var j=0; j<elements.length; ++j){
-        var el = elements[j];
-        if(el && el.parentNode && typeof el.parentNode.removeChild == 'function'){
-            el.parentNode.removeChild(el);
+        //Remove the lines that we added into the page.
+        var elements = YAHOO.util.Selector.query('.TDS_Line_Reader');
+        for(var j=0; j<elements.length; ++j){
+            var el = elements[j];
+            if(el && el.parentNode && typeof el.parentNode.removeChild == 'function'){
+                el.parentNode.removeChild(el);
+            }
         }
-    }
+
 		//REMOVE DEBUG LINES
 		for (var i = 0; i < this._linesList.length; i++) {
 			var l = this._linesList[i];
@@ -405,10 +465,13 @@ TDS.LineReader = function (el) {
 			}
 		}
 
-    var elRelative = YAHOO.util.Selector.query('.TDS_Line_Reader_Relative_Pos');
-    for(var i=0; i<elRelative.length; ++i){ 
-      YAHOO.util.Dom.removeClass(elRelative[i], 'TDS_Line_Reader_Relative_Pos');
-    }
+	    // REMOVE CLASSNAME WE ADDED TO PARENTS EL OF IMG AND MATH
+		$('.' + this._bgActiveClassName).removeClass(this._bgActiveClassName);
+
+        var elRelative = YAHOO.util.Selector.query('.TDS_Line_Reader_Relative_Pos');
+        for(var i = 0; i < elRelative.length; ++i){ 
+          YAHOO.util.Dom.removeClass(elRelative[i], 'TDS_Line_Reader_Relative_Pos');
+        }
 	};
 	//*********END PROCESS METHODS*********//
 
@@ -420,7 +483,7 @@ TDS.LineReader = function (el) {
 		if (YAHOO.util.Selector.query(this._settings.lineID).length === 0) {
 			this.TheLine.setAttribute("id", this._settings.lineID.replace('#', ''));
 		}
-    YAHOO.util.Dom.addClass(this.TheLine, 'TDS_Line_Reader');
+        YAHOO.util.Dom.addClass(this.TheLine, 'TDS_Line_Reader');
 	};
 	//IF SETTINGS ARE SUBMITTED, APPLIES SETTINGS, OVERRIDES DEFAULT SETTINGS
 	this._applySettings = function (settings) {
@@ -440,14 +503,11 @@ TDS.LineReader = function (el) {
 	};
 	//GIVEN A NODENAME i.e. 'TR' || 'DIV', FINDS MATCHING PARSER OBJECT FROM ._parsers ARRAY 
 	this._get_parser = function (nodeName) {
-
-
 		for (var i = 0; i < this._parsers.length; i++) {
 			var nodeNames = [];
 			if (this._parsers[i]._nodeName.indexOf(',') > -1) {
 				nodeNames = this._parsers[i]._nodeName.split(',');
-			}
-			else {
+			} else {
 				nodeNames.push(this._parsers[i]._nodeName);
 			}
 
@@ -458,8 +518,6 @@ TDS.LineReader = function (el) {
 				}
 			}
 		}
-
-
 		return null;
 	};
 
@@ -528,40 +586,40 @@ TDS.LineReader = function (el) {
 		}
 	};
 
-  //Select the previous line on an up arrow
-  this.up = function(){
-				//turn off last line
-				if (this._activeLineIndex > 0) {
-					pOff = this._get_parser(this._linesList[this._activeLineIndex].element.nodeName);
-					pOff._onLineExit.call(this, this._linesList[this._activeLineIndex]);
-				}
-				//go to next 
-				if ((this._activeLineIndex -1) >= 0) {
-					this._activeLineIndex = this._activeLineIndex - 1;
-					pOn = this._get_parser(this._linesList[this._activeLineIndex].element.nodeName);
-					pOn._onLineEnter.call(this, this._linesList[this._activeLineIndex]);
-				}
-  };
-  //Select the next line on a down arrow
-  this.down = function(){
-				//turn off last line
-				if (this._activeLineIndex > -1 && this._activeLineIndex < (this._linesList.length - 1) ) {
-					pOff = this._get_parser(this._linesList[this._activeLineIndex].element.nodeName);
-					pOff._onLineExit.call(this,this._linesList[this._activeLineIndex]);
-				}
-				//go to next 
-				if (this._activeLineIndex < (this._linesList.length - 1)) {
-					this._activeLineIndex = this._activeLineIndex + 1;
-					pOn = this._get_parser(this._linesList[this._activeLineIndex].element.nodeName);
-					pOn._onLineEnter.call(this, this._linesList[this._activeLineIndex]);
-				}
-  };
+    //Select the previous line on an up arrow
+	this.up = function () {
+	    //turn off last line
+        if (this._activeLineIndex > 0) {
+	        pOff = this._get_parser(this._linesList[this._activeLineIndex].element.nodeName);
+	        pOff._onLineExit.call(this, this._linesList[this._activeLineIndex]);
+        }
+        //go to next 
+        if ((this._activeLineIndex -1) >= 0) {
+	        this._activeLineIndex = this._activeLineIndex - 1;
+	        pOn = this._get_parser(this._linesList[this._activeLineIndex].element.nodeName);
+	        pOn._onLineEnter.call(this, this._linesList[this._activeLineIndex]);
+        }
+	};
+    //Select the next line on a down arrow
+    this.down = function(){
+        //turn off last line
+        if (this._activeLineIndex > -1 && this._activeLineIndex < (this._linesList.length - 1) ) {
+	        pOff = this._get_parser(this._linesList[this._activeLineIndex].element.nodeName);
+	        pOff._onLineExit.call(this,this._linesList[this._activeLineIndex]);
+        }
+        //go to next 
+        if (this._activeLineIndex < (this._linesList.length - 1)) {
+	        this._activeLineIndex = this._activeLineIndex + 1;
+	        pOn = this._get_parser(this._linesList[this._activeLineIndex].element.nodeName);
+	        pOn._onLineEnter.call(this, this._linesList[this._activeLineIndex]);
+        }
+    };
 
 	//HANDLES ARROW KEY UP AND DOW
-	this._onArrowKeyPress = function (e) {
-		if (e.keyCode === 38 || e.keyCode === 40) {
+    this._onArrowKeyPress = function (e) {
+        if (e.keyCode === 38 || e.keyCode === 40) {
 			//STOP DEFAULT ARROW BEHAVIOR
-      YAHOO.util.Event.stopEvent(e);
+            YAHOO.util.Event.stopEvent(e);
 
 			var target = e.target || e.srcElement;
 			var pOn;
@@ -578,11 +636,11 @@ TDS.LineReader = function (el) {
 				}
 			}
 			if (e.keyCode === 38) {
-          this.up();
+                this.up();
 			}
 			//DOWN
 			if (e.keyCode === 40) {
-          this.down();
+                this.down();
 			}
 
 			var currentLinePostion = (YAHOO.util.Dom.getY(this.TheLine) - YAHOO.util.Dom.getY(scrollParent));
@@ -592,9 +650,6 @@ TDS.LineReader = function (el) {
 			if (currentLinePostion < 1 || (currentLinePostion + AUTOSCROLL_TOLERANCE) > bottomofViewableArea) {
 			    this.TheLine.scrollIntoView(true);
 			}
-
-
-			
 		}
 	};
 	//*********END EVENT HANDLERS*********//
@@ -603,55 +658,61 @@ TDS.LineReader = function (el) {
 	//PARAGRAPH, DIV and LI
 	//var par    = new TDS.LineReader.Parser('P,DIV,LI,H2,H1,H3,H4');
 	var par    = new TDS.LineReader.Parser('P,DIV,LI');//Fixes several bugs by removing H tags from scope of LineReader
-  var exclude = { 
-    'TD': true,
-    'BUTTON': true,
-    'H': true
-  };
+    var exclude = { 
+        'TD': true,
+        'BUTTON': true,
+        'H': true
+    };
 
-  //FB: 90302
-  var excludeClasses = [
-    'prompt',
-    'format_wb'
-  ];
-  var excludeClass = function(el){
-      for(var i=0; i<excludeClasses.length; ++i){
-          if(el && YAHOO.util.Dom.hasClass(el, excludeClasses[i])){
-              return true;
-          }
-      }
-  };
+    //FB: 90302
+    var excludeClasses = [
+        'prompt',
+        'format_wb'
+    ];
+    var excludeClass = function(el){
+        for(var i=0; i<excludeClasses.length; ++i){
+            if(el && YAHOO.util.Dom.hasClass(el, excludeClasses[i])){
+                return true;
+            }
+        }
+    };
+    var hasSingleImageOrMath = this._hasSingleImageOrMath;
 
-  var dfsText = function(x){
-    if(excludeClass(x)){return;}
-		var parEles = YAHOO.util.Dom.getAncestorBy(x, function (E) { return true; });
+    var dfsText = function (x) {
+
+        if (excludeClass(x)) { return; }
+
+		var parEles = YAHOO.util.Dom.getAncestorBy(x, function (e) { return true; });
 
 		//IF THE NEAREST PARENT IS A TD TAG IGNORE. THE ROW SHOULD BE HIGHLIGHTED. UNLESS IT IS A SINGLE COLUMN TABLE
 		if ((!exclude[parEles.nodeName] &&
             !excludeClass(parEles)) ||
-            ((parEles.nodeName == 'TD') && $(parEles).siblings().length == 0)) {    // Single column table
+            ((parEles.nodeName == 'TD') &&
+            $(parEles).siblings().length == 0)) {    // Single column table
+
 		    for (var i = 0; i < x.childNodes.length; i++) {
 		        
 		        var cn = x.childNodes[i];
 		        var nv = typeof cn.nodeValue == 'string' ? cn.nodeValue.trim() : '';
 		        //DOES ELEMENT HAVE CHILD NODES? ARE CHILD NODES TEXT NODES -- IF SO PASS
-		    if (cn.nodeType === 3 && nv.length > 0) {            
-            if(x.offsetWidth && x.offsetHeight) {
-                return true;
-            }
-				}else if(cn.nodeName == 'SPAN') {
+		        if (cn.nodeType === 3 && nv.length > 0) {            
+                    if(x.offsetWidth && x.offsetHeight) {
+                        return true;
+                    }
+			    }else if(cn.nodeName == 'SPAN') {
                     //Bug 134755, checks for empty spans which may cause line reader to skip lines
 				    if (!cn.textContent.trim() && x.childNodes[i + 1]) {
                         //If current span is empty but has sibling node it will continue on and check that node
-		        } else {
-				        
-		            return dfsText(cn);
-		        }
-          
-        }
-			}
+		            } else {
+		                return dfsText(cn);
+		            }
+			    } else if (hasSingleImageOrMath(x)                  // x contains single image or math element
+                       && ($(cn).is('img') || $(cn).is('math'))) {  // only do this check when current child node is img/math
+			                return true;                            // bring them into this._linesList array
+			    }
+		    }
 		}
-  };
+    };
 
     par._criteria = function (x) {
         var parent = x.parentNode;
@@ -660,7 +721,7 @@ TDS.LineReader = function (el) {
             parent.nodeName == 'TD')) {
 
             // if the parent TD is the only column in this row, then include it
-            if (parent.nodeName == 'TD' &&
+            if ((parent.nodeName == 'TD' || parent.nodeName == 'TH') &&
                 $(parent).siblings().length == 0) {
                 return dfsText(x);
             } else {
@@ -685,30 +746,20 @@ TDS.LineReader = function (el) {
 	    var pfel_lh = parseFloat(el_line_height);
 	    var pfel_fs = parseFloat(el_font_size);
 
-	    if(isNaN(pfel_lh))
-	    {
+	    if (isNaN(pfel_lh)) {
 	        ln_height = pfel_fs * LHR;
-	    }
-	    else
-	    {
-	        if(el_line_height.indexOf('%') > -1)
-	        {
+	    } else {
+	        if(el_line_height.indexOf('%') > -1){
 	            ln_height = pfel_fs * (pfel_lh / 100);
-	        }
-	        else if(el_line_height.indexOf('in') > -1) //bug 109466 half-fix
-	        {
+	        } else if (el_line_height.indexOf('in') > -1) { //bug 109466 half-fix
 	            ln_height = pfel_fs * LHR;
-	        }
-	        else
-	        {
+	        } else {
 	            ln_height = pfel_lh;
 	        }
 	    }
 	    
-
-		   
-		   var curr_pos = 0,
-	        pos = YAHOO.util.Dom.getStyle(el, 'position');
+		var curr_pos = 0,
+	    pos = YAHOO.util.Dom.getStyle(el, 'position');
 
 		if (el.nodeName === 'SPAN') {
 			el_h = ln_height;
@@ -750,7 +801,8 @@ TDS.LineReader = function (el) {
         //DYNAMICALLY GET THE OFFSET FOR A SUPER SCRIPT
         var curSuperOffset = spansArray.length > 0 ? that._getSuperScriptOffset(el, YAHOO.util.Dom.getStyle(spansArray[0].obj, 'font-size')) : 0;
         //CREATE LINES UNTIL THE BOTTOM OF THE ELEMENT IS REACHED
-		while (curr_pos < el_h) {
+        while (curr_pos < el_h) {
+
 			var linObj = new that.line();
 			linObj.height = ln_height;
 			linObj.width = el_w;
@@ -770,8 +822,21 @@ TDS.LineReader = function (el) {
 			    }
 			}
 
-			this._linesList.push(linObj);
-			curr_pos = curr_pos + ln_height;
+
+            // for image/math is the only children of the paragraph except <br> 
+		    // and the height between single line height and twice line height, render them as same line, line height will be the element height
+		    if (this._hasSingleImageOrMath(el)) {
+		        if (this._hasFitImageOrMath(el, ln_height)) {
+		            curr_pos += el_h;
+		        } else {
+		            break;
+		        }
+		    } else {
+			    curr_pos = curr_pos + ln_height;
+			}
+
+		    this._linesList.push(linObj);
+
 			//IF TR ELEMENT, ONLY CREATE ONE LINE OBJECT
 			if (el.nodeName === 'TR') {
 				break;
@@ -783,7 +848,7 @@ TDS.LineReader = function (el) {
 		this._textContainerOnClick(e);
 	};
 	par._onLineEnter = function (line) {
-		this._moveLine(line);
+	    this._moveLine(line);
 	};
 	par._onLineExit = function (line) {
 		//this is handled by _moveLine;
@@ -797,13 +862,13 @@ TDS.LineReader = function (el) {
 		return true;
 	};
 	par._processLines = function (el) {
-			var linObj = new that.line();
-			linObj.height = 0;
-			linObj.width = 0;
-			linObj.top = 0;
-			linObj.element = el;//we are really just saving the tr element
-			linObj.bottom = 0;
-			this._linesList.push(linObj);
+		var linObj = new that.line();
+		linObj.height = 0;
+		linObj.width = 0;
+		linObj.top = 0;
+		linObj.element = el;//we are really just saving the tr element
+		linObj.bottom = 0;
+		this._linesList.push(linObj);
 	};
 	par._onClick = function (e) {
 		//HIDE THE CURRENT LINE
@@ -845,7 +910,6 @@ TDS.LineReader = function (el) {
 	//this._add_parser(par);//Matt says: not using this parser improves 102511 : make this work without commenting out this parser, but I can't yet tell what breaks from not using it
 	//*********END DEFAULT PARSERS*********//
 
-
 	//*****SET PROPERTIES ON INSTANTIATION***//
 	//ALWAYS THE FIRST ARGUMENT
 	this._parentContainers = YAHOO.lang.isArray(arguments[0]) ? arguments[0] : [arguments[0]]; //PARENT ELEMENT
@@ -879,7 +943,6 @@ TDS.LineReader = function (el) {
 					this._add_parser(arguments[i][j]);
 				}
 			}
-			
 		}
 	}
 

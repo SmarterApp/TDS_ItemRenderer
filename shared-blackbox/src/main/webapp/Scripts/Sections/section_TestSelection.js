@@ -120,17 +120,20 @@ Sections.TestSelection.prototype._createButton = function(testSelection, idx) {
     // render the html:
 
     // create test selection button
-    var testButtonEl = HTML.DIV();
+    var testButtonEl = HTML.LI();
     YUD.addClass(testButtonEl, 'testSelection');
     YUD.addClass(testButtonEl, testClass);
     YUD.addClass(testButtonEl, (idx % 2 == 0) ? 'even' : 'odd');
-    YUD.setAttribute(testButtonEl, 'role', 'button');
     YUD.setAttribute(testButtonEl, 'tabindex', 0);
+
+    // create div wrapper
+    var divWrapperEl = HTML.DIV();
+    YUD.setAttribute(divWrapperEl, 'role', 'button');
 
     // create test header
     var testHeaderEl = HTML.STRONG();
     testHeaderEl.innerHTML = testHeader;
-    testButtonEl.appendChild(testHeaderEl);
+    divWrapperEl.appendChild(testHeaderEl);
 
     // create test description
     var testDescEl = HTML.P();
@@ -140,7 +143,9 @@ Sections.TestSelection.prototype._createButton = function(testSelection, idx) {
         testDescEl.appendChild(HTML.SPAN(null, testOpp));
     }
 
-    testButtonEl.appendChild(testDescEl);
+    divWrapperEl.appendChild(testDescEl);
+    
+    testButtonEl.appendChild(divWrapperEl);
 
     if (testActive) {
     // add mouse click
@@ -190,7 +195,7 @@ Sections.TestSelection.prototype.open = function(test) {
     var session = TDS.Student.Storage.getTestSession();
 
     // if this is a proctorless session and the test has never been started then show accommodations selection
-    if (LoginShell.session.isGuest && test.status == 2) {
+    if (session.isGuest && test.status == 2) {
         // get accommodations for selected test
         TDS.Student.API.getTestAccommodations(test, testee, session)
             .then(function (accommodations) {
@@ -199,7 +204,9 @@ Sections.TestSelection.prototype.open = function(test) {
     } else {
 
         // get data for opening test
-        var proctorBrowserKey = TDS.Student.Storage.getProctorSatBrowserKey();
+        var proctor = TDS.Student.Storage.getProctor();
+        // TODO: if (!proctorBrowserKey) log(error)
+        var proctorBrowserKey = (proctor && proctor.satBrowserKey) || null;
         var passphrase = TDS.Student.Storage.getPassphrase();
 
         // open the selected test

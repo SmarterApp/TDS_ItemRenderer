@@ -128,7 +128,7 @@ input.mje_cursor_field {
     border-top: medium none;
 }
 .keypad-rows .keypad-row{
-	margin-left: 94px;
+	margin-left: 98px;
 }
 .keypad-item {
 	background-color: transparent;
@@ -152,7 +152,7 @@ input.mje_cursor_field {
 	font-family: STIXGeneral,Arial,Helvetica,sans-serif;
 }
 .TDS_PS_L0 .keypad-item{
-	line-height: 1.7em;
+	line-height: 30px;
 }
 .mje_button:hover, .mje_button:focus {
     border-color: #0785AB;
@@ -165,15 +165,39 @@ input.mje_cursor_field {
 	background: url(images/next_back.png) no-repeat 6px 5px;
 	width: 30px;
 }
-.mje_nav_next:hover, .mje_nav_next:active {
+.mje_nav_next:hover, .mje_nav_next:active,
+.TDS_CCYellowB .mje_nav_next:hover,.TDS_CCWhiteN .mje_nav_next:hover,.TDS_CCInvert .mje_nav_next:hover{
+	background-position: -94px 5px;
+}
+.TDS_CCYellowB .mje_nav_next{
+	background-position: 6px -45px;
+}
+.TDS_CCYellowB .mje_nav_next:hover{
+	background-position: -94px 5px;
+}
+.TDS_CCInvert .mje_nav_next,
+.TDS_CCWhiteN .mje_nav_next{
+	background-position: 6px -20px;
+}
+.TDS_CCInvert .mje_nav_next:hover,
+.TDS_CCWhiteN .mje_nav_next:hover{
 	background-position: -94px 5px;
 }
 .mje_nav_prev {
 	background-position: -194px 5px;
 }
+.TDS_CCYellowB .mje_nav_prev {
+	background-position: -194px -45px;
+}
+.TDS_CCInvert .mje_nav_prev,
+.TDS_CCWhiteN .mje_nav_prev {
+	background-position: -194px -20px;
+}
 .mje_nav_prev:hover, .mje_nav_prev:active {
 	background-position: -294px 5px;
 }
+
+
 
 /*Icons for Undo, Redo, and Delete*/
 .mje_nav_undo, .mje_nav_redo, .mje_nav_del{
@@ -885,6 +909,7 @@ div.mje_selected_tab, div.mje_selected_tab:hover {
 .TDS_PS_L1 .keypad-item {
 	height: 35px;
 	min-width: 19px;
+	line-height: 35px;
 }
 .TDS_PS_L1 .mje_grid_row {
 	width: 100px;
@@ -926,7 +951,8 @@ div.mje_selected_tab, div.mje_selected_tab:hover {
 /*2*/
 .TDS_PS_L2 .keypad-item {
 	height: 42px;
-	min-width: 22px;
+	min-width: 25px;
+	line-height: 42px;
 }
 .TDS_PS_L2 .mje_grid_row {
 	width: 115px;
@@ -938,7 +964,7 @@ div.mje_selected_tab, div.mje_selected_tab:hover {
 	min-height: 45px;
 }
 .TDS_PS_L2 .keypad-row{
-	margin-left: 116px;
+	margin-left: 125px;
 	min-height: 45px;
 }
 .browser_ie.browserVer_10.TDS_PS_L2 .mje_simple_row{
@@ -1068,16 +1094,17 @@ div.mje_selected_tab, div.mje_selected_tab:hover {
 }
 .TDS_PS_L3 .keypad-item {
 	height: 52px;
-	min-width: 24px;
+	min-width: 29px;
+	line-height: 52px;
 }
 .TDS_PS_L3 .mje_grid_row {
-	width: 130px;
+	width: 132px;
 }
 .TDS_PS_L3 .mje_button_grid_row {
 	min-height: 55px;
 }
 .TDS_PS_L3 .keypad-row{
-	margin-left: 132px;
+	margin-left: 141px;
 	min-height: 55px;
 }
 .TDS_PS_L3 .mje_controls {
@@ -1203,10 +1230,11 @@ div.mje_selected_tab, div.mje_selected_tab:hover {
 }
 .TDS_PS_L4 .keypad-item {
 	height: 68px;
-	min-width: 25px;
+	min-width: 34px;
+	line-height: 68px;
 }
 .TDS_PS_L4 .mje_grid_row {
-	width: 160px;
+	width: 163px;
 }
 .TDS_PS_L4 .mje_button_grid_row {
 	min-height: 72px;
@@ -1215,7 +1243,7 @@ div.mje_selected_tab, div.mje_selected_tab:hover {
 	min-width: 158px;
 }
 .TDS_PS_L4 .keypad-row{
-	margin-left: 160px;
+	margin-left: 163px;
 	min-height: 72px;
 }
 .TDS_PS_L4 .mje_controls {

@@ -563,6 +563,13 @@ input.disabled[type="button"]#RCL{ background-image: url("../Images/mediumGrey.p
 #canvasHolder, #resetgraph, #previous5, #next5, #calczoomin, #calczoomout {
 	font-size: .9em;
 }
+canvas#canvas {
+    position: relative;
+}
+.platform_android canvas#canvas,
+.android canvas#canvas {
+    position: inherit;
+}
 #resetgraph, #previous5, #next5, #calczoomin, #calczoomout {
 	background: #fff url(../Images/arrows.gif) no-repeat 3px -382px;
 	padding-left: 18px;
@@ -1381,7 +1388,6 @@ input[type="button"].disabled {
 /*Input display error on iOS fix*/
 
 .mobile input[type="radio"]{
-
 	margin: 0;
 	padding: 0;
 	background: #555;
@@ -1394,10 +1400,21 @@ input[type="button"].disabled {
 	
 	margin: 0;
 	padding: 0;
-	/*background: #69F;*/
 	width: 16px;
 	height: 16px;
 }
+
+/* end */
+
+/* Bugs 152758 & 152768 */
+.touch.platform_android #modes input[type="radio"],
+.mobile.platform_android #modes input[type="radio"]{
+	margin: 0.2em;
+}
+.platform_android.browser_airsecurebrowser input[type="radio"]{
+	min-width: 0 !important;
+}
+
 /* end */
 
 /* FIX for 65854 */
@@ -1537,5 +1554,11 @@ sup{
 /* MO Emergency fixes for demo */
 .calculatorWidget.matrices{
 	display: block !important;
+}
+/* end */
+
+/*Disable selection and context menu on iOS*/
+.platform_ios a {
+    -webkit-touch-callout: none;
 }
 /* end */
