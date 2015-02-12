@@ -110,7 +110,7 @@ var MasterShell = {};
 (function (TDS, MS) {
 
     function isLoginShell() {
-        return Util.String.contains(location.href.toLowerCase(), 'loginshell.aspx');
+        return Util.String.contains(location.href.toLowerCase(), 'loginshell.xhtml');
     }
 
     // this is called when first entering login shell
