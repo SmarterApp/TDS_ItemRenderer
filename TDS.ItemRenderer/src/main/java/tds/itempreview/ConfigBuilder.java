@@ -109,8 +109,6 @@ public class ConfigBuilder
       Map<String, IrisITSDocument> documentsMap = new CaseInsensitiveMap<IrisITSDocument> ();
       for (IrisITSDocument itsDocument : itsDocuments) {
         
-        if (itsDocument.getItemKey () == 1401)
-          System.err.println();
         documentsMap.put (ItsItemIdUtil.getItsDocumentId (itsDocument), itsDocument);
       }
       _documentLookup = Collections.unmodifiableMap (documentsMap);
