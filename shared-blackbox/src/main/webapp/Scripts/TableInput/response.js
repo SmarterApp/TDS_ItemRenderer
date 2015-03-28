@@ -87,9 +87,9 @@ This file contains code for generating and setting a xml response.
     TI.prototype.isResponseValid = function () {
 
         /*
-        I spoke with Jeremy/Balaji and for right now
-        all the inputs need to be different before
-        being considered a valid response.
+        On 3/26/2015 Jon/Meg/Jeremy decided that only one cell 
+        needs to have changed before we consider it valid. This
+        was how the content team though it was working to begin with.
         */
 
         var $inputs = this.getInputs();
@@ -97,14 +97,14 @@ This file contains code for generating and setting a xml response.
         // if there are no inputs found then nobody tagged the content
         if ($inputs.length == 0) return false;
 
-        var valid = true;
+        var valid = false;
 
         // check if the current response is different than the original response
         $inputs.each(function (idx, inputEl) {
             var originalResponse = $(inputEl).data('originalResponse');
             var currentResponse = $(inputEl).val().trim();
-            if (originalResponse === currentResponse) {
-                valid = false;
+            if (originalResponse !== currentResponse) {
+                valid = true;
                 return false; // stop loop
             }
         });

@@ -739,6 +739,10 @@ span.MathJax
     min-width: 15em;
 	max-width: 100%;
 }
+/* Adding pading to the left side because of italics fonts*/
+.input.mje_dynamic_inputbox{
+	padding-left: 0.5em;
+}
 
 /*.mathquill-editable .mathquill-root-block.mq-hasCursor{
 	-moz-box-shadow:inset 0 0 5px 2px rgba(0,174,239,.3);
@@ -1651,10 +1655,7 @@ div.mje_selected_tab, div.mje_selected_tab:hover {
 .mathquill-rendered-math .mq-fraction{
 	vertical-align: middle;
 }
+
 .mathquill-editable .mq-empty {
     min-height: 1em;
-}
-/* SB-1010 */
-.mathquill-rendered-math .mq-non-leaf, .mathquill-rendered-math .mq-scaled { 
-	vertical-align: middle; 
 }
