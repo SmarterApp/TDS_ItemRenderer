@@ -162,7 +162,7 @@ public class XmlUtils
     "    <xsl:template match=\"*[not(node())]\">" +
     "        <xsl:copy>" +
     "            <xsl:apply-templates select=\"@*\"/>" +
-    "            <xsl:text>" + SPACE_FILLER_VALUE +  "+</xsl:text>" +
+    "            <xsl:text>" + SPACE_FILLER_VALUE +  "</xsl:text>" +
     "        </xsl:copy>" +
     "    </xsl:template>" +
     "    <xsl:template match=\"script[not(node())]\">" +
