@@ -146,12 +146,17 @@ public class ITSDocumentHelper
    * @return
    */
   public static String getUriOriginalString (URI uri) {
+    String orgStr = null;
     if (StringUtils.equalsIgnoreCase ("file", uri.getScheme ())) {
-      return uri.getPath ();
+      orgStr = uri.getPath ();
     } else {
-      return uri.toString ();
+      orgStr = uri.toString ();
     }
-
+    if (orgStr.toLowerCase ().startsWith ("/c") || orgStr.startsWith ("\\c")) {
+      orgStr = orgStr.substring (1);
+    }
+    _logger.info ("getUriOriginalString(): in-" + uri.toString () + ", out-" + orgStr);
+    return orgStr;
   }
 
   /**

@@ -87,13 +87,16 @@ public class ContentRequestParser
           continue;
 
         // load file
-        IITSDocument itemDoc = ITSDocumentFactory.loadUri2 (Server.mapPath (item.getFile ()), accommodations, true);
+        IITSDocument itemDoc = ITSDocumentFactory.loadUri2 (item.getFile (), accommodations, true);
 
         // skip item if the languages content does not exist
         if (itemDoc.getContent (language) == null)
           continue;
+
         // add to render group
-        IItemRender itemRender = new ItemRender (itemDoc, (int) itemDoc.getItemKey ());
+        // SB-1040: using item.position instead of itemDoc.key to show item
+        // position in print preview
+        IItemRender itemRender = new ItemRender (itemDoc, item.getPosition ());
 
         // set item properties from blackbox API
         if (item.getPosition () > 0)

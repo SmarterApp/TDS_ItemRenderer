@@ -1,0 +1,200 @@
+{
+	"controls": 
+	{
+		"save": 
+		{
+			"id": "btnSave",
+			"classname": "save",
+			"i18n": "TestShell.Link.Save",
+			"label": "Save"
+		},
+		"back": 
+		{
+			"id": "btnBack",
+			"classname": "back",
+			"i18n": "TestShell.Link.Back",
+			"label": "Back",
+			"inactive": true
+		},
+		"next": 
+		{
+			"id": "btnNext",
+			"classname": "next",
+			"i18n": "TestShell.Link.Next",
+			"label": "Next",
+			"inactive": true
+		},
+		"pause": 
+		{
+			"id": "btnPause",
+			"classname": "pause",
+			"i18n": "TestShell.Link.Pause",
+			"label": "Pause"
+		},
+		"end": 
+		{
+			"id": "btnEnd",
+			"classname": "endTest confirmexitCSS",
+			"i18n": "TestShell.Link.EndTest",
+			"label": "End Test",
+			"inactive": true
+		},
+		"itemscore": 
+		{
+			"id": "btnItemScore",
+			"label": "Item Score",
+			"hidden": true
+		},
+		"results": 
+		{
+			"id": "btnResults",
+			"classname": "endTest",
+			"i18n": "TestShell.Link.TestResults",
+			"label": "Test Results",
+			"inactive": true
+		},
+		"fullscreen": 
+		{
+			"id": "btnFullScreen",
+			"classname": "fullscreen",
+			"i18n": "TestShell.Link.FullScreen",
+			"label": "Full Screen",
+			"hidden": true
+		}
+	},
+	"tools": 
+	{
+		"contextmenu": 
+		{
+			"id": "btnContext",
+			"classname": "openContext"
+		},
+		"zoomin": 
+		{
+			"id": "btnZoomIn",
+			"classname": "zoomIn",
+			"i18n": "TestShell.Link.ZoomIn",
+			"label": "Zoom In"
+		},
+		"zoomout": 
+		{
+			"id": "btnZoomOut",
+			"classname": "zoomOut",
+			"i18n": "TestShell.Link.ZoomOut",
+			"label": "Zoom In"
+		},
+		"linereader": 
+		{
+			"id": "btnLineReader",
+			"classname": "lineReader",
+			"i18n": "TestShell.Link.LineReader",
+			"label": "LineReader"
+		},
+		"notes": 
+		{
+			"id": "btnGlobalNotes",
+			"classname": "globalNotes",
+			"i18n": "TestShell.Link.GlobalNotes",
+			"label": "Notes"
+		},
+		"calculator": 
+		{
+			"id": "btnCalculator",
+			"classname": "calculator",
+			"i18n": "TestShell.Link.Calculator",
+			"label": "Calculator"
+		},
+		"formula": 
+		{
+			"id": "btnFormula",
+			"classname": "math",
+			"i18n": "TestShell.Link.Formula",
+			"label": "Formula"
+		},
+		"periodictable": 
+		{
+			"id": "btnPeriodic",
+			"classname": "periodic",
+			"i18n": "TestShell.Link.PeriodicTable",
+			"label": "Periodic Table"
+		},
+		"print": 
+		{
+			"id": "btnPrint",
+			"classname": "printer excludeMenu",
+			"i18n": "TestShell.Link.Print",
+			"label": "Print"
+		},
+		"printpage": 
+		{
+			"id": "btnPagePrint",
+			"classname": "printerPage",
+			"i18n": "TestShell.Link.PrintPage",
+			"label": "Print Page"
+		},
+		"printpractice": 
+		{
+			"id": "btnPrintPractice",
+			"classname": "printerPractice excludeMenu",
+			"i18n": "TestShell.Link.PrintPractice",
+			"label": "Print"
+		},
+		"dictionary": 
+		{
+			"id": "btnDictionary",
+			"classname": "dictionary",
+			"i18n": "TestShell.Link.Dictionary",
+			"label": "Dictionary",
+			"hidden": true
+		},
+		"masking": 
+		{
+			"id": "btnMask",
+			"classname": "maskingtool",
+			"i18n": "TestShell.Link.Masking",
+			"label": "Masking",
+			"hidden": true
+		},
+		"ruler": 
+		{
+			"id": "btnRuler",
+			"classname": "mt_ruler",
+			"i18n": "TestShell.Link.Ruler",
+			"label": "Ruler",
+			"hidden": true
+		},
+		"protractor": 
+		{
+			"id": "btnProtractor",
+			"classname": "mt_protractor",
+			"i18n": "TestShell.Link.Protractor",
+			"label": "Protractor",
+			"hidden": true
+		},
+		"rubric": 
+		{
+			"id": "btnRubric",
+			"classname": "rubric",
+			"i18n": "TestShell.Link.Rubric",
+			"label": "Rubric",
+			"hidden": true
+		}
+	},
+	
+	"toolbars": 
+	{
+		"modern":
+		{
+			"controls": ["save", "back", "next", "pause", "end", "itemscore", "results"],
+			"tools": ["contextmenu", "zoomin", "zoomout", "print", "linereader", "notes", "calculator", "formula", "periodictable", "dictionary", "masking", "ruler", "protractor", "rubric"]
+		},
+		"universal": 
+		{
+			"controls": ["back", "next", "save", "pause", "end", "itemscore", "results"],
+			"tools": ["rubric", "protractor", "ruler", "masking", "dictionary", "periodictable", "formula", "calculator", "notes", "linereader", "print", "printpage", "zoomout", "zoomin", "contextmenu"]
+		}
+	}
+
+}
+
+

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<cc:interface componentType="tds.itemrenderer.webcontrols.templates.MCTable">
+</cc:interface>
+<cc:implementation>
+	<div id="OptionsContainer_#{cc.data.position}" class="optionsContainer">
+		<tds:DataTable value="#{cc.options}" var="dataItem" styleClass="mc_stacked" repeatColumns="2" repeatDirection="Vertical">
+
+			<div id="Item_OptionContainer_#{cc.getName(dataItem)}" title="Option #{cc.getKey(dataItem)}"
+				class="optionContainer contextArea option#{cc.getKey(dataItem)} #{cc.getIsSelected(dataItem, 'optionSelected')} #{cc.getIsDisabled(dataItem, 'optionDisabled')} ">
+				<span class="striked"></span> <span class="optionClicker"></span>
+
+				<tds:CustomInput type="checkbox" id1="Item_#{cc.getName(dataItem)}" styleClass="option" name="Item_#{cc.getId(dataItem)}" value="#{cc.getKey(dataItem)}" checked="#{cc.getIsSelected(dataItem)}"
+					disabled="#{cc.getIsDisabled(dataItem)}" data-tts-prefix="TDSTTS.Speak.Select#{option.key}" />
+
+				<div class="optionContent">
+					<h:outputText value="#{cc.getText(dataItem)}" escape="false" />
+				</div>
+
+			</div>
+
+		</tds:DataTable>
+	</div>
+</cc:implementation>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom" xmlns:ui="http://java.sun.com/jsf/facelets">
+<cc:interface componentType="tds.itemrenderer.webcontrols.templates.MCObject">
+</cc:interface>
+<cc:implementation>
+	<ui:repeat value="#{cc.options}" var="option">
+		<div id="Item_OptionContainer_#{option.name}" onclick="optionClick('Item_OptionContainer_#{option.name}')"
+			class="optionContainer option#{option.key} #{(option.selected) ? 'optionSelected' : ''} #{(option.disabled) ? 'optionDisabled' : ''}">
+
+			<span class="optionClicker"></span> <span class="theValue">#{option.key}</span>
+
+			<div class="optionContent">#{option.text}</div>
+		</div>
+	</ui:repeat>
+</cc:implementation>
+</html>

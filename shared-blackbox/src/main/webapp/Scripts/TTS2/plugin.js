@@ -162,6 +162,12 @@ CM TTS page plugin
         }
         return false;
     });
+    
+    /*SB-1263*/
+    PassagePlugin_TTS.prototype.load = function () {
+        // initialize TTS
+        TTS.createSingleton();
+    };
 
     PassagePlugin_TTS.prototype.showMenu = function (menu, evt, selection) {
 

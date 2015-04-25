@@ -252,8 +252,8 @@ Blackbox.loadContent = function (contentRequest, forceReload) {
     // CORS: https://developer.mozilla.org/en-US/docs/HTTP_access_control
 
     // NOTE: We need to use 'text/plain' or request will be preflighted
-    // YAHOO.util.Connect.setDefaultPostHeader(false); // allow custom 'Content-Type'
-    // YAHOO.util.Connect.initHeader('Content-Type', 'text/plain');
+    YAHOO.util.Connect.setDefaultPostHeader(false); // allow custom 'Content-Type'
+    YAHOO.util.Connect.initHeader('Content-Type', 'text/plain');
 
     // NOTE: Don't send custom headers ('X-Requested-With') or request will be preflighted
     YAHOO.util.Connect.setDefaultXhrHeader(false); // 

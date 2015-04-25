@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/passthrough" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<cc:interface componentType="tds.itemrenderer.webcontrols.LayoutSingle">
+</cc:interface>
+<cc:implementation>
+
+<div id="Item_#{cc.data.position}" class="unitWrap #{(cc.data.selected) ? 'selectedPrompt' : ''}">
+    
+   	<input type="hidden" id="Item_Changed_#{cc.data.position}" name="Item_Changed_#{cc.data.position}" value="false" />
+    <input type="hidden" id="Item_Selected_#{cc.data.position}" name="Item_Selected_#{cc.data.position}" value="#{cc.data.selected}" />
+
+    <span class="markComment">
+        <h:panelGroup rendered="#{cc.data.hasTutorial}"><a href="#" id="Item_HelpLink_#{cc.data.position}" class="contexthelp" >Item Tutorial</a></h:panelGroup>
+     	<h:panelGroup rendered="#{cc.data.printable}"><a href="#" id="Item_PrintLink_#{cc.data.position}" class="printItem">Print Item</a></h:panelGroup>
+    	<h:panelGroup rendered="#{cc.data.hasGtr}"><a href="#" id="Item_GTRLink_#{cc.data.position}" class="guideToRevision">Guide To Revision</a></h:panelGroup>
+	        		
+	    <a href="#" id="Item_CommentLink_#{cc.data.position}" class="commentItem">Submit a comment for this item</a> 
+        <a href="#" id="Item_MarkLink_#{cc.data.position}" class="#{(cc.data.mark) ? 'markReviewMarked' : 'markReview'} #{(cc.data.disabled) ? 'markReviewDisabled' : ''}">Mark Item for Review</a>
+        <tds:CustomInput style="display:none" type="checkbox" id1="Item_Mark_#{cc.data.position}" name="Item_Mark_#{cc.data.position}" checked="#{cc.data.mark}" disabled="#{cc.data.disabled}" />
+    </span>
+    
+	<div class="instructionsPrompt">#{cc.itemIllustration}</div>
+    <span class="clear"></span>
+     
+    <div class="changeWrap"><a href="#" class="changePrompt"><span class="lefty"><span class="righty">Change<br />
+    Prompt</span></span></a></div>
+     
+    <div class="prompt">
+        <span class="topCorners"><em></em></span>
+        
+        <div class="promptWrapper">
+            <span class="promptContent">
+            <span class="prompNumber">#{cc.data.positionOnPage}</span>
+                <span id="Stem_#{cc.data.position}" class="addMark contextArea stemContainer" title="Prompt">#{cc.itemStem}</span>
+            </span>
+        </div>
+        
+        <a href="#" class="expandPrompt"><span class="inlineCount"></span><span class="rightExpand"><span class="leftExpand">Click to <span class="textOpen">Expand</span><span class="textClose">Close</span></span></span></a>
+    </div><!-- end prompt -->
+
+    <div id="Item_CommentBox_#{cc.data.position}" class="commentBox" style="display:none">
+        <textarea spellcheck="false" cols="" rows="4" id="Item_Comment_#{cc.data.position}" name="Item_Comment_#{cc.data.position}"></textarea>
+        <a href="#" id="Item_CommentCloseLink_#{cc.data.position}" class="greenBtn"><span>Close Comment</span></a>
+        <span class="clear"></span>
+    </div>
+    
+    <div class="writingBlock"><textarea spellcheck="false" id="Item_Response_CR_#{cc.data.position}" name="Item_Response_CR_#{cc.data.position}" cols="" rows="" style="display:none;"></textarea></div>
+    
+</div>
+</cc:implementation>
+</html>

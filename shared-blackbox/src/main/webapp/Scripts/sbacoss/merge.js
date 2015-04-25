@@ -224,5 +224,8 @@ function sbacossChanges() {
 	 */
 
 	// TODO: calculator.js toggle() function
+	if(typeof TestShell != 'undefined'){
+		$("#btnPagePrint").hide();
+	}
 };
 

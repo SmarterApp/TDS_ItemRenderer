@@ -182,7 +182,7 @@ The main test shell entry code.
 		// We don't need to override anything from testshell this time 01/27/2015
         //TODO Sajib/Shiva: May be we can call sbacossChanges on "init" event.
         //that way we will not have any code modifications.
-        //sbacossChanges();
+        sbacossChanges();
     };
 
     // attach DOM events to the test shell

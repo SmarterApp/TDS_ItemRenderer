@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/passthrough" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<cc:interface componentType="tds.itemrenderer.webcontrols.templates.ITools">
+</cc:interface>
+<cc:implementation>
+
+<span data-tts-skip="true" class="markComment">
+	<c:if test="#{cc.data.hasTutorial}"><a href="#" id="Item_HelpLink_#{cc.data.position}" class="contexthelp">Item Tutorial</a> </c:if>
+	<c:if test="#{cc.data.printable}"><a href="#" id="Item_PrintLink_#{cc.data.position}" class="printItem">Print Item</a> </c:if>
+	<c:if test="#{cc.data.hasGtr}"><a href="#" id="Item_GTRLink_#{cc.data.position}" class="guideToRevision">Guide To Revision</a> </c:if>
+	<a href="#" id="Item_CommentLink_#{cc.data.position}" class="commentItem">Submit a comment for this item</a>
+    <a href="#" id="Item_MarkLink_#{cc.data.position}" class="#{(cc.data.mark) ? 'markReviewMarked' : 'markReview'} #{(cc.data.disabled) ? 'markReviewDisabled' : ''}">Mark Item for Review</a>                   
+	<input style="display:none;" type="checkbox" id="Item_Mark_#{cc.data.position}" name="Item_Mark_#{cc.data.position}" >
+          <c:if test="#{cc.data.mark}">
+         		<f:attribute name="checked" value="checked" />
+          </c:if>
+          <c:if test="#{cc.data.disabled}">
+          	<f:attribute name="disabled" value="disabled" />
+          </c:if>
+    </input>
+</span>  
+</cc:implementation>
+</html>

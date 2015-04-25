@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/passthrough" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<cc:interface componentType="tds.itemrenderer.webcontrols.LayoutSingle">
+</cc:interface>
+<cc:implementation>
+<table cellspacing="0" cellpadding="0" width="100%" class="bigTable noColumns">
+<tr><td valign="top" align="center"><div class="theQuestions"><span class="padding">
+<table cellspacing="0" cellpadding="0" class="structure layout19"><tr><td>
+
+<span class="markComment">
+	<h:panelGroup rendered="#{cc.data.hasTutorial}"><a href="#" id="Item_HelpLink_#{cc.data.position}" class="contexthelp" >Item Tutorial</a></h:panelGroup>
+    <h:panelGroup rendered="#{cc.data.printable}"><a href="#" id="Item_PrintLink_#{cc.data.position}" class="printItem">Print Item</a></h:panelGroup>
+    <h:panelGroup rendered="#{cc.data.hasGtr}"><a href="#" id="Item_GTRLink_#{cc.data.position}" class="guideToRevision">Guide To Revision</a></h:panelGroup>
+	     
+    <a href="#" id="Item_CommentLink_#{cc.data.position}" class="commentItem">Submit a comment for this item</a>
+    <a href="#" id="Item_MarkLink_#{cc.data.position}" class="#{(cc.data.mark) ? 'markReviewMarked' : 'markReview'} #{(cc.data.disabled) ? 'markReviewDisabled' : ''}">Mark Item for Review</a>
+    <tds:CustomInput style="display:none" type="checkbox" id1="Item_Mark_#{cc.data.position}" name="Item_Mark_#{cc.data.position}" checked="#{cc.data.mark}" disabled="#{cc.data.disabled}" />
+</span>
+
+<div class="questionCell">
+	<tds:PlaceHolder ID="Stem" binding="#{cc.stem}" />
+</div>
+
+<div id="Illustration_#{cc.data.position}" class="stimulusCell contextArea" title="Illustration" align="center">
+	<tds:PlaceHolder ID="Stimulus" binding="#{cc.stimulus}" />
+</div>
+         
+<div id="Item_CommentBox_#{cc.data.position}" class="commentBox" style="display:none">
+    <textarea cols="" rows="4" id="Item_Comment_#{cc.data.position}" name="Item_Comment_#{cc.data.position}"></textarea>
+    <a href="#" id="Item_CommentCloseLink_#{cc.data.position}" class="greenBtn"><span>Close Comment</span></a>
+    <span class="clear"></span>
+</div>
+            
+</td></tr></table>
+</span></div></td>   
+</tr></table>
+</cc:implementation>
+</html>

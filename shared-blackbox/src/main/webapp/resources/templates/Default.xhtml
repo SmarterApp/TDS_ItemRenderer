@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/passthrough"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<cc:interface>
+</cc:interface>
+<cc:implementation>
+	<div id="topBar">
+
+		<a href="#contents" id="skipNav" tabindex="0">Skip navigation</a>
+
+		<div id="infoBar" role="banner">
+			<div id="jumpQuestions">
+				<label id="jumpLabel" i18n-content="TestShellModern.Label.Items">Items:</label> <select id="ddlNavigation" name="ddlNavigation" aria-labelledby="jumpLabel jumpGo"></select> <input id="jumpGo"
+					type="button" value="Go" aria-controls="ddlNavigation" style="display: none;" />
+			</div>
+			<h1 id="lblTestName"></h1>
+			<h2 id="lblStudentName"></h2>
+			<div id="smallButtons">
+				<a href="#" id="btnHelp" aria-haspopup="true">Help</a> <a href="#" id="btnSettings" aria-haspopup="true">Settings</a> <a href="#" id="proctorLogout" aria-hidden="true" style="display: none;">Log
+					Out</a>
+			</div>
+		</div>
+
+		<nav id="navigation" role="navigation">
+		<ul id="studentControls"></ul>
+		<div id="soundCues"></div>
+		<ul id="studentTools"></ul>
+		</nav>
+	</div>
+
+	<div class="alertBar alertClosed" aria-hidden="true" role="alertdialog">
+		<a href="#" class="alertDismiss">Open or Close</a>
+		<ul class="alertContent"></ul>
+	</div>
+
+	<div id="contents" role="main">
+		<div id="reviews"></div>
+	</div>
+
+</cc:implementation>
+</html>
+
+

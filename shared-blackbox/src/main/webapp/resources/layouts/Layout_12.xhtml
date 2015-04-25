@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/passthrough" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<cc:interface componentType="tds.itemrenderer.webcontrols.LayoutMulti">
+</cc:interface>
+<cc:implementation>
+
+<div class="bigTable layout12">
+
+<div class="writeWrap">
+    
+    <div class="instructionsChoose">#{cc.passageTitle}</div><!-- title goes here -->
+    <div class="thePassage instructionsResponse contextArea" title="Directions">#{cc.passageStem}</div><!-- stem goes here -->
+    <!-- <div class="questionContainer">
+        <p><span style="font-weight:bold; ">Papers may not be scored if the paper:</span> is so short that scores would be meaningless, is blank, is written in a language other than English, is written in the form of poetry or drama, is plagiarized from other sources, is not written to one of the provided topics, or contains profanity or graphic violence beyond usual community standards for school writing.</p>
+	</div> -->
+    
+    <div class="chooseHolder"> 
+        <div class="chooseLeft"><tds:LayoutHolder id="Column1" layout="Layout_12_Unit.xhtml"  binding="#{cc.column1}"/></div>
+    	<div class="chooseRight"><tds:LayoutHolder id="Column2" layout="Layout_12_Unit.xhtml" binding="#{cc.column2}" /></div>
+	</div>
+    <span class="clear"></span>
+
+</div>
+
+<div class="writeNav">
+    <a href="#" class="expandAll"><span class="lefty"><span class="righty"><span class="allOpen">Expand All Prompts</span><span class="allClose">Collapse All Prompts</span></span></span></a>
+    <a href="#" class="writeNow inactive"><span class="lefty"><span class="righty">Start Writing on Selected Prompt</span></span></a>
+</div>
+
+<div class="writeNav2">
+    <span class="writeCounter"></span>
+    <a href="#" class="changePrompt2"><span>Change Prompt</span></a>
+</div>
+
+
+</div>
+</cc:implementation>
+</html>

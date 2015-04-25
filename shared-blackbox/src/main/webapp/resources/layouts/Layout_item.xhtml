@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom">
+<cc:interface componentType="tds.itemrenderer.webcontrols.LayoutSingle">
+</cc:interface>
+<cc:implementation>
+	<div class="printsingleitem">
+		<div class="stimulusCell">
+			<tds:PlaceHolder iD="Stimulus" binding="#{cc.stimulus}" />
+		</div>
+		<div class="questionCell">
+			<tds:PlaceHolder iD="Stem" binding="#{cc.stem}" />
+		</div>
+		<div class="answerCell">
+			<tds:PlaceHolder iD="Answer" binding="#{cc.answer}" />
+		</div>
+	</div>
+</cc:implementation>
+</html>
