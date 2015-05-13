@@ -85,7 +85,7 @@ public class ContentRequestParser
         // check if valid file name
         if (item == null || StringUtils.isEmpty (item.getFile ()))
           continue;
-
+        
         // load file
         IITSDocument itemDoc = ITSDocumentFactory.loadUri2 (item.getFile (), accommodations, true);
 

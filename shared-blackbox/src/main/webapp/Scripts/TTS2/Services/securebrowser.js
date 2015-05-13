@@ -20,7 +20,8 @@ function TTSService_Generic() {
     this.currentVolume = 10;
     this.voicepacks = [];
     this.currentVoice = '';
-    this.pauseEnabled = (Util.Browser.getSecureVersion() < 2) ? false : true; // pause and resume are disabled for Android v1.x
+    /*SB-1287: Removed check for SB version and checking android and IOS*/
+    this.pauseEnabled = (Util.Browser.isAndroid() || Util.Browser.isIOS()) ? false : true; // pause and resume are not supported on Android Browser
 
     function convertDeviceStatusToTTStatus(deviceStatus) {
         if ('idle' == deviceStatus)

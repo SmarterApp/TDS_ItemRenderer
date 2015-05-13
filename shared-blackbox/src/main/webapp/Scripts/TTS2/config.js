@@ -230,6 +230,8 @@ TTS.Config = {
     //iOS voice pack
     { name: "julie", priority: 9, language: "ENU" },
     { name: "violeta", priority: 9, language: "ESN" },
+	{ name: "en-US", priority: 9, language: "ENU" },
+    { name: "es-ES", priority: 9, language: "ESN" },
     { name: "eng", priority: 9, language: "ENU" },
     { name: "spa", priority: 9, language: "ESN" }
   ],
