@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿EditItem = (typeof (EditItem) == "undefined") ? {} : EditItem;
 
 ////////////////////
@@ -52,26 +60,27 @@ EditItem.InteractionSet = function () {
     // Parse the XML from the server, and update the object 
     // state based on the contents.
     this.setXmlResponse = function (xmlString) {
-        var xmlDoc = Util.Xml.parseFromString(xmlString);
-        var nodeAr = xmlDoc.getElementsByTagName('value');
-        for (var i = 0; nodeAr && i < nodeAr.length; ++i) {
+        
+        // get all the <value> elements
+        var xmlDoc = Util.Xml.parseFromString(xmlString);  //<testeeResponse>
+        var valueNodes = xmlDoc.getElementsByTagName('value');
+        
+        // loop through <value> elements to set responses
+        for (var i = 0; valueNodes && i < valueNodes.length; ++i) {
+
+            var valueNode = valueNodes[i];
+            
+            // find the interaction for this <value>
+            var responseIdentifier = valueNode.getAttribute('responseIdentifier');
             var matchInteraction = self.getInteraction(function (interaction) {
-                var id = nodeAr[i].getAttribute('responseIdentifier');
-                return interaction.getId() == id;
+                return interaction.getId() === responseIdentifier;
             });
 
+            // if interaction was found then set response
             if (matchInteraction) {
-                var node = nodeAr[i];
-                var newValue = '';
-                if (!node.getAttribute('choiceIdentifier')) {
-                    for (var j = 0; j < node.childNodes.length; ++j) {
-                        var inner = node.childNodes[j];
-                        newValue = newValue + Util.Xml.serializeToString(inner);
-                    }
-                } else {
-                    newValue = newValue + node.getAttribute('choiceIdentifier');
-                }
-                matchInteraction.setXmlResponse(newValue);
+                // Bug 170875: escape the entities after we get the node, since the browser unescapes them
+                var value = EditItem.Html.Text.entityEncode(valueNode.textContent);
+                matchInteraction.setXmlResponse(value);
             }
         }
         this.redisplay();
@@ -132,16 +141,21 @@ EditItem.Interaction.Choice = function (parentId, identifier, shuffle, inlineCho
         return (inlineChoices.length > i) ? inlineChoices[i] : null;
     };
     
-    this.setXmlResponse = function (string) {
-        
+    this.setXmlResponse = function (value) {
+        // get default if nothing was provided
+        if (!value) {
+            var defaultChoice = this.getDefaultChoice();
+            if (defaultChoice) {
+                value = defaultChoice.identifier;
+            }
+        }
+        // set the selected choice
         this.forEachInlineChoice(function(choice) {
             choice.selected = false;
-            if (choice.identifier == string) {
+            if (choice.identifier == value) {
                 choice.selected = true;
             }
         });
-        
-        
     };
     
     this.getResponse = function () {
@@ -166,8 +180,8 @@ EditItem.Interaction.Text = function (parentId, identifier, content) {
     this.responseValue = '';
     EditItem.Interaction.call(this, parentId, identifier);
 
-    this.setXmlResponse= function (xmlString) {
-        this.responseValue = xmlString;
+    this.setXmlResponse= function (text) {
+        this.responseValue = text;
     };
 
     this.createDivId = function () {

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// used for sending responses to the server
 
 TestShell.ResponseManager = {};
@@ -47,13 +55,25 @@ TestShell.ResponseManager.Events =
     onFinished: TestShell.ResponseManager.createEvent('onFinished')
 };
 
-TestShell.ResponseManager.fireEvent = function(name, obj) { this.Events[name].fire(obj); };
+TestShell.ResponseManager.fireEvent = function(name, obj) {
+    this.Events[name].fire(obj);
+};
 
-TestShell.ResponseManager.getLastError = function() { return this._lastError; };
-TestShell.ResponseManager.getLastStatusCode = function() { return this._lastStatusCode; };
-TestShell.ResponseManager.getLastStatusText = function() { return this._lastStatusText; };
+TestShell.ResponseManager.getLastError = function() {
+    return this._lastError;
+};
 
-TestShell.ResponseManager._setLastError = function(error, message) { this._lastError = error; };
+TestShell.ResponseManager.getLastStatusCode = function() {
+    return this._lastStatusCode;
+};
+
+TestShell.ResponseManager.getLastStatusText = function() {
+    return this._lastStatusText;
+};
+
+TestShell.ResponseManager._setLastError = function(error, message) {
+    this._lastError = error;
+};
 
 TestShell.ResponseManager._setLastStatus = function(statusCode, statusText)
 {
@@ -61,8 +81,21 @@ TestShell.ResponseManager._setLastStatus = function(statusCode, statusText)
     this._lastStatusText = statusText; 
 };
 
-TestShell.ResponseManager.getPendingResponses = function() { return this._pendingResponses; };
-TestShell.ResponseManager.getOutgoingResponses = function() { return this._outgoingResponses; };
+TestShell.ResponseManager.getPendingResponses = function() {
+    return this._pendingResponses;
+};
+
+TestShell.ResponseManager.removePendingResponse = function (response) {
+    Util.Array.remove(this._pendingResponses, response);
+};
+
+TestShell.ResponseManager.getOutgoingResponses = function() {
+    return this._outgoingResponses;
+};
+
+TestShell.ResponseManager.removeOutgoingResponse = function (response) {
+    Util.Array.remove(this._outgoingResponses, response);
+};
 
 // reset send count 
 // NOTE: call this when you successfully processed a request
@@ -89,10 +122,14 @@ TestShell.ResponseManager.ping = function()
     this.processQueue();
 };
 
-TestShell.ResponseManager.isSending = function() { return this._sending; };
+TestShell.ResponseManager.isSending = function() {
+    return this._sending;
+};
 
 // queue response to be sent to the server
-TestShell.ResponseManager.sendResponse = function(response) { this.sendResponses([response]); };
+TestShell.ResponseManager.sendResponse = function(response) {
+    this.sendResponses([response]);
+};
 
 // queue responses to be sent to the server
 TestShell.ResponseManager.sendResponses = function(responses)
@@ -184,12 +221,26 @@ TestShell.ResponseManager._createUrl = function()
 // create the xhr xml
 TestShell.ResponseManager._createRequest = function() {
 
-    var lastGroup = TestShell.PageManager.getLastGroup();
+    // get current page number
+    var currentPageNum = 0;
+    var currentGroup = TestShell.PageManager.getCurrent();
+    if (currentGroup instanceof TestShell.PageGroup) {
+        currentPageNum = currentGroup.pageNum;
+    }
 
+    // get last page number
+    var lastPageNum = 0;
+    var lastGroup = TestShell.PageManager.getLastGroup();
+    if (lastGroup) {
+        lastPageNum = lastGroup.pageNum;
+    }
+
+    // create data for TestResponseReader.cs
     var data = {
         id: this._attemptTotal,
         timestamp: new Date().getTime(),
-        lastPage: (lastGroup ? lastGroup.pageNum : 0),
+        currentPage: currentPageNum,
+        lastPage: lastPageNum,
         prefetch: TestShell.Config.prefetch,
         accommodations: TDS.Student.Storage.serializeAccs(),
         responses: this._outgoingResponses
@@ -411,48 +462,106 @@ TestShell.ResponseManager.Events.onFinished.subscribe(function () {
     }
 });
 
-// on XHR failure
-TestShell.ResponseManager.Events.onFailure.subscribe(function(error)
-{
-    TestShell.UI.hideLoading();
+(function() {
 
-    var logout = function()
-    {
-        // clear responses in queue
-        TestShell.ResponseManager.clearQueue();
+    // if true the user clicked on "Yes" when asked to retry sending responses
+    var manualRetry = false;
+    var retryInstance = 0;
 
-        // redirect to login
-        TestShell.redirectLogin();
-    };
+    // send error log with pending/outgoing responses to the server
+    function logQueuedResponses() {
 
-    // check if we can retry from this error
-    if (TestShell.ResponseManager.hasFatalLastError())
-    {
-        var message = Messages.getAlt('TestShell.Label.ErrorLoggedOut', 'Error you will be logged out');
+        var details = new Util.StringBuilder();
 
-        if (this.getLastError() == TestShell.ResponseManager.Error.ReturnStatus)
-        {
-            message = this.getLastStatusText();
+        function writeResponses(name, items) {
+            details.appendFormat('{0}:', name);
+            details.appendLine();
+            items.forEach(function (item) {
+                details.appendLine();
+                details.appendSub('Item: {position} ({sequence})', item);
+                details.appendLine();
+                details.append('Response:');
+                if (typeof item.value == 'string') {
+                    details.appendLine();
+                    details.append(item.value);
+                } else {
+                    details.append(' NULL');
+                }
+                details.appendLine();
+            });
+            details.appendLine();
         }
 
-        TestShell.UI.showWarning(message, logout);
-    }
-    else
-    {
-        // show retry submitting responses dialog
-        TestShell.UI.showErrorPrompt('ResponseError',
-        {
-            yes: function() // [Yes] try again
-            {
-                TestShell.ResponseManager.resetQueue();
-                TestShell.ResponseManager.processQueue();
-                // TestShell.UI.showLoading();
-            },
-            no: logout
-        });
-    }
+        writeResponses('PENDING RESPONSES', TestShell.ResponseManager.getPendingResponses());
+        writeResponses('OUTGOING RESPONSES', TestShell.ResponseManager.getOutgoingResponses());
 
-});
+        TDS.Diagnostics.logServerError('Failure sending responses', details.toString());
+    };
+
+    // on XHR failure
+    TestShell.ResponseManager.Events.onFailure.subscribe(function (error) {
+
+        manualRetry = false;
+        TestShell.UI.hideLoading();
+
+        var logout = function ()
+        {
+            // clear responses in queue
+            TestShell.ResponseManager.clearQueue();
+
+            // redirect to login
+            TestShell.redirectLogin();
+        };
+
+        // check if we can retry from this error
+        if (TestShell.ResponseManager.hasFatalLastError()) {
+
+            // log responses
+            try {
+                logQueuedResponses();
+            } catch (ex) {
+                // ignore errors when logging
+            }
+
+            var message = Messages.getAlt('TestShell.Label.ErrorLoggedOut', 'Error you will be logged out');
+
+            if (this.getLastError() == TestShell.ResponseManager.Error.ReturnStatus) {
+                message = this.getLastStatusText();
+            }
+
+            TestShell.UI.showWarning(message, logout);
+        }
+        else
+        {
+            // show retry submitting responses dialog
+            TestShell.UI.showErrorPrompt('ResponseError',
+            {
+                yes: function () // [Yes] try again
+                {
+                    // retry sending responses
+                    TestShell.ResponseManager.resetQueue();
+                    TestShell.ResponseManager.processQueue();
+                    // show waiting dialog
+                    manualRetry = true;
+                    var waitMsg = Messages.getAlt('ResponseErrorRetry', 'Saving responses');
+                    retryInstance = TestShell.UI.showLoading(waitMsg);
+                },
+                no: logout
+            });
+        }
+
+    });
+    
+    // check if we opened a retry loading screen and need to close it
+    TestShell.ResponseManager.Events.onSuccess.subscribe(function () {
+        if (manualRetry) {
+            // hide waiting dialog
+            manualRetry = false;
+            TestShell.UI.hideLoading(retryInstance);
+        }
+    });
+
+})();
 
 // audit code
 (function(RM) {
@@ -460,6 +569,11 @@ TestShell.ResponseManager.Events.onFailure.subscribe(function(error)
     var positions = {};
 
     function processResponse(response) {
+
+        // don't audit prefetch requests
+        if (response.id === 'prefetch') {
+            return;
+        }
 
         // get the sequence #'s for this position
         var sequences = positions[response.position];

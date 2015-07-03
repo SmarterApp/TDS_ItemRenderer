@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function(TS, CM) {
 
     var UI = TS.UI;
@@ -161,22 +169,23 @@
         var taskWorkflow = Navigation.createWorkflow(currentPage, nextGroup);
         taskWorkflow.start(this._nextInternal, this);
     };
-
+    
     // moves to the next page
     Navigation._nextInternal = function () {
 
-        // save current page
-        TS.save();
+        // save current page so completion rules can be checked
+        TS.save(TS.SaveRequest.Implicit);
 
         var currentPage = PM.getCurrent();
 
         // cannot go to next page if the current page has not been completed
         if (currentPage && !currentPage.isCompleted()) {
-            UI.showWarning(ErrorCodes.get('NextUnanswered'));
+            UI.showWarning(currentPage.getUnansweredLabel());
             return;
         }
 
-        // cannot go to next page if we are on the last page and it has not been completed
+        // if we are on the last page and test is finished then let the user know
+        // TODO: What would it take to hide the next button in this case?
         if (PM.isLast() && TS.testLengthMet) {
             // if we are not show item scores then show warning
             if (!TDS.showItemScores) {
@@ -187,6 +196,11 @@
 
         // get the next group (could be null if we haven't got it from the server yet)
         var nextGroup = PM.getNext();
+
+        // check if we should try to prefetch the next group
+        if (!nextGroup && TS.Prefetch.isSupported()) {
+            TS.Prefetch.request();
+        }
 
         Util.log('TS.nextPage: ' + (nextGroup ? nextGroup.id : 'waiting') + ' (current: ' + (currentPage ? currentPage.id : 'none') + ')');
 

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /* LINE CLASS */
 
 Grid.Model.Line = function(model, source, target, dirType, style, transparent)
@@ -57,7 +65,20 @@ Grid.Model.Line.prototype.intersect = function(line)
 	return (Intersection.intersectLineLine(a1, a2, b1, b2).status == 'Intersection');
 };
 
+Grid.Model.Line.prototype.distanceFromPoint = function (point) {
+    var px = point.x,
+		py = point.y,
+		x1 = this.source.x,
+		y1 = this.source.y,
+		x2 = this.target.x,
+		y2 = this.target.y;
+
+    var nearestPoint = Grid.Utils.getNearestPointAlongLine(px, py, x1, y1, x2, y2);
+    return point.distanceFrom(nearestPoint);
+};
+
 // get the distance from this line to another line
+// TODO: Switch to using distanceFromPoint()
 Grid.Model.Line.prototype.distanceFrom = function(line)
 {
 	// if the lines intersect then the distance is 0

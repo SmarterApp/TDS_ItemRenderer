@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿window.Util = window.Util || {};
 
 /*
@@ -30,7 +38,7 @@ Example:
 
 */
 
-Util.XDM = (function () {
+Util.XDM = (function ($) {
 
 	var defaults = {
 		targetWindow: window,
@@ -49,6 +57,18 @@ Util.XDM = (function () {
 			targetOrigin: targetOrigin,
 			post: postRequest
 		});
+	};
+
+	XDM.useJQuery = function (jQuery) {
+	    $ = jQuery;
+	};
+
+	XDM.serialize = function (value) {
+	    return JSON.stringify(value);
+	};
+
+	XDM.deserialize = function (value) {
+	    return JSON.parse(value);
 	};
 
     XDM.suppressException = false;
@@ -76,7 +96,7 @@ Util.XDM = (function () {
         Object.keys(listeners).forEach(function(key) {
             XDM.removeListener(key);
         });
-    };
+	};
 
 	// send a request
 	function postRequest(requestName) {
@@ -94,7 +114,7 @@ Util.XDM = (function () {
 	    // console.log('MESSAGE RECIEVED', evt);
 
 		try {
-		    var data = JSON.parse(evt.data);
+		    var data = XDM.deserialize(evt.data);
 		} catch (ex) {
 			console.log('XDM: error parsing json data');
 			return;
@@ -140,7 +160,7 @@ Util.XDM = (function () {
 	Request.prototype.send = function() {
 		this.targetWindow = this.targetWindow || defaults.targetWindow;
 		this.targetOrigin = this.targetOrigin || defaults.targetOrigin;
-		this.targetWindow.postMessage(JSON.stringify(this), this.targetOrigin);
+		this.targetWindow.postMessage(XDM.serialize(this), this.targetOrigin);
 	};
 
 	Request.prototype.toJSON = function() {
@@ -194,7 +214,7 @@ Util.XDM = (function () {
 	    var request = this;
 		function postMessage(value) {
 		    request.data = value;
-		    request.targetWindow.postMessage(JSON.stringify(request), request.targetOrigin);
+		    request.targetWindow.postMessage(XDM.serialize(request), request.targetOrigin);
 	    };
 
         // delay posting message in case listener returned a promise
@@ -249,4 +269,4 @@ Util.XDM = (function () {
 
 	return XDM;
 
-})();
+})(window.$);

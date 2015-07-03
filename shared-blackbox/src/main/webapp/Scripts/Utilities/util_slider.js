@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Used for creating a slider.
 Internally this uses YUI but in the future can change. So try not to expose any YUI specific stuff.
@@ -77,13 +85,23 @@ TODO: Add support for vertical.
         var bgSlider = document.createElement('div');
         bgSlider.id = 'slider_bg_' + this._id;
         bgSlider.className = 'slide_controls_slider_bg';
+        bgSlider.style.width = sliderWidth + 'px';
         bgSlider.setAttribute('tabindex', 0); // adds keyboard support
         container.appendChild(bgSlider);
+
+        var timelineContainer = document.createElement('div');
+        timelineContainer.id = 'slider_timeline_' + this._id;
+        timelineContainer.className = 'slide_controls_slider_timeline';
+        timelineContainer.style.width = sliderWidth - thumbWidth + 'px';
+        timelineContainer.style.marginLeft = (thumbWidth * .5) + 'px';
+        timelineContainer.style.marginRight = (thumbWidth * .5) + 'px';
+        container.appendChild(timelineContainer);
 
         // Slider thumb
         var thumbSlider = document.createElement('span');
         thumbSlider.id = 'slider_image_' + this._id;
         thumbSlider.className = 'slide_controls_img';
+        thumbSlider.style.position= 'absolute';
         bgSlider.appendChild(thumbSlider);
 
         // Create YUI slider control

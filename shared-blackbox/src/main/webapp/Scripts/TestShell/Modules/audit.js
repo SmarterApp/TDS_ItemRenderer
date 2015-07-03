@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 * Module to monitor latencies and tool usage
 */
@@ -22,36 +30,7 @@
             return this._ticks * this.RESOLUTION;
         };
     }
-
-    // A poller that periodically sends the accummulated (and completed) audit logs to the server
-    function AuditLogPoller () {
-        this.timer = null;
-        
-        this.start = function (interval) {
-            var instance = this;
-            var poll = function() {
-                var auditData = TS.Audit.recordsToReport();
-                if (auditData == null || auditData.length == 0) { // No data to report
-                    instance.timerInst = setTimeout(poll, interval * 1000);
-                    return;     
-                }
-                // send Data to server
-                TestShell.xhrManager.logAuditTrail(TS.Audit.serializeToJSON(auditData))
-                    .then(function () {
-                        TS.Audit.markAsReported(auditData);
-                    })   // mark these records as successfully submitted                           
-                    .finally(function() {
-                        instance.timerInst = setTimeout(poll, interval * 1000);
-                    });  // reschedule next poll. Note: not using setInterval to prevent overruns);
-            };
-            this.timerInst = setTimeout(poll, interval*1000);
-        };
-        
-        this.cancel = function() {
-            clearInterval(this.timerInst);
-        };
-    };
- 
+    
     function load() {
 
         // Start our synthetic clock
@@ -130,15 +109,27 @@
             }
         });
 
-        // Periodically poll for completed audit records and send it back to the server
-        TS.Audit.Poller = new AuditLogPoller();
-        TS.Audit.Poller.start(TS.Config.auditTimerInterval);
+        // Timer task to get audit info every two ticks (about two minutes)
+        TS.xhrTimer.register(2, function(api) {
+        /*    var auditData = TS.Audit.recordsToReport();
+            if (auditData && auditData.length > 0) {
+                var obj = TS.Audit.toObject(auditData);
+                api.add('audit', obj).then(function () {
+                    // mark these records as successfully submitted
+                    TS.Audit.markAsReported(auditData);
+                }, function () {
+                    // don't mark as reported and hope that next time it saves
+                    console.warn('Error saving audit logs');
+                });
+            }*/
+        });
+
     }
     
     function unload() {
-        // stop the poller, stop the timer
-        if (TS.Audit.Poller) TS.Audit.Poller.cancel();
-        if (TS.Audit.SynthClock) TS.Audit.SynthClock.stop();
+        if (TS.Audit.SynthClock) {
+            TS.Audit.SynthClock.stop();
+        }
     }
 
     TS.registerModule({

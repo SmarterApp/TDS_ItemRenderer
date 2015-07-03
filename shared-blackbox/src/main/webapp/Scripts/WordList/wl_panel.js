@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 
 ////////////// Word list Panel logic.  Handles the singleton word list panel tool.
 // This class is all static methods/data for handling word list items in general.
@@ -54,19 +62,22 @@ WordListPanel.postCallback = {
     success: (function (resp) {
         // Parse the returned JSON structure, containing an array of objects
         var messages = YAHOO.lang.JSON.parse(resp.responseText);
-        for (var i = 0; messages != null && i < messages.length; ++i) {
-            // Create HTML for WordList dialog
-            var tabString = WordListPanel.RenderHtmlTabs(messages[i]);
+        if (messages) {
+            for (var i = 0; i < messages.length; ++i) {
+                // Create HTML for WordList dialog
+                var tabString = WordListPanel.RenderHtmlTabs(messages[i]);
 
-            var key = messages[i].EntryKey;
-            var itemKey = key.split('-')[1];
+                var key = messages[i].EntryKey;
+                var itemKey = key.split('-')[1];
 
-            //store the data so we don't have to fetch it again.
-            WordListPanel.contentWordCache[key] = tabString;
-            WordListPanel.message[key] = messages[i];
+                //store the data so we don't have to fetch it again.
+                WordListPanel.contentWordCache[key] = tabString;
+                WordListPanel.message[key] = messages[i];
+            }
+            WordListPanel.ProcessTagQ(itemKey);
+        } else {
+            console.error('word list: server returned no word list words');
         }
-
-        WordListPanel.ProcessTagQ(itemKey);
     }),
     argument: []
 };
@@ -89,32 +100,31 @@ WordListPanel.ProcessTagQ = function(itemKey) {
 };
 
 // User has clicked on a span.  Search for the definition
-WordListPanel.processClick = (function (entry, headerText) {
+WordListPanel.processClick = function (entry, headerText) {
     if ((WordListPanel.panel != null) && (WordListPanel.toolDiv != null)) {
-        if (!WordListPanel.IsVisible()) {
-            if (entry != null) {
-                var cacheKey = WordListPanel.getKeyFromQEntry(entry);
+        if (entry != null) {
+            var cacheKey = WordListPanel.getKeyFromQEntry(entry);
 
-                // Do we know this word?
-                if (WordListPanel.contentWordCache[cacheKey] != null) {
-                    // It is possible that multiple words/phrases map to same
-                    // definition.  So update the header with that word/phrase.
-                    WordListPanel.headerWordCache[cacheKey] = headerText;
+            // Do we know this word?
+            if (WordListPanel.contentWordCache[cacheKey] != null) {
+                // It is possible that multiple words/phrases map to same
+                // definition.  So update the header with that word/phrase.
+                WordListPanel.headerWordCache[cacheKey] = headerText;
 
-                    WordListPanel.setPanel(WordListPanel.headerWordCache[cacheKey], WordListPanel.contentWordCache[cacheKey]);
-                    WordListPanel.panel.mask.style.display = 'none';
-                } else {
-                    ContentManager.log("WordList: errantly tagged span");
-                }
+                WordListPanel.curWLItem = entry.wl_item;
+                WordListPanel.setPanel(WordListPanel.headerWordCache[cacheKey], WordListPanel.contentWordCache[cacheKey]);
+                WordListPanel.panel.mask.style.display = 'none';
+            } else {
+                ContentManager.log("WordList: errantly tagged span");
             }
         }
     }
-});
+};
 
 /////////////////// Helper logic /////////////////////
 
 // Unpack the item string and send the word list POST request
-WordListPanel.sendRequest = (function (wl_item) {
+WordListPanel.sendRequest = function (wl_item) {
     var bankKey = wl_item.wl_res.bankKey;
     var itemKey = wl_item.wl_res.itemKey;
  
@@ -159,11 +169,11 @@ WordListPanel.sendRequest = (function (wl_item) {
 
     // Display loading screen.
     // WordListPanel.setPanel(WordListPanel.headerWordCache[key], WordListPanel.LoadingPageString);
-});
+};
 
 // Are there any TDS_WL configs in the accs cookie?  If not then
 // don't bother to fetch any data we can't even display
-WordListPanel.IsWordListEnabled = (function () {
+WordListPanel.IsWordListEnabled = function () {
 
     var accs = Accommodations.Manager.getCurrent();
     var wlType = accs.getType(WordListPanel.AccType);
@@ -191,7 +201,7 @@ WordListPanel.IsWordListEnabled = (function () {
 
     // if we got here then 'TDS_WL0' was not included
     return true;
-});
+};
 
 // Helper function to show the word view panel
 // args: hd (header html) bd (body html)
@@ -205,7 +215,7 @@ WordListPanel.setPanel = function (hd, bd) {
 
         WordListPanel.tabView = new YAHOO.widget.TabView(WordListPanel.tabbedDivName);
 
-        /// Count # of tabs in word list panel
+        // Count # of tabs in word list panel
         WordListPanel.tabCount = 0;
         while (WordListPanel.tabView.getTab(WordListPanel.tabCount) != null) {
             WordListPanel.tabCount++;
@@ -215,8 +225,8 @@ WordListPanel.setPanel = function (hd, bd) {
 
         // Hook up an event to move the 'aria-title' attribute as different tabs
         //  are selected for WCAG
-        WordListPanel.tabView.on("activeTabChange", function (event) {
-            var curTab
+        WordListPanel.tabView.on("activeTabChange", function(event) {
+            var curTab;
             var oTabEl;
 
             for (var i = 0; i < WordListPanel.tabCount; ++i) {
@@ -227,16 +237,16 @@ WordListPanel.setPanel = function (hd, bd) {
 
             oTabEl = this.get("activeTab").get("element");
             $(oTabEl).attr('aria-title', 'Selected');
-        });   
-        
-        setTimeout(function () {
+        });
+
+        setTimeout(function() {
             WordListPanel.postProcessAudioTags();
         }.bind(this), 1); //Panels can behave in a scary fashion
     }
 };
 
 // Set up the word list pane.  Should only be done once.
-WordListPanel.InitializePane = (function() {
+WordListPanel.InitializePane = function() {
 
     // This next line fixes a bug in YUI2 where active tab
     // has a title attribute which generates a tooltip
@@ -253,7 +263,7 @@ WordListPanel.InitializePane = (function() {
         YUD.setAttribute(clink, 'type', 'text/css');
         YUD.setAttribute(clink, 'rel', 'stylesheet');
         YUD.setAttribute(clink, 'media', 'screen');
-        YUD.setAttribute(clink, 'href', ContentManager.resolveBaseUrl('Scripts/Libraries/YUI/tabview/assets/skins/sam/tabview.css'));
+        YUD.setAttribute(clink, 'href', ContentManager.resolveBaseUrl('Scripts/Libraries/yahoo/yui2/build/tabview/assets/skins/sam/tabview.css'));
         WordListPanel.toolDiv.appendChild(clink);
 
         toolDiv.appendChild(WordListPanel.toolDiv);
@@ -278,7 +288,14 @@ WordListPanel.InitializePane = (function() {
             }
         });
     }
-});
+
+    WordListPanel.panel.subscribe('hide', function () {
+        if (WordListPanel.curWLItem) {
+            WordListPanel.curWLItem.ClearSelectedWord();
+            WordListPanel.curWLItem = null;
+        }
+    });
+};
 
 // From parsed JSON POST response, construct the YUI Tab formats with the response.
 WordListPanel.RenderHtmlTabs = function (messages) {
@@ -308,11 +325,15 @@ WordListPanel.RenderHtmlTabs = function (messages) {
  *  process things into sound manager sounds for certain browser types.
  */
 WordListPanel.postProcessAudioTags = function () {
-    if (!window.TDS || !window.TDS.Audio || !window.TDS.Audio.Widget) { return; }
+    if (!window.TDS || !window.TDS.Audio || !window.TDS.Audio.Widget) {
+        return;
+    }
 
     var bd = WordListPanel.panel.body;
     try {
-        if (!bd) { return; }
+        if (!bd) {
+            return;
+        }
 
         // Url resolver puts the encoded path in the anchor tags.
         var audioEls = YAHOO.util.Selector.query('a', bd) || [];

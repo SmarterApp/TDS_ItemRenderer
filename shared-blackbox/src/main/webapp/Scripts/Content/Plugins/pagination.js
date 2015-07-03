@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 This code is used to add pagination to item groups.
 */
@@ -25,7 +33,7 @@ This code is used to add pagination to item groups.
         itemLinkEl.setAttribute('tabindex', '0');
         var tabData = { item: item };
         $(itemLinkEl).on('click', tabData, onTabClick);
-        $(itemLinkEl).text(item.position);
+        $(itemLinkEl).text(item.getQuestionLabel());
         itemTabEl.appendChild(itemLinkEl);
         return itemTabEl;
     }
@@ -216,9 +224,16 @@ This code is used to add pagination to item groups.
     
     function requestPage(direction, page, verify) {
 
+        // if there is no page object then just accept request (happens on itempreview sometimes)
+        if (!page) {
+            return true;
+        }
+
         // check for pagination
         var pagination = page.plugins.get('pagination');
-        if (!pagination) return true;
+        if (!pagination) {
+            return true;
+        }
 
         // create iterator with tabable items
         var tabableItems = pagination.getTabableItems();

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 AsiItem = (typeof (AsiItem) == "undefined") ? {} : AsiItem;
 
 // Parser.  Parse the asiItem xml text and create an object that
@@ -5,7 +13,6 @@ AsiItem = (typeof (AsiItem) == "undefined") ? {} : AsiItem;
 AsiItem.Parse = function (item) {
 
     var YUD = YAHOO.util.Dom;
-    var YUE = YAHOO.util.Event;
 
     // Unique ID for container to apply the asi to
     this.mid = item.position;
@@ -29,17 +36,12 @@ AsiItem.Parse = function (item) {
         // Process the choices and associated feedback spans.
         this.asiContent = this.processNodes(this.mid, stem, answers);
         
-        // THis is a unique item type.  We assume for now that there is only one
+        // This is a unique item type.  We assume for now that there is only one
         // correct answser that completes the question, and n-1 possible wrong answers.
         // Ideally this would be passed in the item format but for now ITS doesn't have a place
         // for it.
         this.minSelection = 1; 
         this.maxAttempts = this.asiContent.choices.length - 1;
-        
-        // Wipe out the entire div, because the renderer is going to re-render it
-        // in the div.  This is pretty inefficient and eventually we should get rid of
-        // it.
-        //answers.innerHTML = '';
     };
 };
 
@@ -109,19 +111,6 @@ AsiItem.Parse.prototype.readChoiceContent = function (choiceNode, index) {
     var htmlContent;
     var htmlContentString = '';
 
-    // Build a string with the HTML from all childNodes that do NOT have a 'data-feedback-identifier' attribute
-    /*
-    var choiceChildNodes = choiceNode.childNodes;
-    for (var k = 0; k < choiceChildNodes.length; ++k) {
-        if (choiceChildNodes[k].nodeType == Util.Dom.NodeType.ELEMENT) {
-            var childNode = choiceChildNodes[k];
-            var feedbackId = YUD.getAttribute(childNode, 'data-feedback-identifier');
-            if (!(feedbackId && feedbackId.length > 0)) { // Skip data-feedback-identifier nodes
-                htmlContentString = htmlContentString + Util.Xml.serializeToString(childNode);
-            }
-        }
-    }
-    */
     // The 'choice content' is the node's child's child's child's child
     var choiceChildNodes = choiceNode.getElementById('');
     for (var k = 0; k < choiceChildNodes.length; ++k) {

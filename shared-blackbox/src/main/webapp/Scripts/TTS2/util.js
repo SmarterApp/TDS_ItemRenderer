@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/**
  *  The parsing is made up of 
  *     TTS.Parser.Container -> Wrapper interface for all the parsing logic
@@ -67,6 +75,7 @@ TTS.Util = {
         }
     },
 
+    /*
     sanitizeLang: function(lang) {
         if (lang == 'ENU') {
             return 'en-us';
@@ -98,6 +107,7 @@ TTS.Util = {
             }
         }
     },
+    */
 
     hasAlt: function(node) { //Does the node contain alternative text
         if (node && node.nodeType != 3) { //YUD.hasClass acts really stupid on textNodes
@@ -107,6 +117,7 @@ TTS.Util = {
         }
     },
 
+    /*
     hasLanguageAttr: function(node) { //Check to see if there is a language divider
         if (node && node.nodeType == Node.ELEMENT_NODE && YUD.hasClass(node, 'languagedivider')) {
             return node;
@@ -125,6 +136,7 @@ TTS.Util = {
         }
         return null;
     },
+    */
 
     bubble: function(node, match, results) { //Bubble up the tree looking for a match.
         results = results || {};

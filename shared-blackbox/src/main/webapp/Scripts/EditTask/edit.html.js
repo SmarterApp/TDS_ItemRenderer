@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿EditItem = (typeof (EditItem) == "undefined") ? {} : EditItem;
 
 ////////////////////////
@@ -225,16 +233,14 @@ EditItem.Dialog = {
         });
 
         editDialog.showEvent.subscribe(function () {
-            // DO NOT REMOVE - Tab navigation of dialog box does not work without this addClass
-            YUD.addClass(document.body, 'showingDialog');
-            
+            TDS.Dialog.onShow();
             //create tab loop from last element to first element
             editDialog.focusFirst();
             editDialog.setTabLoop(editDialog.firstElement, editDialog.lastElement);
         });
 
         editDialog.hideEvent.subscribe(function () {
-            YUD.removeClass(document.body, 'showingDialog');
+            TDS.Dialog.onHide();
         });
 
         // set tab index on dialog

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 (function (CKEDITOR) {
 
     // check if ckeditor lib is available
@@ -35,7 +43,7 @@
     function fixPaths(config) {
 
         // version of ckeditor (should match what is in scripts_shared.xml)
-        var version = '4.4';
+        var version = '4.4.7';
 
         var rootPath = HTMLEditor.resolveBaseUrl('');
         var basePath = rootPath + 'Scripts/Libraries/ckeditor/' + version + '/';
@@ -143,9 +151,11 @@
         }
 
         // if not in streamlined mode then remove the help group
-        var accProps = Accommodations.Manager.getCurrentProps();
-        if (!accProps.isStreamlinedMode()) {
-            delete toolGroups['help'];
+        if (window.Accommodations) {
+            var accProps = Accommodations.Manager.getCurrentProps();
+            if (!accProps.isStreamlinedMode()) {
+                delete toolGroups['help'];
+            }
         }
 
         // remove any groups passed in
@@ -183,13 +193,22 @@
             startupFocus: false,
             baseFloatZIndex: 50, // allow showAlert dialogs to be higher than cke_dialog_background_cover and dialogs
             dialog_noConfirmCancel: true,
-            //tabSpaces: 4,  // Please see FB 147852 before changing this
             extraPlugins: 'clipboard,spellchecker,keymaphelp,tdsspecialchar',
             removePlugins: 'sharedSpaces,floatingspace,resize,tableresize,wordcount,specialchar',
             disableNativeSpellChecker: true,
             disableNativeTableHandles: true,
             height: '' // removes height attribute
         };
+
+        // Set tab in editor to perform indentation (by adding 4 spaces) or don't set it so that
+        //  tab retains our system function of moving to the next test element. It has been contested
+        //  how this should work so please read FB 161493 before modifying this
+        if (window.Accommodations) {
+            var accProps = Accommodations.Manager.getCurrentProps();
+            if (!accProps.isStreamlinedMode() && !accProps.hasBraille()) {
+                config.tabSpaces = 4;
+            }
+        }
 
         // create toolbar
         config.toolbar = createToolbar(responseType, addGroups, removeGroups);
@@ -257,7 +276,7 @@
     function createEditor(containerEl, responseType, configOverride) {
 
         // If we're in print mode and the mode wasn't manually set
-        if (ContentManager.isPrintMode() && !mode) {
+        if (window.ContentManager && ContentManager.isPrintMode() && !mode) {
             useInline = true;
         }
 
@@ -321,12 +340,8 @@ Any patches or hacks for CKEditor.
     CKEDITOR.on('dialogDefinition', function (e) {
         var dialogName = e.data.name;
         var dialog = e.data.definition.dialog;
-        dialog.on('show', function () {
-            YUD.addClass(document.body, 'showingDialog');
-        });
-        dialog.on('hide', function () {
-            YUD.removeClass(document.body, 'showingDialog');
-        });
+        dialog.on('show', TDS.Dialog.onShow);
+        dialog.on('hide', TDS.Dialog.onHide);
     });
 
     // BUG 116874 recommended solution for preventing drag&drop into editor
@@ -426,44 +441,70 @@ Any patches or hacks for CKEditor.
         };
     }
 
-})(CKEDITOR);
 
-// Check if user deleted everything
-(function (CKEDITOR) {
+    // This patch was created by taking the version of the function from CKEditor 4.4.3 and making a minor change
+    //  as noted at the bottom in an attempt to resolve some exceptions
+    CKEDITOR.dom.range.prototype.moveToBookmark = function (bookmark) {
+        if (bookmark.is2) // Created with createBookmark2().
+        {
+            // Get the start information.
+            var startContainer = this.document.getByAddress(bookmark.start, bookmark.normalized),
+                startOffset = bookmark.startOffset;
 
-    var charDiff = 10;
+            // Get the end information.
+            var endContainer = bookmark.end && this.document.getByAddress(bookmark.end, bookmark.normalized),
+                endOffset = bookmark.endOffset;
 
-    function instanceCreated(editor) {
+            // Set the start boundary.
+            this.setStart(startContainer, startOffset);
 
-        // the last text that was changed by this editor instance
-        var lastChange = '';
+            // Set the end boundary. If not available, collapse it.
+            if (endContainer)
+                this.setEnd(endContainer, endOffset);
+            else
+                this.collapse(true);
+        } else // Created with createBookmark().
+        {
+            var serializable = bookmark.serializable,
+                startNode = serializable ? this.document.getById(bookmark.startNode) : bookmark.startNode,
+                endNode = serializable ? this.document.getById(bookmark.endNode) : bookmark.endNode;
 
-        // check for when text is changed
-        editor.on('change', function (evt) {
+            // This is the only change to this function... basically we're validating that we REALLY
+            //  found a startNode before trying to use it. It has been found that some CSS causes the
+            //  editor to report an incorrect selection in FF which for the following case (and possibly others)
+            //  causes the start node to be deleted before it can be processed here:
+            //
+            // Starting with an empty editor create three lines with the letters a, b, and c on them
+            // Select the first two lines (a and b) and make them into a ordered/numbered list.
+            // Select all three lines and convert it to an unordered list.
+            // 
+            // That should trigger an exception. The root of this problem is actually in the CKEDITOR.dom.selection.getNative function
+            //  when it tries to get the native selection from the browser when a cached selection is not available. Ticket #13020
+            //  was opened in the CKEditor bug reporting system as a correct solution should involve somehow correcting this
+            //  native selection.
+            //
+            // Please also note that during selection and testing of various possible fixes different behavior was observed when
+            //  selecting from the last line (c) to the first line (a) when ending one's selection after the '1.', before the '1.',
+            //  and outside of the editor's border.
+            //
+            if (startNode) {
+                // Set the range start at the bookmark start node position.
+                this.setStartBefore(startNode);
 
-            // get editor text
-            var editable = editor.editable();
-            var text = editable.getText();
-
-            // remove all whitespaces
-            if (text) {
-                text = text.replace(/([\s\t\r\n]*)/gm, '');
+                // Remove it, because it may interfere in the setEndBefore call.
+                startNode.remove();
             }
 
-            // check if anyting has changed
-            if (text != lastChange && text.length == 0 && lastChange.length > charDiff) {
-                console.warn('EDITOR DELETE WARNING: ' + lastChange);
-            }
-
-            // save text for the next check
-            lastChange = text;
-
-        });
-        
+            // Set the range end at the bookmark end node position, or simply
+            // collapse it if it is not available.
+            if (endNode) {
+                this.setEndBefore(endNode);
+                endNode.remove();
+            } else
+                this.collapse(true);
+        }
     }
 
-    CKEDITOR.on('instanceCreated', function (ev) {
-        instanceCreated(ev.editor);
-    });
-    
 })(CKEDITOR);
+
+

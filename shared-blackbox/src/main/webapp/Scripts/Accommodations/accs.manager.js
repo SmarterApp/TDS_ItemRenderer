@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// holds a collection of accommodations and has a current accommodations set at any one time
 Accommodations.Manager =
 {
@@ -20,6 +28,10 @@ Accommodations.Manager.add = function(accommodations) {
         this.setDefault(id);
         this.setCurrent(id);
     }
+};
+
+Accommodations.Manager.getAll = function () {
+    return this._mapOfAccommodations.getValues();
 };
 
 Accommodations.Manager.get = function(id) {

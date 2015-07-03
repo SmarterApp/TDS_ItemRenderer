@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 CM TTS page plugin
 */
@@ -162,8 +170,7 @@ CM TTS page plugin
         }
         return false;
     });
-    
-    /*SB-1263*/
+
     PassagePlugin_TTS.prototype.load = function () {
         // initialize TTS
         TTS.createSingleton();
@@ -174,7 +181,7 @@ CM TTS page plugin
         var page = this.page;
         var passage = this.entity;
 
-        // we only support Firefox
+        // check if TTS is available yet
         if (!TTS.Manager.isAvailable()) return;
 
         //Create the text to speech menu defaults.

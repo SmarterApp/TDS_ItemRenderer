@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // MODE: DELETE POINT AND IMAGE
 Grid.Action.Delete = function(grid)
 {
@@ -31,11 +39,16 @@ Grid.Action.Delete.prototype.onMouseEvent = function(evt)
 		{
 			// check if someone clicked on a line directly
 			var targetEntity = this.model.getEntity(evt.target.id);
-			
-			if (targetEntity && targetEntity.getType() == 'line')
-			{
-				this.model.deleteLine(targetEntity);
+			if (targetEntity && targetEntity.getType() == 'line') {
+			    this.model.deleteLine(targetEntity);
+			} else if (evt.touch) {
+                // check if someone touched near a line
+			    var closestLine = this.canvas.getNearestLineFromEvent(evt);
+                if (closestLine) {
+                    this.model.deleteLine(closestLine);
+                }
 			}
+
 		}
 	}
 

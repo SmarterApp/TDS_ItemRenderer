@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿Sections.Logout = function()
 {
     Sections.Logout.superclass.constructor.call(this, 'sectionLogout');
@@ -22,11 +30,11 @@ Sections.Logout.prototype.requestApproval = function(skipCheck)
 
 Sections.Logout.prototype.load = function ()
 {
-    // if a test is selected then pause
+    // if a test is selected then pause (this scenario only occurs on login shell for sat)
     if (LoginShell.testSelection != null)
     {
         // pause test
-        TDS.Student.API.pauseTest().then(function() {
+        TDS.Student.API.pauseTest('login').then(function() {
             this.ready();
         }.bind(this));
 

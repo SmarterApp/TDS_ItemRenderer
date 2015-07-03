@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // Collection of MC/MS items
 var EBSR = function (xmlString, item) {
     this._xmlString = xmlString;
@@ -91,15 +99,17 @@ EBSR.prototype.populateStem = function () {
 
     // Get the contents from XML
     if (this._xmlString == null) return;
+
+    // build xml based on <itemBody>
     var xmlDoc = Util.Xml.parseFromString(this._xmlString);
-    var docEl = xmlDoc.documentElement;
+    var itemBodyNode = xmlDoc.documentElement;
 
-    // Remove the interactions, leaving the contents of the stem
-    var stemContent = $(docEl).children().not('choiceInteraction');
+    // remove all choice interactions
+    $('choiceInteraction', itemBodyNode).remove();
 
-    // Populate the stem with contents
-    // TODO: We should pass the stem container in and not look it up in the dom.
-    $("#Stem_" + this._position).html(stemContent.contents());
+    // write out stem html
+    $("#Stem_" + this._position).html(Util.Xml.innerHTML(itemBodyNode));
+
 };
 
 // Generate the HTML DOM structure for the EBSR item, and all sub-item interactions/options
@@ -228,5 +238,23 @@ EBSR.prototype.isValid = function() {
         }
     });
     return response;
+};
+
+// If no MC or MS option has been selected yet then this will be true. 
+EBSR.prototype.isEmpty = function() {
+    var interactions = this.getInteractions();
+    // all the interactions have to have no response to be empty
+    return interactions.every(function (interaction) {
+        var selected = interaction.options.getSelected();
+        if (interaction.type == 'MC') {
+            // MC is a string (null if no response)
+            return (!selected);
+        } else if (interaction.type == 'MS') {
+            // MS is an array
+            return selected.length == 0;
+        }
+        // interactions can only be MC/MS.. so can we ever get here? Bruce?
+        return true; 
+    });
 };
 

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Code for using the help guide popup and inline iframe.
 */
@@ -14,20 +22,25 @@ TDS.Help = (function (TDS) {
         var enabled = false;
         var that = this;
 
-        // add selectionchange event, to capture range before it is lost due to button touch
-        if (frame && Util.Browser.isMobile()) {
-            var frameDoc = Util.Dom.getFrameContentDocument(frame);
-            if (frameDoc) {
-                YUE.addListener(frameDoc, 'selectionchange', function(evt) {
-                    // Don't update selected range if Speak button is pressed
-                    if (evt && evt.target != btnStartTTS) {
-                        that.selection = rangy.getSelection(frameDoc);
-                    }
-                });
-            }
-        }
 
         //**************************public methods
+        this.handleMobileSelection = function(frame, btnStartTTS) {
+            var that = this;
+
+            // add selectionchange event, to capture range before it is lost due to button touch
+            if (frame && Util.Browser.isMobile()) {
+                var frameDoc = Util.Dom.getFrameContentDocument(frame);
+                if (frameDoc) {
+                    YUE.addListener(frameDoc, 'selectionchange', function(evt) {
+                        // Don't update selected range if Speak button is pressed
+                        if (evt && evt.target != btnStartTTS) {
+                            that.selection = rangy.getSelection(frameDoc);
+                        }
+                    });
+                }
+            }
+        };
+        
         this.init = function() {
             shouldEnableTTS();
             return enabled;
@@ -141,7 +154,7 @@ TDS.Help = (function (TDS) {
                         var selected = rangy.getSelection(doc);
                     }
                     var element = doc.getElementById('helpContent');
-                    ctrl.languageManager.addLanguageTags(element, language);
+                    tds.language.tagElements(element, language);
                     var entity = {};
                     entity.getElement = function() { return element; };
                     ctrl.setCurrentDomEntity(entity);
@@ -164,14 +177,21 @@ TDS.Help = (function (TDS) {
                         selection = prepSelection(frame, language);
                     }
                     // Bug JS exceptions make sure selection has a valid range before calling .playSelection()
-                    if (selection.getAllRanges().length) {
+                    // Don't play if audio is active
+                    if (selection.getAllRanges().length && !TDS.Audio.isActive()) {
                         ctrl.playSelection(selection, language);
                     }
                 } else {
                     if (typeof altFrame != 'undefined' && altFrame != null) {
-                        ctrl.play(Util.Dom.getFrameContentWindow(altFrame), TTS.Parser.Types.Selection, language);
+                        // Don't play if audio is active
+                        if (!TDS.Audio.isActive()) {
+                            ctrl.play(Util.Dom.getFrameContentWindow(altFrame), TTS.Parser.Types.Selection, language);
+                        }
                     } else {
-                        ctrl.play(Util.Dom.getFrameContentWindow(frame), TTS.Parser.Types.Selection, language);
+                        // Don't play if audio is active
+                        if (!TDS.Audio.isActive()) {
+                            ctrl.play(Util.Dom.getFrameContentWindow(frame), TTS.Parser.Types.Selection, language);
+                        }
                     }
                 }
             }
@@ -216,7 +236,8 @@ TDS.Help = (function (TDS) {
         noTTSMessageDiv = YUD.get(noTTSMessageDiv);
 
         //create a tts help container for this frame and attach a reset handler to it.
-        var tdsHelpFunctionality = new HelpGuide(frame, btnStartSpeaking);
+        var tdsHelpFunctionality = new HelpGuide(frame);
+        tdsHelpFunctionality.handleMobileSelection(frame, btnStartSpeaking);
 
         var disableTTS = function() {
             var hasTTSInstrAccommmodation = tdsHelpFunctionality.hasTTSInstrAccommodationEnabled();
@@ -333,6 +354,16 @@ TDS.Help = (function (TDS) {
                     if (label == Messages.get('TDSContentJS.Label.StartSpeaking')) {
                         button = thatPanel.getButtons()[counter1];
                         button.addClass('ttsHelpSpeakButtonClass');
+                        // add startSpeaking handlers, touchstart for mobile, click for all others
+                        var startSpeakingEvt = Util.Browser.isMobile() ? 'mousedown' : 'click';
+                        button.removeListener('click');
+                        button.addListener(startSpeakingEvt, function () {
+                            var handler = tdsHelpFunctionality.getStartSpeakingHandler();
+                            handler(null, thatPanel.getFrame());
+                        });
+                        var btnStartSpeaking = button._button;
+                        tdsHelpFunctionality.handleMobileSelection(thatPanel.getFrame(), btnStartSpeaking);
+                        
                     } else if (label == Messages.get('TDSContentJS.Label.StopSpeaking')) {
                         button = thatPanel.getButtons()[counter1];
                         button.addClass('ttsHelpStopSpeakButtonClass');
@@ -356,13 +387,13 @@ TDS.Help = (function (TDS) {
                     YAHOO.util.Dom.addClass(panel.footer, 'noTTS');
                     YAHOO.util.Dom.removeClass(panel.footer, 'hasTTS');
                 }
-            };
+            }.bind(this);
 
             // when showing help reset TTS
             panel.showEvent.subscribe(function() {
                 tdsHelpFunctionality.reset(false);
                 oninited(panel);
-            });
+            }.bind(this));
 
             // stop TTS on panel hide. 
             panel.hideEvent.subscribe(function() {
@@ -372,7 +403,7 @@ TDS.Help = (function (TDS) {
             tdsHelpFunctionality.onReset.subscribe(function() { oninited(panel); });
             tdsHelpFunctionality.init();
 
-            YAHOO.util.Event.onDOMReady(function() {
+            YAHOO.util.Event.onDOMReady(function () {
                 TTS.getInstance();
             });
         }

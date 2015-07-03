@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// REQUIRES: util.js
 
 (function(Util) {
@@ -65,44 +73,53 @@
         return evt;
     };
 
-    var EventMap = {
-        'start': Hammer.INPUT_START,
-        'move': Hammer.INPUT_MOVE,
-        'end': Hammer.INPUT_END
-    };
+    function addEventListener(type, el, listener, useCapture) {
 
-    // a hammerjs recognizer for determing when input event starts
-    // INPUT_START, INPUT_MOVE, INPUT_END
-    function DOMRecognizer(inputType, options) {
-        this.inputType = inputType;
-        Hammer.Recognizer.call(this, options);
+        // event event listener
+        el.addEventListener(type, listener, useCapture);
+
+        // return object to remove event
+        return {
+            destroy: function () {
+                el.removeEventListener(type, listener, useCapture);
+            }
+        }
+        
     }
 
-    Hammer.inherit(DOMRecognizer, Hammer.Recognizer);
+    // generic event listener
+    E.on = function (type, el, listener, useCapture) {
 
-    DOMRecognizer.prototype.process = function (input) {
-        // check if the input matches and the target hasn't changed
-        if (input.eventType & this.inputType) {
-            return Hammer.STATE_RECOGNIZED;
+        el = Util.Dom.get(el);
+
+        if (!el) {
+            throw new Error('Element not found');
         }
-        return Hammer.STATE_FAILED;
+
+        useCapture = useCapture || false;
+
+        return addEventListener(type, el, listener, useCapture);
+
     };
-    
-    // listen for event on element (start, move, end)
-    E.addTouchMouse = function(name, el, callback) {
-        var manager = new Hammer.Manager(el);
-        var events = name.split(' ');
-        events.forEach(function(event) {
-            var inputType = EventMap[event];
-            if (inputType) {
-                manager.add(new DOMRecognizer(inputType, { event: event }));
-            }
-        });
-        manager.on(name, function (evt) {
-            var normalizedEvent = E.normalize(evt.srcEvent);
-            callback(normalizedEvent);
-        });
-        return manager;
+
+    var EventMap = {
+        'start': 'pointerdown',
+        'move': 'pointermove',
+        'end': 'pointerend'
+    };
+
+    // add event listener to element
+    // TODO: This uses pointer events.. once this is working well remove this function
+    E.addTouchMouse = function (name, el, listener) {
+
+        var type = EventMap[name];
+
+        if (!type) {
+            throw new Error('Unknown event name: ' + name);
+        }
+
+        return E.on(type, el, listener);
+
     };
 
     Util.Event = E;

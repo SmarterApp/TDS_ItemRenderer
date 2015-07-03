@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Text To Speach mode for MC/MS.
 When Mode is active, modal window covers everything except interaction options
@@ -37,10 +45,10 @@ Selecting an interaction option will invoke TTS on that option, and exit mode
     Modes.register('tts-option', Mode_TTSOption);
 
     // this is called when someone clicks on an option
-    Mode_TTSOption.prototype.select = function (el) {
-        var languages = CM.getLanguage() == 'ESN' ? ['ESN', 'ENU'] : ['ENU'];
-        var ttsMenu = new TTS.Menu(languages);
-        var menuCfg = ttsMenu.addFocusedOption(null, el);
+    Mode_TTSOption.prototype.select = function (el, evt) {
+        var language = tds.language.getITSFromXml(evt.target.lang);
+        var ttsMenu = new TTS.Menu();
+        var menuCfg = ttsMenu.addFocusedOption(null, el, language);
         if (menuCfg && menuCfg.PRI && menuCfg.PRI.cb) {
             menuCfg.PRI.cb();
         }
@@ -101,7 +109,7 @@ Selecting an interaction option will invoke TTS on that option, and exit mode
         if (component && isSpeakable(component) && CM.Menu.isContextEvent(evt)) {
             // toggle individual option TTS
             menuCfg = ttsMenu.addFocusedOption(null, component);
-        } else if (hasMenuButton) {
+        } else if (hasMenuButton && TTS.Manager.getStatus() != TTS.Status.NotSupported) {
             // enter into TTS Speak Option mode
             menuCfg = ttsMenu.addMode(null, function() {
                 CM.Modes.enable('tts-option');

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/**************/
 /* PROPERTIES */
 /**************/
@@ -253,6 +261,10 @@
         return this.isSelected('Item Response Reset', 'TDS_ItemReset1');
     };
 
+    PropsProto.hasResponseRecovery = function () {
+        return this.isSelected('Item Response Recovery', 'TDS_IRR1');
+    };
+
     // check if we should load the classic test shell
     PropsProto.isTestShellClassic = function() {
         return this.isSelected('Test Shell', 'TDS_TS_Classic');
@@ -373,7 +385,7 @@
     •	TDS_TPI_Percent – Show “10% completed” and performs test length adjust when test is completed. 
     */
     PropsProto.getTestProgressIndicator = function() {
-        return this.getSelectedCode('Test Progress Indictator') || 'TDS_TPI_Responses';
+        return this.getSelectedCode('Test Progress Indicator') || 'TDS_TPI_Responses';
     };
 
     // check if system volume control is enabled
@@ -455,6 +467,11 @@
     // should we use a list view on the review shell
     PropsProto.isReviewScreenLayoutListView = function () {
         return this.isSelected('Review Screen Layout', 'TDS_RSL_ListView');
+    };
+
+    // Check how we should prefetch items. 
+    PropsProto.prefetchAnyItem = function () {
+        return this.isSelected('Prefetch Item Rules', 'TDS_PIR_Any');
     };
     
     Accs.Properties = Props;

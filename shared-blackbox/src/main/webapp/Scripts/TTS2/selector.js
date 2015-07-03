@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿TTS = window.TTS || {};
 TTS.Parse = window.TTS.Parse || {};
 
@@ -100,7 +108,9 @@ TTS.Parse.Selector = function (sel, lang) {
                     break;
                 case TTS.Parse.TTSNodeTypes.Other:
                     //in this case, there is no parsenode returned because this tree only stores the leaf nodes (sort of, since compound speak creates a tree)
-                    collectChildren(node, offset);
+                    if (!ttsSameNode(node, _end)) {  // Bug 163978 - If selection ends in an Element node, don't parse it's children
+                        collectChildren(node, offset);
+                    }
                     break;
                 default:
                     TTS.getInstance().Error(new Error('Error in TTSSelector.  Unexpected node type in collect nodes: ' + ttsNodeType));

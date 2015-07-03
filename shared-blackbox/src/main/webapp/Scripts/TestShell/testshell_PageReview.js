@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Test shell page that contains the segment review screen.
 */
@@ -55,36 +63,64 @@ TestShell.PageReview.prototype.hide = function()
 };
 
 // update review information
-TestShell.PageReview.prototype.show = function()
-{
-    // set html
-    var divList = this._divReview.getElementsByTagName('ul')[0];
-    divList.innerHTML = '';
+TestShell.PageReview.prototype.show = function() {
+
+    // get list container
+    var listEl = null;
+    if (this._divReview) {
+        listEl = $('ul', this._divReview).get(0);
+    }
+
+    // make sure list exists
+    if (!listEl) {
+        return;
+    }
+
+    // clear out existing questions
+    listEl.innerHTML = '';
 
     // get segment groups
     var groups = this._segment.getGroups();
 
-    // filter groups to show only enabled
-    groups = Util.Array.filter(groups, function(group) { return group.isEnabled(); });
+    groups.forEach(function(group) {
 
-    Util.Array.each(groups, function(group)
-    {
-        var btnReview = HTML.A({ href: '#' }, '' + group.getLabel());
-
-        if (group instanceof TestShell.PageGroup && group.hasMark())
-        {
-            YUD.addClass(btnReview, 'marked');
+        // ignore disabled groups
+        if (!group.isEnabled()) {
+            return;
         }
 
-        YUE.on(btnReview, 'click', function()
-        {
-            TestShell.UI.Nodes.ddlNavigation.value = group.id;
-            TestShell.Navigation.change();
+        group.items.forEach(function(item) {
+
+            // TODO: This code is mostly copied from section_TestReview. We need a way to share it.
+            var el = document.createElement('li');
+            var linkEl = document.createElement('a');
+            linkEl.href = '#';
+            $(linkEl).click(function (evt) {
+                YUE.stopEvent(evt);
+                TestShell.UI.Nodes.ddlNavigation.value = group.id;
+                TestShell.Navigation.change();
+            });
+            $(linkEl).text(item.position);
+            var label = 'Question';
+            if (item.mark) { // marked
+                $(linkEl).addClass('marked');
+                label += ' marked for review';
+            }
+            if (!item.isAnswered()) { // answered
+                $(linkEl).addClass('unanswered');
+                if (item.mark) { // marked
+                    label += ' and';
+                }
+                label += ' unanswered';
+            }
+            linkEl.setAttribute('title', label);
+            el.appendChild(linkEl);
+            listEl.appendChild(el);
+
         });
 
-        divList.appendChild(HTML.LI(null, btnReview));
     });
-
+    
     ContentManager.Renderer.show(this._divReview);
     TestShell.PageManager.Events.fire('onShow', this);
 };

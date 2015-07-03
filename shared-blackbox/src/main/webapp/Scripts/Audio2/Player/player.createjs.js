@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Audio player abstraction implementation for createjs.
 NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems with recorder. 
@@ -134,6 +142,9 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
             // create a sound instance to allow control of playback
             this._sounds[id] = sound = createjs.Sound.createInstance(id);
 
+            // mark the sound as loaded
+            sound.air_loading = false;
+
             var self = this;
 
             // bind to its succeeded (onPlayStart) and complete (onPlayFinished) events
@@ -150,6 +161,7 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
             }, this, false, id);
 
             sound.on('complete', function (event, id) {
+                this.onTimeUpdate[id].fire(this.getDuration(id));
                 this.onFinish.fire(id);
                 this.onIdle.fire(id);
                 sound.air_playState = '';
@@ -157,7 +169,18 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
 
             // execute commands which were invoked for this sound prior to it being loaded by createjs
             for (var i = 0; i < commands.length; ++i) {
-                this[commands[i]](id);
+                var command = commands[i];
+
+                if (!command.name) {
+                    // build command from simplified command-name
+                    command = { name: command, arguments: [] }
+                }
+
+                // add id as first argument
+                command.arguments.unshift(id);
+
+                // execute command
+                this[command.name].apply(this, command.arguments);
             }
         },
 
@@ -236,7 +259,7 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
                 return false;
             }
 
-            if (sound.loading) {
+            if (sound.air_loading) {
                 sound.commands.push('play');
             } else {
                 // fire before play event (which can be cancelled by the event handler)
@@ -253,6 +276,23 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
             return true;
         },
 
+        _stop: function (sound, onStop) {
+            // stop always returns true, but we need to know if sound was actually playing (for firing events below)
+            // pause only returns true if the sound was playing and it succeeds
+            wasPlaying = sound.air_playState === 'playing' && sound.pause();
+            wasPaused = sound.air_playState === 'paused';
+
+            // createjs does not safely stop a WebAudio sound when it is already paused
+            // we force the sound to play so that we can stop it and leave it in a consistent state
+            // note: this proplem appears to be fixed in soundjs 0.6.0
+
+            (wasPlaying || wasPaused) && (sound.resume(), sound.stop());
+
+            typeof onStop === 'function' && onStop(wasPlaying, wasPaused);
+
+            return wasPlaying;
+        },
+
         stop: function (id) {
             var sound = this._sounds[id];
 
@@ -262,28 +302,19 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
 
             var wasPlaying, wasPaused;
 
-            if (sound.loading) {
+            if (sound.air_loading) {
                 var lastCommand = sound.commands[sound.commands.length - 1];
                 wasPlaying = lastCommand === 'play' || lastCommand === 'resume';
                 sound.commands.push('stop');
             } else {
-                // stop always returns true, but we need to know if sound was actually playing (for firing events below)
-                // pause only returns true if the sound was playing and it succeeds
-                wasPlaying = sound.air_playState === 'playing' && sound.pause();
-                wasPaused = sound.air_playState === 'paused';
+                wasPlaying = this._stop(sound, function (wasPlaying, wasPaused) {
+                    this.onTimeUpdate[id].fire(0);
 
-                // createjs does not safely stop a WebAudio sound when it is already paused
-                // we force the sound to play so that we can stop it and leave it in a consistent state
-                // note: this proplem appears to be fixed in soundjs 0.6.0
-
-                (wasPlaying || wasPaused) && (sound.resume(), sound.stop());
-
-                this.onTimeUpdate[id].fire(0);
-
-                if (wasPlaying || wasPaused) {
-                    this.onStop.fire(id);
-                    this.onIdle.fire(id);
-                }
+                    if (wasPlaying || wasPaused) {
+                        this.onStop.fire(id);
+                        this.onIdle.fire(id);
+                    }
+                }.bind(this));
             }
 
             sound.air_playState = '';
@@ -308,7 +339,7 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
 
             var ret;
 
-            if (sound.loading) {
+            if (sound.air_loading) {
                 ret = sound.commands[sound.commands.length - 1] === 'pause';
                 sound.commands.push('resume');
             } else {
@@ -341,7 +372,7 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
 
             var wasPlaying;
 
-            if (sound.loading) {
+            if (sound.air_loading) {
                 var lastCommand = sound.commands[sound.commands.length - 1];
                 wasPlaying = lastCommand === 'play' || lastCommand === 'resume';
                 sound.commands.push('pause');
@@ -363,7 +394,7 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
                 ids = Object.keys(self._sounds);
             return !!ids.length && ids.some(function(id) {
                 var sound = self._sounds[id];
-                return (sound.loading ? sound.commands[sound.commands.length - 1] === 'play' : sound.air_playState === 'playing');
+                return (sound.air_loading ? sound.commands[sound.commands.length - 1] === 'play' : sound.air_playState === 'playing');
             });
         },
 
@@ -374,22 +405,42 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
 
         getDuration: function (id) {
             var sound = this._sounds[id];
-            return sound ? (sound.getDuration() / 1000) : 0;
+            return sound && !sound.air_loading ? (sound.getDuration() / 1000) : 0;
         },
 
         setPosition: function (id, time) {
             var sound = this._sounds[id];
-            if (sound) {
-                sound.setPosition(Math.floor(time * 1000));
-                if (sound.air_playState !== 'playing') {
-                    this.onTimeUpdate[id].fire(time);
-                }
+
+            if (!sound) {
+                return;
+            }
+
+            if (sound.air_loading) {
+                sound.commands.push({ name: 'setPosition:', arguments: [time] });
+            } else {
+                // createjs poorly handles seeking when audio is paused, so our best
+                // option is to always make sure the audio is stopped; we can resume
+                // playback after seeking, if necessary
+                this._stop(sound, function (wasPlaying, wasPaused) {
+                    sound.setPosition(Math.floor(time * 1000));
+
+                    if (wasPaused) {
+                        // need to return it to the paused state, which we can only do from the playing state
+                        // unfortunately, this causes a lot superfluous events to be fired
+                        // note: this proplem appears to be fixed in soundjs 0.6.0
+                        this.play(id);
+                        this.pause(id);
+                    } else if (wasPlaying) {
+                        sound.play();
+                        this.onTimeUpdate[id].fire(time);
+                    }
+                }.bind(this));
             }
         },
 
         getPosition: function (id) {
             var sound = this._sounds[id];
-            return sound ? (sound.getPosition() / 1000) : 0;
+            return sound && !sound.air_loading ? (sound.getPosition() / 1000) : 0;
         },
 
         canPlaySource: function (source) {
@@ -441,7 +492,7 @@ NOTE: Do not call initializeDefaultPlugins() in a IIFE. This causes problems wit
             }
 
             this._sounds[id] = {
-                loading: true,
+                air_loading: true,
                 air_playState: '',  // createjs's playState indicates playing and paused as the same state; we'll keep track for ourself
                 commands: []
             };

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /* The internal blackbox API */
 
 var Blackbox = {};
@@ -26,7 +34,15 @@ Blackbox.fireEvent = function(name, obj) {
     if (parentBlackboxFunc) {
         parentBlackboxFunc(window, name, obj);
     }
+
+    Blackbox.events.fire(name);
 };
+
+Blackbox.events = new Util.Event.Emitter();
+
+Blackbox.events.create('init', { fireOnce: true });
+Blackbox.events.create('available', { fireOnce: true });
+Blackbox.events.create('ready', { fireOnce: true });
 
 Blackbox.getConfig = function() {
     return (typeof blackboxConfig == 'object') ? blackboxConfig : {};
@@ -251,6 +267,7 @@ Blackbox.loadContent = function (contentRequest, forceReload) {
 
     // CORS: https://developer.mozilla.org/en-US/docs/HTTP_access_control
 
+    // Sb-1040: Following two lines need to be used to read request body for item content request
     // NOTE: We need to use 'text/plain' or request will be preflighted
     YAHOO.util.Connect.setDefaultPostHeader(false); // allow custom 'Content-Type'
     YAHOO.util.Connect.initHeader('Content-Type', 'text/plain');

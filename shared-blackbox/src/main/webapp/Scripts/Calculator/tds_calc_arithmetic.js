@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // ******************** arithmetic calculator *************************
 /*
 Arithmetic calculator supports basic arithmetic operations such as multiplication, division etc 
@@ -64,37 +72,40 @@ ArithmeticCalc.prototype.getRadianOrDegree = function () {
 };
 
 //clear text input when C, CE, or Backspace button pressed. ANS and memory need to be resset
-ArithmeticCalc.prototype.clearInput = function(id)
-{
+ArithmeticCalc.prototype.clearInput = function(id) {
     var inputarea = this.getInputArea();
     if ((id == 'C') || (id == 'CE')) {
         inputarea.value = '';
         if (id == 'C') {
             this.resetImmEvalFlags();
-            
+
             document.getElementById('memorystatus').value = '';
             document.getElementById('memorystatusStandard').value = '';
             memoryValue = '';
-            
+
             var ANSBtn = document.getElementById("ANS");
             if (!YAHOO.util.Dom.hasClass(ANSBtn, 'disabled')) YAHOO.util.Dom.addClass(ANSBtn, 'disabled');
             ANSBtn.setAttribute('disabled', 'disabled');
-            
+
             var RCLBtn = document.getElementById("RCL");
             if (!YAHOO.util.Dom.hasClass(RCLBtn, 'disabled')) YAHOO.util.Dom.addClass(RCLBtn, 'disabled');
             RCLBtn.setAttribute('disabled', 'disabled');
-            
+
             this.ANS = null;
         }
-    } 
-    else if (id == 'delete')
-    {    
+    } else if (id == 'delete') {
         CaretPositionUtils.applyDeleteKeyPress(inputarea);
-    }
-    else {
+    } else {
         CaretPositionUtils.applyBackspaceKeyPress(inputarea);
     }
-}
+
+    // this clear input method may lead an empty input area, then there will be no need to replace input area value when new input behavior happens, so no reason to keep resultClearFlag as true.
+    // bug: otherwise, it may cause negative-sign-input after calculation be replaced by following input values.
+    if (inputarea.value == '' && this.immediateEvalFlag.resultClearFlag == true) {
+        this.immediateEvalFlag.resultClearFlag = false;
+    }
+
+};
 
 
 ArithmeticCalc.prototype.getOutputArea = function() {

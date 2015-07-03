@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// REQUIRES: SecureBrowser.Base.js, Summit/air_mobile.js
 
 TDS.SecureBrowser.Mobile = TDS.SecureBrowser.Mobile || {};
@@ -10,6 +18,7 @@ TDS.SecureBrowser.Mobile.Android = function () {
     this._config = { pausedSinceLaunch: false, keyboardChanged: false, clipboardChanged: false };
     this._airMobile = (new Summit.SecureBrowser.Mobile()).getNativeBrowser();
     this._airMobile.initialize();
+    this._textSelected = { rangyValue: null };
 };
 
 YAHOO.lang.extend(TDS.SecureBrowser.Mobile.Android, TDS.SecureBrowser.Base);
@@ -17,6 +26,7 @@ YAHOO.lang.extend(TDS.SecureBrowser.Mobile.Android, TDS.SecureBrowser.Base);
 TDS.SecureBrowser.Mobile.Android.prototype.initialize = function () {
     var sb = this._airMobile;
     var config = this._config;
+    var textSelected = this._textSelected;
 
     // wait for SB to be ready
     sb.listen(sb.EVENT_DEVICE_READY, window.document, function () {
@@ -49,6 +59,10 @@ TDS.SecureBrowser.Mobile.Android.prototype.initialize = function () {
         });
     });
 
+    sb.listen(sb.EVENT_TEXT_SELECTED, window.document, function () {
+        textSelected.rangyValue = window.rangy.getSelection(document);
+    });
+
 };
 
 TDS.SecureBrowser.Mobile.Android.prototype.isEnvironmentSecure = function () {
@@ -56,10 +70,13 @@ TDS.SecureBrowser.Mobile.Android.prototype.isEnvironmentSecure = function () {
     return result;
 };
 
+TDS.SecureBrowser.Mobile.Android.prototype.getSelectedText = function () {
+    return this._textSelected.rangyValue;
+};
 
 // Returns a handle to the native browser engine.
 TDS.SecureBrowser.Mobile.Android.prototype.getRunTime = function () {
     return this._airMobile;
-}
+};
 
 

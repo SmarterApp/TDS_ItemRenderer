@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// ******************** Linear Algebra (Matrices) Calculator ********************
 /* Currently we support matrix operations including plus, minus, multiplication and inverse. 
  * There are existing Javascript packages that we can directly use them to perform matrix calculation. 
@@ -450,7 +458,6 @@ LinearalgebraCalc.prototype.createMatrixInput = function()
                 input.setAttribute('type', 'text');
                 input.setAttribute('name', '');
 
-                input.setAttribute('onkeypress', 'return CalcKeyPressProcess(this,event)');
                 input.setAttribute('onfocus', 'return CalcFocusGained(this, event)');
 
                 td.appendChild(input);

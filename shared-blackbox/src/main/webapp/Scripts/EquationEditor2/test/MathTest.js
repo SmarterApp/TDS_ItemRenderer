@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 var MATH_TO_TEST = ['<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mstyle displaystyle="true"><mn>1</mn><mi>x</mi><mo>≤</mo><mn>3</mn></mstyle></math>',
     '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mstyle displaystyle="true"><mn>2</mn><mi>x</mi><mo>-</mo><mn>3</mn><mo>=</mo><mn>2</mn><mi>x</mi><mo>-</mo><mn>5</mn></mstyle></math>',
     '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mstyle displaystyle="true"><mn>7</mn><mi>x</mi></mstyle></math>',

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// REQUIRES: util.js, util_dom.js
 
 Util.Frame = { };
@@ -137,6 +145,23 @@ Util.Frame.create = function(id, parent)
     return iframe;
 };
 
+// get all iframes including nested ones for a given doc(could be an iframe)
+// putting it in util file because this is not only used by tools in tds_toolManager.js, but also tutorial dialog in content_dialog.js
+Util.Frame.getFrames = function (doc) {
+
+    var frames = doc.tagName.toLowerCase() == 'iframe' ? [doc] : [],
+        $nestedFrame = $(doc).find('iframe');
+
+    if ($nestedFrame.length > 0) {
+
+        $nestedFrame.each(function() {
+            frames.concat(Util.Frame.getFrames($nestedFrame.contents()));
+        });
+    }
+
+    return frames;
+};
+
 Util.Frame.addEnhancements = function(iframe)
 {
     // add new functionality to iframes
@@ -146,9 +171,8 @@ Util.Frame.addEnhancements = function(iframe)
 
         loadState: 0,
 
-        getDebugID: function()
-        {
-            return this.id.replace('iframe_', '')
+        getDebugID: function() {
+            return this.id.replace('iframe_', '');
         },
 
         // get the iframe ready to load

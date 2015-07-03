@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function (exports) {
 
     function SlideshowManager() {
@@ -278,25 +286,25 @@
 
         prev.addEventListener('click', function () {
             self.goPrev();
-        });
+        }, false);
 
         play.addEventListener('click', function () {
             self.play();
 
             pause.classList.remove('hidden');
             play.classList.add('hidden');
-        });
+        }, false);
 
         pause.addEventListener('click', function () {
             self.pause();
 
             pause.classList.add('hidden');
             play.classList.remove('hidden');
-        });
+        }, false);
 
         next.addEventListener('click', function () {
             self.goNext();
-        });
+        }, false);
     };
 
     Slideshow.prototype._createSlider = function (container) {

@@ -187,36 +187,37 @@
 
             var editable = editor.editable();
 
-            editable.on('mouseup', function () {
-                setTimeout(function () {
+            var mouseupTimeout;
+
+            // Use editor.document instead of editable in non-IEs for observing mouseup
+            // since editable won't fire the event if selection process started within
+            // iframe and ended out of the editor (#9851).
+            editable.attachListener(CKEDITOR.env.ie ? editable : editor.document.getDocumentElement(), 'mouseup', function () {
+                clearTimeout(mouseupTimeout);
+                mouseupTimeout = setTimeout(function () {
                     setToolbarStates(); // <-- update cut/copy/paste buttons
                 }, 0);
             });
 
-            editable.on('keyup', setToolbarStates); // <-- update cut/copy/paste buttons
-
-            // check if iframe
-            if (editor.document && editor.document.$ != document) {
-
-                var mouseupTimeout;
-
-                // Use editor.document instead of editable in non-IEs for observing mouseup
-                // since editable won't fire the event if selection process started within
-                // iframe and ended out of the editor (#9851).
-                editable.attachListener(CKEDITOR.env.ie ? editable : editor.document.getDocumentElement(), 'mouseup', function () {
+            // Touch devices weren't highlighting the cut/copy buttons when text was selected so we have to account for
+            // touchend events, but 
+            if ('ontouchend' in window) {
+                editable.attachListener(CKEDITOR.env.ie ? editable : editor.document.getDocumentElement(), 'touchend', function () {
+                    clearTimeout(mouseupTimeout);
                     mouseupTimeout = setTimeout(function () {
                         setToolbarStates(); // <-- update cut/copy/paste buttons
                     }, 0);
                 });
-
-                // Make sure that deferred mouseup callback isn't executed after editor instance
-                // had been destroyed. This may happen when editor.destroy() is called in parallel
-                // with mouseup event (i.e. a button with onclick callback) (#10219).
-                editor.on('destroy', function () {
-                    clearTimeout(mouseupTimeout);
-                });
-                
             }
+
+            // Make sure that deferred mouseup callback isn't executed after editor instance
+            // had been destroyed. This may happen when editor.destroy() is called in parallel
+            // with mouseup event (i.e. a button with onclick callback) (#10219).
+            editor.on('destroy', function () {
+                clearTimeout(mouseupTimeout);
+            });
+
+            editable.on('keyup', setToolbarStates); // <-- update cut/copy/paste buttons
         }
 
         // Create object representing Cut or Copy commands.
@@ -256,16 +257,16 @@
                     pasteHtml();
                     event.cancel();
                     return;
-                    // Copy
+                // Copy
                 case CKEDITOR.CTRL + 67: // CTRL+C
                     cutCopyHtml('copy');
                     event.cancel();
                     return;
-                    // Cut
+                // Cut
                 case CKEDITOR.CTRL + 88: // CTRL+X
+                    editor.fire('saveSnapshot');
                     cutCopyHtml('cut');
                     event.cancel();
-                    editor.fire('saveSnapshot');
                     return;
             }
         }
@@ -274,6 +275,7 @@
             if (editor.mode != 'wysiwyg') {
                 return;
             }
+
             editor.getCommand('cut').setState(stateFromNamedCommand('Cut'));
             editor.getCommand('copy').setState(stateFromNamedCommand('Copy'));
             editor.getCommand('paste').setState(stateFromNamedCommand('Paste'));
@@ -285,8 +287,6 @@
                 return CKEDITOR.TRISTATE_DISABLED;
             }
 
-            var retval;
-
             if (inReadOnly && command in { Paste: 1, Cut: 1 }) {
                 return CKEDITOR.TRISTATE_DISABLED;
             }
@@ -297,15 +297,14 @@
                 } else {
                     return CKEDITOR.TRISTATE_DISABLED;
                 }
-            }
-                // Cut, Copy - check if the selection is not empty
-            else {
+            } else {
+                // Cut, Copy - check if the selection is not empty            
                 var sel = editor.getSelection(),
-                    ranges = sel.getRanges();
-                retval = sel.getType() != CKEDITOR.SELECTION_NONE && !(ranges.length == 1 && ranges[0].collapsed);
-            }
+                    ranges = sel.getRanges(),
+                    selectionIsEmpty = sel.getType() == CKEDITOR.SELECTION_NONE || (ranges.length == 1 && ranges[0].collapsed);
 
-            return retval ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED;
+                return selectionIsEmpty ? CKEDITOR.TRISTATE_DISABLED : CKEDITOR.TRISTATE_OFF;
+            }
         }
     }
 

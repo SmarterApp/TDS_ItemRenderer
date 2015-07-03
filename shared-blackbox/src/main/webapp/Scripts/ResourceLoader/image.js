@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// image loader
 // note: src can be an image already added to the page or just a url
 ResourceLoader.Image = function(src, timeoutInterval, retriesMax)
@@ -51,8 +59,14 @@ ResourceLoader.Image.prototype.load = function()
     return true;
 };
 
-// handles image events (READY_STATE_CHANGE, LOAD, ABORT, and ERROR)
-ResourceLoader.Image.prototype._onEvent = function(evt)
+// handles dom image events
+ResourceLoader.Image.prototype._onEvent = function(evt) {
+    // BUG 160415: DOMParser can trigger image load events so we need to schedule them
+    setTimeout(this._processEvent.bind(this, evt), 0);
+};
+
+// process image events (READY_STATE_CHANGE, LOAD, ABORT, and ERROR)
+ResourceLoader.Image.prototype._processEvent = function(evt)
 {
     this._stopTimer();
 
@@ -116,7 +130,7 @@ ResourceLoader.Image.prototype._onEvent = function(evt)
 
 ResourceLoader.Image.prototype._attachEvents = function()
 {
-    var loadEvent = YAHOO.env.ua.ie ? 'readystatechange' : 'load';
+    var loadEvent = (YAHOO.env.ua.ie && YAHOO.env.ua.ie < 11) ? 'readystatechange' : 'load';
     YUE.addListener(this._img, loadEvent, this._onEvent, this, true);
     YUE.addListener(this._img, 'abort', this._onEvent, this, true);
     YUE.addListener(this._img, 'error', this._onEvent, this, true);
@@ -124,7 +138,7 @@ ResourceLoader.Image.prototype._attachEvents = function()
 
 ResourceLoader.Image.prototype._removeEvents = function()
 {
-    var loadEvent = YAHOO.env.ua.ie ? 'readystatechange' : 'load';
+    var loadEvent = (YAHOO.env.ua.ie && YAHOO.env.ua.ie < 11) ? 'readystatechange' : 'load';
     YUE.removeListener(this._img, loadEvent, this._onEvent);
     YUE.removeListener(this._img, 'abort', this._onEvent);
     YUE.removeListener(this._img, 'error', this._onEvent);

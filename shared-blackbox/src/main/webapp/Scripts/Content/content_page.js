@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/* Init */
 
 (function(CM) {
@@ -637,11 +645,15 @@
 
         }
 
+        // FB 160134 - This is a bit of a hack initially intended for OS X Safari where we add and then remove a class to trigger a re-rendering of the page
+        $('body').addClass('tds-contentRedraw');
+
         // fire show event
         this.fire('show');
 
-        // fire after show event on a seperate thread
+        // fire after show event on a separate thread
         YAHOO.lang.later(1, this, function () {
+            $('body').removeClass('tds-contentRedraw');
             this.fire('afterShow');
         });
 

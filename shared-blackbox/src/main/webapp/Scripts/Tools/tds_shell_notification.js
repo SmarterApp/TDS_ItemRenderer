@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Test shell notifications.
 */
@@ -19,14 +27,19 @@ TDS.Shell.Notification = (function() {
 
     function show() {
         $(SELECTOR_CONTAINER).removeClass('alertClosed');
+        $(SELECTOR_DISMISS).attr('aria-expanded', 'true');
     }
 
     function hide() {
         $(SELECTOR_CONTAINER).addClass('alertClosed');
+        $(SELECTOR_DISMISS).attr('aria-expanded', 'false');
     }
 
     function toggle() {
         $(SELECTOR_CONTAINER).toggleClass('alertClosed');
+        $(SELECTOR_DISMISS).attr('aria-expanded', function (index, value) {
+            return !value || value === 'false' ? 'true' : 'false';
+        });
     }
 
     function remove(numToShow) {
@@ -40,6 +53,10 @@ TDS.Shell.Notification = (function() {
         $(SELECTOR_DISMISS).click(function (evt) {
             YUE.stopEvent(evt);
             toggle();
+        }).keyup(function (evt) {
+            if (evt.which === 32) {
+                toggle();
+            }
         });
         isInit = true;
     }

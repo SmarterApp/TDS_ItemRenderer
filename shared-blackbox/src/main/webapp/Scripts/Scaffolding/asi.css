@@ -12,9 +12,10 @@
 	position: relative;
 	min-height: 6.5em;
 }
-.asi-stem p {
+.asi-stem p, .asi-stem table {
 	padding: 0.2em 0.2em 0.2em 7em;
 }
+
 /*.asi-stem p img {
 	height: 200px;
 }*/
@@ -259,3 +260,12 @@
 }
 
 /* end Multiple Choice rebuild */
+
+/* ASI table stem CSS fixes*/
+.asi-stem table{
+  max-width: 100%;
+}
+
+.asi-stem table p{
+	padding: 0.2em;
+}

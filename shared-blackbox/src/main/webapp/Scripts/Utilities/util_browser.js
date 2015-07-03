@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// REQUIRES: util_event.js, YUI
 
 /*
@@ -147,7 +155,12 @@ https://github.com/faisalman/ua-parser-js/
     Browser.isAndroid = function () {
         return (YAHOO.env.ua.android > 0);
     };
-
+    
+    // check if this is a certified device
+    Browser.isCertified = function() {
+        return typeof(window.browser) == 'object';
+    };
+    
     // check if this browser supports touch events
     Browser.isTouchDevice = function () {
         return SUPPORT_TOUCH;
@@ -219,7 +232,7 @@ https://github.com/faisalman/ua-parser-js/
 
         var chromeAppCheck = YUD.hasClass(document.body, 'browser_airsecurebrowser');
 
-        return clientSideCheck || serverSideCheck || extensionCheck || chromeAppCheck;
+        return clientSideCheck || serverSideCheck || extensionCheck || chromeAppCheck || Browser.isCertified();
     };
 
     Browser.getSecureVersion = function () {

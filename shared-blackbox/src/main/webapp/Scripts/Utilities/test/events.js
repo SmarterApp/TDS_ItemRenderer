@@ -1,4 +1,12 @@
-/// <reference path="../../Libraries/YUI/yahoo/yahoo.js" />
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
+/// <reference path="../../Libraries/yahoo/yui2/build/yahoo/yahoo.js" />
 /// <reference path="../util_event_custom.js" />
 /// <reference path="../util_event_emitter.js" />
 

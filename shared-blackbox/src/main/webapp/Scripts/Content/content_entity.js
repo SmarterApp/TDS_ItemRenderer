@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function(CM) {
 
     function Entity(page, bankKey, itemKey, filePath) {
@@ -126,11 +134,11 @@
 
             // add mouse listener
             // YUE.on(toolEl, 'mousedown', callback);
-            Util.Event.addTouchMouse('start', toolEl, callback);
+            toolEl.addEventListener('pointerdown', callback);
 
             // add key listener
             (new YAHOO.util.KeyListener(toolEl, {
-                keys: 13
+                keys: [32, 13]
             }, {
                 fn: callback
             })).enable();

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// entry point into the javascript from the login shell
 function init() {
     LoginShell.init();
@@ -12,11 +20,10 @@ var LoginShell = {
     satellite: null, // the sat info for geo
     session: null, // current session
     testee: null, // current student
-    testeeForms: null, // current testee forms (from RTS)
     testSelection: null, // current test
-    testForms: null, // current test forms
+    formGroups: null, // all the available form groups
+    formKeys: null, // the selected form group keys (only available in data entry mode)
     testApproved: false, // is the test approved
-    formSelection: null, // selected form key (only in data entry mode)
     segmentsAccommodations: null, // all segments accommodations
     proctor: null // ProctorLoginInfo object (to be appended to LoginInfo object)
 };
@@ -304,8 +311,7 @@ LoginShell.clearLoginInfo = function() {
 
 LoginShell.clearTestSelection = function() {
     this.testSelection = null;
-    this.testForms = null;
-    this.testeeForms = null;
+    this.formGroups = null;
     this.segmentsAccommodations = null;
 };
 
@@ -438,8 +444,7 @@ LoginShell.setOppInfo = function(oppInfo) {
     TDS.Student.Storage.setOppInfo(oppInfo);
 
     // set forms for test verify screen 
-    this.testForms = oppInfo.testForms;
-    this.testeeForms = oppInfo.testeeForms;
+    this.formGroups = oppInfo.formGroups;
 };
 
 LoginShell.setTestAccommodations = function (segmentsAccommodations) {
@@ -552,6 +557,9 @@ LoginShell.setMozillaPreferences = function () {
         // disable checking SSL certificate validity
         Mozilla.setPreference('security.OCSP.enabled', 0);
 
+        // disable browser auto update
+        Mozilla.setPreference('app.update.enabled', false);
+
         // shut off Shift+scroll for back and next browsing
         // (ref: http://kb.mozillazine.org/Firefox_:_FAQs_:_About:config_Entries#Mousewheel.)
 
@@ -633,6 +641,11 @@ LoginShell.setMozillaPreferences = function () {
         
         // close any other secure browser windows that might be hiding in the background
         LoginShell.closeAllOtherBrowserWindows();
+
+        // disable the development tool window for Secure Browser 7.x (bug # 169134)
+        if (Util.Browser.getSecureVersion() >= 7 && Util.Browser.getSecureVersion() < 8) {
+            Util.SecureBrowser.disableDevToolWindow();
+        }
     });
 
     if (success) {

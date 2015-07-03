@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// REQUIRES: SecureBrowser.Base.js, Summit/air_mobile.js
 
 
@@ -56,8 +64,9 @@ TDS.SecureBrowser.Mobile.iOS.prototype.initialize = function () {
 
     this.checkAutonomousGuidedAccess = function () {
         if (typeof (isAutonomousGuidedAccessEnabled) == 'undefined') {
-            // determine whether autonomous guided access is available
-            if (Util.Browser.getIOSVersion() >= 7) {
+            // Determine whether autonomous guided access is available. ASAM will cause the browser to crash on iOS 7.0.x,
+            // so we limit the use of ASAM to iOS 7.1 or later versions.
+            if (Util.Browser.getIOSVersion() >= 7.1) {
                 isAutonomousGuidedAccessEnabled = TDS.getAppSetting('sb.iosAutonomousGuidedAccessAllowed', false);
             } else {
                 isAutonomousGuidedAccessEnabled = false;
@@ -74,9 +83,8 @@ TDS.SecureBrowser.Mobile.iOS.prototype.initialize = function () {
         isLockedDown = lockdown;
         if (!lockdown) {
             hasBeenBackgrounded = false;
-            // Disable guided access when lockdown is lifted. Guided access can be disabled autonomously only when it was enabled autonomously
-            // by the browser itself. So no need to check if the autonomous guided access is available here.
-            if (guidedAccessMode == 'enabled') {
+            // Disable guided access when lockdown is lifted.
+            if (this.checkAutonomousGuidedAccess() && guidedAccessMode == 'enabled') {
                 secBrowser.enableGuidedAccess(lockdown, null, function (enableResults) {
                     if (enableResults.didSucceed) {
                         guidedAccessMode = 'disabled';

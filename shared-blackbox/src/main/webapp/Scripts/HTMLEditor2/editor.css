@@ -125,7 +125,7 @@
 }
 .cke_contents.cke_reset iframe {
 	position: relative;
-    top: 2px;
+    /*top: 2px; CKEditor Fix*/
 }
 .cke_browser_ios .cke_contents.cke_reset iframe {
 	height: 99% !important
@@ -153,3 +153,52 @@ div.cke_dialog_contents_body {
 }
 
 /* @end */
+.pageWrapper.hiding .editor .cke_inner a.skipTools {
+	display: none;
+}
+.editor .cke_inner a.skipTools {
+	display: block;
+	position: absolute;
+	visibility: visible;
+	height: 0px;
+	width: 0px;
+	overflow: hidden;
+	left: -900px;
+}
+.editor .cke_inner a.skipTools:focus, 
+.editor .cke_inner a.skipTools:active
+{
+    overflow: inherit;
+    width: auto;
+    height: auto;
+    z-index: 1;
+    padding: 5px;
+    font-size: 14px;
+    -webkit-box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, .9);
+	-moz-box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, .9);
+	box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, .9);
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #0099d4;
+    border: solid 1px #fff;
+    text-decoration: none;
+    font-weight: bold; 
+    margin-top: -2px;
+    left: 38px; 
+    outline: none;
+}
+/* make the spellcheck button and dropdown appear as part of the same group */
+.spellcheckGroup .cke_toolgroup {
+	margin-right: 0px !important;
+	border-right: none !important;
+	-moz-border-radius: 3px 0 0 3px;
+	-webkit-border-radius: 3px 0 0 3px;
+	border-radius: 3px 0 0 3px;
+}
+.spellcheckGroup .cke_combo_button {
+    -moz-border-radius: 0px 3px 3px 0px;
+	-webkit-border-radius: 0px 3px 3px 0px;
+	border-radius: 0px 3px 3px 0px;
+}

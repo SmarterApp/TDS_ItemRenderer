@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿Sections.Login = function()
 {
     Sections.Login.superclass.constructor.call(this, 'sectionLogin');
@@ -7,7 +15,8 @@
         txtLoginSessionID: YUD.get('loginSessionID') ? [YUD.get('loginSessionID')] : [YUD.get('loginSessionID1'), YUD.get('loginSessionID2'), YUD.get('loginSessionID3')],
         cbUser: YUD.get('cbUser'),
         cbSession: YUD.get('cbSession'),
-        btnLogin: YUD.get('btnLogin')
+        btnLogin: YUD.get('btnLogin'),
+        btnLogout: YUD.get('btnLogout')
     };
 
     // Events: checkboxes
@@ -19,6 +28,10 @@
     this.addClick(this.Controls.cbSession, function()
     {
         this.disableSessionInput(this.Controls.cbSession.checked);
+    });
+
+    this.addClick(this.Controls.btnLogout, function () {
+        TDS.logout();
     });
 };
 
@@ -71,6 +84,14 @@ Sections.Login.prototype.setSessionID = function (value) {
     }
 };
 
+Sections.Login.prototype.enter = function () {
+    if (TDS.isProctoredAssessmentPreview()) {
+        // switch to GUEST user and sign in
+        this.disableUserInput(true);
+        this.validate();
+    }
+};
+
 Sections.Login.prototype.load = function ()
 {
     // clear previous student and reset accommodations
@@ -82,11 +103,8 @@ Sections.Login.prototype.load = function ()
     // the check if the browser has been backgrounded
     if (Util.Browser.isSecure()) {
         if (Util.Browser.isWindows()) {
-            // For Windows, we attempt to lock down while launching the Secure Browser if
-            // AssistX is required. The Secure Browser is locked down the first time we load the
-            // login page, and is unlockd while we close the browser.
-            var whitelist = TDS.getAppSetting('sb.assistxWhitelist', '');
-            Util.SecureBrowser.enableLockDown(true, whitelist);
+            // For Windows, we attempt to lock down while launching the Secure Browser
+            Util.SecureBrowser.enableLockDown(true);
         } else {
             Util.SecureBrowser.enableLockDown(false);
         }
@@ -95,20 +113,6 @@ Sections.Login.prototype.load = function ()
     var loginForm = YUD.get('loginForm');
 
     loginForm.onsubmit = function () {
-
-        // Test to verify that local storage is working... otherwise thing will fail silectly later resulting
-        //  in much user frustration.
-        try {
-            Util.Storage.set('storageTest', '');
-        } catch (ex) {
-            if (ex.name.toLowerCase() === 'quotaexceedederror') {
-                var localStorageErrorMsg = Messages.getAlt('Login.Message.LocalStorageError', 'Unable to use local storage on your device. Please disable Private browsing if enabled');
-                TDS.Dialog.showAlert(localStorageErrorMsg, function () { return; });
-            }
-            return false;
-        }
-        Util.Storage.remove('storageTest'); // Clean Up
-
         this.validate();
         return false; // cancels form submission
     }.bind(this);
@@ -289,6 +293,19 @@ Sections.Login.prototype.disableSessionInput = function(disabled)
 // validate the login fields and submit to the server for authentication
 Sections.Login.prototype.validate = function ()
 {
+    // Test to verify that local storage is working... otherwise thing will fail silectly later resulting
+    //  in much user frustration.
+    try {
+        Util.Storage.set('storageTest', '');
+    } catch (ex) {
+        if (ex.name.toLowerCase() === 'quotaexceedederror') {
+            var localStorageErrorMsg = Messages.getAlt('Login.Message.LocalStorageError', 'Unable to use local storage on your device. Please disable Private browsing if enabled');
+            TDS.Dialog.showAlert(localStorageErrorMsg, function () { return; });
+        }
+        return false;
+    }
+    Util.Storage.remove('storageTest'); // Clean Up
+
     //Check if the environment is secure in case we are using a secure browser
     if (Util.Browser.isSecure() && !TDS.Debug.ignoreBrowserChecks) {
         var securityCheckResult = Util.SecureBrowser.canEnvironmentBeSecured();

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿////////////////////////////////
 // Program logic.  Handles all the interactions that ASI item supports.
 ////////////////////////////////
@@ -51,7 +59,7 @@ AsiItem.Interaction = function (asiHtmlObject, parser, voiceGuidance) {
     this.hasPlayedOnce = false;
 
     // Audio for the feedback responses
-    this._feedbackCues = [];
+    this._feedbackCues = {};
 
     // Actual response Identifiers
     this._responseIdentifiers = [];
@@ -101,7 +109,6 @@ AsiItem.Interaction.prototype.startInteraction = function (valueToRestore) {
     //ensure audio is preloaded
     if (this._voiceGuidance) {
         //Collect all audio references for the current item such as Stem, Response and Feedback
-        //playercontent
         var playerContent = [];
 
         //insert stem audio
@@ -129,11 +136,14 @@ AsiItem.Interaction.prototype.startInteraction = function (valueToRestore) {
             playerContent.push(track);
 
             //add feedback if any
-            var feedbackSpanId = this._html.createSpanId('feedback-' + i.toString());
-            if (choiceContent[i].audioCue) {
+            // Bug 162614: add the feedback audio to the feedback span, not the 
+            // cue audio a second time.
+            if (choiceContent[i].feedback &&
+                choiceContent[i].feedback.audioCue) {
+                var feedbackSpanId = this._html.createSpanId('feedback-' + i.toString());
                 track = {
                     id: feedbackSpanId,
-                    url: choiceContent[i].audioCue,
+                    url: choiceContent[i].feedback.audioCue,
                     audioData: null
                 };
                 playerContent.push(track);
@@ -244,7 +254,7 @@ AsiItem.Interaction.prototype.constructAudioTag = function (parentDiv) {
     YUE.addListener(audioWidgetSpan, 'click', AsiItem.Interaction.handlePlayAudioButton, this);
 };
 
-// The user has clicked on one of the anwers, process the response.
+// The user has clicked on one of the answers, process the response.
 AsiItem.Interaction.prototype.processResponse = function (span) {
 
     if (this._isPlaying || this._isResponsePlaying || this._isFeedbackPlaying) {
@@ -262,7 +272,7 @@ AsiItem.Interaction.prototype.processResponse = function (span) {
         this.complete = true;
         this.terminateInteraction();
     } else if ((this.complete == false) && (this.responsesLeft == 0)) {
-        // User has chosen all the incorrect resposnes.  Don't allow any more
+        // User has chosen all the incorrect responses.  Don't allow any more
         // interaction per the requirements.
         this.complete = true;
         this.terminateInteraction();
@@ -281,9 +291,8 @@ AsiItem.Interaction.prototype.processResponse = function (span) {
             this._html.subdueResponses(this._responseSpanIds);
             this._html.disableResponses(this._responseSpanIds);
             this._html.subduePlayIcon(this.audioWidget);
-            var hap = new AsiItem.AudioInterface();
-            hap.add(this._feedbackCues[fid], fid, null,
-                AsiItem.Interaction.handleEndFeedbackAudio, this);
+            var hap = this._audioFactory.createAudioInterface();
+            hap.add(this._feedbackCues[fid], fid, function() {}, AsiItem.Interaction.handleEndFeedbackAudio, this);
             hap.start();
         } else {
             AsiItem.Interaction.handleEndFeedbackAudio(fid, this);
@@ -297,7 +306,7 @@ AsiItem.Interaction.prototype.processResponse_noVoiceGuidance = function (span) 
     this.responsesLeft--;
 
     // Find the span that was clicked.
-    var fspan = this._html.getRelatedFeedbackSpan(span);
+    //var fspan = this._html.getRelatedFeedbackSpan(span);
     var spid = YUD.getAttribute(span, 'id');
     this._responseIdentifiers.push(this._spanToIdentifierMap[spid]);
 
@@ -383,7 +392,7 @@ AsiItem.Interaction.handleResponseAudioButton = function (ev, instance) {
     if (instance.isReadOnly())
         return;
     YUE.stopEvent(ev);
-    if ((instance._isResponsePlaying) && (instance._responsePlayer)) {
+    if (instance._isResponsePlaying && instance._responsePlayer) {
         AsiItem.EventLog('handleResponseAudioButton - playing, treat like stop');
         instance._responsePlayer.stop();
         return;
@@ -444,7 +453,7 @@ AsiItem.Interaction.prototype.playAudioResponse = function (audioArray) {
         AsiItem.EventLog('complete');
         return;
     }
-    this._responsePlayer = new AsiItem.AudioInterface();
+    this._responsePlayer = this._audioFactory.createAudioInterface();
     var self = this;
     var startPlaying = function () {
         AsiItem.EventLog('playAudioResponse - startPlaying');
@@ -616,7 +625,7 @@ AsiItem.Interaction.prototype.populateResponseAudio = function (audioObject, res
     audioObject.lastChoiceToPlay = 'A';
     for (var i = 0; i < this._responseSpanIds.length; ++i) {
         var spid = this._responseSpanIds[i];
-        var span = YUD.get(spid);
+        //var span = YUD.get(spid);
         var choice = this._html.getResponseChoice(spid);
         if ((responseId == null) || (responseId == choice)) {
             if (!this.hasResponseBeenChosen(spid)) {
@@ -705,7 +714,8 @@ AsiItem.Interaction.prototype.populateResponses = function (parentDiv) {
         // Feedback might have an audio cue.  Save the cue so we can play it
         // if we end up displaying this feedback span.
         if (feedbackContent.audioCue) {
-            this._feedbackCues[this._html.createSpanId('feedback-' + choice.identifier)] = feedbackContent.audioCue;
+            var spanId = this._html.createSpanId('feedback-' + choice.identifier);
+            this._feedbackCues[spanId] = feedbackContent.audioCue;
             this._playbackInfo.playStemAudio = false;
         }
 

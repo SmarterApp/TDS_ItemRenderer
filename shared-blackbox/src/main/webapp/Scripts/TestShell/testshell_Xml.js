@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿TestShell.Xml = {};
 
 (function(TestShell) {
@@ -9,6 +17,7 @@
         xml += 'action="update" ';
         xml += 'eventID="' + data.id + '" ';
         xml += 'timestamp="' + data.timestamp + '" ';
+        xml += 'currentPage="' + data.currentPage + '" ';
         xml += 'lastPage="' + data.lastPage + '" ';
         xml += 'prefetch="' + data.prefetch + '" ';
         xml += '>';
@@ -55,20 +64,22 @@
         xml += 'id="' + item.id + '" ';
         xml += 'bankKey="' + item.bankKey + '" ';
         xml += 'itemKey="' + item.itemKey + '" ';
-        xml += 'segmentID="' + item.page.segmentID + '" ';
-        xml += 'pageKey="' + item.page.pageKey + '" ';
-        xml += 'dateCreated="' + item.page.dateCreated + '" ';
-        xml += 'page="' + item.page.pageNum + '" ';
+
+        if (item.page) {
+            xml += 'segmentID="' + item.page.segmentID + '" ';
+            xml += 'pageKey="' + item.page.pageKey + '" ';
+            xml += 'page="' + item.page.pageNum + '" ';
+        }
+
         xml += 'position="' + item.position + '" ';
         xml += 'sequence="' + item.sequence + '" ';
         xml += 'selected="' + item.isSelected + '" ';
         xml += 'valid="' + item.isValid + '" ';
         xml += '>';
 
-        var contentItem = item.getContentItem();
-
         // add file path
-        xml += '<filePath>' + (contentItem.filePath || '') + '</filePath>';
+        var contentItem = item.getContentItem();
+        xml += '<filePath>' + (contentItem && contentItem.filePath || '') + '</filePath>';
 
         // add response value
         xml += '<value>';
@@ -241,6 +252,7 @@
         // page
         var type = getAttrib(pageNode, 'type');
         var pageNum = getAttribInt(pageNode, 'number');
+        var prefetched = getAttribBool(pageNode, 'prefetched');
 
         // <segment>
         var segmentNode = getNode('segment', pageNode);
@@ -251,16 +263,15 @@
         var groupNode = getNode('group', pageNode);
         var groupID = getAttrib(groupNode, 'id');
         var pageKey = getAttrib(groupNode, 'key');
-        var dateCreated = getAttrib(groupNode, 'created');
-        var numRequired = getAttrib(groupNode, 'required');
+        var numRequired = getAttribInt(groupNode, 'required');
 
         // create page group
         var page = new TestShell.PageGroup();
         page.id = groupID;
         page.pageNum = pageNum;
         page.pageKey = pageKey;
-        page.dateCreated = dateCreated;
         page.numRequired = numRequired;
+        page.prefetched = prefetched;
         page.segment = segmentPos;
         page.segmentID = segmentID;
 
@@ -290,8 +301,7 @@
         item.isSelected = getAttribBool(itemNode, 'selected');
         item.isRequired = getAttribBool(itemNode, 'required');
         item.isValid = getAttribBool(itemNode, 'valid');
-        item.prefetched = getAttribBool(itemNode, 'prefetched');
-
+        
         return item;
     };
     

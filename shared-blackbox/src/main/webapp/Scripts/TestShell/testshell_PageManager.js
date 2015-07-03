@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 This file is responsible for managing a collection of pages. A group returned from
 the adaptive algorithm is considered a page. 
@@ -81,6 +89,23 @@ TestShell.PageManager.getResponse = function(position) {
         }
     }
 
+    return null;
+};
+
+// get the test shell item for a content manager item
+TestShell.PageManager.getItem = function(contentItem) {
+    if (contentItem instanceof ContentItem) {
+        var contentPage = contentItem.getPage();
+        if (contentPage instanceof ContentPage) {
+            var page = TestShell.PageManager.get(contentPage.id);
+            if (page instanceof TestShell.PageGroup) {
+                var item = page.getResponse(contentItem.position);
+                if (item instanceof TestShell.Item) {
+                    return item;
+                }
+            }
+        }
+    }
     return null;
 };
 
@@ -283,13 +308,15 @@ TestShell.PageManager._addGroup = function(group) {
         }
     }
 
-    // PREFETCH CONTENT: When getting back a group from XHR we need to make a decision on whether to preload
-    // its content. If the group we are getting was directly because of prefetch then we should always load
-    // its content. However if we are resuming a test then we need to be more careful and only load the content
-    // for item groups that are not completed.
-    // BUG: When first starting a test any optional pages are not prefetched with below logic.
-    if (!this._initializing || !group.isCompleted()) {
-        group.requestContent();
+    // if we are using the prefetch any mode then we rely on the user viewing a page to prefetch (prefetch.js)
+    if (!TestShell.Prefetch.isSupported()) {
+        // PREFETCH CONTENT: When getting back a group from XHR we need to make a decision on whether to preload
+        // its content. If the group we are getting was directly because of prefetch then we should always load
+        // its content. However if we are resuming a test then we need to be more careful and only load the content
+        // for item groups that are not completed.
+        if (!this._initializing || !group.isCompleted()) {
+            group.requestContent();
+        }
     }
 
     // check for duplicate items
@@ -313,17 +340,18 @@ TestShell.PageManager.addGroups = function(groups) {
     // add each group
     Util.Array.each(groups, this._addGroup, this);
 
+    var currentPage = this.getCurrent();
+
     // check if this is the first time loading this page
     if (this._initializing) {
         // set the current group to the last one the student saw
-        if (this.getCurrent() == null) {
+        if (currentPage == null) {
             this.setCurrent(groups[groups.length - 1]);
         }
-
         this._initializing = false;
     } else {
         // if there is no current group then set to the first new group received
-        if (this.getCurrent() == null) {
+        if (currentPage == null) {
             this.setCurrent(groups[0]);
         }
     }
@@ -341,6 +369,7 @@ TestShell.PageManager.addGroups = function(groups) {
 
     // check if one of the groups we received should be shown
     TestShell.Navigation.requestPage();
+
 };
 
 // add a review page
@@ -439,6 +468,9 @@ TestShell.PageManager.updateAccommodations = function(currentPage) {
 
     // remove and set accommodations
     Accommodations.Manager.updateCSS(document.body, currentAccs.getId());
+
+    // fire event notifying that we have switched accommodations
+    TestShell.Events.fire('changeAccommodations', currentAccs, previousAccs);
 };
 
 // Listen for when page group is shown (testshell).
@@ -506,6 +538,7 @@ TestShell.PageManager.Events.subscribe('onShow', function(page) {
         }
     }
 
+    var isInitial = TestShell.Navigation.getState();
     // NOTE: the show event might have a focus event, so this needs to be last
     setTimeout(function() {
         // if this is a content page and ARIA is enabled then focus on the content div
@@ -513,7 +546,16 @@ TestShell.PageManager.Events.subscribe('onShow', function(page) {
             // set text to speak for JAWS
             var screenReaderText = page.getScreenReaderText();
             if (screenReaderText) {
-                TDS.ARIA.setStatus(screenReaderText);
+                var contentPage = page.getContentPage();
+                if (contentPage) {
+                    var container = contentPage.getContainer();
+                    var statusEl = TDS.ARIA.setStatus(container.parentElement, screenReaderText);
+
+                    // focus on start of content if this isn't the first time on first page of test
+                    if (isInitial != TestShell.Navigation.State.Initializing) {
+                        $(statusEl).focus();
+                    }
+                }
             }
         } else {
             // BUG #22684: Focus stays on NEXT button

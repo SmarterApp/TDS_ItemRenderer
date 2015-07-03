@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 This module is used for loading Swiffy animations.
 */
@@ -9,6 +17,7 @@ This module is used for loading Swiffy animations.
         var processed = false;
         var scriptUrl = ContentManager.resolveBaseUrl('Scripts/Libraries/');
         var pageLinks = parentEl.getElementsByTagName('a');
+        pageLinks = Array.prototype.slice.call(pageLinks); // Convert from HTMLCollection to Array
         YUD.batch(pageLinks, function (pageLink) {
             if (AnimationManager.canPlayHTML5(pageLink)) {
                 AnimationManager.injectHTML5(pageLink, scriptUrl);

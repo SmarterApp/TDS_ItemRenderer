@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 Grid.Canvas = function(grid)
 {
     this.grid = grid;
@@ -233,6 +241,74 @@ Grid.Canvas.prototype.stopAction = function()
     return true;
 };
 
+// find the closest point to x,y
+Grid.Canvas.prototype.getNearestPoint = function (x, y, tolerance) {
+    tolerance = tolerance > 0 ? tolerance : this.model.options.selectionTolerance;
+    var targetPoint = new Point2D(x, y);
+    var closestPoint = null;
+    var closestDistance = +Infinity;
+    var points = this.model.getPoints();
+    for (var i = 0; i < points.length; i++) {
+        var point = points[i];
+        var distance = targetPoint.distanceFrom(point);
+        if (distance <= tolerance &&
+            distance < closestDistance) {
+            closestDistance = distance;
+            closestPoint = point;
+        }
+    }
+    return closestPoint;
+};
+
+Grid.Canvas.prototype.getNearestPointFromEvent = function (evt) {
+    var x = evt.clickedPosition.x,
+        y = evt.clickedPosition.y;
+    return this.getNearestPoint(x, y);
+};
+
+// find the closest line to x,y
+Grid.Canvas.prototype.getNearestLine = function (x, y, tolerance) {
+    tolerance = tolerance > 0 ? tolerance : this.model.options.selectionTolerance;
+    var targetPoint = new Point2D(x, y);
+    var closestLine = null;
+    var closestDistance = +Infinity;
+    var lines = this.model.getLines();
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        var distance = line.distanceFromPoint(targetPoint);
+        if (distance <= tolerance &&
+            distance < closestDistance) {
+            closestDistance = distance;
+            closestLine = line;
+        }
+    }
+    return closestLine;
+};
+
+Grid.Canvas.prototype.getNearestLineFromEvent = function (evt) {
+    var x = evt.clickedPosition.x,
+        y = evt.clickedPosition.y;
+    return this.getNearestLine(x, y);
+};
+
+
+// get entity by dom event
+Grid.Canvas.prototype.getFocusableEntity = function (evt) {
+
+    // get entity directly by id
+    var entity = this.model.getEntity(evt.target.id);
+    if (entity && entity.isFocusable()) {
+        return entity;
+    }
+
+    // if touch event then look for nearest point
+    if (evt.touch) {
+        return this.getNearestPointFromEvent(evt);
+    }
+
+    return null;
+};
+
 // call this function when a point stops moving
 Grid.Canvas.prototype.finalizePoint = function(point)
 {
@@ -370,11 +446,14 @@ Grid.Canvas.prototype._checkForMouseFocus = function(evt)
     if (evt.target == null) return;
 
     // get mouse event object
-    var entity = this.model.getEntity(evt.target.id);
+    var entity = this.getFocusableEntity(evt);
 
     // check if allows focus
-    if (entity && entity.isFocusable()) this.setFocused(entity);
-    else this.clearFocused();
+    if (entity && entity.isFocusable()) {
+        this.setFocused(entity);
+    } else {
+        this.clearFocused();
+    }
 };
 
 // this function is responsible for figuring out if the mouse event should trigger an action

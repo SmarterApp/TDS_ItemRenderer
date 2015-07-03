@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /** **************************************************************************
 * @class AnimationRenderer
 * @superclass SimItem
@@ -154,6 +162,9 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
                     }
                     
                     if (sim.getAccessibilityIFActive()) {
+                        // get any animation output right away
+                        movie.animationInput(simID, 'command', Simulator.Constants.OUTPUT_REQ_CMD);
+                        debug('Requesting animation output since accessibilityIF is true');
                         // send 'finished' event right away in accessibility mode
                         simulateAnimationExecutionTime();
                         requestAltText(movie); // request alt text with each new trial (allows for input-specific alt text)
@@ -294,6 +305,8 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
             iFrame.id = iFrameID;
             iFrame.width = wsize - 5;
             iFrame.height = hsize - 5;
+            if (sim.getAccessibilityIFActive()) // if in streamlined mode, we need to load animation, but it shouldn't be visible - override: height = 0
+                iFrame.height = 0;
             debug('iFrame.height = ' + iFrame.height + ', iFrame.width = ' + iFrame.width);
             iFrame.border = 0;
             iFrame.scrolling = 'no';
@@ -301,6 +314,7 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
             // force setting the iFrame height, and override any existing css settings
             iFrame.setAttribute('style', 'height:' + iFrame.height + 'px !important');
             iFrame.setAttribute('class', 'centeredAnimation');
+            iFrame.setAttribute('aria-hidden', 'true'); // WCAG
             if (initialRender) holderDiv.appendChild(iFrame);
             iFrame.onload = function () {
                 debug("iFrame is loaded");
@@ -487,6 +501,8 @@ Simulator.Animation.AnimationRenderer = function (sim, thePanel, animationSet) {
             } else {
                 hsize = panel.getOriginalHeight() - 10;
             }
+            if (sim.getAccessibilityIFActive()) // if in streamlined mode, we need to load animation, but it shouldn't be visible - override: height = 0
+                hsize = 0;
             if ((panel.getOriginalWidth() == null) || (panel.getOriginalWidth() <= 0)) {
                 wsize = panel.getWidth() - 10;
             } else {

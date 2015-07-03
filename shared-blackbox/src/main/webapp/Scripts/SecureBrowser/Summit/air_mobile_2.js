@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 if (typeof Summit != 'object') Summit = {};
 if (typeof Summit.SecureBrowser != 'object') Summit.SecureBrowser = {};
 
@@ -118,6 +126,15 @@ Summit.SecureBrowser.Mobile = function () {
 	    /** (Internal)Command to request that the device report the status of speach playback
 	     @constant */
 	    CMD_CHECK_SPEAK_STATUS: "cmdCheckSpeakStatus",
+        /** (Internal)Command to set pitch for text to speech
+	     @constant */
+	    CMD_TTS_SETPITCH: "cmdSetPitch",
+        /** (Internal)Command to set rate for text to speech
+	     @constant */
+	    CMD_TTS_SETRATE: "cmdSetRate",
+        /** (Internal)Command to set volume for text to speech
+	     @constant */
+	    CMD_TTS_SETVOLUME: "cmdSetVolume",
 	    /** (Internal)Command to request that the device exit the application. Currently android only.
          @constant */
 	    CMD_EXIT_APPLICATION: "cmdExitApplication",
@@ -188,7 +205,10 @@ Summit.SecureBrowser.Mobile = function () {
         /** Event dispatched by the document when the application has detected a change in the contents of the clipboard.
          * When the event is dispatched, the contets of the clipboard, if available, are supplied via the events data property.
         @constant */
-        EVENT_CLIPBOARD_CHANGED : "airMobile_clipboard_changed",
+        EVENT_CLIPBOARD_CHANGED: "airMobile_clipboard_changed",
+        /** Event dispatched by the document when some text has been selected
+         @constant */
+        EVENT_TEXT_SELECTED: "airMobile_text_selected",
 
 	    /**
 	     *  @ignore @private Registered callbacks.
@@ -348,7 +368,22 @@ Summit.SecureBrowser.Mobile = function () {
              @type String */
             startTime : "unknown",
 
-            ttsVoices : "unknown",
+	        /** A list of voice packs supported by the browser.
+             @type String */
+            ttsVoices: "unknown",
+
+	        /** tts pitch.
+             @type integer */
+            ttsPitch: 0,
+
+	        /** tts rate.
+             @type integer */
+            ttsRate: 0,
+
+	        /** tts volume.
+             @type integer */
+            ttsVolume: 0,
+
 
 		    /** Check if the device can currently take screenshots. For iphone OS,
 		     *  this returns true when guided access is disabled, false otherwise. On
@@ -783,6 +818,11 @@ Summit.SecureBrowser.Mobile = function () {
             this.device.startTime = results.startTime;
             this.device.macAddress = results.macAddress;
             this.device.ttsVoices = results.availableTTSLanguages;
+            if (results.ttsSettings != null) {
+                this.device.ttsPitch = results.ttsSettings.pitch;
+                this.device.ttsRate = results.ttsSettings.rate;
+                this.device.ttsVolume = results.ttsSettings.volume;
+            }
 
 		    this.dispatchEvent(this.EVENT_DEVICE_READY);
 
@@ -1048,6 +1088,14 @@ Summit.SecureBrowser.Mobile = function () {
                 var results = JSON.parse(_parameters, null);
 
                 return this.dispatchMessageEvent(this.EVENT_CLIPBOARD_CHANGED, results.contents);
+        },
+
+        /** Called when the some text has been selected.
+	     *  
+	     */
+        ntvOnTextSelected: function (_parameters) {
+
+            return this.dispatchEvent(this.EVENT_TEXT_SELECTED);
         },
 
 	    /** Dispatch an event using the document; with the given name.
@@ -1388,6 +1436,45 @@ Summit.SecureBrowser.Mobile = function () {
             getVoices : function(){
                 return AIRMobile.device.ttsVoices;
             },
+
+            getPitch: function () {
+                return AIRMobile.device.ttsPitch;
+            },
+
+            setPitch: function (pitch){
+                AIRMobile.device.ttsPitch = pitch;
+                var params = {
+                    pitch: pitch
+                };
+
+                AIRMobile.sendToApp(AIRMobile.CMD_TTS_SETPITCH, JSON.stringify(params, null, true));
+            },
+
+            getRate: function () {
+                return AIRMobile.device.ttsRate;
+            },
+
+            setRate: function (rate) {
+                AIRMobile.device.ttsRate = rate;
+                var params = {
+                    rate: rate
+                };
+
+                AIRMobile.sendToApp(AIRMobile.CMD_TTS_SETRATE, JSON.stringify(params, null, true));
+            },
+
+            getVolume: function () {
+                return AIRMobile.device.ttsVolume;
+            },
+
+            setVolume: function (volume) {
+                AIRMobile.device.ttsVolume = volume;
+                var params = {
+                    volume: volume
+                };
+
+                AIRMobile.sendToApp(AIRMobile.CMD_TTS_SETVOLUME, JSON.stringify(params, null, true));
+            }
         },
     };
 
@@ -2105,4 +2192,4 @@ Summit.SecureBrowser.Mobile = function () {
     window.AIRMobile = AIRMobile;
 
     this.getNativeBrowser = function () { return AIRMobile; };
-}
+};

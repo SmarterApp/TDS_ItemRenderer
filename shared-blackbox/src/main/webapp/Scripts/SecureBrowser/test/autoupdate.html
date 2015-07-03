@@ -1,0 +1,134 @@
+﻿<html>
+<head>
+    <title>SB Auto Update Test Page</title>
+</head>
+<body onload="CreateAutoUpdate();">
+    <script src="../autoupdate.js"></script>
+    <script type="text/javascript">
+
+        var AutoUpdater;
+
+        function displayInfo() {
+
+            var div = document.getElementById("status");
+
+            var a = [];
+            for (var i = 0; i < arguments.length; ++i) {
+                a.push(arguments[i]);
+            }
+
+            div.innerHTML += a.join(": ") + "<br>\n";
+        }
+
+        function displayError() {
+            var div = document.getElementById("status");
+
+            var a = [];
+            for (var i = 0; i < arguments.length; ++i) {
+                a.push(arguments[i]);
+            }
+
+            div.innerHTML += "<br><b style='color: red;'>" + a.join(": ") + "</b><br>\n";
+        }
+
+        function CreateAutoUpdate() {
+            AutoUpdater = new TDS.SecureBrowser.AutoUpdate;
+        }
+
+        function Initialize() {
+
+            if (AutoUpdater.initialize()) {
+                displayInfo("AutoUpdate Initialized");
+            } else {
+                displayError('Failed to Initialize AutoUpdate');
+            }
+        }
+
+        function CanAutoUpdate() {
+            displayInfo("canCheckForUpdates", AutoUpdater.canAutoUpdate());
+        }
+
+        function AutoUpdateURL() {
+            displayInfo("UpdateURL", AutoUpdater.updateURL());
+        }
+
+        function ShowStatus() {
+            var statusCode = AutoUpdater.getStatus(),
+                statusText = AutoUpdater.getStatusText();
+
+            displayInfo(statusText + ' (' + statusCode + ')');
+        }
+
+        function CheckForUpdates() {
+            var p = AutoUpdater.check();
+
+            p.then(function (result) {
+                displayInfo('CheckForUpdates() promise resolved');
+                if (result) {
+                    displayInfo("Update Available");
+                    displayInfo(" Available", result.Available);
+                    displayInfo(" Type", result.Type);
+                    displayInfo(" Name", result.Name);
+                    displayInfo(" DisplayVersion", result.DisplayVersion);
+                    displayInfo(" AppVersion", result.AppVersion);
+                    displayInfo(" AppInfoVersion", result.AppInfoVersion);
+                    displayInfo(" BuildID", result.BuildID);
+                    displayInfo(" DetailsURL", result.DetailsURL);
+                } else {
+                    displayInfo("No updates available");
+                }
+            }, function (err) {
+                displayInfo('CheckForUpdates() promise rejected');
+                displayError(err);
+            });
+
+            displayInfo('CheckForUpdates() waiting on promise to complete');
+        }
+
+        function Update() {
+            var p = AutoUpdater.download(function (pct) {
+                displayInfo('Downloaded ' + pct + '%');
+            });
+
+            p.then(function (result) {
+                displayInfo('Update() promise resolved');
+                if (result) {
+                    displayInfo("Successfully downloaded/installed update");
+                } else {
+                    displayInfo("No updates available");
+                }
+            }, function (err) {
+                displayInfo('Update() promise rejected');
+                displayError(err);
+            });
+
+            displayInfo('Update() waiting on promise to complete');
+        }
+
+        function Pause() {
+            if (AutoUpdater.stop()) {
+                displayInfo("Attempting to pause download in progress");
+            } else {
+                displayInfo("There is no download in progress that can be paused");
+            }
+        }
+
+    </script>
+
+    <b>Test Auto Update</b><br>
+    <br>
+
+    <input type="button" value="Initialize" onclick="Initialize();">
+    <input type="button" value="Can AutoUpdate?" onclick="CanAutoUpdate();">
+    <input type="button" value="Show Update URL" onclick="AutoUpdateURL();">
+    <input type="button" value="Show Status" onclick="ShowStatus();">
+    <input type="button" value="Check for Update" onclick="CheckForUpdates();">
+    <input type="button" value="Update" onclick="Update();">
+    <input type="button" value="Pause Update" onclick="Pause();">
+    <input type="button" value="Restart (to Apply Updates)" onclick="AutoUpdater.restart();">
+    <input type="button" value="Close" onclick="SecureBrowser.CloseWindow();">
+
+    <div id="status"></div>
+
+</body>
+</html>

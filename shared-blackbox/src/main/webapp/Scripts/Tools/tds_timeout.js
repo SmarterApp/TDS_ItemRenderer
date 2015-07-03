@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // SUMMARY: This class is used for when a student is idle. It should open a dialog
 // after a set period of minutes and ask the user to respond. If the user does not 
 // respond after another set period of time it will pause the test. 
@@ -15,7 +23,7 @@ TDS.IdleTimer = (function(TDS) {
         this.waitMins = waitMins;
         this.respondSecs = respondSecs;
 
-        // Events: onTimeout
+        // Events: onTimeout, onResume
         this.Events = new Util.EventManager();
 
         this.getIdleMilliseconds = function() {
@@ -41,7 +49,8 @@ TDS.IdleTimer = (function(TDS) {
         };
 
         // reset timer, this only works if the timer is started
-        this.reset = function() {
+        this.reset = function () {
+
             // check to make sure timer is started first
             if (!this.isStarted) {
                 return;
@@ -70,9 +79,9 @@ TDS.IdleTimer = (function(TDS) {
             // open dialog
             var self = this;
             TDS.Dialog.showAlert(this.message, function () {
-                // TODO: Ping the server with XHR so the encrypted auth cookie gets refreshed
                 self.cancel();
                 self.start();
+                self.Events.fire('onResume');
             }.bind(this));
         };
 

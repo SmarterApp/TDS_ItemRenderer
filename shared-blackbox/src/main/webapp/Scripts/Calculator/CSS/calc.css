@@ -1556,9 +1556,3 @@ sup{
 	display: block !important;
 }
 /* end */
-
-/*Disable selection and context menu on iOS*/
-.platform_ios a {
-    -webkit-touch-callout: none;
-}
-/* end */

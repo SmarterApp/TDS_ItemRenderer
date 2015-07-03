@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Item Widget
 */
@@ -55,8 +63,8 @@ Item Widget
     YAHOO.lang.extend(ItemWidget, CM.EntityPlugin);
 
     // A helper function for creating a response object.
-    ItemWidget.prototype.createResponse = function(value, isValid, isSelected) {
-        return new CM.Response(this.id, value, isValid, isSelected);
+    ItemWidget.prototype.createResponse = function(value, valid, empty, selected) {
+        return CM.createResponse(this.id, value, valid, empty, selected);
     };
 
     // Is the response available to read.

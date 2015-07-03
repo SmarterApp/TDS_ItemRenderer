@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// The content dialog is a window for loading content into. 
 // We currently use this with tutorials and GTR.
 
@@ -100,6 +108,14 @@
 
             update();
             Dialog.onLoad.fire(frame);
+
+            if (Util.Browser.isChromeOS()) {
+                $(Util.Frame.getFrames(frame)).each(function () {
+                    $(this).contents().on('contextmenu', function () {
+                        return false;
+                    });
+                });
+            }
         });
 
         return frame;

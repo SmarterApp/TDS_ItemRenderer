@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /** **************************************************************************
  * @class Simulator
  * @superclass none
@@ -43,7 +51,7 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
     var animationPresent = true;
     //var simElement = container;
     var accessibilityIFActive = assistiveMode;
-    var presetLang = null; // store rendered language before laoding xml
+    var currentLanguage = null; // current language - should be set by widget
 
     var dataTable = null;
 
@@ -196,6 +204,7 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
         return speechEnabled;
     };
 
+    /*
     this.presetLanguage = function (lang) {
         presetLang = lang;
     }
@@ -205,14 +214,21 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
         if (lang == 'ENU-Braille')
             lang = 'ENU';
         if (lang != 'ENU' && !translationDictionary.isLoaded()) {
-            dbg.logFatalError(source, 'Error: Translations have not been loaded. Request for non-English language ("' + lang + '") cannot be supported.');
+            // SUPPRESS MISSING TRANSLATION WARNING: --SDN 2/26/2015
+            // we have some faux-Spanish simulations out there which were recreated with spanish text where we'd expect english to be, so proceed in 'english' mode regardless
+            //dbg.logFatalError(source, 'Error: Translations have not been loaded. Request for non-English language ("' + lang + '") cannot be supported.');
             lang = 'ENU'; // default back to english if that is all we have...
         }
         translationDictionary.setCurrentLanguage(lang);
     }
+    */
+
+    this.setCurrentLanguage = function (lang) {
+        currentLanguage = lang;
+    }
 
     this.getCurrentLanguage = function () {
-        return translationDictionary.getCurrentLanguage();
+        return currentLanguage;
     }
 
     this.getAnimationDisplayLanguage = function () {
@@ -475,24 +491,17 @@ Simulator.Simulator = function (container, assistiveMode, speechMode) {
     // This is the main function to call for external users to
     // render the item and response xml into the simulator.
     // Translation xml is passed in separately.
-    this.loadXml = function (itemXml, responseXml, translationXml) {
-        // load translation dictionary first
-        if (translationXml != null && translationXml.length > 0) {
-            this.loadTranslationXmlText(translationXml);
-        }
-
-        // *** FOR TESTING ***
-        // when translation xml is sent inside response xml, uncomment the following line:
-        if (translationXml == null) this.loadTranslationXmlText(itemXml);
-        // *******************
-
-        // set language now that translations have been loaded
-        if (presetLang == null)
-            this.presetLanguage('ENU');
-        this.setCurrentLanguage(presetLang);
+    this.loadXml = function (itemXml, responseXml) {
 
         // load item xml
-        this.startSimulationXmlText(itemXml);
+        if (typeof itemXml === 'string') {
+            this.loadTranslationXmlText(itemXml);
+            this.startSimulationXmlText(itemXml);
+        } else {
+            this.loadTranslationXmlDom(itemXml);
+            this.startSimulationXmlDom(itemXml);
+            sendStartEvent();
+        }
 
         // load response xml
         if (responseXml != null && responseXml.length > 0) {

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /**
  *  Try and sanitize some of the actual configuration for TTS into a testable module.
  */
@@ -230,7 +238,7 @@ TTS.Config = {
     //iOS voice pack
     { name: "julie", priority: 9, language: "ENU" },
     { name: "violeta", priority: 9, language: "ESN" },
-	{ name: "en-US", priority: 9, language: "ENU" },
+    { name: "en-US", priority: 9, language: "ENU" },
     { name: "es-ES", priority: 9, language: "ESN" },
     { name: "eng", priority: 9, language: "ENU" },
     { name: "spa", priority: 9, language: "ESN" }

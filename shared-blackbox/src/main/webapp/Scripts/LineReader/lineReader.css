@@ -16,16 +16,17 @@
 	-webkit-border-radius:  3px;
     border-radius: 3px;
     visibility: hidden;
+    pointer-events: none;
 }
 
 .TDS_Line_Reader_bgActive {
     background-color: rgba(0, 191, 243, 0.2);
     border: solid 1px #00bff3;
     -webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	-moz-border-radius:  3px;
-	-webkit-border-radius:  3px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-border-radius:  3px;
+    -webkit-border-radius:  3px;
     border-radius: 3px;
     margin: -1px;
 }
@@ -66,3 +67,12 @@
   /* To show on the toolbar that the button is active */
 }
 
+.lr-enabled #btnLineReader .icon,
+.lr-enabled #btnLineReader:active .icon,
+.lr-enabled #btnLineReader:focus .icon,
+.lr-enabled #btnLineReader:hover .icon{
+    background-color: #e46f37;
+	background-position: center -2973px;
+	border-color: #fff;
+	box-shadow: 0 0 3px #b4b4b4;
+}

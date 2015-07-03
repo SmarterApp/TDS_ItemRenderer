@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿AsiItem = (typeof (AsiItem) == "undefined") ? {} : AsiItem;
 
 // This object acts as an interface to the Audio2 logic.  It just 
@@ -26,7 +34,7 @@ AsiItem.AudioInterface = function () {
 
         // Create audio data
         var audioData = AsiItem.AudioInterface.audioData[id];
-        if (audioData == null) {
+        if (audioData == null) { // If we haven't already created this track...
             audioData = AsiItem.Audio.createSound(id, url);
             AsiItem.AudioInterface.audioData[id] = audioData;
         }
@@ -70,7 +78,7 @@ AsiItem.AudioInterface.prototype.stop = function () {
 
 // Event: An audio in the sequence has completed.
 AsiItem.AudioInterface.prototype.onStop = function () {
-    if ((this._lastPlayed > 0) && (this._tracksToPlay.length > this._lastPlayed - 1)) {
+    if ((this._lastPlayed > 0) && (this._tracksToPlay.length >= this._lastPlayed)) {
         var current = this._tracksToPlay[this._lastPlayed - 1];
         var spid = current.id;
         var instance = current.instance;
@@ -81,17 +89,15 @@ AsiItem.AudioInterface.prototype.onStop = function () {
 
 // Event: An audio in the sequence is about to start
 AsiItem.AudioInterface.prototype.onStart = function () {
-    if (this._tracksToPlay.length > this._lastPlayed) {
+    if (this._tracksToPlay.length > this._lastPlayed) { // Is there another track to play?
         var current = this._tracksToPlay[this._lastPlayed];
         var spid = current.id;
         var instance = current.instance;
         if (current.startFunction) {
             current.startFunction(spid, instance);
         }
+        this._lastPlayed++;
     }
-    this._lastPlayed++;
 };
 
-AsiItem.AudioInterface.audioData = [];
-
-
+AsiItem.AudioInterface.audioData = []; // Global list of sound objects

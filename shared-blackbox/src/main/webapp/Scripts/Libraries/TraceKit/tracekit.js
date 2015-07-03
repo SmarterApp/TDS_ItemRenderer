@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
  TraceKit - Cross brower stack traces - github.com/occ/TraceKit
  MIT license
@@ -156,29 +164,35 @@ TraceKit.report = (function reportModuleWrapper() {
      * @param {(number|string)} lineNo The line number at which the error
      * occurred.
      */
-    function traceKitWindowOnError(message, url, lineNo) {
+    function traceKitWindowOnError(message, url, lineNo, columnNo, error) {
         var stack = null;
 
-        if (lastExceptionStack) {
-            TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
-            stack = lastExceptionStack;
-            lastExceptionStack = null;
-            lastException = null;
-        } else {
-            var location = {
-                'url': url,
-                'line': lineNo
-            };
-            location.func = TraceKit.computeStackTrace.guessFunctionName(location.url, location.line);
-            location.context = TraceKit.computeStackTrace.gatherContext(location.url, location.line);
-            stack = {
-                'mode': 'onerror',
-                'message': message,
-                'url': document.location.href,
-                'stack': [location],
-                'useragent': navigator.userAgent
-            };
-        }
+		if (error) {
+			// New HTML5 spec (Aug 2013) actually passes an error to window.onerror
+            stack = TraceKit.computeStackTrace(error);
+		} else {
+			if (lastExceptionStack) {
+				TraceKit.computeStackTrace.augmentStackTraceWithInitialElement(lastExceptionStack, url, lineNo, message);
+				stack = lastExceptionStack;
+				lastExceptionStack = null;
+				lastException = null;
+			} else {
+				var location = {
+					'url': url,
+					'line': lineNo,
+					'column': columnNo
+				};
+				location.func = TraceKit.computeStackTrace.guessFunctionName(location.url, location.line);
+				location.context = TraceKit.computeStackTrace.gatherContext(location.url, location.line);
+				stack = {
+					'mode': 'onerror',
+					'message': message,
+					'url': document.location.href,
+					'stack': [location],
+					'useragent': navigator.userAgent
+				};
+			}
+		}
 
         notifyHandlers(stack, 'from window.onerror');
 
@@ -322,6 +336,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @return {string} Source contents.
      */
     function loadSource(url) {
+		
         if (!TraceKit.remoteFetching) { //Only attempt request if remoteFetching is on.
             return '';
         }
@@ -350,6 +365,11 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
      * @return {Array.<string>} Source contents.
      */
     function getSource(url) {
+	
+		if (typeof url !== 'string') {
+			return [];
+		}
+	
         if (!_has(sourceCache, url)) {
             // URL needs to be able to fetched within the acceptable domain.  Otherwise,
             // cross-domain errors will be triggered.
@@ -661,9 +681,14 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
             stack.push(element);
         }
 
-        if (stack[0] && stack[0].line && !stack[0].column && reference) {
-            stack[0].column = findSourceInLine(reference[1], stack[0].url, stack[0].line);
-        }
+		if (stack[0]) {
+			if (stack[0].line && !stack[0].column && reference) {
+				stack[0].column = findSourceInLine(reference[1], stack[0].url, stack[0].line);
+			} else if (!stack[0].column && typeof ex.columnNumber !== 'undefined') {
+				// Firefox column number
+				stack[0].column = ex.columnNumber + 1;
+			}
+		}
 
         if (!stack.length) {
             return null;

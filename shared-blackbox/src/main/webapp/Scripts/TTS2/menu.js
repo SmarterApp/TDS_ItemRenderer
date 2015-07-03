@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /**
  *  TTS.Menu  This class creates the menu options associated with TTS
  *  
@@ -70,7 +78,6 @@ TTS.Menu = function() {
     this.hasPauseSupport = !Util.Browser.isChrome() && // Pause is not working on chrome books
         !Util.Browser.isIOS() && // Bug 120767 - Balaji recommended disabling TTS pause due to iOS bug
         !(Util.Browser.osxVersionIsAtLeast(10, 9) && Util.Browser.getSecureVersion() < 6.5) && //OSX 10.9 requires SB6.5 or above as we fixed a bug in the SB that prevents pause from working  
-        /*SB-1287: Removed last condition "Util.Browser.getSecureVersion()<2"*/
         !Util.Browser.isAndroid();  // TTS pause and resume are not supported on Android Browser
 
     this.assembleContent = function(cfg, node) {
@@ -90,8 +97,8 @@ TTS.Menu = function() {
 
         //forcing the container to accept that ESN content is required since you can have a spanish
         //test but only ENU voice packs
-        this.assembleLanguageContent(node, cfg.PRI, cfg.PRI_OP, ctrl.languageManager.getDefaultLanguage());
-        this.assembleLanguageContent(node, cfg.SEC, cfg.SEC_OP, ctrl.languageManager.getAltLanguage());
+        this.assembleLanguageContent(node, cfg.PRI, cfg.PRI_OP, tds.language.getITSDefault());
+        this.assembleLanguageContent(node, cfg.SEC, cfg.SEC_OP, tds.language.getITSAlt());
     };
 
     this.assembleLanguageContent = function (node, cfgLangOb, cfgLangOpOb, language) {
@@ -113,7 +120,7 @@ TTS.Menu = function() {
                 cfgLangOb.cb = this.getPlayFunction(pnContent, language);
                 cfgLangOb.contain = pnContent;
                 if (TTS.getInstance().getCurrentDomEntity() instanceof ContentItem) {
-                    var raNode = ctrl.getCurrentDomEntity().getResponseArea();
+                    var raNode = ctrl.getCurrentDomEntity().getResponseTTS();
                     if (raNode) {
                         raNode.splice(0, 0, node);
                         pnResponseArea = new TTS.Parse.ParseNode(language, raNode);
@@ -184,8 +191,8 @@ TTS.Menu.prototype.checkSelection = function (cfg, dom, sel, win) {
         return;
     }
 
-    var priLang = ctrl.languageManager.getDefaultLanguage();
-    var secLang = ctrl.languageManager.getAltLanguage();
+    var priLang = tds.language.getITSDefault();
+    var secLang = tds.language.getITSAlt();
     var priSelector = new TTS.Parse.Selector(sel, priLang);
     var pnPrimary = (priSelector) ? priSelector.collectNodes() : null;
     var pnSecondary = null;
@@ -225,10 +232,10 @@ TTS.Menu.prototype.addOptions = function (cfg, dom) {
         return;
     }
 
-    var priLang = ctrl.languageManager.getDefaultLanguage();
+    var priLang = tds.language.getITSDefault();
     var pnPrimary = new TTS.Parse.ParseNode(priLang, dom);
     var pnSecondary = null;
-    var secLang = ctrl.languageManager.getAltLanguage();
+    var secLang = tds.language.getITSAlt();
     if (secLang) {
         pnSecondary = new TTS.Parse.ParseNode(secLang, dom);
     }
@@ -245,7 +252,7 @@ TTS.Menu.prototype.addOptions = function (cfg, dom) {
 
 //this code implements a special case when the user clicks on a specific multiple choice option. The logic is handled in module_tts, which also makes sure that
 //it is the only tts option offered (or whatever). 
-TTS.Menu.prototype.addFocusedOption = function (cfg, dom) {
+TTS.Menu.prototype.addFocusedOption = function (cfg, dom, language) {
 
     if (!dom) {
         return;
@@ -258,10 +265,10 @@ TTS.Menu.prototype.addFocusedOption = function (cfg, dom) {
         return;
     }
 
-    var priLang = ctrl.languageManager.getDefaultLanguage();
+    var priLang = language || tds.language.getITSDefault();
     var pnPrimary = new TTS.Parse.ParseNode(priLang, dom);
     var pnSecondary = null;
-    var secLang = ctrl.languageManager.getAltLanguage();
+    var secLang = tds.language.getITSAlt();
     if (secLang) {
         pnSecondary = new TTS.Parse.ParseNode(secLang, dom);
     }
@@ -306,7 +313,7 @@ TTS.Menu.prototype.checkServiceStates = function (cfg) {
     if (this.hasPauseSupport) {
         if (ctrl.isPlaying()) {
             cfg.PAUSE.cb = function() { TTS.getInstance().pause(); };
-        } else if (ctrl.getStatus() == TTS.Status.Paused) {
+        } else if (ctrl.getStatus() == TTS.Status.Paused && ctrl.canResume()) {
             cfg.RESUME.cb = function() { TTS.getInstance().resume(); };
         }
     }

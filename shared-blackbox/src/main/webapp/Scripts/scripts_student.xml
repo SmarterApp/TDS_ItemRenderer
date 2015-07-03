@@ -49,11 +49,27 @@
     <!-- ReviewShell -->
     <fileSet name="reviewshell" output="combined/tds_reviewshell.js">
         <reference set="mastershell" />
+	<reference set="libs-parsley" />
         <input>Shells/reviewshell.js</input>
         <input>Sections/section_TestReview.js</input>
+	<input>Sections/section_TestReview_Survey.js</input>
         <input>Sections/section_TestResults.js</input>
     </fileSet>
+    <!-- Response Recovery -->
+    <fileSet name="responseRecovery">
+        <input>ResponseRecovery/responserecovery.js</input>
+        <input>ResponseRecovery/messages.js</input>
+        <input>ResponseRecovery/manager.js</input>
+        <input>ResponseRecovery/managerFacade.js</input>
+        <input>ResponseRecovery/history.js</input>
+        <input>ResponseRecovery/session.js</input>
+        <input>ResponseRecovery/version.js</input>
 
+	<input>ResponseRecovery/dialog.js</input>
+        <input>ResponseRecovery/plugin.js</input>
+
+        <input>ResponseRecovery/module.js</input>
+    </fileSet>
     <!-- *************************************************************************************** -->
 
     <!-- Test Shell Core -->
@@ -100,6 +116,7 @@
         <input>TestShell/Modules/logging.js</input>
         <input>TestShell/Modules/masking.js</input>
         <input>TestShell/Modules/periodictable.js</input>
+	<input>TestShell/Modules/prefetch.js</input>
         <input>TestShell/Modules/print.js</input>
         <!-- <input>TestShell/Modules/proxy.js</input> -->
         <input>TestShell/Modules/tools.js</input>
@@ -109,6 +126,7 @@
 		<input>TestShell/Modules/securitybreach.js</input>
 		<input>TestShell/Modules/audit.js</input>
 
+	<reference set="responseRecovery" />
         <!-- Comments -->
         <input>Comments/comments.js</input>
         <input>Comments/base.js</input>
@@ -130,6 +148,7 @@
         <reference set="content-animation" /> <!-- needs to be before video -->
         <reference set="content-video" />
         <reference set="content-spell" />
+	<reference set="content-ms" />
         <reference set="content-editor2" />
         <reference set="content-grid2" />
 		<reference set="content-ht" />
@@ -141,7 +160,6 @@
         <reference set="content-slideshow2" />
 		<reference set="content-mask" />
         <reference set="content-edittask" />
-		<reference set="content-notes" />
 		<reference set="content-scratchpad" />
         <reference set="content-scaffolding" />
         <reference set="content-ti" />

@@ -1,0 +1,62 @@
+CKEditor Download Instructions
+
+Downloading the latest version of CKEditor is a simple process.
+
+1) Visit ckeditor.com and click on the download button close to the upper right of the page
+2) In the 'Select and download...' area choose 'Or let me customize CKEditor' and click on the Download CKEditor button
+3) Click on the Upload build-config.js button and upload the most recent version's build-config.js file. It contains settings regarding plugins, skins, and languages used.
+4) Make an changes (ensure that the right plugins are chosen, the correct skins is selected [currently Moono], and the languages we use and also chosen [currently English and Spanish]).
+5) Click to 'Agree' to terms and conditions
+6) Click the big Download button
+
+=============================================================================================================================================================================
+
+CKEditor Build Instructions (for Windows)
+
+In order to build CKEditor on Windows one will need
+
+1) A github tool and a bash shell. "GIT for Windows" works well for both of these needs (http://msysgit.github.io/).
+2) Java
+3) A cloned repository from the CKEditor github repo
+
+
+Step 1) Cloning the repository (if you have not done this before)
+
+1) Open Git GUI
+2) Choose 'Clone Existing Repository' and enter the .git URL (https://github.com/ckeditor/ckeditor-dev.git) and a local storage place for your repo on your hard drive.
+
+or (if you've) already cloned the repository)
+
+1) Open Git GUI
+2) Choose 'Open Existing Repository' and fine the dir with your git repo in it (or Open Recent Repository and just click on the folder in the main Git Gui Window)
+
+and then
+
+3) Choose "Branch... Checkout" from the menu, Click on the 'Tag' option, Select the desired branch/tag for the version/subversion you want, and click Checkout.
+
+
+Step 2) Build Instructions
+
+1) Ensure that the build-config.js (in the dev/builder directory) has the desired plugins selected (e.g. match them to the downloaded non-debug version).
+2) Open a bash shell in the root of your cloned CKEditor repo
+3) Navigate to (i.e. use the 'cd' command) to dev/builder (Note that the Git Bash file system consists of drive letters as root folders to be consistent with a Unix file system
+   [e.g. my CKEditor dev dir is at 'C:\ckeditor-dev' with the 'dev\builder' dir under that, but for Git Bash I need to navigate to /c/ckeditor-dev/dev/builder])
+4) Type "./build.sh" to run the build. This will download the appropriate CKBuilder tool (a java program) and run it creating both a ckbuilder directory (in dev/builder) 
+   that contains versions of the CKBuilder tool and a release directory containing the release version of CKEditor (in a directory, as a zip file, and as a tar.gz file)
+
+In order to build an unminified (aka debug) version of CKEditor add the "--leave-js-unminified" argument to the command the executes CKBuilder. For V4.4.7 that 
+was near line 74 in the build.sh script file. For example:
+
+  java -jar ckbuilder/$CKBUILDER_VERSION/ckbuilder.jar --build ../../ release $JAVA_ARGS --leave-js-unminified --version="$VERSION" --revision="$REVISION" --overwrite
+
+Step 3) After Build Instructions
+
+1) The resulting ckeditor.js file will have references for cut, copy, and paste icons that will override our plugin's cut/copy/paste icons. You will need to 
+   manually remove those from the ckeditor.js file (I'm sure there's a better way, but I haven't had time to look). Do this by locating the line
+   
+CKEDITOR.config.plugins='dialogui,dialog,a11yhelp,basicstyles,button,panel,floatpanel,menu,contextmenu,divarea,enterkey,entities,htmlwriter,indent,indentblock,indentlist,list,listblock,removeformat,richcombo,sharedspace,specialchar,tab,table,tabletools,tableresize,toolbar,undo,wysiwygarea';CKEDITOR.config.skin='moono';(function() {var setIcons = function(icons, strip) {var path = CKEDITOR.getUrl( 'plugins/' + strip );icons = icons.split( ',' );for ( var i = 0; i < icons.length; i++ )CKEDITOR.skin.icons[ icons[ i ] ] = { path: path, offset: -icons[ ++i ], bgsize : icons[ ++i ] };};if (CKEDITOR.env.hidpi) setIcons('about,0,,bold,24,,italic,48,,strike,72,,subscript,96,,superscript,120,,underline,144,,bidiltr,168,,bidirtl,192,,blockquote,216,,copy-rtl,240,,copy,264,,cut-rtl,288,,cut,312,,paste-rtl,336,,paste,360,,codesnippet,384,,bgcolor,408,,textcolor,432,,creatediv,456,,docprops-rtl,480,,docprops,504,,find-rtl,528,,find,552,,replace,576,,flash,600,,button,624,,checkbox,648,,form,672,,hiddenfield,696,,imagebutton,720,,radio,744,,select-rtl,768,,select,792,,textarea-rtl,816,,textarea,840,,textfield-rtl,864,,textfield,888,,horizontalrule,912,,iframe,936,,image,960,,indent-rtl,984,,indent,1008,,outdent-rtl,1032,,outdent,1056,,justifyblock,1080,,justifycenter,1104,,justifyleft,1128,,justifyright,1152,,language,1176,,anchor-rtl,1200,,anchor,1224,,link,1248,,unlink,1272,,bulletedlist-rtl,1296,,bulletedlist,1320,,numberedlist-rtl,1344,,numberedlist,1368,,mathjax,1392,,maximize,1416,,newpage-rtl,1440,,newpage,1464,,pagebreak-rtl,1488,,pagebreak,1512,,pastefromword-rtl,1536,,pastefromword,1560,,pastetext-rtl,1584,,pastetext,1608,,placeholder,1632,,preview-rtl,1656,,preview,1680,,print,1704,,removeformat,1728,,save,1752,,selectall,1776,,showblocks-rtl,1800,,showblocks,1824,,smiley,1848,,source-rtl,1872,,source,1896,,sourcedialog-rtl,1920,,sourcedialog,1944,,specialchar,1968,,table,1992,,templates-rtl,2016,,templates,2040,,uicolor,2064,,redo-rtl,2088,,redo,2112,,undo-rtl,2136,,undo,2160,,simplebox,4368,auto','icons_hidpi.png');else setIcons('about,0,auto,bold,24,auto,italic,48,auto,strike,72,auto,subscript,96,auto,superscript,120,auto,underline,144,auto,bidiltr,168,auto,bidirtl,192,auto,blockquote,216,auto,copy-rtl,240,auto,copy,264,auto,cut-rtl,288,auto,cut,312,auto,paste-rtl,336,auto,paste,360,auto,codesnippet,384,auto,bgcolor,408,auto,textcolor,432,auto,creatediv,456,auto,docprops-rtl,480,auto,docprops,504,auto,find-rtl,528,auto,find,552,auto,replace,576,auto,flash,600,auto,button,624,auto,checkbox,648,auto,form,672,auto,hiddenfield,696,auto,imagebutton,720,auto,radio,744,auto,select-rtl,768,auto,select,792,auto,textarea-rtl,816,auto,textarea,840,auto,textfield-rtl,864,auto,textfield,888,auto,horizontalrule,912,auto,iframe,936,auto,image,960,auto,indent-rtl,984,auto,indent,1008,auto,outdent-rtl,1032,auto,outdent,1056,auto,justifyblock,1080,auto,justifycenter,1104,auto,justifyleft,1128,auto,justifyright,1152,auto,language,1176,auto,anchor-rtl,1200,auto,anchor,1224,auto,link,1248,auto,unlink,1272,auto,bulletedlist-rtl,1296,auto,bulletedlist,1320,auto,numberedlist-rtl,1344,auto,numberedlist,1368,auto,mathjax,1392,auto,maximize,1416,auto,newpage-rtl,1440,auto,newpage,1464,auto,pagebreak-rtl,1488,auto,pagebreak,1512,auto,pastefromword-rtl,1536,auto,pastefromword,1560,auto,pastetext-rtl,1584,auto,pastetext,1608,auto,placeholder,1632,auto,preview-rtl,1656,auto,preview,1680,auto,print,1704,auto,removeformat,1728,auto,save,1752,auto,selectall,1776,auto,showblocks-rtl,1800,auto,showblocks,1824,auto,smiley,1848,auto,source-rtl,1872,auto,source,1896,auto,sourcedialog-rtl,1920,auto,sourcedialog,1944,auto,specialchar,1968,auto,table,1992,auto,templates-rtl,2016,auto,templates,2040,auto,uicolor,2064,auto,redo-rtl,2088,auto,redo,2112,auto,undo-rtl,2136,auto,undo,2160,auto,simplebox,2184,auto','icons.png');})();CKEDITOR.lang.languages={"en":1};}());
+
+which was the last line in the file for me and getting rid of both regular and hi-dpi cut, copy, and paste references resulting in the following line (I have left it so that everything lines up 
+and solely these 3 icon references have been removed so it's easy to see exactly what I have done):
+
+CKEDITOR.config.plugins='dialogui,dialog,a11yhelp,basicstyles,button,panel,floatpanel,menu,contextmenu,divarea,enterkey,entities,htmlwriter,indent,indentblock,indentlist,list,listblock,removeformat,richcombo,sharedspace,specialchar,tab,table,tabletools,tableresize,toolbar,undo,wysiwygarea';CKEDITOR.config.skin='moono';(function() {var setIcons = function(icons, strip) {var path = CKEDITOR.getUrl( 'plugins/' + strip );icons = icons.split( ',' );for ( var i = 0; i < icons.length; i++ )CKEDITOR.skin.icons[ icons[ i ] ] = { path: path, offset: -icons[ ++i ], bgsize : icons[ ++i ] };};if (CKEDITOR.env.hidpi) setIcons('about,0,,bold,24,,italic,48,,strike,72,,subscript,96,,superscript,120,,underline,144,,bidiltr,168,,bidirtl,192,,blockquote,216,,copy-rtl,240,,          cut-rtl,288,,         paste-rtl,336,,           codesnippet,384,,bgcolor,408,,textcolor,432,,creatediv,456,,docprops-rtl,480,,docprops,504,,find-rtl,528,,find,552,,replace,576,,flash,600,,button,624,,checkbox,648,,form,672,,hiddenfield,696,,imagebutton,720,,radio,744,,select-rtl,768,,select,792,,textarea-rtl,816,,textarea,840,,textfield-rtl,864,,textfield,888,,horizontalrule,912,,iframe,936,,image,960,,indent-rtl,984,,indent,1008,,outdent-rtl,1032,,outdent,1056,,justifyblock,1080,,justifycenter,1104,,justifyleft,1128,,justifyright,1152,,language,1176,,anchor-rtl,1200,,anchor,1224,,link,1248,,unlink,1272,,bulletedlist-rtl,1296,,bulletedlist,1320,,numberedlist-rtl,1344,,numberedlist,1368,,mathjax,1392,,maximize,1416,,newpage-rtl,1440,,newpage,1464,,pagebreak-rtl,1488,,pagebreak,1512,,pastefromword-rtl,1536,,pastefromword,1560,,pastetext-rtl,1584,,pastetext,1608,,placeholder,1632,,preview-rtl,1656,,preview,1680,,print,1704,,removeformat,1728,,save,1752,,selectall,1776,,showblocks-rtl,1800,,showblocks,1824,,smiley,1848,,source-rtl,1872,,source,1896,,sourcedialog-rtl,1920,,sourcedialog,1944,,specialchar,1968,,table,1992,,templates-rtl,2016,,templates,2040,,uicolor,2064,,redo-rtl,2088,,redo,2112,,undo-rtl,2136,,undo,2160,,simplebox,4368,auto','icons_hidpi.png');else setIcons('about,0,auto,bold,24,auto,italic,48,auto,strike,72,auto,subscript,96,auto,superscript,120,auto,underline,144,auto,bidiltr,168,auto,bidirtl,192,auto,blockquote,216,auto,copy-rtl,240,auto,              cut-rtl,288,auto,             paste-rtl,336,auto,               codesnippet,384,auto,bgcolor,408,auto,textcolor,432,auto,creatediv,456,auto,docprops-rtl,480,auto,docprops,504,auto,find-rtl,528,auto,find,552,auto,replace,576,auto,flash,600,auto,button,624,auto,checkbox,648,auto,form,672,auto,hiddenfield,696,auto,imagebutton,720,auto,radio,744,auto,select-rtl,768,auto,select,792,auto,textarea-rtl,816,auto,textarea,840,auto,textfield-rtl,864,auto,textfield,888,auto,horizontalrule,912,auto,iframe,936,auto,image,960,auto,indent-rtl,984,auto,indent,1008,auto,outdent-rtl,1032,auto,outdent,1056,auto,justifyblock,1080,auto,justifycenter,1104,auto,justifyleft,1128,auto,justifyright,1152,auto,language,1176,auto,anchor-rtl,1200,auto,anchor,1224,auto,link,1248,auto,unlink,1272,auto,bulletedlist-rtl,1296,auto,bulletedlist,1320,auto,numberedlist-rtl,1344,auto,numberedlist,1368,auto,mathjax,1392,auto,maximize,1416,auto,newpage-rtl,1440,auto,newpage,1464,auto,pagebreak-rtl,1488,auto,pagebreak,1512,auto,pastefromword-rtl,1536,auto,pastefromword,1560,auto,pastetext-rtl,1584,auto,pastetext,1608,auto,placeholder,1632,auto,preview-rtl,1656,auto,preview,1680,auto,print,1704,auto,removeformat,1728,auto,save,1752,auto,selectall,1776,auto,showblocks-rtl,1800,auto,showblocks,1824,auto,smiley,1848,auto,source-rtl,1872,auto,source,1896,auto,sourcedialog-rtl,1920,auto,sourcedialog,1944,auto,specialchar,1968,auto,table,1992,auto,templates-rtl,2016,auto,templates,2040,auto,uicolor,2064,auto,redo-rtl,2088,auto,redo,2112,auto,undo-rtl,2136,auto,undo,2160,auto,simplebox,2184,auto','icons.png');})();CKEDITOR.lang.languages={"en":1};}());

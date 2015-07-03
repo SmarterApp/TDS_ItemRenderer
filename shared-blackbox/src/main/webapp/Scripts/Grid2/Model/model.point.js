@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /* POINT CLASS */
 
 Grid.Model.Point = function(model, x, y, radius)
@@ -122,8 +130,9 @@ Grid.Model.Point.prototype._intersectLine = function(line)
     return (Intersection.intersectCircleLine(c, r, a1, a2).source != 'Outside');
 };
 
-// returns the closest position (Point2D) along a line
-Grid.Model.Point.prototype._nearestPointAlongLine = function(line)
+// what is the distance from this position to the line
+// TODO: Remove this function in favor of line.distancefromPoint()
+Grid.Model.Point.prototype.distanceFromLine = function(line)
 {
     var px = this.x,
 		py = this.y,
@@ -132,40 +141,7 @@ Grid.Model.Point.prototype._nearestPointAlongLine = function(line)
 		x2 = line.target.x,
 		y2 = line.target.y;
 
-    var dx = x2 - x1;
-    var dy = y2 - y1;
-
-    // check if the segment is just a point
-    if (dx == 0 && dy == 0) return { x: x1, y: y1 };
-
-    // calculate the t that minimizes the distance.
-    var t = ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy);
-
-    // See if this represents one of the segment's end points or a point in the middle.
-    if (t < 0)
-    {
-        dx = x1;
-        dy = y1;
-    }
-    else if (t > 1)
-    {
-        dx = x2;
-        dy = y2;
-    }
-    else
-    {
-        dx = x1 + t * dx;
-        dy = y1 + t * dy;
-    }
-
-    return new Point2D(dx, dy);
-};
-
-// what is the distance from this position to the line
-// TODO: Should we move this to the line object?
-Grid.Model.Point.prototype.distanceFromLine = function(line)
-{
-    var nearestPoint = this._nearestPointAlongLine(line);
+    var nearestPoint = Grid.Utils.getNearestPointAlongLine(px, py, x1, y1, x2, y2);
     return this.get2D().distanceFrom(nearestPoint);
 };
 

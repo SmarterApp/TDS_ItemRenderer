@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Allows for setting different interaction modes.
 Modes work at then entity level (so passage or item).
@@ -16,6 +24,11 @@ ContentManager.Modes = (function(CM) {
 
     // start mode logic
     Mode.prototype.enable = function() {};
+
+    // can the mode be disabled/exited at this time
+    Mode.prototype.canDisable = function (entity, evt) {
+        return true;
+    };
 
     // when a mode a ends we dispose of it
     Mode.prototype.dispose = function() {};
@@ -96,7 +109,7 @@ ContentManager.Modes = (function(CM) {
         console.log('mode enabled: ' + name);
 
         CM.setReadOnly(true);
-        
+
         // assign event listeners
         var listeners = addListeners(mode, elements);
         current = {
@@ -108,8 +121,10 @@ ContentManager.Modes = (function(CM) {
 
         // listen for document click
         mouseListener = Util.Event.addTouchMouse('start', document.body, function (evt) {
-            YUE.stopEvent(evt);
-            disableMode();
+            if (current.mode.canDisable(current.entity, evt)) {
+                YUE.stopEvent(evt);
+                disableMode(evt);
+            }
         });
 
         // listen for esc key

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Sortable lists interaction block.
 */
@@ -82,6 +90,18 @@ Sortable lists interaction block.
 
         // save original response
         this._defaultResponse = this.getResponse();
+    };
+    
+    // 
+    OI.prototype.prepareForShow = function () {
+        var groups = this.getGroups();
+        groups.forEach(function (group) {
+            var choices = group.getChoices();
+            choices.forEach(function (choice) {
+                var proxy = choice.getProxy();
+                proxy.resetConstraints();
+            });
+        });
     };
 
     // it is a valid response if the draggables have changed at all

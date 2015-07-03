@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // TODO: 
 // * https://github.com/marquete/kibo/blob/master/kibo.js
 // * https://github.com/madrobby/keymaster
@@ -52,6 +60,11 @@ function onglobalkeyevent(evt, type, key, keyCode, charCode) {
 
     // shortcut to close secure browser
     if (evt.ctrlKey && evt.altKey && evt.shiftKey && key == 'F10') {
+        return;
+    }
+
+    // shortcut to close secure browser linux
+    if (Util.Browser.isLinux() && evt.ctrlKey && evt.shiftKey && key == 'Escape') {
         return;
     }
 

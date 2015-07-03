@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 This is used to swap out images with different media data:
 - MathML
@@ -86,9 +94,9 @@ NOTE: For this to work you need to be using ITSUrlResolver2
             else if (code >= 0x25A0 && code <= 0x25FF) { // Geometric Shapes
                 return true;
             }
-            else if (code == 0x03C0) { // Pi symbol
+            else if (code >= 0x0391 && code <= 0x03C9) { // Greek alphabets http://unicode-table.com/en/blocks/greek-coptic/
                 return true;
-            }
+            }            
         }
         return false;
     };
@@ -195,7 +203,6 @@ NOTE: For this to work you need to be using ITSUrlResolver2
             mediaNode.setAttribute('alt', imgAlt);
         }
 
-        // insert resource data and remove image
         YUD.insertBefore(mediaNode, imgNode);
         Util.Dom.removeNode(imgNode);
 

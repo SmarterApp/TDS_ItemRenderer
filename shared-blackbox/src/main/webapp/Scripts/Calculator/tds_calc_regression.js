@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// ******************** Regression Calculator **************************
 /*
 Currently we support three types of regression models: 
@@ -174,7 +182,6 @@ RegressionCalc.prototype._addEventHandlers = function(id)
 {
     /** HACK **/
     //TODO: Replace with YUI listeners
-    document.getElementById(id).setAttribute('onkeypress', 'return CalcKeyPressProcess(this,event)');
     document.getElementById(id).setAttribute('onfocus', 'return CalcFocusGained(this, event)');
     /** HACK **/
 }

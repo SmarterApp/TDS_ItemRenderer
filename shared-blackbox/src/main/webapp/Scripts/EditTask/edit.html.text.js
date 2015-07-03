@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿EditItem = (typeof (EditItem) == "undefined") ? {} : EditItem;
 
 
@@ -44,17 +52,7 @@ EditItem.Html.Text = function () {
 
     this.getComponentArray = function () {
         return addComponentArray;
-    };
-    
-    //Encode HTML entities (i.e. <>&/ etc)
-    var entityEncode = function (text) {
-
-        if (text && typeof text == 'string') {
-            var textElement = document.createElement('span');
-            Util.Dom.setTextContent(textElement, text);
-            return textElement.innerHTML;
-        } else return;
-    };
+    };    
 
     //Decode HTML entities (i.e. <>&/ etc)
     var entityDecode = function (text, code) {
@@ -140,7 +138,7 @@ EditItem.Html.Text = function () {
 
         var interaction = EditItem.Html._activeDbInstance.interaction;
         self.createCrossoutSpan(interaction.getContent(), text, YUD.get(interaction.createDivId()));
-        interaction.responseValue = entityEncode(text);
+        interaction.responseValue = EditItem.Html.Text.entityEncode(text);
     };
 
     // Callback. User has clicked on a word that can be replaced.  SHow the dialog.
@@ -166,3 +164,12 @@ EditItem.Html.Text = function () {
 };
 
 EditItem.Html.Text.prototype.isReadOnly = function () { return false; };
+
+// Encode special html characters (<>&) for xml storage
+EditItem.Html.Text.entityEncode = function (text) {
+    if (text && typeof text == 'string') {
+        var textElement = document.createElement('span');
+        Util.Dom.setTextContent(textElement, text);
+        return textElement.innerHTML;
+    } else return '';
+};

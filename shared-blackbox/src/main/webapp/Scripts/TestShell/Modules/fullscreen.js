@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 This test shell module is used for the fullscreen button.
 */
@@ -6,9 +14,12 @@ This test shell module is used for the fullscreen button.
 
     var CSS_ENABLED = 'fs-enabled';
 
+    // if this is true then one of the segments has full screen
+    var checkForFullScreen = false;
+
     function getPassword() {
         var testee = TDS.Student.Storage.getTestee();
-        if (testee) {
+        if (testee && testee.firstName) {
             return testee.firstName;
         } else {
             return '';
@@ -58,11 +69,15 @@ This test shell module is used for the fullscreen button.
 
     function load() {
 
-        // check if full screen is enabled
-        var accProps = TDS.getAccommodationProperties();
-        if (accProps && accProps.hasFullScreenEnabled()) {
+        // check if any of the segments have full screen
+        var foundAccs = Util.Array.find(Accommodations.Manager.getAll(), function(accs) {
+            var accProps = new Accommodations.Properties(accs);
+            return accProps.hasFullScreenEnabled();
+        });
 
-            // setup button
+        // check if we should add button
+        if (foundAccs) {
+            checkForFullScreen = true;
             TestShell.UI.addButtonControl({
                 id: 'btnFullScreen',
                 className: 'fullscreen',
@@ -70,13 +85,29 @@ This test shell module is used for the fullscreen button.
                 label: 'Full Screen',
                 fn: toggle
             });
-
-            // if full screen pass is enabled Jeremy said to enable right away
-            if (accProps.hasFullScreenPassword()) {
-                enable();
-            }
         }
     }
+
+    TestShell.Events.on('changeAccommodations', function(currentAccs, previousAccs) {
+
+        // if no segment has full screen then stop here
+        if (!checkForFullScreen) {
+            return;
+        }
+
+        var currentAccProps = new Accommodations.Properties(currentAccs);
+        var previousAccProps = new Accommodations.Properties(previousAccs);
+
+        // if we move from a segment where full screen is off to one where it is on, then we need to enable it (and vice versa)
+        if (previousAccProps.hasFullScreenEnabled() === false &&
+            currentAccProps.hasFullScreenEnabled() === true) {
+            enable();
+        } else if (previousAccProps.hasFullScreenEnabled() === true &&
+            currentAccProps.hasFullScreenEnabled() === false) {
+            disable();
+        }
+
+    });
 
     TS.registerModule({
         name: 'fullscreen',

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Used to create the container for passage controls
 */
@@ -33,10 +41,15 @@ Used to create the container for passage controls
 
         var passage = this.entity;
         var passageEl = passage.getElement();
-        var controlsEl = document.createElement('div');
-        controlsEl.className = 'toolsContainer passageTools';
-        // $(passageEl).before(controlsEl); (append
-        $(passageEl).prepend(controlsEl);
+
+        // check if tools div already exists
+        var toolsEl = $('.passageTools', passageEl).get(0);
+        if (toolsEl) return;
+
+        // create new container for passage tools
+        toolsEl = document.createElement('div');
+        toolsEl.className = 'toolsContainer passageTools';
+        $(passageEl).prepend(toolsEl);
 
         /*
         var paddingEl = this.el;

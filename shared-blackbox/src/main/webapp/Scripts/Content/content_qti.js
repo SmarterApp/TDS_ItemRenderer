@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 This file is used for any general QTI utilities or parsers.
 */
@@ -117,7 +125,7 @@ This file is used for any general QTI utilities or parsers.
     */
 
     function mapInteractionsToWidgetConfigs(item, type, custom) {
-        var stemEl = item.getStemElement();
+        var stemEl = item.getElement();
         var selector = '*[data-qti-type=' + type + ']';
         if (custom) {
             selector += '[data-qti-custom=' + custom + ']';
@@ -188,6 +196,16 @@ This file is used for any general QTI utilities or parsers.
         var interactionEl = document.createElement(nodeName || 'div');
         interactionEl.innerHTML = Util.Xml.innerHTML(interactionNode);
         return interactionEl;
+    }
+
+    // check if the item/passage is native QTI
+    QTI.isNativeEntity = function(entity) {
+        if (entity instanceof ContentItem && entity.responseType == 'QTI') {
+            return true;
+        } else if (entity instanceof ContentPassage && entity.qti) {
+            return true;
+        }
+        return false;
     }
 
     CM.QTI = QTI;

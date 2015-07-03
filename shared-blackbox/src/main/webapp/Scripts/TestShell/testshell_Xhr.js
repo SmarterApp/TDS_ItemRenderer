@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 TestShell.XhrManager = function () {
 
     var timeout = (120 * 1000); // 2 min timeout
@@ -69,11 +77,17 @@ TestShell.XhrManager.prototype.queueAction = function (action, parameters, callb
     // show loading screen
     TestShell.UI.showLoading('');
 
-    // create a temp function so we can wait to process this action
-    this._action = Util.Function.bind(this[action], this, parameters, callback);
+    // send out timer api
+    TestShell.xhrTimer.send().done(function () {
 
-    // check if any responses are being sent out
-    TestShell.ResponseManager.processQueue();
+        // create a temp function so we can wait to process this action
+        this._action = this[action].bind(this, parameters, callback);
+
+        // check if any responses are being sent out
+        TestShell.ResponseManager.processQueue();
+
+    }.bind(this));
+
 };
 
 // check if there is a queued action
@@ -96,15 +110,11 @@ TestShell.XhrManager.prototype.processAction = function() {
 /****************************************************************************************/
 
 TestShell.XhrManager.prototype.pause = function (parameters, callback) {
-    TestShell.Audit.Poller.cancel();
-    var data = TestShell.Audit.serializeToJSON(TestShell.Audit.recordsToReport());
-    return this.sendAction('pauseTest', data, callback, null, parameters);
+    return this.sendAction('pauseTest', null, callback, null, parameters);
 };
 
 TestShell.XhrManager.prototype.complete = function (parameters, callback) {
-    TestShell.Audit.Poller.cancel();
-    var data = TestShell.Audit.serializeToJSON(TestShell.Audit.recordsToReport());
-    return this.sendAction('completeTest', data, callback, null, parameters);
+    return this.sendAction('completeTest', null, callback, null, parameters);
 };
 
 // submit a request to wait for segment approval
@@ -167,7 +177,7 @@ TestShell.XhrManager.prototype.markForReview = function(data, callback) {
     });
 };
 
-// remove an item response ( data = { position: #, itemID: I-100, dateCreated: 199837382 } )
+// remove an item response ( data = { position: #, itemID: I-100, pageKey: 759faae4-c6fe-4b16-8fc5-3079ee92b60d } )
 TestShell.XhrManager.prototype.removeResponse = function(data, callback) {
     return this.sendAction('removeResponse', data, callback, {
         allowRetry: true,
@@ -185,6 +195,17 @@ TestShell.XhrManager.prototype.getPauseStatus = function(callback) {
     });
 };
 
+// ping the server to check if we are still active
+TestShell.XhrManager.prototype.ping = function (callback) {
+    return this.sendAction('getStatus', null, callback, {
+        allowRetry: true,
+        forceLogout: false,
+        showProgress: false,
+        showDialog: true,
+        showError: true
+    });
+};
+
 // this is called when block pausing is enabled and we are checking the servers opp status
 TestShell.XhrManager.prototype.logAuditTrail = function (data) {
     return this.sendPromise('logAuditTrail', data, null, {
@@ -192,7 +213,27 @@ TestShell.XhrManager.prototype.logAuditTrail = function (data) {
         forceLogout: false,
         showProgress: false,
         showDialog: false,
+        showError: false
+    });
+};
+
+TestShell.XhrManager.prototype.getResponse = function (pageKey, itemId, position, sequence) {
+    var postData = { pageKey: pageKey, itemId: itemId, position: position, sequence: sequence };
+    return this.sendPromise('getResponse', postData, null, {
+        allowRetry: false,
+        forceLogout: false,
+        showProgress: true,
+        showDialog: false,
         showError: false,
     });
 };
 
+TestShell.XhrManager.prototype.listResponses = function () {
+    return this.sendPromise('listResponses', null, null, {
+        allowRetry: true,
+        forceLogout: false,
+        showProgress: true,
+        showDialog: false,
+        showError: false,
+    });
+};

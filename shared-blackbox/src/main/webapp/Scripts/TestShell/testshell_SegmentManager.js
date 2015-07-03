@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿TestShell.Segment = function(id, position, label, isPermeable, entryApproval, exitApproval, itemReview, updatePermeable)
 {
     this._id = id;
@@ -234,6 +242,7 @@ TestShell.SegmentManager.init = function()
     var testSession = TDS.Student.Storage.getTestSession();
     var isGuestSession = (testSession && testSession.isGuest);
     var isReadOnly = TDS.isReadOnly; // TODO: Review if this still works
+    var isDataEntry = TDS.isDataEntry;
     var isReviewing = (TestShell.Config.reviewPage > 0);
 
     // add all the tds segments
@@ -246,7 +255,7 @@ TestShell.SegmentManager.init = function()
         }
 
         // NOTE: If proctorless test then don't require entry/exit approval (nobody to approve it)
-        if (isReadOnly || isGuestSession) {
+        if (isReadOnly || isGuestSession || isDataEntry) {
             segmentInfo.entryApproval = 0;
             segmentInfo.exitApproval = 0;
         } else if (isReviewing) {
@@ -535,7 +544,7 @@ TestShell.SegmentManager.deniedApproval = function(approval)
 
     // show message
     TDS.Dialog.showAlert(deniedMessage, function() {
-        TDS.logout();
+        TestShell.redirectLogin();
     });
 };
 

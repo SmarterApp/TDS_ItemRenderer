@@ -1,9 +1,53 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿TDS.Student = TDS.Student || {};
 
 (function (Student) {
 
     var API = {};
     var xhr = new TDS.Student.Xhr();
+
+    // storage.getTestProperties() (TestSelection.cs)
+    API.TestSelectionStatus = {
+        Disabled: 0,
+        Hidden: 1,
+        Start: 2,
+        Resume: 3
+    };
+
+    // api.checkApproval() (ApprovalInfo.cs)
+    API.TestApprovalStatus = {
+        Waiting: 0,
+        Approved: 1,
+        Denied: 2,
+        Logout: 3
+    };
+
+    // storage.getOppInfo() (OpportunityStatus.cs)
+    API.OpportunityStatus = {
+        Unknown: 0,
+        Denied: -1,
+        Failed: -2,
+        Pending: 1, // never started test (even if TestSelectionStatus is 'Resume')
+        Suspended: 2, // resuming started test (got into test shell)
+        Approved: 3,
+        Started: 4,
+        Paused: 5,
+        Review: 6,
+        Completed: 7,
+        Scored: 8,
+        NotApplicable: 9,
+        SegmentEntry: 10,
+        SegmentExit: 11,
+        Closed: 12,
+        Disabled: 13
+    };
 
     // POST: Pages/API/MasterShell.axd/loginStudent
     API.loginStudent = function (keyValues /*string[]*/, sessionID /*string*/, forbiddenApps /*string[]*/) {
@@ -133,8 +177,20 @@
     };
 
     // POST: Pages/API/MasterShell.axd/pauseTest
-    API.pauseTest = function () {
-        return xhr.sendPromise('pauseTest');
+    API.pauseTest = function (reason, validate) {
+
+        // create pause data
+        var data = {
+            validate: !!validate
+        };
+
+        // set reason it was included (otherwise null on the server)
+        if (reason) {
+            data.reason = reason;
+        }
+
+        // send pause request
+        return xhr.sendPromise('pauseTest', data);
     };
     
     // process the proctor approval data
@@ -169,12 +225,14 @@
     };
 
     // POST: Pages/API/MasterShell.axd/startTest
-    API.startTest = function (testee, formKey /*string*/) {
+    API.startTest = function (testee, formKeys /*List<string>*/) {
         var data = {
             testeeKey: testee.key,
-            testeeToken: testee.token,
-            formKey: formKey
+            testeeToken: testee.token
         };
+        if (formKeys) {
+            data.formKeys = formKeys;
+        }
         return xhr.sendPromise('startTest', data);
     };
     
@@ -184,12 +242,15 @@
     };
 
     // POST: Pages/API/MasterShell.axd/scoreTest
-    API.scoreTest = function (hideScoreReport, showItemScoreReportSummary, showItemScoreReportResponses) {
+    API.scoreTest = function (hideScoreReport, showItemScoreReportSummary, showItemScoreReportResponses, surveyData) {
         var data = {
             suppressScore: hideScoreReport,
             itemScoreReportSummary: showItemScoreReportSummary,
-            itemScoreReportResponses: showItemScoreReportResponses,
+            itemScoreReportResponses: showItemScoreReportResponses
         };
+        if (surveyData) {
+            data.surveyData = surveyData;
+        }
         return xhr.sendPromise('scoreTest', data);
     };
 
@@ -198,7 +259,7 @@
         var data = {
             suppressScore: hideScoreReport,
             itemScoreReportSummary: showItemScoreReportSummary,
-            itemScoreReportResponses: showItemScoreReportResponses,
+            itemScoreReportResponses: showItemScoreReportResponses
         };
         return xhr.sendPromise('getScores', data, null, {
             showProgress: false,

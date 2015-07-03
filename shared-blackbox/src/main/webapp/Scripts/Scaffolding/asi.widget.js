@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 This module is used for loading Alt Scaffolding items (QTI).
 */
@@ -30,15 +38,17 @@ This module is used for loading Alt Scaffolding items (QTI).
         var accProps = page.getAccommodationProperties();
         var hasASIVoiceGuidance = accProps.hasASIVoiceGuidance();
         // If Voice Guidance is OFF then the scaffolding items continue to work the same with the exception that there is no audio playback on the items (no-auto queuing of audio and no speaker buttons anywhere).  The teacher is going to use their own voice (like they would on the paper/pencil assessment) to instruct the student on what to do.
-        // I believe that when this is turned off then the item will need to be presented in it's entirety (stem with all options) immediately because there is no audio to wait for for presentation OR we just cycle through like we did before, but without playing the audio (whichever is easier).
+        // I believe that when this is turned off then the item will need to be presented in its entirety (stem with all options) immediately because there is no audio to wait for for presentation OR we just cycle through like we did before, but without playing the audio (whichever is easier).
 
         // remove exitAudio from stem 
         var stem = item.getStemElement();
         if (stem) {
             var exitAudioCue = this._processExitAudioLink(stem, hasASIVoiceGuidance);
             var exitAudioPlayer = new AsiItem.AudioInterface();
-            var exitAudioPlayerId = 'asi-' + item.position + 'exitAudio';
-            exitAudioPlayer.add(exitAudioCue, exitAudioPlayerId);
+            if (exitAudioCue) { // If there is an exit audio cue for this item
+                var exitAudioPlayerId = 'asi-' + item.position + 'exitAudio';
+                exitAudioPlayer.add(exitAudioCue, exitAudioPlayerId);
+            }
         }
 
         var onTerminate = function(type, args, instance) {
@@ -118,12 +128,18 @@ This module is used for loading Alt Scaffolding items (QTI).
     };
 
     Widget_ASI.prototype.getResponse = function() {
+
         var value = '';
+        var empty = true;
+        var valid = false;
+
         if (this.scaffolding) {
             value = this.scaffolding.getResponse();
+            empty = (!value || value.length == 0);
+            valid = (!empty && this.scaffolding.complete);
         }
-        var validResponse = (value && (value.length > 0) && (this.scaffolding) && (this.scaffolding.complete)) ? true : false;
-        return this.createResponse(value, validResponse);
+
+        return this.createResponse(value, valid, empty);
     };
 
     // response handler for ASI questions

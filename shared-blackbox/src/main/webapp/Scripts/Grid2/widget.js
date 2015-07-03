@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 This module hooks up the grid renderer. 
 */
@@ -170,8 +178,11 @@ This module hooks up the grid renderer.
         grid.subscribe('onAreaChange', function(gridEvt) {
 
             if (gridEvt.name != null) {
-                item.setActive(); // NOTE: Must pass in object or scrollTo get triggered on page
-                item.setActiveComponent(gridComponents[gridEvt.name]);
+                item.setActive();
+                // only set active component if the grid is loaded
+                if (grid.getState() == GridState.Loaded) {
+                    item.setActiveComponent(gridComponents[gridEvt.name]);
+                }
             }
 
             CM.log('GRID ' + item.position + ': AREA - ' + gridEvt.name);

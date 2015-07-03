@@ -38,12 +38,23 @@
 }
 
 .slide_controls_slider_bg {
-    background: url(images/slider_back.gif) repeat-x center center;
+    background: transparent;
     position: relative;
   	height: 23px;
   	width: 195px;
   	float: left;
   	margin-top: 5px;
+    z-index:2;
+}
+.slide_controls_slider_timeline {
+    background: url(images/slider_back.gif) repeat-x center center;
+    position: absolute;
+  	height: 23px;
+  	width: 195px;
+  	float: left;
+  	margin-top: 5px;
+    z-index:1;
+    
 }
 
 .slide_controls_btn {

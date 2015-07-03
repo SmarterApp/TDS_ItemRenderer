@@ -1,8 +1,29 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿TDS = window.TDS || {};
 
 (function(TDS) {
 
     var CSS_SHOWING_PROGRESS = 'showingLoading';
+    var CSS_SHOWING_DIALOG = 'showingDialog';
+    
+    // code to run when we show a dialog
+    function onShowDialog() {
+        YUD.addClass(document.body, CSS_SHOWING_DIALOG);
+        TDS.ARIA.hideContent();
+    }
+
+    // code to run when we hide a dialog
+    function onHideDialog() {
+        YUD.removeClass(document.body, CSS_SHOWING_DIALOG);
+        TDS.ARIA.showContent();
+    }
 
     var progressDialog = new YAHOO.widget.Panel("yuiProgressDialog", {
         width: '240px',
@@ -56,14 +77,8 @@
         // describedby: 'testby'
     });
 
-    dialog.showEvent.subscribe(function() {
-        YUD.addClass(document.body, 'showingDialog');
-    });
-
-    dialog.hideEvent.subscribe(function() {
-        // top.focus(); ?
-        YUD.removeClass(document.body, 'showingDialog');
-    });
+    dialog.showEvent.subscribe(onShowDialog);
+    dialog.hideEvent.subscribe(onHideDialog);
 
     // { header: '', buttons: [], text: '' }
     // { header: '', buttons: [], bodyHtml: '', formHtml: '' }
@@ -130,10 +145,12 @@
         dialog.render(document.body);
         dialog.show();
         dialog.cfg.setProperty('zindex', 1005); // BUG #33828
+
+        return dialog;
     }
 
     function showDialog(header, message, buttons) {
-        showObj({
+        return showObj({
             text: message,
             header: header,
             buttons: buttons
@@ -164,7 +181,7 @@
             { text: 'Global.Label.Yes', handler: handleYes }
         ];
 
-        showDialog(header, message, buttons);
+        return showDialog(header, message, buttons);
     }
 
     // internal function
@@ -270,28 +287,60 @@
         });
     }
 
+    // fixes the first and last tabbable elements
+    function fixTabLoop(dialog, fixFormElements) {
+        // YUI Dialog focus method are using firstFormElement instead of firstElement to redirect focus
+        dialog.setFirstLastFocusable();  //reset the tab order since we adjusted the close button location
+        dialog.setTabLoop(dialog.firstElement, dialog.lastElement);
+
+        // reset first/lastFormElement since Dialog.focusFirst/Last will use them instead of first/lastElement.
+        if (fixFormElements) {
+            dialog.firstFormElement = dialog.firstElement;
+            dialog.lastFormElement = dialog.lastElement;
+        }
+
+        // in Firefox, it deals with tabbing in a different way that when iframe gain the focus, it will focus on where it left last time.
+        // so for Firefox, if the focus goes by pass the close button, which is <a>, into iframe, we blur the iframe existing focus first.
+        if (Util.Browser.isFirefox()) {
+            var dialogEl = $(dialog.innerElement),
+                closeBtn = dialogEl.find('a').get(0);
+            if (closeBtn) {
+                $(closeBtn).on('focus', function(e) {
+                    var frameEl = dialogEl.find('iframe').get(0);
+                    if (frameEl) {
+                        var frameDoc = Util.Dom.getFrameContentDocument(frameEl);
+                        if (frameDoc && frameDoc.activeElement) {
+                            Util.Dom.blur(frameDoc.activeElement);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    function isAccessible() {
+        var accProps = Accommodations.Manager.getCurrentProps();
+        return accProps && accProps.isStreamlinedMode();
+    }
+    
     // set tab index on dialog
     fixTabIndex(dialog);
     
-    /*
-    SEARCH CODE: (^|[^\.])(showProgress|hideProgress|showSimpleDialog|showSimplePrompt|showSimpleAlert|showAlertWarning|_setTabIndexOnDialog)\(\S*\)
-
-    Objects:
-    progressDialog
-    simpleDialog
-    */
-
     // public dialog api
     TDS.Dialog = {
-        showProgress: showProgress, // showProgress
-        hideProgress: hideProgress, // hideProgress
+        showProgress: showProgress,
+        hideProgress: hideProgress,
         showObj: showObj,
-        show: showDialog, // showSimpleDialog
-        showPrompt: showPrompt, // showSimplePrompt
-        showAlert: showAlert, // showSimpleAlert
-        showWarning: showWarning, // showAlertWarning
+        show: showDialog,
+        showPrompt: showPrompt,
+        showAlert: showAlert,
+        showWarning: showWarning,
         showInput: showInput,
-        fixTabIndex: fixTabIndex // _setTabIndexOnDialog
+        fixTabIndex: fixTabIndex,
+        fixTabLoop: fixTabLoop,
+        isAccessible: isAccessible,
+        onShow: onShowDialog,
+        onHide: onHideDialog
     };
 
 })(TDS);

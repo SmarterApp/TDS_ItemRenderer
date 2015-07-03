@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // A queue for creating audio sounds to play back to back
 (function(YAHOO, Audio) {
 
@@ -34,7 +42,7 @@
 
     // remove a sound from the queue
     Queue.prototype.remove = function(sound) {
-        sound.onFailure.subscribe(this._onStop, this, true);
+        sound.onFailure.unsubscribe(this._onStop, this, true);
         sound.onStop.unsubscribe(this._onStop, this, true);
         sound.onIdle.unsubscribe(this._onFinish, this, true);
         Util.Array.remove(this._sounds, sound);

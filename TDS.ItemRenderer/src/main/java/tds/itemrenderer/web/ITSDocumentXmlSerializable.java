@@ -376,7 +376,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       startElement("options"); // <options>
       
       writeAttribute("minChoices", content.getOptions().getMinChoices ());
-      writeAttribute("maxChoices", content.getOptions().getMinChoices());
+      writeAttribute("maxChoices", content.getOptions().getMaxChoices());
       
       for (ITSOption option : content.getOptions())
       {

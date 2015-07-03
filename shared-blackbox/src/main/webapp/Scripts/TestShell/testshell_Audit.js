@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 *   Client side latency collector.  
 *   
@@ -14,13 +22,12 @@
 */
 
 TestShell.Audit = {
-    
-    _inProgressRecords: {},  // These are incomplete records that raw events are still updating. These are indexed by pageId
-    _completedRecords: [],   // These are completed records that are ready for reporting        
-    _reportingRecords: [],   // These are records that are in process of being reported to the backend
-    
-    _aggregateRecord: function (newRecord, existingRecords) {
-        var existingRecord = Util.Array.find(existingRecords, function (record, index, list) {
+    _inProgressRecords: {}, // These are incomplete records that raw events are still updating. These are indexed by pageId
+    _completedRecords: [], // These are completed records that are ready for reporting        
+    _reportingRecords: [], // These are records that are in process of being reported to the backend
+
+    _aggregateRecord: function(newRecord, existingRecords) {
+        var existingRecord = Util.Array.find(existingRecords, function(record, index, list) {
             return (record.pageId == newRecord.pageId && record.recordType == newRecord.recordType);
         });
         if (existingRecord != null) {
@@ -29,61 +36,61 @@ TestShell.Audit = {
             existingRecords.push(newRecord);
         }
     },
-        
+
     // All events are reported here. 
-    logAuditEvent: function (event) {
+    logAuditEvent: function(event) {
 
         if (this._inProgressRecords[event.pageId] == null) {
             this._inProgressRecords[event.pageId] = [];
         }
-        
+
         // look for events that trigger the creation of records
-        if (event.eventType == 'content-init') {            
+        if (event.eventType == 'content-init') {
             this._inProgressRecords[event.pageId].push(new TestShell.Audit.PageLoadRecord(event.pageId));
         } else if (event.eventType == 'page-requested') {
             this._inProgressRecords[event.pageId].push(new TestShell.Audit.PageVisitRecord(event.pageId));
         }
-        
+
         // iterate the array backwards to have the "records" process the event. We do this backwards because we want the latest records to respond to the events first
         var records = this._inProgressRecords[event.pageId];
-        for (var i = records.length-1; i >= 0; i--) {
-            if (!records[i].process(event)) {               
-                break;  // returning false breaks out of the loop    
+        for (var i = records.length - 1; i >= 0; i--) {
+            if (!records[i].process(event)) {
+                break; // returning false breaks out of the loop    
             }
         }
-        
+
         // iterate the transient records and move the completed ones to the _completedRecords array
         var index = this._inProgressRecords[event.pageId].length;
         while (index--) {
             var record = this._inProgressRecords[event.pageId][index];
-            if (record.isComplete) {                
+            if (record.isComplete) {
                 this._inProgressRecords[event.pageId].splice(index, 1);
                 this.logAuditRecord(record);
             }
-        }                                    
+        }
     },
 
     // These are completed audit Records. Some may need to aggregate with other unreported records
-    logAuditRecord: function (auditRecord) {
+    logAuditRecord: function(auditRecord) {
         if (!(auditRecord instanceof TestShell.Audit.Record))
             throw new TypeError("argument passed in is not of type TestShell.Audit.Record");
-        
+
         if (!auditRecord.isComplete)
             throw new TypeError("Audit record is not complete");
 
         if (auditRecord._performAggregation) {
             this._aggregateRecord(auditRecord, this._completedRecords);
         } else {
-            this._completedRecords.push(auditRecord);    
-        }                
-    },   
+            this._completedRecords.push(auditRecord);
+        }
+    },
 
     // Records that need to be sent to the server and this clears the pending latency records.
-    recordsToReport: function() {        
+    recordsToReport: function() {
         // Move all the completed records over to the ready for reporting pile
         var records = this._completedRecords.splice(0, this._completedRecords.length);
-        
-        Util.Array.each(records, function (record, index, array){
+
+        Util.Array.each(records, function(record, index, array) {
             if (record._performAggregation) {
                 this._aggregateRecord(record, this._reportingRecords);
             } else {
@@ -93,26 +100,37 @@ TestShell.Audit = {
 
         return this._reportingRecords;
     },
-    
-    markAsReported: function () {
+
+    markAsReported: function() {
         // Design Note: We splice here instead of using a "isReported" marker on the record and retaining all records so that we dont run into a memory leak 
         this._reportingRecords.splice(0, this._reportingRecords.length);
     },
-    
-    serializeToJSON: function (records) {
+
+    toObject: function(records) {
+
         // make sure the pageNum is included for each record because without it, this record cannot be posted to the DB       
-        Util.Array.each(records, function(record) {
+        records.forEach(function (record) {
             if (!record.pageNum) {
                 var testShellPage = TestShell.PageManager.get(record.pageId);
-                record.pageNum =  testShellPage != null ? testShellPage.pageNum : -1;
+                record.pageNum = testShellPage != null ? testShellPage.pageNum : -1;
             }
         });
 
         // split the records into page loads and page visits
-        var obj = {
-            pageLoads: Util.Array.filter(records, function(record) { return record instanceof TestShell.Audit.PageLoadRecord; }),
-            pageVisits: Util.Array.filter(records, function(record) { return record instanceof TestShell.Audit.PageVisitRecord; })
-        };               
+        return {
+            pageLoads: records.filter(function(record) {
+                return record instanceof TestShell.Audit.PageLoadRecord;
+            }),
+            pageVisits: records.filter(function(record) {
+                return record instanceof TestShell.Audit.PageVisitRecord;
+            })
+        };
+
+    },
+
+    serializeToJSON: function (records) {
+
+        var obj = this.toObject(records);       
 
         //custom JSON converter mainly to deal with dates and members that should be skipped
         var converter = function(key, value) {            

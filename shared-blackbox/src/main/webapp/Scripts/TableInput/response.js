@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 This file contains code for generating and setting a xml response.
 */
@@ -102,7 +110,7 @@ This file contains code for generating and setting a xml response.
         // check if the current response is different than the original response
         $inputs.each(function (idx, inputEl) {
             var originalResponse = $(inputEl).data('originalResponse');
-            var currentResponse = $(inputEl).val().trim();
+            var currentResponse = $(inputEl).val();
             if (originalResponse !== currentResponse) {
                 valid = true;
                 return false; // stop loop

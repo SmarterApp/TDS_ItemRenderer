@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /**
  * *****************************************************************************
  * @class OptionList 
@@ -224,7 +232,11 @@ Simulator.Input.OptionList = function(sim, node, panel, theSection, container) {
             var itemIDReset = x == 0 ? true : false;
             itemID = this.createItemID(itemIDReset);
             items[x]['itemID'] = itemID;
-            image = (items[x]).lookup('image');
+
+            // retrieve translated image
+            var imageTag = (items[x]).lookup('image');
+            image = transDictionary().translate((items[x]).lookup('image')); // set translated image src as image
+
             if(x == 0) {
                 if (image != undefined && image != null) {
                 	ulElement = simDocument().createElement('ul');
@@ -245,12 +257,16 @@ Simulator.Input.OptionList = function(sim, node, panel, theSection, container) {
                 outerDiv.appendChild(ulElement);
             }
             if ((items[x]).lookup('val') != undefined) {
+                // retrieve translated text
+                var valueTag = (items[x]).lookup('val');
+                var valueTranslated = transDictionary().translate(valueTag);
+
             	var listElement = simDocument().createElement('li');
             	var inputEl = simDocument().createElement('input');
             	inputEl.id = itemID;
             	inputEl.setAttribute('type', 'radio');
             	inputEl.setAttribute('name', 'RadioButtonGroup' + nodeID + nextNum);
-            	inputEl.setAttribute('value', (items[x]).lookup('val'));
+            	inputEl.setAttribute('value', valueTranslated); // set translated text as value
             	if (this.getSaveOnChange()) {
                     utils().bindEvent(inputEl, 'click', function () {
                         that.doOnClick(nodeID);
@@ -274,15 +290,13 @@ Simulator.Input.OptionList = function(sim, node, panel, theSection, container) {
             		imageSpanEl.setAttribute('class', 'holderImage');
             		var imageEl = simDocument().createElement('img');
             		imageEl.setAttribute('src', image);
-            		imageEl.setAttribute('alt', (items[x]).lookup('val'));
+            		imageEl.setAttribute('alt', valueTranslated); // set translated text as alt
             		imageSpanEl.appendChild(imageEl);
             		elementLabel.appendChild(imageSpanEl);
             	}
             	var listLabelSpanEl = simDocument().createElement('span');
             	listLabelSpanEl.setAttribute('class', 'listLabel');
-                // retrieve translated text
-            	var innerHTMLtag = (items[x]).lookup('val');
-            	listLabelSpanEl.innerHTML = transDictionary().translate(innerHTMLtag);
+            	listLabelSpanEl.innerHTML = valueTranslated; // set translated text as innerHTML
             	elementLabel.appendChild(listLabelSpanEl);
             	listElement.appendChild(elementLabel);
             	ulElement.appendChild(listElement);

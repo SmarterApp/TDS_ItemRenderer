@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Test shell page that contains adaptive item groups.
 */
@@ -7,11 +15,10 @@ TestShell.PageGroup = function(id)
     TestShell.PageGroup.superclass.constructor.call(this, id);
 
     this.pageKey = null;
-    this.dateCreated = null;
     this.pageNum = 0;
     this.items = [];
     this.numRequired = -1;
-    
+    this.prefetched = false;
     this.segment = 0;
     this.segmentID = null;
 };
@@ -27,18 +34,9 @@ TestShell.PageGroup.prototype.getContentUrl = function()
     urlBuilder.push('?groupID=' + this.id);
     urlBuilder.push('&page=' + this.pageNum);
     urlBuilder.push('&pageKey=' + this.pageKey);
-    urlBuilder.push('&datecreated=' + this.dateCreated);
-    urlBuilder.push('&new=' + this.isNew());
+    urlBuilder.push('&new=' + this.prefetched);
     urlBuilder.push('&attempt=' + this.getRequestCount());
     return urlBuilder.join('');
-};
-
-// check if this group is new (prefetched)
-TestShell.PageGroup.prototype.isNew = function()
-{
-    return Util.Array.some(this.items, function (item) {
-        return item.prefetched;
-    }, this);
 };
 
 TestShell.PageGroup.prototype.isEnabled = function()
@@ -81,6 +79,71 @@ TestShell.PageGroup.prototype.isCompleted = function() // base
     }
 
     return completed;
+};
+
+// get all the required items
+TestShell.PageGroup.prototype.getRequiredItems = function() {
+    return this.items.filter(function(item) {
+        return item.isRequired;
+    });
+};
+
+// get all items that have a valid response
+TestShell.PageGroup.prototype.getAnsweredItems = function () {
+    return this.items.filter(function(item) {
+        return item.isSelected && item.isValid;
+    });
+};
+
+TestShell.PageGroup.prototype.getUnansweredLabel = function () {
+    
+    var label = null;
+
+    // check if the label where we show positions is available
+    if (Messages.has('NextUnansweredPositions')) {
+
+        var requiredItems = this.getRequiredItems();
+        var answeredItems = this.getAnsweredItems();
+
+        // get all the item positions that are required and don't have a response
+        var unanweredPositions = requiredItems.filter(function (item) {
+            // check if required item has a response
+            return answeredItems.indexOf(item) == -1;
+        }).map(function(item) {
+            return item.position;
+        });
+
+        // if there are unanswered positions then create a nice comma seperated list
+        if (unanweredPositions.length) {
+            var andLabel = Messages.getAlt('Global.Label.And', 'and');
+            var lastIdx = unanweredPositions.length - 1;
+            var unansweredLabel = new Util.StringBuilder();
+            unanweredPositions.forEach(function(position, idx) {
+                if (idx > 0) {
+                    if (idx === lastIdx) {
+                        unansweredLabel.append(' ');
+                        unansweredLabel.append(andLabel);
+                        unansweredLabel.append(' ');
+                    } else {
+                        unansweredLabel.append(', ');
+                    }
+                }
+                unansweredLabel.append(position);
+            });
+
+            // get label used for positions and fill in the format param
+            label = ErrorCodes.get('NextUnansweredPositions');
+            label = Util.String.format(label, unansweredLabel);
+        }
+    }
+
+    // if there was no special labels created then use default
+    if (!label) {
+        label = ErrorCodes.get('NextUnanswered');
+    }
+
+    return label;
+
 };
 
 // check if this page was visited

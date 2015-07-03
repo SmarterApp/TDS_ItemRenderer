@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 "undefined"==typeof MeasurementTool&&(MeasurementTool={});MeasurementTool.Set=PiObject.extend();
 MeasurementTool.Set.prototype.init=function(b){b=this.set("config",b||{});this.addListener("config",this.defaultConfig);MeasurementTool.Set.parent.init.apply(this,arguments);var c=this.exists("children")?this.get("children"):this.set("children",new PiObject);this.addListener("children",this.initCollection);c.addListener(this,this.transformChildren,!1);c=this.exists("transforms")?this.get("transforms"):this.set("transforms",new PiObject);c.addListener(this,this.defineTransform);c.addListener(this,
 this.transform);this.addFilter("transform",this.getTransform);this.addFilter("transforms",this.getPosition);this.addFilter("transforms",this.getRotation);this.addFilter("dragHandleAttributes",this.getDragHandleAttributes);this.addListener("canvas",this.addSet);this.addFilter("offset",this.getOffset);this.addListener("scale",this.setScale);this.addListener("visibility",this.setVisibility);this.addListener("visibility",this.resetTransforms)};

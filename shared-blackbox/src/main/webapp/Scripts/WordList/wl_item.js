@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /////////////// Word List Item Object
 // A WordListItem handles the mechanics of tagging and navigating an item's word 
 // list content.  Public methods allow for tagging of items for word list content and 
@@ -29,9 +37,10 @@ function WordListItem () {
     // spans that contain word list items.
     var myPageSpans = [];
     // tabbing information on the spans.
-    var myPageZOrders = {
-        current: -1,
-        total: 0
+    var myPageWLWords = {
+        current: -1, // Currently selected WL Word (-1 means none)
+        last: -1, // Last selected WL Word (used when we Ctrl-X again)
+        total: 0 // Total # of WL Words on this Page
     };
 
     var spanCount = 0;
@@ -62,7 +71,7 @@ function WordListItem () {
         WordListItem.CTag++;
         $(anchor).attr('id', spanid);
         $(anchor).attr('tabindex', '0');
-        $(anchor).attr('aria-label', 'lookup word');
+        $(anchor).attr('title', 'lookup word');
         $(anchor).attr('role', 'button');
 
         YAHOO.util.Event.addListener(anchor, 'mouseenter', WordListItem.mouseOver, this);
@@ -81,7 +90,7 @@ function WordListItem () {
         // Update the tabbing array
         myPageSpans[spanCount] = anchor;
         ++spanCount;
-        myPageZOrders.total = spanCount;
+        myPageWLWords.total = spanCount;
     };
     
     // The tagging format used by ITS is not the one that we want in the DOM, due to issues like
@@ -149,6 +158,14 @@ function WordListItem () {
         WordListPanel.sendRequest(this);
     });
 
+    this.ClearSelectedWord = function () {
+        var zo = myPageWLWords;
+        if (zo) {
+            zo.last = zo.current; // Save which WL Word we were on, but don't leave it selected otherwise we'll show the WL Dialog on the next keyup
+            zo.current = -1;
+        }
+    };
+
     // Some key events allow for shortcuts so handle them. For now we use:
     // Ctrl-X to tab between word list spans when not in streamlined mode.
     // Last selected span is displayed as if it were clicked.  The tabbing
@@ -158,12 +175,12 @@ function WordListItem () {
     // returns true if the key event was handled here.
     this.HandleKey = function (evt) {
         var isHandled = false;
-        
+        var zo = myPageWLWords;
+        var spans = myPageSpans;
+
         // key has been released - is a word list term selected
         if ((evt.type == 'keyup') && !evt.ctrlKey) {
-            if (myPageZOrders != null) {
-                zo = myPageZOrders;
-                spans = myPageSpans;
+            if (zo != null) {
                 if (zo.current >= 0) {
                     var div = spans[zo.current];
                     var entry = { wl_item: this, span: div };
@@ -201,7 +218,7 @@ function WordListItem () {
         // Indicate that this even was for us, so we stop propagation.
         isHandled = true;
         
-        // If word list is displayed, use tab shortcutto tab between
+        // If word list is displayed, use tab shortcut to tab between
         // tabs in the word list.
         if ((WordListPanel.panel != null) && WordListPanel.IsVisible() &&
         (WordListPanel.tabView != null) && (WordListPanel.tabCount > 0)) {
@@ -213,25 +230,34 @@ function WordListItem () {
         // ctrl-x, tab to the next word list span.  If the last one on the 
         // page, select none
         var spanGroupAttr = "";
-        if (myPageZOrders != null) {
-            var zo = myPageZOrders;
-            var spans = myPageSpans;
+        if (zo != null) {
+            // Deactivate currently selected WL Word
             if (zo.current >= 0) {
                 spanGroupAttr = YUD.getAttribute(spans[zo.current], WordListItem.groupAttributeName);
                 this.AddClassToGroup(spans[zo.current], WordListItem.ClassNameString, WordListItem.ClassNameStringHover);
             }
-            ++zo.current;
-            // There might be multiple spans for the same word list, so advance the 
-            // counter twice if we need to.
-            while ((zo.current < zo.total) && (YUD.getAttribute(spans[zo.current], WordListItem.groupAttributeName) == spanGroupAttr)) {
+
+            // Move to the next WL Word on this page
+            if (zo.last != -1) {
+                zo.current = zo.last;
+            } else {
                 ++zo.current;
+                // There might be multiple spans for the same word list, so advance the 
+                // counter twice if we need to.
+                while ((zo.current < zo.total) && (YUD.getAttribute(spans[zo.current], WordListItem.groupAttributeName) == spanGroupAttr)) {
+                    ++zo.current;
+                }
+                if (zo.current == zo.total) {
+                    zo.current = -1;
+                }
             }
-            if (zo.current == zo.total) {
-                zo.current = -1;
-                return isHandled;
+
+            // Activate the newly selected WL Word
+            zo.last = -1;
+            if (zo.current != -1) {
+                this.AddClassToGroup(spans[zo.current], WordListItem.ClassNameStringHover, WordListItem.ClassNameString);
+                ContentManager.log("wordlist: focus span " + zo.current + " out of " + zo.total + " evt is " + evt.type);
             }
-            this.AddClassToGroup(spans[zo.current], WordListItem.ClassNameStringHover, WordListItem.ClassNameString); 
-            ContentManager.log("wordlist: focus span " + zo.current + " out of " + zo.total + " evt is " + evt.type);
         }
 
         return isHandled;
@@ -269,26 +295,26 @@ function WordListItem () {
 ///////////////// Event Handlers  ////////////////
 
 // Change class of span and other spans in group to hover
-WordListItem.mouseOver = (function (event, wl) {
+WordListItem.mouseOver = function (event, wl) {
     var div = this;
     wl.AddClassToGroup(div, WordListItem.ClassNameStringHover, WordListItem.ClassNameString);
-});
+};
 
 // Change class of span and other spans in gropu to normal
-WordListItem.mouseOut = (function (event, wl) {
+WordListItem.mouseOut = function (event, wl) {
     var div = this;
     wl.AddClassToGroup(div, WordListItem.ClassNameString, WordListItem.ClassNameStringHover);
-});
+};
 
 // Use has clicked on one of the word list activated spans (where a click is either a mouse click
 // or a press of the enter key/space bar when the word list item is focused in streamlined mode).
 // When not in streamlined mode keyboard input is handled in the HandleKey function above.
 // Get required information from the span/item and send it to the panel click handler.
-WordListItem.clickHandler = (function (event, wl) {
+WordListItem.clickHandler = function (event, wl) {
     if (event.type == 'click' || (event.type == 'keyup' && (event.keyCode == 13 || event.keyCode == 32))) {
         var div = this;
         var entry = { wl_item: wl, span: div };
         var headerText = wl.getGroupHtml(div);
         WordListPanel.processClick(entry, headerText);
     }
-});
+};

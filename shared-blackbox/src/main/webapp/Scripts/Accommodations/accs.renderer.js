@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿Accommodations.Renderer = (function() {
 
     function Renderer(accs, opts) {
@@ -74,7 +82,8 @@
     Renderer.prototype.renderType = function (accType) {
 
         // create container or clear out existing container
-        var containerEl = this.createContainer(accType);
+        var containerEl = this.createContainer(accType),
+            isMultiselect = accType.isMultiSelect();
 
         // check if accommodation is visible
         if ((!this._opts.showHidden && !accType.isVisible()) ||
@@ -98,7 +107,12 @@
 
             // create form element label
             var labelEl = this.createLabel(accType, reviewMode);
-            containerEl.appendChild(labelEl);
+
+            //for multiselect options, wrap it up with fieldset
+            var container = isMultiselect ? $('<fieldset></fieldset>').appendTo(containerEl) : containerEl;
+
+            // append labelEl
+            $(labelEl).appendTo(container);
 
             // logic for figuring out best way to render this accommodation
             var ctrlEl;
@@ -122,8 +136,10 @@
             // add control
             if (ctrlEl) {
                 $(ctrlEl).addClass('control');
-                containerEl.appendChild(ctrlEl);
+                $(container).append(ctrlEl);
             }
+
+
 
             // create line break
             var clearEl = document.createElement('span');
@@ -162,9 +178,6 @@
             $(containerEl).addClass('dependency');
         }
 
-        // adding aria-labelledby attribute to the container
-        $(containerEl).attr({ 'aria-labelledby': 'containerLabel_' + accType.getControlId() });
-
         return containerEl;
 
     };
@@ -197,7 +210,15 @@
 
         var labelText = document.createTextNode(accType.getLabel() + ': ');
         labelEl.appendChild(labelText);
-        return labelEl;
+
+        //for multiselect options, wrap up label with <legend>
+        if (isMultiselect) {
+            var legendEl = $('<legend></legend');
+            legendEl.append(labelEl);
+            return legendEl;
+        } else {
+            return labelEl;
+        }
     };
 
     // when in review mode render control as plain text

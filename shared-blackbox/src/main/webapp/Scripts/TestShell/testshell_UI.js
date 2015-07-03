@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Test shell general user interface functionality. 
 */
@@ -143,10 +151,19 @@ Test shell general user interface functionality.
         });
     };
 
-    UI.isLoading = function() {
+    var loadingInstance = 0;
+
+    // check if the loading screen is showing
+    UI.isLoading = function (instance) {
+        // check if loading instance matches
+        if (instance > 0 && instance !== loadingInstance) {
+            return false;
+        }
+        // check if loading class is on the body
         return YUD.hasClass(document.body, UI.CSS.loading);
     };
 
+    // show the loading screen (blocks all ui)
     UI.showLoading = function(message) {
         if (YAHOO.lang.isString(message)) {
             if (YUD.get('loadingMessage')) {
@@ -156,14 +173,18 @@ Test shell general user interface functionality.
             // YUD.get('loadingMessage').innerHTML = '';
         }
 
-        if (this.isLoading()) {
-            return false;
+        if (!this.isLoading()) {
+            YUD.addClass(document.body, UI.CSS.loading);
         }
-        return YUD.addClass(document.body, UI.CSS.loading);
+
+        // return a unique id so folks can reference loading screen
+        loadingInstance = Math.ceil(Math.random() * 9999999999999);
+        return loadingInstance;
     };
 
-    UI.hideLoading = function() {
-        if (!this.isLoading()) {
+    // hide the loading screen
+    UI.hideLoading = function(instance) {
+        if (!this.isLoading(instance)) {
             return false;
         }
         return YUD.removeClass(document.body, UI.CSS.loading);
@@ -232,22 +253,7 @@ Test shell general user interface functionality.
 
     // update test name and # of completed
     UI.updateTestInfo = function() {
-
-        // figure out how many responses the user has seen
-        var responsesSoFar = 0;
-
-        // assume all responses before the first content page are answered
-        var firstPage = TS.PageManager.getFirstGroup();
-        if (firstPage && firstPage.items) {
-            responsesSoFar = firstPage.items[0].position - 1;
-        }
-
-        // count num responses answered for all visible content pages
-        var pages = TS.PageManager.getGroups();
-        Util.Array.each(pages, function(page) {
-            responsesSoFar += page.getNumAnswered();
-        });
-
+        
         // build label text
         var labelEl = UI.Nodes.testName;
         var labelText = TS.Config.testName;
@@ -259,15 +265,36 @@ Test shell general user interface functionality.
         // check if we need to calc stats
         if (tpiCode && tpiCode != 'TDS_TPI_None') {
 
+            // how many items have we got
+            var itemsSoFar = 0;
+
+            // figure out how many responses the user has made
+            var responsesSoFar = 0;
+
+            // the expected test length
             var testLength = TS.Config.testLength;
 
-            // if the test is completed make sure length is correct (ignore legacy TDS_TCI_Responses)
-            if (TS.testFinished && tpiCode != 'TDS_TPI_Responses') {
-                var itemsCount = 0;
-                pages.forEach(function(page) {
-                    itemsCount += page.items.length;
-                });
-                testLength = itemsCount;
+            // get the last page and last item position to figure out how many items we have so far
+            var lastPage = TestShell.PageManager.getLastGroup();
+            if (lastPage && lastPage.items && lastPage.items.length > 0) {
+                itemsSoFar = lastPage.items[lastPage.items.length - 1].position;
+            }
+
+            // assume all responses before the first content page are answered
+            var firstPage = TS.PageManager.getFirstGroup();
+            if (firstPage && firstPage.items && firstPage.items.length > 0) {
+                responsesSoFar = firstPage.items[0].position - 1;
+            }
+
+            // count num responses answered for all visible content pages
+            var pages = TS.PageManager.getGroups();
+            pages.forEach(function (page) {
+                responsesSoFar += page.getNumAnswered();
+            });
+
+            // make sure length is correct
+            if ((TS.testLengthMet && itemsSoFar !== testLength) || itemsSoFar > testLength) {
+                testLength = itemsSoFar;
             }
 
             // figure out percentage complete
@@ -278,10 +305,12 @@ Test shell general user interface functionality.
                 testPercent = 100;
             }
 
-            if (tpiCode == 'TDS_TPI_Responses' || tpiCode == 'TDS_TPI_ResponsesFix') {
+            if (tpiCode == 'TDS_TPI_Responses' || tpiCode == 'TDS_TPI_ResponsesFix' /* code removed */) {
+                // write out counts
                 var i18n_1 = Messages.getAlt('TDSShellUIJS.Label.OutOf', 'out of');
                 labelText += ' (' + responsesSoFar + ' ' + i18n_1 + ' ' + testLength + ')';
             } else if (tpiCode == 'TDS_TPI_Percent') {
+                // write out percent
                 var i18n_2 = Messages.getAlt('TDSShellUIJS.Label.OutOfPercent', 'completed');
                 labelText += ' (' + testPercent + '% ' + i18n_2 + ')';
             }

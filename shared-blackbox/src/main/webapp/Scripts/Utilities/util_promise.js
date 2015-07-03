@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 A simple interface for creating promises.
 API: https://github.com/kriskowal/q
@@ -8,6 +16,8 @@ Future: https://github.com/petkaantonov/bluebird (https://news.ycombinator.com/i
 Util.Promise = {};
 
 (function (P, Q) {
+    Q.stopUnhandledRejectionTracking();
     P.defer = Q.defer;
     P.isPromise = Q.isPromise;
+    P.when = Q.when;
 })(Util.Promise, Q);

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Plugin/Widget manager for passage and items
 */
@@ -35,20 +43,25 @@ Plugin/Widget manager for passage and items
         sort(registrations);
     }
 
-    function extendPlugin(cls) {
+    // TODO: this summer, make override behavior default
+    function extend(cls, supercls, prototypeHasOverrides) {
+        YAHOO.lang.extend(cls, supercls, prototypeHasOverrides === true ? cls.prototype : undefined);
+    }
+
+    function extendPlugin(cls, prototypeHasOverrides) {
         // check if already extended
         if (typeof cls.superclass != 'object' ||
             typeof cls.superclass.constructor != 'function') {
-            YAHOO.lang.extend(cls, CM.EntityPlugin);
+            extend(cls, CM.EntityPlugin, prototypeHasOverrides);
         }
     }
 
-    function extendWidget(cls) {
-        YAHOO.lang.extend(cls, CM.ItemWidget);
+    function extendWidget(cls, prototypeHasOverrides) {
+        extend(cls, CM.ItemWidget, prototypeHasOverrides);
     }
 
     function registerPlugin(name, cls, match, opts) {
-        extendPlugin(cls);
+        extendPlugin(cls, opts && opts.prototypeHasOverrides);
         addRegistration(name, cls, match, opts, {
             widget: false,
             priority: 100,
@@ -57,7 +70,7 @@ Plugin/Widget manager for passage and items
     }
 
     function registerWidget(name, cls, match, opts) {
-        extendWidget(cls);
+        extendWidget(cls, opts && opts.prototypeHasOverrides);
         addRegistration(name, cls, match, opts, {
             widget: true,
             priority: 200,

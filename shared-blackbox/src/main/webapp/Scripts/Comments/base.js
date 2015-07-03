@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // base class for comments
 TestShell.Comments.Base = function () {
     this._dialog = null; // current YUI dialog
@@ -72,7 +80,12 @@ TestShell.Comments.Base.prototype.render = function() {
     
     // save dialog instance
     this._dialog = dialog;
-    TestShell.Comments._overlayManager.register(dialog);
+
+    //Register the dialog to TDS.ToolManager where we manage all dialogs together. 
+    //This is needed because https://bugz.airast.org/default.asp?150705#922339 ESC key does not work as expected to cancel the dialog in Chrome.
+    //Because the YUI containerariaplugin.js line #131 has a chrome detection error especially for chrome. And we have our own code to take care of it in TDS.ToolManager's _overlayManager.
+    //This can be found officially at the example containerariaplugin.js page: http://yui.github.io/yui2/docs/yui_2.9.0_full/examples/container/container-ariaplugin.html
+    TDS.ToolManager._overlayManager.register(dialog);
 
     // set header
     dialog.setHeader(this.getHeaderText());
@@ -84,7 +97,7 @@ TestShell.Comments.Base.prototype.render = function() {
     ];
 
     dialog.cfg.queueProperty("buttons", buttons);
-
+    
     // EVENTS:
     dialog.beforeShowEvent.subscribe(this._onBeforeShow, this, true);
     dialog.showEvent.subscribe(this._onShow, this, true);
@@ -186,6 +199,11 @@ TestShell.Comments.Base.prototype._onBeforeShow = function()
     } else {
         inputEl.value = value;
     }
+
+    // trap focus inside dialog
+    if (TDS.Dialog.isAccessible()) {
+        TDS.Dialog.fixTabLoop(this._dialog, false);
+    }
     
     // reset component focus
     ContentManager.resetActiveComponent();
@@ -195,23 +213,24 @@ TestShell.Comments.Base.prototype._onBeforeShow = function()
 };
 
 // this is called when the comment dialog show event fires
-TestShell.Comments.Base.prototype._onShow = function()
-{
-    YUD.addClass(document.body, TestShell.UI.CSS.dialogShowing);
+TestShell.Comments.Base.prototype._onShow = function() {
+
+    TDS.Dialog.onShow();
 
     // automatically set focus on input if this is not a touch device
     if (!Util.Browser.isTouchDevice()) {
         var inputEl = this.getInputEl();
         if (inputEl != null) {
-            setTimeout(function() { inputEl.focus(); }, 0);
+            setTimeout(function() {
+                inputEl.focus();
+            }, 0);
         }
     }
 };
 
 // this is called when the comment dialog hide event fires 
-TestShell.Comments.Base.prototype._onHide = function()
-{
-    YUD.removeClass(document.body, TestShell.UI.CSS.dialogShowing);
+TestShell.Comments.Base.prototype._onHide = function() {
+    TDS.Dialog.onHide();
     Util.Dom.focusWindow(2); // (BUG #26524)
 };
 

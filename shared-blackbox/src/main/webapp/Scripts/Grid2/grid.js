@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
  * This is the main grid class and the entry point for everything.
  */
@@ -704,18 +712,17 @@ Grid.prototype.addMouseListener = function(id, handler)
         // if mousing down then save this as the clicked point
         if (name == 'mousedown') clickedPosition = currentPosition;
 
-        var callHandler = function(eventName)
-        {
+        var callHandler = function(eventName) {
             // create fake event
-            var svgEvent =
-            {
+            var svgEvent = {
                 name: eventName,
                 target: evt.target,
                 raw: evt,
                 currentPosition: currentPosition,
-                clickedPosition: clickedPosition
+                clickedPosition: clickedPosition,
+                touch: evt.touch === true
             };
-
+            // call event handler
             handler(svgEvent);
         };
 

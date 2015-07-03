@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function(CM, CI) {
     
     var DataType = {
@@ -11,15 +19,10 @@
 
     // A struct for representing a widget response.
     // NOTE: Assigning func to 'var' so toString() works.
-    var Response = function(id, value, valid, selected) {
-
-        Util.Assert.isString(id);
-        Util.Assert.isNotUndefined(value);
-        Util.Assert.isBoolean(valid);
-
-        // set defaults
+    var Response = function (id, value, valid, empty, selected) {
+        
+        // when was this response created
         var created = new Date();
-        selected = (typeof selected == 'boolean') ? selected : valid;
 
         // define properties as read-only
         Object.defineProperties(this, {
@@ -47,6 +50,11 @@
                 get: function () {
                     return selected;
                 }
+            },
+            'empty': {
+                get: function () {
+                    return empty;
+                }
             }
         });
 
@@ -65,7 +73,7 @@
         });
     }
 
-    Response.parseDataType = function(value) {
+    function parseDataType(value) {
         if (typeof value === 'string') {
             return DataType.String;
         } else if ($.isArray(value)) {
@@ -78,12 +86,12 @@
 
     Object.defineProperty(Response.prototype, 'dataType', {
         get: function () {
-            return Response.parseDataType(this.value);
+            return parseDataType(this.value);
         }
     });
 
-    Response.prototype.toString = function (delimiter) {
-        var type = dataType;
+    Response.prototype.toString = function(delimiter) {
+        var type = this.dataType;
         if (this.value == null) {
             return '';
         } else if (type == DataType.String) {
@@ -96,8 +104,31 @@
             return JSON.stringify(this.value);
         }
     }
-    
-    CM.Response = Response;
+
+    CM.createResponse = function(id, value, valid, empty, selected) {
+
+        Util.Assert.isString(id);
+        Util.Assert.isNotUndefined(value);
+        Util.Assert.isBoolean(valid);
+
+        if (typeof empty != 'boolean') {
+            if (value == null || value.length == 0) {
+                // if the response is null or has no length then it is considered empty
+                empty = true;
+            } else {
+                // if the response is not valid then for legacy reasons assume it is empty
+                empty = !valid;
+            }
+        }
+
+        if (typeof selected != 'boolean') {
+            // if the response is valid or not empty then consider it selected
+            selected = valid || !empty;
+        }
+
+        return new Response(id, value, valid, empty, selected);
+
+    };
 
     /******************************************************************************************/
 
@@ -191,16 +222,23 @@
         // create a single xml string out of all the responses
         var value = container.create(responses);
 
-        // create a Response object
-        var valid = responses.every(function(response) {
+        // all widget responses need to be valid for the item response to be valid
+        var valid = responses.every(function (response) {
             return response.valid;
         });
 
+        // all widget responses need to be empty for the item response to be empty
+        var empty = responses.every(function (response) {
+            return response.empty;
+        });
+
+        // all widget responses need to be valid for the item response to be selected
         var selected = responses.every(function (response) {
             return response.selected;
         });
 
-        return new CM.Response(this.getID(), value, valid, selected);
+        // create response object
+        return CM.createResponse(this.getID(), value, valid, empty, selected);
     };
 
     // set this items response, this will call into the widget

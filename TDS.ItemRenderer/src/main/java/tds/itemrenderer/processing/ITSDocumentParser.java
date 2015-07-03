@@ -497,8 +497,8 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
     if (!StringUtils.isBlank (optionlist.getMinChoices ())) {
        itsOptionList.setMinChoices (Integer.parseInt (optionlist.getMinChoices ()));
     } 
-    if (!StringUtils.isBlank (optionlist.getMinChoices ())) {
-       itsOptionList.setMinChoices (Integer.parseInt (optionlist.getMaxChoices ()));
+    if (!StringUtils.isBlank (optionlist.getMaxChoices ())) {
+       itsOptionList.setMaxChoices (Integer.parseInt (optionlist.getMaxChoices ()));
     }
     if (options != null && options.size () > 0) {
       for (Option option : options) {

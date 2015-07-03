@@ -43,7 +43,6 @@
     <reference set="content-slideshow2" />
     <reference set="content-mask" />
     <reference set="content-edittask" />
-    <reference set="content-notes" />
     <reference set="content-scratchpad" />
     <reference set="content-scaffolding" />
     <reference set="content-ti" />
@@ -71,7 +70,6 @@
     <exclude set="content-editor2" />
     <exclude set="content-linereader" />
     <exclude set="content-slideshow2" />
-    <exclude set="content-notes" />
     <exclude set="content-scaffolding" />
     <exclude set="content-ti" />
     <exclude set="content-mask" />
@@ -85,7 +83,6 @@
     <exclude set="content-editor2" />
     <exclude set="content-linereader" />
     <exclude set="content-slideshow2" />
-    <exclude set="content-notes" />
     <exclude set="content-scaffolding" />
     <exclude set="content-ti" />
     <exclude set="content-mask" />

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 CaretPositionUtils = {
     getCaretPosition: function (ctrl) {
 	    var caretPos = 0;	// IE Support
@@ -70,11 +78,13 @@ CaretPositionUtils = {
     {
         var currentPosition = CaretPositionUtils.getCaretPosition(inputarea);
         var value = inputarea.value;
-        if (value.length > 0 && currentPosition < value.length)
-        {
+
+        // for mobile browsers, the input area is "readonly", so we do not actually need any INSERT other than attaching it to the end of current string
+        if (value.length > 0 && currentPosition < value.length && !BrowserUtils.isTouchBrowser()) {
             var newValue = "";
-            if (currentPosition > 0)
+            if (currentPosition > 0) {
                 newValue = value.substring(0, currentPosition);
+            }
             newValue = newValue + newChar;
             newValue = newValue + value.substring(currentPosition);    
             inputarea.value = newValue;
@@ -203,6 +213,12 @@ PreciseUtils = {
      *@s: new input string
      */
     validatedInputFractionalPartLen: function (input, s) {
+
+        // return true if there is no need to check fractionalPartLen, which means current calculator instance does not have config of that.
+        if (!getWorkingCalcInstance().config.fractionalPartLen) {
+            return true;
+        }
+
         var value = input.value,
             curPos = CaretPositionUtils.getCaretPosition(input), // position of newly input
             decimalPos = value.indexOf('.'),        // position of decimal point, -1 means do not have to worry about it
@@ -694,7 +710,7 @@ function exp(x){return Math.exp(x);}
 function ln(x){return Math.log(x);}
 
 function abs(x){return Math.abs(x);}
-function log(x){return Math.log(x) * 0.43429448;}
+function log(x) { return Math.log(x) / Math.log(10); }
 function pow(x,y){return Math.pow(x,y);}
 function sqrt(x){return Math.sqrt(x);}
 function fact(x){return factorial(x);}
@@ -856,7 +872,26 @@ TDS_Calc.prototype.textInputFocusInit = function(inputIds) {
                 });
             }
 
-            el.setAttribute('onkeypress', 'return CalcKeyPressProcess(this,event)');
+            YAHOO.util.Event.on(el, 'keypress', function(e) {
+                if (!CalcKeyPressProcess(this, e)) {
+                    YAHOO.util.Event.stopEvent(e);
+                }
+            });
+
+            //webkit browsers (chrome and safari) is listening to keydown event for backspace/delete key, bug:https://bugz.airast.org/default.asp?163435#938541
+            if (YAHOO.env.ua.webkit) {
+                YAHOO.util.Event.on(el, 'keydown', function (e) {
+                    // for navi keyboard shortcut combination (see short.add()), allow the event listener
+                    var code = e.keyCode;
+                    if ((e.ctrlKey || e.shiftKey) && (code == 37 || code == 38 || code == 39 || code == 40)) {
+                        return;
+                    }
+                    if (!CalcKeyPressProcess(this, e)) {
+                        YAHOO.util.Event.stopEvent(e);
+                    }
+                });
+            }
+
             //el.focusId = inputIds[i];
             el.focused = false;
             el.hasFocus = function() {
@@ -1129,15 +1164,15 @@ TDS_Calc.prototype.init = function()
     }
     
     // add keyboard short keys
-    shortcut.add("ctrl+shift+right", function() {return keyboardTab('forward')});
-    shortcut.add("ctrl+shift+left", function() {return keyboardTab('back')});
-    shortcut.add("enter", function(e) {return keyboardEnter(e) });
-    shortcut.add("space", function(e) {return keyboardSpace(e) });
+    shortcut.add("ctrl+shift+right", function() { return keyboardTab('forward'); });
+    shortcut.add("ctrl+shift+left", function() { return keyboardTab('back'); });
+    shortcut.add("enter", function(e) { return keyboardEnter(e); });
+    shortcut.add("space", function(e) { return keyboardSpace(e); });
 
-    shortcut.add("shift+left", function() { return keyboardArrowKey('left') });
-    shortcut.add("shift+right", function() { return keyboardArrowKey('right') });
-    shortcut.add("shift+up", function() { return keyboardArrowKey('up') });
-    shortcut.add("shift+down", function () { return keyboardArrowKey('down') });
+    shortcut.add("shift+left", function() { return keyboardArrowKey('left'); });
+    shortcut.add("shift+right", function() { return keyboardArrowKey('right'); });
+    shortcut.add("shift+up", function() { return keyboardArrowKey('up'); });
+    shortcut.add("shift+down", function () { return keyboardArrowKey('down'); });
     
 }
 
@@ -1983,7 +2018,7 @@ function CalcReturnKeyPressProcess(myfield, e) {
 };
 
 function CalcKeyPressProcess(myfield, e) {
-
+    
     var curClass = document.getElementById("calculatorwidget");
     if (YAHOO.util.Dom.hasClass(curClass, 'regressions') && (myfield.id == 'textinput')) return false;
   

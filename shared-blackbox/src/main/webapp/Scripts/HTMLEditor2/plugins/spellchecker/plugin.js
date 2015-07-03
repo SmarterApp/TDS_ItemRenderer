@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function (CKEDITOR) {
 
     var modeName = 'spellcheck';
@@ -27,6 +35,16 @@
         });
     }
 
+    function resetSelection(editor) {
+        // Position cursor at the beginning of the editor area... IE 10 in particular seems to have problems
+        // with old ranges causing crashes if the cursor is in the midst of DOM elements that changed
+        editor.getSelection().removeAllRanges(); // Clear any existing selections
+
+        var range = editor.createRange(); // Move the cursor (and set a collapsed range) as the beginning of the editor document
+        range.moveToPosition(range.root.getFirst() ? range.root.getFirst() : range.root, CKEDITOR.POSITION_AFTER_START);
+        editor.getSelection().selectRanges([range]);
+    }
+
     // call this to enable spellcheck
     function enableSpellCheck(editor) {
 
@@ -34,12 +52,7 @@
         if (this.enabled) return;
         console.log('SpellCheck Enabled "' + editor.name + '": ' + this.language);
 
-        // Position cursor at the beginning of the editor area... IE 10 in particular seems to have problems
-        // with old ranges causing crashes if the cursor is in the midst of DOM elements that changed
-        editor.getSelection().removeAllRanges();
-        var range = editor.createRange();
-        range.moveToPosition(range.root.getFirst() ? range.root.getFirst() : range.root, CKEDITOR.POSITION_AFTER_START);
-        editor.getSelection().selectRanges([range]);
+        resetSelection(editor);
 
         // disable any other spell checks
         disableSpellChecks();
@@ -75,12 +88,7 @@
         if (!this.enabled) return;
         console.log('SpellCheck Disabled "' + editor.name + '"');
 
-        // Position cursor at the beginning of the editor area... IE 10 in particular seems to have problems
-        // with old ranges causing crashes if the cursor is in the midst of DOM elements that changed
-        editor.getSelection().removeAllRanges();
-        var range = editor.createRange();
-        range.moveToPosition(range.root.getFirst() ? range.root.getFirst() : range.root, CKEDITOR.POSITION_AFTER_START);
-        editor.getSelection().selectRanges([range]);
+        resetSelection(editor);
 
         // mark as disabled
         this.enabled = false;
@@ -107,10 +115,26 @@
 
     // this is event handler for when clicking on a replacement word in the context menu
     function replaceWord(editor, node, word, replacement) {
-        // fetch words async and highlight mistakes
-        var bookmarks = editor.getSelection().createBookmarks2();
+
+        // Removing bookmark code as it causes a problem when used with the replaceWord function (next). The exception can be demonstrated by visiting a new editor item and
+        // 1) Typing 'this is a tst of the editr'
+        // 2) Entering spell check mode
+        // 3) Clicking on the word 'tst' to correct it
+        // 4) Spelling choices list will appear... click outside of the list in the middle of the editor box to dismiss the suggestions list
+        // 5) Click on the word 'tst' again to correct it
+        // 6) Choose the word 'test' and an exception will occur in SB or Chrome (and likely other browsers)
+        //var bookmarks = editor.getSelection().createBookmarks2();
+
         editor.spellCheck.replaceWord(node, word, replacement);
-        editor.getSelection().selectBookmarks(bookmarks);
+        /*
+        // Experimental code used as a replacement for the above replaceWord code to demonstrate a way to modify that DOM that cooperates with CKEditor
+        var ckNode = new CKEDITOR.dom.node(node);
+        var prevNode = ckNode.getPrevious();
+        var newTextNode = new CKEDITOR.dom.text(replacement);
+        newTextNode.insertAfter(prevNode);
+        ckNode.remove();
+        */
+        //editor.getSelection().selectBookmarks(bookmarks);
     }
 
     // this is event handler for when clicking on a misspelled word in CKEditor
@@ -208,7 +232,10 @@
                 panel: {
                     css: [CKEDITOR.skin.getPath('editor')].concat(editor.config.contentsCss),
                     multiSelect: false,
-                    attributes: { 'aria-label': 'Spellcheck language' }
+                    attributes: {
+                        'aria-label': 'Spellcheck language',
+                        name: 'Languages'
+                    }
                 },
                 init: function () {
                     this.startGroup('Language');
@@ -220,6 +247,27 @@
                     this.commit();
                 }
             });
+
+            // In accessbility mode send the focus back to the richcombo when it is dismissed. Note: We may want to do this
+            //  regardless of accessibility mode in the future.
+            if (editor.accessibility) {
+                editor.on('panelHide', function (e) {
+                    var editor = e.editor;
+                    var data = e.data;
+
+                    // If only I could find something better than this to identify that it is the languages richcombo
+                    if (data._.definition.attributes.name === 'Languages') {
+                        var elEditor = editor.element.$;
+                        var $Editor = $(elEditor);
+
+                        // Set focus back on the Languages combo after it has been dismissed
+                        setTimeout(function () {
+                            editor.execCommand('toolbarFocus');
+                            $Editor.find('.cke_combo__languages a').focus();
+                        }, 0);
+                    }
+                });
+            }
         }
 
     }

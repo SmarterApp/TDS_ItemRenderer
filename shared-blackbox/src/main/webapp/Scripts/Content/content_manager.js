@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function() {
     
     // The goal of the content manager is to collect events and hand them off to the widgets. It also keeps state about the current pages.
@@ -24,6 +32,12 @@
     };
 
     Util.Event.Emitter(CM);
+
+    // Called when a new iFrame is created so that any events that needs to be attached
+    //  to the new frame can be added e.g. the system idle timeout functionality (FB 161129).
+    CM.registerFrame = function (iFrame) {
+        CM.fire('registerFrame', iFrame);
+    };
 
     // toggle if read-only is enabled for all items
     CM.setReadOnly = function (value) {
@@ -194,7 +208,7 @@
             if (Util.Browser.isSecure() && Util.Browser.isMac()) {
                 // BUG: In SB on OS X the 'contextmenu' event does not fire so we 
                 // need to check if right click button was pressed on 'mousedown'
-                if (evt.type == 'mousedown' && evt.button == 2) {
+                if (evt.type == 'pointerdown' && evt.button == 2) {
                     // BUG: must be scheduled or menu closes right away after showing
                     setTimeout(function () {
                         CM.Menu.show({ evt: evt });
@@ -205,14 +219,22 @@
             }
         };
 
+        // allow scrolling up and down
+        // Note: CKEditor calls addMouseEvents (this function) with an iFrame document so we have to check that the setAttribute function
+        //  exists first
+        if (element.setAttribute) {
+            element.setAttribute('touch-action', 'pan-y');
+        }
+
         // Set entity as focused when clicked.
         // BUG 119445: for iOS, use touchstart, otherwise touch-hold won't properly select text
-        var activeElementEvent = Util.Browser.isIOS() ? 'touchstart' : 'mousedown';
-        YUE.on(element, activeElementEvent, setActive, this, true);
+        // var activeElementEvent = Util.Browser.isIOS() ? 'touchstart' : 'mousedown';
+        // YUE.on(element, 'pointerdown', setActive, this, true);
+        element.addEventListener('pointerdown', setActive);
 
         // set entity as focused when clicked
-        YUE.on(element, 'mousedown', checkForMenu, this, true);
-        YUE.on(element, 'contextmenu', checkForMenu, this, true);
+        element.addEventListener('pointerdown', checkForMenu);
+        element.addEventListener('contextmenu', checkForMenu);
 
         element.__tds_mouseEventsEnabled = true;
         return true;

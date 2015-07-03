@@ -7,7 +7,7 @@ CKEDITOR.dialog.add( 'tdsspecialchar', function( editor ) {
 	// Simulate "this" of a dialog for non-dialog events.
 	// @type {CKEDITOR.dialog}
 	var dialog,
-		lang = editor.lang.specialchar,
+		lang = editor.lang.tdsspecialchar,
 	    pluginInstructions = Messages.get('TDSCKE.Label.SpecialCharIntro');
 
 	var onChoice = function( evt ) {

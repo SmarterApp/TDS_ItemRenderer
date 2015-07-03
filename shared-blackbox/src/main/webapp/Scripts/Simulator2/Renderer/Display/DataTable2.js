@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /** **************************************************************************
 * @class DataTable
 * @superclass DataDisplayElement
@@ -144,6 +152,21 @@ Simulator.Display.DataTable = function (sim, panel) {
         table.setNumRows(hTable.tBodies[0].rows.length);
     }
 
+    function trimExtraRows(table, intendedRowCount) {
+        // if table has more rows than intendedRowCount, pop off the last rows until it doesn't
+        // (only used when loading a response)
+        var hTable = simDocument().getElementById(table.getID());
+        var nRows = hTable.rows.length - 1; // -1 so we don't count header row...
+
+        if (intendedRowCount < nRows) { // intendedRowCount is count of data rows (not including header row)
+            for (var r = nRows; r > intendedRowCount; --r) {
+                hTable.deleteRow(r);
+            }
+            updateHTMLTable(hTable);
+            table.setNumRows(hTable.tBodies[0].rows.length);
+        }
+    }
+
     function resolveColumn(inputKey, outputKey) {
         for (var i = 0; i < numColumns; i++) {  // try all table columns
             if (headingMap[i]['inputKey']) { // we are expecting an inputKey for this column
@@ -205,7 +228,13 @@ Simulator.Display.DataTable = function (sim, panel) {
                             if (isNaN(myData)) {
                                 // if not a number, then it is a tag so translate (otherwise, leave it alone)
                                 // retrieve translated text for output
-                                myData = transDictionary().translate(myData);
+                                // NOTE: it is possible (optionSet) that there could be multiple values, so we split, translate, and re-join
+                                var dataValues = myData.split(Simulator.Constants.MULTIPLE_VALUE_DELIMITTER + ' ');
+                                for (var m = 0; m < dataValues.length; m++) {
+                                    dataValues[m] = transDictionary().translate(dataValues[m]);
+                                }
+                                myData = dataValues.join(Simulator.Constants.MULTIPLE_VALUE_DELIMITTER + ' ');
+
                             }
                             cellWritten = obj.setCell(myInputKey, myData);
                         }
@@ -1040,6 +1069,8 @@ Simulator.Display.DataTable = function (sim, panel) {
                 }
             }
         }
+        // if there are pre-existing rows beyond the loaded response, we need to trim those off
+        trimExtraRows(this, responseRowNum + 1); // responseRowNum + 1 is the count of data rows (not counting header)
     };
 
     this.keyboardNavigateTo = function (elementID, itemID, index) {

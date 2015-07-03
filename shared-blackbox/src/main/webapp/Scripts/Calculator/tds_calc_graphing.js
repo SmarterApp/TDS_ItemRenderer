@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿//***************** Graphing Calculator ****************************
 
 /*
@@ -882,9 +890,10 @@ GraphingCalc.prototype.setCanvasWindowRange =  function(which, value)
     ctx: canvas handle
     equality: = < > 
 */
-GraphingCalc.prototype.draw_graph = function(inputElm, ctx, equality) 
-{
-    var funcTxt = this.parent.translate_input(document.getElementById(inputElm).value);
+GraphingCalc.prototype.draw_graph = function (inputElm, ctx, equality) {
+
+    // keep original ^ style expression for power operation, because the translate_pow works with ^, but not pow()
+    var funcTxt = this.keepPowerExp(document.getElementById(inputElm).value);
 
     if (funcTxt &&(funcTxt.length>0))
     {
@@ -1000,7 +1009,10 @@ GraphingCalc.prototype.draw_graph = function(inputElm, ctx, equality)
 GraphingCalc.prototype.draw_Trace = function()
 {
     if (this.trace.equationIndex < 0) return;  // There are no graphs plotted. Nothing to trace
-    var func = this.parent.translate_input(document.getElementById(this.equationsIds[this.trace.equationIndex]).value);
+
+    // keep original ^ style expression for power operation, because the translate_pow works with ^, but not pow()
+    var func = this.keepPowerExp(document.getElementById(this.equationsIds[this.trace.equationIndex]).value);
+
     if (func == '') return;
 
     var canvasX = this.canvas_width / 2 + this.trace.offset;
@@ -1059,11 +1071,17 @@ GraphingCalc.prototype.draw_Trace = function()
     canvasX: x coordinate of canvas
     func: function
 */
-GraphingCalc.prototype.getFuncYbyCanvasX = function(canvasX, func)
-{
- 
-    return eval('x='+this.getFuncXbyCanvasX(canvasX, func) + ';' + func);
-}
+GraphingCalc.prototype.getFuncYbyCanvasX = function(canvasX, func) {
+    var xval = this.getFuncXbyCanvasX(canvasX, func);
+
+    // for ^ operation, we do the translate_pow here with the xval number to avoid Javascript returning NaN for negative number like Math.pow((-4), (1/3))
+    if (func.indexOf('^') > -1) {
+        return this.parent.evalVariableExpression(func, xval);
+    }
+
+    // for others we do not need to use evalVariableExpression, or the eval will be very slow.
+    return eval('x=' + xval + ';' + func);
+};
 
 /* get function x coordinate, given a canvas X and function
     canvasX: x coordinate of canvas
@@ -1375,7 +1393,9 @@ GraphingCalc.prototype.showGraphingTable = function(clean)
             for (var j=0; j<this.equationsIds.length; j++) {
                 var equaTD = document.createElement('td');
                 var val = '';
-                var func = this.parent.translate_input(document.getElementById(this.equationsIds[j]).value);
+
+                // keep original ^ style expression for power operation, because the translate_pow works with ^, but not pow()
+                var func = this.keepPowerExp(document.getElementById(this.equationsIds[j]).value);
                 if (func.length > 0) val = getFixedResult(this.parent.evalVariableExpression(func, thisXPos)) + '';
                 if (val.indexOf('error') != -1) val = 'error';
                 if (val == 'NaN') val = 'error';
@@ -1395,11 +1415,20 @@ GraphingCalc.prototype.showGraphingTable = function(clean)
 }
 
 //clear data table
-GraphingCalc.prototype.cleanDataTable = function() 
-{
+GraphingCalc.prototype.cleanDataTable = function() {
     var tableDiv = document.getElementById('datatable');
     while (tableDiv.hasChildNodes()) {
         tableDiv.removeChild(tableDiv.childNodes[0]);
     }
     return;
-}   
+};
+
+// for operation like (x)^(1/3), when we need to get different result for different x value, don't do the translate_input until we've got a fixed x value, because Javascript returns NaN for expression like Math.pow((-4), (1/3)).
+// so we are using (-4)^(1/3) to do translate_input, aka translate_pow to get the actual value instead of NaN
+GraphingCalc.prototype.keepPowerExp = function(exp) {
+    if (exp.length > 0 && exp.indexOf('^') > -1) {
+        return exp;
+    } else {
+        return this.parent.translate_input(exp);
+    }
+};

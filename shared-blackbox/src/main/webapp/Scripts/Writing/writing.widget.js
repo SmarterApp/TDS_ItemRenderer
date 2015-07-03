@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 This code is used for setting up the writing widget with ckeditor.
 */
@@ -260,8 +268,9 @@ This code is used for setting up the writing widget with ckeditor.
         var unit = this.unit;
         var value = editor.getData();
         var isValid = (value.length > 0);
+        var isEmpty = !isValid;
         var isSelected = unit.isSelected();
-        return this.createResponse(value, isValid, isSelected);
+        return this.createResponse(value, isValid, isEmpty, isSelected);
     }
 
     Widget_Writing.prototype.setResponse = function(value) {

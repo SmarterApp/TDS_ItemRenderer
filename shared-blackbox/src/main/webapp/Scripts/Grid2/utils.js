@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿Grid.Utils = {};
 
 // does this browser support native SVG
@@ -71,6 +79,9 @@ Grid.Utils.isSVGFlash = function() {
                     evt.stopPropagation = function () {
                         return oldevt.stopPropagation();
                     };
+
+                    // mark this as touch event
+                    evt.touch = true;
 
                     return evt;
                 }
@@ -271,9 +282,13 @@ Grid.Utils.fixOffset = function(svgObject)
         // get window
         var win = doc.parentWindow || doc.defaultView;
 
-        // get windows frame element
-        // NOTE: might not have permission to access this if cross-domain
-        return win.frameElement;
+        try {
+            // get windows frame element
+            return win.frameElement;
+        } catch (ex) {
+            // cross-domain
+            return null;
+        }
     };
 
     // current element
@@ -282,11 +297,10 @@ Grid.Utils.fixOffset = function(svgObject)
     // add all the elements to fix offset on into a collection
     var elements = [];
 
-    do
-    {
+    do {
         elements.push(element);
     }
-    while (element = getElementFrame())
+    while (element = getElementFrame());
 
     // reverse the array so we start with the top level element first
     elements.reverse();
@@ -356,4 +370,36 @@ Grid.Utils.parseElementXY = function(el)
     data.thickness = getFloat('stroke-width');
 
     return data;
+};
+
+// returns the closest position (Point2D) along a line
+Grid.Utils.getNearestPointAlongLine = function (px, py, x1, y1, x2, y2) {
+
+    var dx = x2 - x1;
+    var dy = y2 - y1;
+
+    // check if the segment is just a point
+    if (dx == 0 && dy == 0) {
+        return {
+            x: x1,
+            y: y1
+        };
+    }
+
+    // calculate the t that minimizes the distance.
+    var t = ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy);
+
+    // See if this represents one of the segment's end points or a point in the middle.
+    if (t < 0) {
+        dx = x1;
+        dy = y1;
+    } else if (t > 1) {
+        dx = x2;
+        dy = y2;
+    } else {
+        dx = x1 + t * dx;
+        dy = y1 + t * dy;
+    }
+
+    return new Point2D(dx, dy);
 };

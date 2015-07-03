@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function(CM) {
 
     // this class is created once per context menu request
@@ -193,6 +201,7 @@
             return false;
         }
 
+        // get item/passage
         var entity = opts.entity;
         if (!entity) {
             var page = CM.getCurrentPage();
@@ -255,10 +264,10 @@
             var contentMenu = new MenuCollection();
 
             // get current text selection
-            var pageSelection = CM.getSelection(document);
+            var selection = CM.getSelection(document);
 
             // fire event
-            entity.fire('menushow', contentMenu, domEvent, pageSelection);
+            entity.fire('menushow', contentMenu, domEvent, selection);
 
             // check if someone cancelled showing the menu
             if (contentMenu.cancel) {
@@ -268,11 +277,11 @@
             menuItems = contentMenu.getMenuItems();
         }
 
-        // Indicate that there are no menu items
+        // if no menu items then show empty button
         if (menuItems.length == 0) {
             menuItems.push({
                 text: Messages.getAlt('TDSContentEventsJS.Label.EmptyMenu', 'Empty'),
-                disabled: true
+                disabled: !CM.isAccessibilityEnabled() // BUG #163484
             });
         }
 
@@ -287,6 +296,8 @@
 
         // set position of menu
         menuInstance.cfg.setProperty('xy', menuXY);
+        // Bug 167033 - supressInitialFocus breaks keyboard navigation of Context Menu
+        //menuInstance.cfg.addProperty('suppressInitialFocus', { value: true });
 
         // add the new menu items
         menuInstance.addItems(menuItems);

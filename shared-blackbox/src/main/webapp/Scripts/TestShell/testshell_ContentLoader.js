@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿TestShell.ContentLoader = 
 {
     _requests: [],
@@ -75,7 +83,8 @@ TestShell.ContentLoader.request = function(group)
     var content = this.getContent(group);
     if (content) {
         YAHOO.lang.later(0, this, function () {
-            Util.Array.remove(this._requests, group);
+            Util.Array.remove(this._requests, group); // remove PageContent request
+            Util.Object.remove(this._contentLookup, group.id); // remove cached json content
             this._processContent(content);
         });
         return true; // don't call xhr

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // define global namespace for all TDS global variables and components
 var TDS = window.TDS || {};
 var tds = TDS; // alias
@@ -263,6 +271,11 @@ var tds = TDS; // alias
             }
         }
         return defaultValue;
+    };
+
+    // check if this is an proctored assessment practice test preview
+    TDS.isProctoredAssessmentPreview = function () {
+        return TDS.isProxyLogin && TDS.inPTMode;
     };
 
     // run init when all scripts are done loading

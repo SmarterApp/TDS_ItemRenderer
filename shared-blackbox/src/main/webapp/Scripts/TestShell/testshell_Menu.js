@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 TestShell global menu code.
 */
@@ -136,8 +144,7 @@ TestShell global menu code.
         var btnContext = YUD.get('btnContext');
         if (btnContext == null) return;
 
-        // list for menu button
-        YUE.on(btnContext, Util.Event.Mouse.start, function (evt) {
+        var showContextMenu = function (evt) {
 
             // prevent click through
             YUE.stopEvent(evt);
@@ -148,7 +155,10 @@ TestShell global menu code.
                 evt: evt,
                 xy: [btnRegion.left, btnRegion.bottom]
             });
-        });
+        };
+
+        // listen for menu button
+        Util.Event.addTouchMouse('start', btnContext, showContextMenu);
     };
 
     // menu api

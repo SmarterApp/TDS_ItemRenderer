@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Plugin for setting up QTI item body. This can be used so 
 widget's can match against the QTI xml and DOM element. 
@@ -33,13 +41,16 @@ widget's can match against the QTI xml and DOM element.
             var nodeName = inline ? 'span' : 'div';
             var interactionEl = qtiDoc.createElement(nodeName);
             var interactionId = itemBodyChild.getAttribute('responseIdentifier');
-            interactionEl.className = 'qti-interaction';
             interactionEl.setAttribute('data-qti-type', interactionType);
             interactionEl.setAttribute('data-qti-identifier', interactionId);
+
+            // set class name
+            var className = 'qti-interaction';
             var customData = itemBodyChild.getAttribute('class');
             if (customData) {
-                interactionEl.setAttribute('class', customData);
+                className += ' ' + customData;
             }
+            interactionEl.setAttribute('class', className);
 
             // swap out interaction node
             $(itemBodyChild).replaceWith(interactionEl);
@@ -69,6 +80,19 @@ widget's can match against the QTI xml and DOM element.
         var itemBodyHtml = Util.Xml.innerHTML(itemBodyNode);
         var stemEl = item.getStemElement();
         stemEl.innerHTML = itemBodyHtml;
+
+        // get response element
+        var responseEl = item.getResponseArea();
+        if (responseEl) {
+            // find the first block level interaction
+            var $blockInteraction = $('div.qti-interaction', stemEl);
+            if ($blockInteraction.length) {
+                var $afterInteraction = $blockInteraction.nextAll();
+                // move the interaction and everything after into the response area
+                $blockInteraction.appendTo(responseEl);
+                $afterInteraction.appendTo(responseEl);
+            }
+        }
 
         // BUG: The xml nodes are not understood by html due to namespace so we need to use innerHTML...
         /*var itemBodyImport = document.importNode(itemBodyEl, true);

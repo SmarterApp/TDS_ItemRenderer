@@ -25,23 +25,23 @@
 
 		init: function( editor ) {
 		    var plugin = this;
-			editor.addCommand( commandName, {
-				exec: function() {
-					var langCode = editor.langCode;
-					langCode =
+		    editor.addCommand( commandName, {
+		        exec: function() {
+		            var langCode = editor.langCode;
+		            langCode =
 						plugin.availableLangs[ langCode ] ? langCode :
 						plugin.availableLangs[ langCode.replace( /-.*/, '' ) ] ? langCode.replace( /-.*/, '' ) :
 						'en';
 
-					CKEDITOR.scriptLoader.load(CKEDITOR.getUrl(plugin.path + 'dialogs/lang/' + langCode + '.js'), function () {
-						editor.lang.keymaphelp = plugin.langEntries[ langCode ];
-						editor.openDialog( commandName );
-					} );
-				},
-				modes: { wysiwyg: 1, source: 1 },
-				readOnly: 1,
-				canUndo: false
-			});
+		            CKEDITOR.scriptLoader.load(CKEDITOR.getUrl(plugin.path + 'dialogs/lang/' + langCode + '.js'), function () {
+		                editor.lang.keymaphelp = plugin.langEntries[ langCode ];
+		                editor.openDialog( commandName );
+		            } );
+		        },
+		        modes: { wysiwyg: 1, source: 1 },
+		        readOnly: 1,
+		        canUndo: false
+		    });
 
 		    // add a button that runs our custom command
 		    editor.ui.addButton('KeyMapHelp', {
@@ -51,13 +51,32 @@
 		        toolbar: 'keymaphelp,11'
 		    });
 
-			//editor.setKeystroke( CKEDITOR.ALT + 48 /*0*/, 'a11yHelp' );   // disabling the keyboard shortcut to avoid conflict with original a11yHelp module
+		    //editor.setKeystroke( CKEDITOR.ALT + 48 /*0*/, 'a11yHelp' );   // disabling the keyboard shortcut to avoid conflict with original a11yHelp module
 		    //CKEDITOR.dialog.add( commandName, this.path + 'dialogs/keymaphelp.js' );  // Redirect the path to prevent from loading the original a11yhelp.js file, which contains <h1> we do not want
-			CKEDITOR.dialog.add(commandName, plugin.path + 'keymaphelp.js');
+		    CKEDITOR.dialog.add(commandName, plugin.path + 'keymaphelp.js');
 
-			editor.on( 'ariaEditorHelpLabel', function( evt ) {
-				evt.data.label = editor.lang.common.editorHelp;
-			} );
+		    editor.on( 'ariaEditorHelpLabel', function( evt ) {
+		        evt.data.label = editor.lang.common.editorHelp;
+		    } );
+
+		    // WCAG/Accessibility - When dialog is dismissed set focus on Help button
+		    if (editor.accessibility) {
+		        editor.on('dialogHide', function (e) {
+
+		            var editor = e.editor;
+		            var dialog = e.data;
+
+		            if (dialog._.name === 'keymapHelp') {
+		                var elEditor = editor.element.$;
+		                var $Editor = $(elEditor);
+
+		                setTimeout(function () {
+		                    editor.execCommand('toolbarFocus');
+		                    $Editor.find('.cke_button__keymaphelp').focus();
+		                }, 0);
+		            }
+		        });
+		    }
 		}
 	} );
 } )();

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 Grid.Palette = function(grid)
 {
     this.grid = grid;
@@ -117,7 +125,7 @@ Grid.Palette.prototype.processMouseEvent = function(evt)
         // clone palette image
         this.view.clonePaletteImage(imageID, cloneID);
         this.view.movePaletteImage(cloneID, gridX, gridY);
-        this.grid.setHint('DraggingObject');
+        this.grid.setHint('DraggingPaletteObject');
     }
     // MOVE
     else if (this.moving && (evt.name == 'mousemove' || evt.name == 'drag'))

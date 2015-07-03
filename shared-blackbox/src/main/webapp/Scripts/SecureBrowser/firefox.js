@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// REQUIRES: YUI, IO.js, SecureBrowser.Base.js
 
 /*
@@ -51,27 +59,11 @@ The Desktop version of the secure browser built on top of the firefox platform.
         this.disableSecurityBreachDetection();
     };
 
-    Firefox.prototype.canEnvironmentBeSecured = function () {
-        var result = { 'canSecure': true, 'messageKey': null };
-        if (this.isAssistXRequired() && !this.isAssistXRunning()) {
-            // mark environment cannot be secured if AssistX is required but not running on the device.
-            result.canSecure = false;
-            result.messageKey = 'LoginShell.Alert.AssistXNotRunning';
-        }
-
-        return result;
-    };
-
-    Firefox.prototype.isEnvironmentSecure = function () {
-        var result = { 'secure': true, 'messageKey': null };
-        if (!this.isPermissiveModeEnabled() && this.isAssistXRequired() && !this.isAssistXInTestMode()) {
-            // mark environment as insecure if AssistX is required and permissive mode is disabled but 
-            // the secure browser is not locked in test mode during a test session.
-            result.secure = false;
-            result.messageKey = 'LoginShell.Alert.AssistXNotLockedInTestMode';
-        }
-
-        return result;
+    Firefox.prototype.disableDevToolWindow = function () {
+        // disable the development tools window which would be invoked by shortcut key Shift+F5 (bug # 169134)
+        Components.utils.import("resource://gre/modules/Services.jsm");
+        var w = Services.wm.getMostRecentWindow("navigator:browser");
+        w.gDevToolsBrowser = null;
     };
 
     Firefox.prototype._hasAPI = function() {
@@ -199,6 +191,45 @@ The Desktop version of the secure browser built on top of the firefox platform.
         return processList;
     };
 
+    // retrieve Windows system environment values
+    Firefox.prototype.getEnvironment = function (name) {
+        if (Util.Browser.isWindows() && name != null) {
+            var environment = Components.classes["@mozilla.org/process/environment;1"].getService(Components.interfaces.nsIEnvironment);
+            if (environment.exists(name)) {
+                return environment.get(name);
+            }
+        }
+        return null;
+    };
+
+    // kill a process given by process name
+    Firefox.prototype.killProcess = function (processName) {
+
+        if (Util.Browser.getSecureVersion() >= 8 && this._hasRuntime()) {
+            try {
+                // kill a process, this feature only available on Secure Browser 8 or later versions
+                if (processName) {
+                    this.runtime.killProcess(processName);
+                }
+            } catch (e) {
+            }
+        }
+    };
+
+    // start a process given by process name
+    Firefox.prototype.startProcess = function (processName) {
+
+        if (Util.Browser.getSecureVersion() >= 8 && this._hasRuntime()) {
+            try {
+                // start a process, this feature only available on Secure Browser 8 or later versions
+                if (processName) {
+                    this.runtime.startProcess(processName);
+                }
+            } catch (e) {
+            }
+        }
+    };
+
     Firefox.prototype.fixFocus = function() {
 
         // We need to temporarily suspend listening for security breach events because the act of opening up hidden windows will trigger that
@@ -249,47 +280,27 @@ The Desktop version of the secure browser built on top of the firefox platform.
             }
         }
 
-        var that = this;
-        // closing the secure browser takes three steps. In step 1, we check if we are safe to unlock the browser if it is
-        // still locked down. In step 2, we unlock the secure browser, and then wait for it to be completed before proceeding
-        // to the next step. In step 3. we fire the "beforeunload" event and then close the browser.
+        // close the secure browser
         try {
-            var deferredCheckEndTestMode = Util.Promise.defer();
+            if (Util.Browser.isWindows()) {
+                // restore the capability for language and keyboard layout switch
+                this.restoreKeyboardLayoutSettings();
+            }
 
-            var checkEndTestMode = function () {
-                if (that.prepareUnLock()) {
-                    clearInterval(checkEndTestMode);
-                    deferredCheckEndTestMode.resolve();
+            if (this.canKillProcess()) {
+                var systemRoot = this.getEnvironment("SYSTEMROOT");
+                if (systemRoot != null) {
+                    this.startProcess(systemRoot + "\\explorer.exe");
                 }
-            };
+            }
 
-            setInterval(checkEndTestMode, 1000);
+            // simulate page unload so that listeners can gracefully cleanup
+            $(window).trigger('beforeunload');
 
-            deferredCheckEndTestMode.promise.then(function () {
-                if (Util.Browser.isWindows()) {
-                    that.restoreKeyboardLayoutSettings();
-                }
-                if (that.isAssistXRequired() && that.isAssistXInTestMode()) {
-                    that.runtime.endTestMode();
-                }
-                var deferredCheckCloseBrowser = Util.Promise.defer();
-                var checkCloseBrowser = function () {
-                    if (that.prepareCloseBrowser()) {
-                        clearInterval(checkCloseBrowser);
-                        deferredCheckCloseBrowser.resolve();
-                    }
-                };
-                setInterval(checkCloseBrowser, 1000);
-                deferredCheckCloseBrowser.promise.then(function () {
-                    // simulate page unload so that listeners can gracefully cleanup
-                    $(window).trigger('beforeunload');
-
-                    // We are putting this in a setTimeout so that listeners to the beforeunload event have a chance to clean up gracefully
-                    setTimeout(function () {
-                        SecureBrowser.CloseWindow();
-                    }, 1000);
-                });
-            });
+            // We are putting this in a setTimeout so that listeners to the beforeunload event have a chance to clean up gracefully
+            setTimeout(function () {
+                SecureBrowser.CloseWindow();
+            }, 1000);
         } catch (ex) {
         };
     };
@@ -314,93 +325,28 @@ The Desktop version of the secure browser built on top of the firefox platform.
         return null;
     };
 
-    // check if AssistX is required
-    Firefox.prototype.isAssistXRequired = function () {
-        // we only need AssistX on Windows 8.0 and 8.1
-        return (TDS.getAppSetting('sb.assistxRequired', false) && Util.Browser.isWindows() && ((Util.Browser.getWindowsNTVersion() == 6.2) || (Util.Browser.getWindowsNTVersion() == 6.3)));
+    // check if we can lock down the Secure Browser by calling kill process API
+    Firefox.prototype.canKillProcess = function () {
+        // we can and only need to kill process for Secure Browser 8 or later versions running on Windows 8.0 and 8.1
+        return (Util.Browser.isWindows()
+            && ((Util.Browser.getWindowsNTVersion() == 6.2) || (Util.Browser.getWindowsNTVersion() == 6.3))
+            && Util.Browser.getSecureVersion() >= 8);
     };
 
-    // check if AssistX is running on the device
-    Firefox.prototype.isAssistXRunning = function () {
-        if (this._hasRuntime()) {
-            // if AssistX is not supported on the Secure Browser or is not running on the deivce, return false
-            if (typeof this.runtime.testModeStatus == 'undefined' || this.runtime.testModeStatus == 'TM_NOT_RUN') {
-                return false;
-            }
-            return true;
-        }
-        return false;
-    };
-
-    // check if AssistX is running in test mode
-    Firefox.prototype.isAssistXInTestMode = function () {
-        if (this._hasRuntime()) {
-            // check the test mode status
-            if (this.runtime.testModeStatus == 'TM_LOCKED' || this.runtime.testModeStatus == 'TM_STANDALONE_LOCKED') {
-                return true;
-            }
-        }
-        return false;
-    };
-
-    Firefox.prototype.enableLockDown = function (lockDown, whitelist) {
+    Firefox.prototype.enableLockDown = function (lockDown) {
         try {
             var that = this;
             if (lockDown) {
                 // disable the capability for language and keyboard layout switch
                 this.disableKeyboardLayoutChanges();
-                // lock dow the secure browser using AssistX if it is required
-                if (this._hasRuntime() && this.isAssistXRequired()) {
-                    if (!that.isAssistXInTestMode()) {
-                        that.runtime.beginTestMode(whitelist);
-                        // store the timestamp for locking down the secure browser
-                        Mozilla.setPreference("tds.lasttime.lockdown", (new Date()).getTime() / 1000);
-                    }
+                // lock dow the secure browser by killing explorer.exe
+                if (this._hasRuntime() && this.canKillProcess()) {
+                    this.killProcess("explorer.exe");
                 }
             }
         } catch (ex) {
             console.error(ex);
         }
-    };
-
-    // this function checks if the secure browser is ready to be unlocked
-    Firefox.prototype.prepareUnLock = function () {
-
-        // if AssistX is not required or not running, then always safe to close the browser
-        if (!this.isAssistXRequired() || !this.isAssistXRunning()) {
-            return true;
-        }
-
-        // check the last time the secure browser is locked down, if the secure browser has never
-        // been locked down, we should be safe to unlock the secure browser
-        var timeStampLastLockDown = Mozilla.getPreference("tds.lasttime.lockdown") * 1000;
-        if (timeStampLastLockDown == null) {
-            return true;
-        }
-
-        var currentTimeStamp = (new Date()).getTime();
-        // if the last lockdown time was more than 10 seconds ago, or the browser has been already locked down, we consider it safe to unlock the browser
-        if (((currentTimeStamp - timeStampLastLockDown) > 10000) || this.isAssistXInTestMode()) {
-            return true;
-        }
-
-        return false;
-    };
-
-    // this function checks if the secure browser has exited test mode, and is ready to proceed to be closed
-    Firefox.prototype.prepareCloseBrowser = function () {
-
-        // if AssistX is not required or not running, then always safe to close the browser
-        if (!this.isAssistXRequired() || !this.isAssistXRunning()) {
-            return true;
-        }
-
-        // if the secure browser is no longer in test mode, then it is safe to close
-        if (!this.isAssistXInTestMode()) {
-            return true;
-        }
-
-        return false;
     };
 
     // check if native system mute capabilities is supported on the system
@@ -524,6 +470,18 @@ The Desktop version of the secure browser built on top of the firefox platform.
                 typeof this.runtime.permissive == 'boolean') {
                 this.runtime.permissive = enabled;
                 changed = true;
+                // restart process explorer.exe if permissive mode is enabled, or kill this process if
+                // permissive mode is disabled
+                if (this.canKillProcess()) {
+                    if (enabled) {
+                        var systemRoot = this.getEnvironment("SYSTEMROOT");
+                        if (systemRoot != null) {
+                            this.startProcess(systemRoot + "\\explorer.exe");
+                        }
+                    } else {
+                        this.killProcess("explorer.exe");
+                    }
+                }
             }
         } catch (ex) {
         }

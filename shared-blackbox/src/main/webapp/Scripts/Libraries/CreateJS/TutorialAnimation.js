@@ -1,4 +1,12 @@
-/************** TutorialAnimation.js version July-20-2014 ****************/
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
+/************** TutorialAnimation.js version February-2-2015 ****************/
 var canvas, stage, exportRoot;
 var mp4Data;
 var oggData;
@@ -91,10 +99,10 @@ function init() {
 	 var UAString = navigator.userAgent;
 	 
 	  if(platform.indexOf("win")> -1){
-	            console.log("this is windows");
-	            console.log("using window 8 IE 10" +UAString); 
+	            //console.log("this is windows");
+	            //console.log("using window 8 IE 10" +UAString); 
 	          if (UAString.indexOf("Trident") !== -1 && UAString.indexOf("rv:11") !== -1 && !touchDevice ){  
-                    console.log("using window 8 IE 10" +navigator.appName +"/" +navigator.appVersion);  
+                    //console.log("using window 8 IE 10" +navigator.appName +"/" +navigator.appVersion);  
                    
                }
 
@@ -161,7 +169,12 @@ function init() {
           }
 	stage.update();
 	createjs.Ticker.setFPS(18);
-	createjs.Ticker.addEventListener("tick", stage);	
+	createjs.Ticker.addEventListener("tick", stage);
+
+    // disabling context menu
+    document.body.oncontextmenu = function() {
+        return false;
+    };
 }
 
 
@@ -599,8 +612,14 @@ function playAnimation(){
 
 
 function stopAnimation(){   
- controlAnimation.controlBar.btnPlay.visible=true;	
- controlAnimation.controlBar.btnPause.visible=false;
+
+if (typeof controlAnimation != 'object' || typeof controlAnimation.controlBar != 'object') {
+  return;
+} 
+  //console.log("there is controlAnimation exist");
+  controlAnimation.controlBar.btnPlay.visible=true;	
+  controlAnimation.controlBar.btnPause.visible=false;
+
   //console.log("animation is stopped");
      if(config.hasSound){
 		 if(platform.indexOf("ipad")> -1){
@@ -641,7 +660,7 @@ function stopAnimation(){
 
 
     if (navigator.userAgent.indexOf("Android "+androidVersion[0]) > -1||navigator.userAgent.indexOf("Android "+androidVersion[1]) > -1|| navigator.userAgent.indexOf("Android "+androidVersion[2]) > -1||navigator.userAgent.indexOf("Android "+androidVersion[3]) > -1||navigator.userAgent.indexOf("Android "+androidVersion[4]) > -1||navigator.userAgent.indexOf("Android "+androidVersion[5]) > -1||navigator.userAgent.indexOf("Android "+androidVersion[6]) > -1||navigator.userAgent.indexOf("Android "+androidVersion[7]) > -1) {
-        console.log("navigator.userAgent  2...."+navigator.userAgent);
+        //console.log("navigator.userAgent  2...."+navigator.userAgent);
         createjs.Stage.prototype._handlePointerDown = function (event) {
             var lastTime = mouseInterval.mousedown;
             var now = new Date().getTime(); // Slower than Date.now(), but compatible with IE8 and others.
@@ -1330,3 +1349,12 @@ var Base64Binary = {
 
 })(tutorialShellLib = tutorialShellLib||{}, images = images||{}, createjs = createjs||{});
 var tutorialShellLib, images, createjs;
+
+
+
+
+
+
+
+
+

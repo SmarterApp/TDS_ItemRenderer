@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿AsiItem = (typeof (AsiItem) == "undefined") ? {} : AsiItem;
 
 //WAPIAudioInterface is used for browsers having support for Web Audio API, context is provided by AudioFactory
@@ -124,6 +132,13 @@ AsiItem.WAPIAudioInterface.prototype.stop = function () {
     //Safari does not support start/stop,It supports deprecated noteOn/noteOff    
     if (this._source && this._isPlaying) {
         this._source.stop ? this._source.stop(0) : this._source.noteOff(0);
+    }
+
+    if (this._currentTrack < this._tracksToPlay.length) {
+        var track = this._tracksToPlay[this._currentTrack];
+        if (track && track.stopFunction) {
+            track.stopFunction(track.id);
+        }
     }
 
     this._isPlaying = false;

@@ -79,8 +79,7 @@
 
 	    <div class="numericDisplay">
 	        <!-- spellcheck attribute fixed:https://bugz.airws.org/default.asp?69032 -->
-	        <!-- using onkeyup instead of onkeypress fixed:https://bugz.airast.org/default.asp?65850#458044 and https://bugz.airast.org/default.asp?74494#458049 on touch browser -->
-            <textarea id="textinput" class=line type="text" name="line" onkeyup="return CalcReturnKeyPressProcess(this, event)" onkeypress="return CalcKeyPressProcess(this, event)" spellcheck="false"></textarea>
+            <textarea id="textinput" class="line" type="text" name="line" spellcheck="false"></textarea>
 	    </div>
     
         <div class="calcButtons">
@@ -211,10 +210,10 @@
             </div>
             <div id="equations" >
                 <!-- SB07072011: I am not sure why there is a display:none option in the following selections. IE does not honor the display:none attribute on a option and hence the "=" would show up twice. I am going to comment those out. -->
-                Y&#x2081;<select id="equations-select-1"><option selected="selected">=</option><option>&gt;</option><option>&lt;</option><!-- <option style="display:none">=</option> --> </select><input id="equa1" value="" class=line type="text" name="line" onkeypress="return CalcKeyPressProcess(this,event)" onfocus="return CalcFocusGained(this, event)"/><span class="clear"></span>
-                Y&#x2082;<select id="equations-select-2"><option selected="selected">=</option><option>&gt;</option><option>&lt;</option><!-- <option style="display:none">=</option> --> </select><input id="equa2" value="" class=line type="text" name="line" onkeypress="return CalcKeyPressProcess(this,event)" onfocus="return CalcFocusGained(this, event)"/><span class="clear"></span>
-                Y&#x2083;<select id="equations-select-3"><option selected="selected">=</option><option>&gt;</option><option>&lt;</option><!-- <option style="display:none">=</option> --> </select><input id="equa3" value="" class=line type="text" name="line" onkeypress="return CalcKeyPressProcess(this,event)" onfocus="return CalcFocusGained(this, event)"/><span class="clear"></span>
-                Y&#x2084;<select id="equations-select-4"><option selected="selected">=</option><option>&gt;</option><option>&lt;</option><!-- <option style="display:none">=</option> --> </select><input id="equa4" value="" class=line type="text" name="line" onkeypress="return CalcKeyPressProcess(this,event)" onfocus="return CalcFocusGained(this, event)"/>
+                Y&#x2081;<select id="equations-select-1"><option selected="selected">=</option><option>&gt;</option><option>&lt;</option><!-- <option style="display:none">=</option> --> </select><input id="equa1" value="" class=line type="text" name="line" onfocus="return CalcFocusGained(this, event)"/><span class="clear"></span>
+                Y&#x2082;<select id="equations-select-2"><option selected="selected">=</option><option>&gt;</option><option>&lt;</option><!-- <option style="display:none">=</option> --> </select><input id="equa2" value="" class=line type="text" name="line" onfocus="return CalcFocusGained(this, event)"/><span class="clear"></span>
+                Y&#x2083;<select id="equations-select-3"><option selected="selected">=</option><option>&gt;</option><option>&lt;</option><!-- <option style="display:none">=</option> --> </select><input id="equa3" value="" class=line type="text" name="line" onfocus="return CalcFocusGained(this, event)"/><span class="clear"></span>
+                Y&#x2084;<select id="equations-select-4"><option selected="selected">=</option><option>&gt;</option><option>&lt;</option><!-- <option style="display:none">=</option> --> </select><input id="equa4" value="" class=line type="text" name="line" onfocus="return CalcFocusGained(this, event)"/>
             </div>
 
             <div id="graphwindow" style="display:none">

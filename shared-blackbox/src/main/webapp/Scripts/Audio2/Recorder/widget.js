@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 This code takes the <div> audio recorder and makes them widgets.
 */
@@ -142,7 +150,7 @@ This code takes the <div> audio recorder and makes them widgets.
         var value = Recorder.retrieveBase64Audio(this.id) || '',
             haveSound = value.length > 0;
 
-        return this.createResponse(value, haveSound, haveSound);
+        return this.createResponse(value, haveSound);
     };
 
     Recorder_Widget.prototype.setResponse = function (value) {

@@ -1,7 +1,16 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /* 
 This is the service layer for the AIR SB audio recorders:
 - TDS.SecureBrowser.Firefox.Recorder
 - TDS.SecureBrowser.Mobile.Recorder
+- TDS.SecureBrowser.Certified.Recorder
 */
 
 (function(Audio) {
@@ -22,27 +31,33 @@ This is the service layer for the AIR SB audio recorders:
     }
 
     function setDefaultOptions() {
-        
-        var capabilities = SBAPI.getCapabilities();
-        var devices = capabilities.supportedInputDevices;
-        if (devices == null || devices.length == 0) {
-            throw new Error('There are no supported input devices.');
+        // Get platform specific options, if present
+        if (SBAPI.getDefaultOptions) {
+            defaultOptions = SBAPI.getDefaultOptions();
         }
-        var device = devices[0]; // first device is system default
-        var channelCount = device.channelCounts[0];
-        var sampleRate = device.sampleRates[0];
-        var sampleSize = device.sampleSizes[0];
-
-        defaultOptions = {
-            captureDevice: device.id, // id
-            channelCount: channelCount,
-            sampleRate: sampleRate,
-            sampleSize: sampleSize,
-            encodingFormat: 'OPUS',
-            qualityIndicator: true
-        };
         
-        console.log('SB Recorder Device: ', device);
+        if ($.isEmptyObject(defaultOptions)) {
+            var capabilities = SBAPI.getCapabilities();
+            var devices = capabilities.supportedInputDevices;
+            if (devices == null || devices.length == 0) {
+                throw new Error('There are no supported input devices.');
+            }
+            var device = devices[0]; // first device is system default
+            var channelCount = device.channelCounts[0];
+            var sampleRate = device.sampleRates[0];
+            var sampleSize = device.sampleSizes[0];
+
+            defaultOptions = {
+                captureDevice: device.id, // id
+                channelCount: channelCount,
+                sampleRate: sampleRate,
+                sampleSize: sampleSize,
+                encodingFormat: 'OPUS',
+                qualityIndicator: true
+            };
+
+            console.log('SB Recorder Device: ', device);
+        }
     }
     
     SBService.getName = function() {
@@ -57,7 +72,7 @@ This is the service layer for the AIR SB audio recorders:
         return SBAPI.getLogs();
     };
 
-    SBService.initialize = function () {
+    SBService.initialize = function() {
 
         ready = false;
         SBAPI = TDS.SecureBrowser.getRecorder();
@@ -65,7 +80,7 @@ This is the service layer for the AIR SB audio recorders:
         Recorder.onDeviceInit.fire();
 
         // assign a global event
-        SBAPI.initialize(function (event) {
+        SBAPI.initialize(function(event) {
 
             if (event.type == SBEvent.DEVICE_READY) {
                 try {
@@ -76,7 +91,7 @@ This is the service layer for the AIR SB audio recorders:
                     Recorder.onDeviceException.fire(null, ex, true); // fatal exception...
                 }
             }
-            // check for initialize error
+                // check for initialize error
             else if (event.type == SBEvent.DEVICE_ERROR && Util.String.contains(event.data, 'Error during initialize')) {
                 // Recorder.onDeviceError.fire(null, 'Failed to initialize - ' + event.data);
                 Recorder.onDeviceException.fire(null, null, true); // fatal exception...
@@ -89,22 +104,28 @@ This is the service layer for the AIR SB audio recorders:
     };
 
     SBService.startCapture = function(id, duration) {
+        var options;
+        if (Util.Browser.isCertified()) {
+            options = SBAPI.getDefaultOptions();
+        } else { // plugins for mobile and firefox may also need their own options instead of this fake one but 
+            // they are not tested since currently they are using webaudio instead of plugin
 
-        initDefaultOptions();
+            initDefaultOptions();
 
-        // build capture options
-        var options = JSON.parse(JSON.stringify(defaultOptions)); // clone
-        options = YAHOO.lang.augmentObject(options, {
-            filename: id,
-            captureLimit: {
-                duration: (YAHOO.lang.isNumber(duration) ? duration : defaultDuration)
-            },
-            progressFrequency: { // get error in debug mode if we don't include this...
-                type: 'time',
-                interval: 99999
-            }
-        });
-
+            // build capture options
+            options = JSON.parse(JSON.stringify(defaultOptions)); // clone
+            options = YAHOO.lang.augmentObject(options, {
+                filename: id,
+                captureLimit: {
+                    duration: (YAHOO.lang.isNumber(duration) ? duration : defaultDuration)
+                },
+                progressFrequency: {
+                    // get error in debug mode if we don't include this...
+                    type: 'time',
+                    interval: 99999
+                }
+            });
+        }
         console.log('SB Recorder Capture: ', options);
 
         // call SB API to begin capture
@@ -128,11 +149,11 @@ This is the service layer for the AIR SB audio recorders:
 
     SBService.playAudio = function(id) {
 
-        var audioData = {            
+        var audioData = {
             type: 'filename',
             filename: id
         };
-        
+
         SBAPI.play(audioData, function(event) {
             if (event.type == SBEvent.PLAYBACK_START) {
                 Recorder.onPlayStart.fire(id);

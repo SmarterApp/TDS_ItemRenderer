@@ -1,8 +1,24 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// REQUIRES: NONE
 
 (function(Util) {
 
     var D = {};
+
+    // return element or lookup id
+    D.get = function(el) {
+        if (typeof el == 'string') {
+            return document.getElementById(el);
+        }
+        return el;
+    };
 
     // get the Document class (on IE < 11 there is no HTMLDocument)
     var DocClass = window.HTMLDocument || window.Document;

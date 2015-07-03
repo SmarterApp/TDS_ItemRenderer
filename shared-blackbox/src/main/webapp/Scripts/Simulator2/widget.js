@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Widget for simulator.
 */
@@ -10,12 +18,7 @@ Widget for simulator.
         var simulator = null;
 
         // begins loading the simulators resources (images and flash)
-        var simImageFiles = SimulationLoader.parseImages(simXml /*, translationXml*/);
-
-        // FOR TESTING: when translations are appended to simXml
-        // !! make sure URL redirects are set-up for this: set "testMode = true" in UrlResolver.ResolveSpecXmlUrls(), found in TDS.ItemRenderer\Processing\ITSUrlResolver.cs
-        // var simImageFiles = SimulationLoader.parseImages(simXml, 'TEST MODE');
-
+        var simImageFiles = SimulationLoader.parseImages(simXml);
 
         // add resources to loader
         for (var i = 0; i < simImageFiles.length; i++) {
@@ -47,9 +50,9 @@ Widget for simulator.
         Simulator.Animation.FlashAnimationInterface.MapInstance(simulator);
         simulator.setAnimationShellPath(CM.resolveBaseUrl('Scripts/Simulator2/Renderer/SWF/SimulationShell.swf'));
         simulator.setAnimationExternalScriptsPath(CM.resolveBaseUrl('Scripts/Libraries'));
-        simulator.presetLanguage(CM.getLanguage()); // set language to display
+        simulator.setCurrentLanguage(CM.getLanguage()); // set language so we can relay that to animation
         
-        simulator.loadXml(simXml, responseXml/*, translationXml*/);
+        simulator.loadXml(simXml, responseXml);
 
 
         // NOTE: This is hack for student code.
@@ -159,7 +162,7 @@ Widget for simulator.
         this.simulator = null;
     }
 
-    function match(page, item, content) {
+    function match_ITS(page, item, content) {
         var id = 'SimContainer_' + item.position;
         var el = document.getElementById(id);
         if (el && item.rendererSpec) {
@@ -168,7 +171,13 @@ Widget for simulator.
         return false;
     }
 
-    CM.registerWidget('simulator', Widget_Sim, match);
+    // register ITS simulator answer space
+    CM.registerWidget('simulator', Widget_Sim, match_ITS);
+
+    // register QTI custom interaction
+    var match_QTI = CM.QTI.createWidgetMatch('customInteraction', 'sim');
+    CM.registerWidget('qti.simulator', Widget_Sim, match_QTI);
+
 
     Widget_Sim.prototype.load = function() {
         this.simulator = create(this.page, this.entity, this.element, this.config);

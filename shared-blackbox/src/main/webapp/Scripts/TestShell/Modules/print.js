@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Code used for printing items and passages.
 */
@@ -53,34 +61,22 @@ Code used for printing items and passages.
 
         console.log('TestShell: onPassagePrinted page=' + page.pageNum);
 
-        // make sure this is the accessible layout
         var contentPage = page.getContentPage();
-        if (contentPage.layout != 'WAI') return;
+        if (!contentPage) return;
 
-        var pagePassage = contentPage.getPassage();
-        var passageElement = pagePassage.getElement();
+        var contentPassage = contentPage.getPassage();
+        if (!contentPassage) return;
 
-        // try and get item status
-        var status = Util.Dom.getElementByClassName('status', 'div', passageElement);
+        // get print plugin
+        var printPlugin = contentPassage.plugins.get('passage.print');
+        if (!printPlugin || !printPlugin.element) return;
 
-        // create item status if it doesn't exist
-        if (status == null) {
-            // create status div and unordered list
-            status = HTML.DIV({ className: 'status' });
+        YUD.addClass(printPlugin.element, 'printSubmitted');
 
-            // add aria
-            status.setAttribute('role', 'status');
-            status.setAttribute('aria-atomic', 'false');
-            status.setAttribute('aria-relevant', 'additions text');
-            status.setAttribute('aria-live', 'assertive');
-
-            // add status div right after the passage element div
-            YUD.insertBefore(status, YUD.getFirstChild(passageElement));
-        }
-
-        // add status message to list
-        // status.appendChild(HTML.DIV(null, 'Print request submitted'));
-        status.innerHTML = 'Print request submitted';
+        // set delay on writing label so this doesn't get spoken when clicking on link
+        setTimeout(function () {
+            printPlugin.element.setAttribute('aria-label', 'This passage has been submitted for printing.');
+        }, 0);
     };
 
     // call when item printing has completed
@@ -101,6 +97,7 @@ Code used for printing items and passages.
         if (!printPlugin || !printPlugin.element) return;
 
         YUD.addClass(printPlugin.element, 'printSubmitted');
+
         // set delay on writing label so this doesn't get spoken when clicking on link
         setTimeout(function () {
             printPlugin.element.setAttribute('aria-label', 'This question has been submitted for printing.');

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Item Tool: Mark for Review
 */
@@ -69,6 +77,9 @@ Item Tool: Mark for Review
 
     Plugin_Mark.prototype.load = function () {
 
+        //Perform update on display styles regardless of menu options
+        this.update();
+        
         // check if we are only showing menu
         var accProps = this.page.getAccProps();
         if (accProps.showItemToolsMenu()) {
@@ -82,8 +93,6 @@ Item Tool: Mark for Review
             text: Messages.get(messageKey),
             fn: this.toggle.bind(this)
         });
-
-        this.update();
 
     }
 

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 This code is used for preloading and parsing image/flash.
 */
@@ -23,8 +31,10 @@ SimulationLoader._regex_images2 = /src[\s]*=[\s]*".*(.jpg | .png | .gif)\s*"/g;
 SimulationLoader._regex_flash1 = /flash[\s]*=[\s]*\".*\"/g;
 SimulationLoader._regex_flash2 = /src[\s]*=[\s]*\".*(swf)\s*\"/g;
 SimulationLoader._regex_flash3 = /altSrc[\s]*=[\s]*\".*(swf)\s*\"/g;
-SimulationLoader._regex_translationImageElement = /^.*(languageElement id="trans\..*\.image[^"]*").*$/gm; // returns whole line with image file in it
-SimulationLoader._regex_translationImageFile = /value[\s]*=[\s]*".*"/g; // used on result of _regex_translationImageElement to extract value attribute
+SimulationLoader._regex_translationImageElement = /^.*languageElement.*type="image\/.*$/gm;
+SimulationLoader._regex_translationFlashElement = /^.*languageElement.*type="application\/x-shockwave-flash.*$/gm;
+SimulationLoader._regex_extractAttribute = /="([^"]*)"/; // get (first) xml attribute in string
+SimulationLoader._regex_extractNodeValue = />([^<]*)</; // get (first) xml node text value in string
 
 // generic function for parsing xml attributes with the regex above
 SimulationLoader._parse = function(xmlText, regex) 
@@ -34,30 +44,20 @@ SimulationLoader._parse = function(xmlText, regex)
     
     if (matches != null)
     {
-        var extractFile = function(str) 
+        var extractFile = function(str, isNodeValue) 
         {
-            var index = str.indexOf('"');
-            var cleanStr = str.substring(index + 1);
-            index = cleanStr.indexOf('"');
-            cleanStr = cleanStr.substring(0, index);
-                 
-            return cleanStr;
+            if (!isNodeValue) {
+                return str.match(SimulationLoader._regex_extractAttribute)[1];
+            } else {
+                return str.match(SimulationLoader._regex_extractNodeValue)[1];
+            }
         }
 
-        var extractFileFromTranslationImageElement = function(str)
-        {
-            // when checking for images in translation elements, we first match the whole line (b/c js does not support regex lookbehind...)
-            // and then extract value attribute from that, hence this extra step
-            var valueMatch = str.match(SimulationLoader._regex_translationImageFile)[0];
-
-            return extractFile(valueMatch);
-        }
-
-        if (regex == this._regex_translationImageElement)
+        if (regex == this._regex_translationImageElement || regex == this._regex_translationFlashElement)
         {
             for (var i = 0; i < matches.length; i++)
             {
-                values.push(extractFileFromTranslationImageElement(matches[i]));
+                values.push(extractFile(matches[i], true));
             }
         }
         else
@@ -73,20 +73,23 @@ SimulationLoader._parse = function(xmlText, regex)
 };
 
 // get all the image file names in the xml
-SimulationLoader.parseImages = function(xmlText, translationText)
+SimulationLoader.parseImages = function(xmlText)
 {
+    if (typeof xmlText != 'string') {
+        xmlText = new XMLSerializer().serializeToString(xmlText);
+    }
+
     var imageFiles = [];
 
-    if (translationText == null) // pre-i18n version: image names are in simXml itself
+    var containsTranslation = xmlText.indexOf('<translation>') > -1;
+
+    if (!containsTranslation) // pre-i18n version: image names are in simXml itself
     {
         imageFiles = imageFiles.concat(this._parse(xmlText, this._regex_images1));
         imageFiles = imageFiles.concat(this._parse(xmlText, this._regex_images2));
     }
-    else if (translationText == 'TEST MODE') { // for testing when translation xml is simply appended to simXml - remove when no longer needed!
+    else { // i18n-compliant version: image names are in the translation section
         imageFiles = imageFiles.concat(this._parse(xmlText, this._regex_translationImageElement));
-    }
-    else { // i18n-compliant version: image names are in the translationXml
-        imageFiles = imageFiles.concat(this._parse(translationText, this._regex_translationImageElement));
     }
 
     // resolve urls
@@ -100,12 +103,25 @@ SimulationLoader.parseImages = function(xmlText, translationText)
 
 // get all the flash file names in the xml
 SimulationLoader.parseFlash = function(xmlText) 
-{ 
+{
+    if (typeof xmlText != 'string') {
+        xmlText = new XMLSerializer().serializeToString(xmlText);
+    }
+
     var flashFiles = [];
 
-    flashFiles = flashFiles.concat(this._parse(xmlText, this._regex_flash1));
-    flashFiles = flashFiles.concat(this._parse(xmlText, this._regex_flash2));
-    flashFiles = flashFiles.concat(this._parse(xmlText, this._regex_flash3));
+    var containsTranslation = xmlText.indexOf('<translation>') > -1;
+
+    if (!containsTranslation) // pre-i18n version: image names are in simXml itself
+    {
+        flashFiles = flashFiles.concat(this._parse(xmlText, this._regex_flash1));
+        flashFiles = flashFiles.concat(this._parse(xmlText, this._regex_flash2));
+        flashFiles = flashFiles.concat(this._parse(xmlText, this._regex_flash3));
+    }
+    else { // i18n-compliant version: image names are in the translation section
+        flashFiles = flashFiles.concat(this._parse(xmlText, this._regex_translationFlashElement));
+    }
+
     
     // resolve urls
     for (var i = 0; i < flashFiles.length; i++)

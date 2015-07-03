@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Expandable Passages
 */
@@ -38,23 +46,29 @@ Expandable Passages
         YUD.addClass(expandLink, 'toolButton');
         YUD.addClass(expandLink, 'expand-collapse-passage');
 
-        // add event handler to toggle classes
-        YUE.on(expandLink, 'click', function (clickEv) {
+        var expandCollapse = function(clickEv) {
             // stop dom event
             YUE.stopEvent(clickEv);
+
+            // fire event after animation done
+            $(pageEl).one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function () {
+                CM.fireEntityEvent('passageExpandCollapse', passage);
+            });
 
             // check for class
             if (YUD.hasClass(pageEl, CSS_EXPANDED)) {
                 // make passage collapsed
                 YUD.removeClass(pageEl, CSS_EXPANDED);
                 YUD.addClass(pageEl, CSS_COLLAPSED);
-            }
-            else if (YUD.hasClass(pageEl, CSS_COLLAPSED)) {
+            } else if (YUD.hasClass(pageEl, CSS_COLLAPSED)) {
                 // make passage expanded
                 YUD.removeClass(pageEl, CSS_COLLAPSED);
                 YUD.addClass(pageEl, CSS_EXPANDED);
             }
-        });
+        };
+
+        // add event handler to toggle classes
+        YUE.on(expandLink, 'click', expandCollapse);
 
         // add expand link as the first child of passage padding
         /*var paddingEl = Util.Dom.getElementByClassName('padding', 'div', passageEl);

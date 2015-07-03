@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Abstract class for inheriting a test shell page from.
 */
@@ -110,6 +118,13 @@ TestShell.Page.prototype.hasLabel = function()
 {
     var label = this.getLabel();
     return (label != null);
+};
+
+// get the label to show when the user tries to leave the page 
+// but there is a task to perform or items required on the page
+TestShell.Page.prototype.getUnansweredLabel = function () {
+    // TODO: Implement this different in other page classes (e.x., PageReview)
+    return ErrorCodes.get('NextUnanswered');
 };
 
 // update the navigation dropdown label

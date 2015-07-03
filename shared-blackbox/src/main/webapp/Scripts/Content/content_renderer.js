@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/* Init */
 
 (function(CM) {
@@ -448,8 +456,14 @@
         }
     };
 
-    // handles image events (READY_STATE_CHANGE, LOAD, ABORT, and ERROR)
+    // handles image DOM event handler 
     Renderer.prototype._onImageEvent = function (evt, image) {
+        // BUG 160415: DOMParser can trigger image load events so we need to schedule them
+        setTimeout(this._processImageEvent.bind(this, evt, image), 0);
+    };
+    
+    // process image event (READY_STATE_CHANGE, LOAD, ABORT, and ERROR)
+    Renderer.prototype._processImageEvent = function (evt, image) {
 
         // make sure we are waiting on this event
         if (!Util.Array.contains(this._imagesLoading, image)) {

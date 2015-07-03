@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 This file is used to hook up the test shell to the content manager. It should contain all the event
 subscriptions.
@@ -83,6 +91,23 @@ ContentManager.onPageEvent('loaded', function(contentPage)
     if (missingFiles.length > 0)
     {
         TDS.Diagnostics.logServerError('CONTENT ' + contentPage.id + ': Missing Images - ' + missingFiles.join(', '));
+    }
+});
+
+// WCAG: add required tag to items
+ContentManager.onItemEvent('loaded', function (contentPage, contentItem) {
+    var page = TestShell.PageManager.get(contentPage.id);
+    if (page instanceof TestShell.PageGroup) {
+        var item = page.getResponse(contentItem.position);
+        if (item) {
+            var msg;
+            if (item.isRequired || page.items.length == page.numRequired) {
+                msg = Messages.getAlt('TDSContentJS.Label.QuestionRequired', 'Required: Question Number');
+            } else {
+                msg = Messages.getAlt('TDSContentJS.Label.QuestionOptional', 'Question Number');
+            }
+            contentItem.setQuestionHeader(msg);
+        }
     }
 });
 
@@ -321,7 +346,9 @@ ContentManager.onPageEvent('show', function(contentPage)
 {
     // fire the test shell version of the onShow event
     var page = TestShell.PageManager.get(contentPage.id);
-    TestShell.PageManager.Events.fire('onShow', page);
+    if (page) {
+        TestShell.PageManager.Events.fire('onShow', page);
+    }
 });
 
 ContentManager.onPageEvent('beforeHide', function(contentPage)
@@ -335,15 +362,16 @@ ContentManager.onPageEvent('hide', function(contentPage)
 {
     // fire the test shell version of the onHide event
     var page = TestShell.PageManager.get(contentPage.id);
-    TestShell.PageManager.Events.fire('onHide', page);
+    if (page) {
+        TestShell.PageManager.Events.fire('onHide', page);
+    }
 });
 
 // hide content dialog when menu key is pressed
 ContentManager.onEntityEvent('menushow', function(contentPage, entity, menu, evt)
 {
     // check if tutorial is showing don't show context menu
-    if (ContentManager.Dialog.isShowing())
-    {
+    if (ContentManager.Dialog.isShowing()) {
         menu.cancel = true; // cancel menu
     }
 });
@@ -353,6 +381,25 @@ ContentManager.onPageEvent('completed', function(contentPage) {
     // go to the next page
     TestShell.Navigation.next();
 });
+
+// item focus save code
+(function(CM, TS) {
+
+    // save when changing item focus in content manager
+    function onEntityFocus(contentPage, currentEntity, previousEntity) {
+        // when previousEntity is not null and it is an item then
+        // we just came from an item and we should try and save it
+        if (TS.Config.saveOnFocusChange && previousEntity instanceof ContentItem) {
+            var previousItem = TS.PageManager.getItem(previousEntity);
+            if (previousItem) {
+                TS.save(TS.SaveRequest.FocusChange, [previousItem]);
+            }
+        }
+    }
+    
+    CM.onEntityEvent('focus', onEntityFocus);
+
+})(window.ContentManager, window.TestShell);
 
 // hook up spell check code
 (function(window) {
@@ -433,7 +480,7 @@ function tdsRemoveResponse(position)
     var itemData = {
         position: itemResponse.position,
         itemID: itemResponse.id,
-        dateCreated: itemResponse.dateCreated
+        pageKey: itemResponse.page.pageKey
     };
 
     var resetResponse = function()
@@ -443,6 +490,8 @@ function tdsRemoveResponse(position)
             // check if remove was successful
             if (reply != null && reply.replyCode === 0)
             {
+                // show progress
+                TestShell.UI.showLoading(Messages.getAlt('UI.ReloadingContent', 'Reloading the page content.'));
                 // reset response data
                 itemResponse.reset();
                 // reload content

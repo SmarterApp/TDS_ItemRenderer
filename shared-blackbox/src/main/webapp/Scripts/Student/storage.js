@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 API for storing and retrieving TDS data for taking a test.
 */
@@ -133,6 +141,18 @@ TDS.Student = TDS.Student || {};
             return typeGroups.join(';');
         }
         return null;
+    };
+
+    // allows setting a type/code on default accommodations (mostly for debugging)
+    Storage.setAccCode = function (name, code) {
+        var accList = TDS.Student.Storage.getAccList();
+        if (accList && accList.length) {
+            var accs = accList[0];
+            var accType = accs.createType(name);
+            var accValue = accType.createValue(code);
+            accValue.select();
+            TDS.Student.Storage.setAccList(accList);
+        }
     };
     
     Storage.setTestProperties = function (obj) {

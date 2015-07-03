@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/// <reference path="Libraries/yahoo.js" />
 /// <reference path="Libraries/dom.js" />
 /// <reference path="Libraries/event.js" />
@@ -61,6 +69,7 @@ LR.addParser(custParser1);
 
 //NAME SPACE
 var TDS = window.TDS || {};
+var CSS_LR_CLASSNAME = 'lr-enabled';
 TDS.LineReaderControl = {
     Instance: null,
     toggle: function(){
@@ -72,17 +81,38 @@ TDS.LineReaderControl = {
     },
     on: function(el){
         if(!TDS.LineReaderControl.Instance){
-            var page = ContentManager.getCurrentPage();
+            var page = ContentManager.getCurrentPage(),
+                item = ContentManager.getCurrentEntity(),
+                menu = ContentManager.Menu;
+
             if(page){
               page.disableScroll();
             }
+
+            // avoid focus stuck on grid canvas which blocks the arrow key event listener for LR
+            // bug: https://bugz.airast.org/default.asp?167981#968033
+            if (item) {
+                item.resetComponent();
+            }
+
+            if (menu && menu.isShowing()) {
+                menu.hide();
+            }
+
             var el = YAHOO.util.Selector.query("#contents")[0];
 
             var root     = YAHOO.util.Selector.query('.showing'); //Active passage
             var passages = YAHOO.util.Selector.query('.thePassage,.theQuestions', root[0]);
-            var stems    = YAHOO.util.Selector.query('.stemContainer', root[0]);
+            var stems = YAHOO.util.Selector.query('.stemContainer', root[0]);
 
             var fin = YAHOO.lang.isArray(el) ? el : passages.concat(stems);
+
+            if (passages.length > 0) {
+                Util.Dom.sort(fin);
+            }
+
+            $(document.body).addClass(CSS_LR_CLASSNAME);
+
             var lr = new TDS.LineReader(fin);
             lr.selectFirst();
 
@@ -97,6 +127,9 @@ TDS.LineReaderControl = {
                   page.enableScroll();
                 }
             }
+
+            $(document.body).removeClass(CSS_LR_CLASSNAME);
+
             TDS.LineReaderControl.Instance.dispose();
             delete TDS.LineReaderControl.Instance;
             TDS.LineReaderControl.Instance = null;
@@ -114,6 +147,7 @@ TDS.LineReaderControl = {
             ContentManager.onItemEvent('hide', TDS.LineReaderControl.off);
             ContentManager.onPageEvent('hide', TDS.LineReaderControl.off);
             ContentManager.onEntityEvent('menushow', TDS.LineReaderControl.off);
+            ContentManager.onEntityEvent('passageExpandCollapse', TDS.LineReaderControl.reset);
         }
     }
 };
@@ -189,7 +223,7 @@ TDS.LineReader = function (el) {
 	    }
 	};
 
-    // image/math element size is reasonable forthe line reader (between line height and 2 * ling height)
+    // image/math element size is reasonable forthe line reader (between line height and 2.5 * ling height)
 	this._hasFitImageOrMath = function (parEl, lnHeight) {
 
 	    var img = $('img', parEl),
@@ -198,7 +232,7 @@ TDS.LineReader = function (el) {
             mathLen = math.length,
 	        imgHeight = imgLen == 1 ? img[0].clientHeight : null,
 	        mathHeight = mathLen == 1 ? math[0].clientHeight : null,
-            heightLimit = lnHeight * 2;
+            heightLimit = lnHeight * 2.5;
 
         if (imgHeight > heightLimit || mathHeight > heightLimit) {
             return false;
@@ -307,7 +341,7 @@ TDS.LineReader = function (el) {
                 $('.' + this._bgActiveClassName).removeClass(this._bgActiveClassName);
 
                 YAHOO.util.Dom.setStyle(this.TheLine, 'top', line.top + 'px');
-                YAHOO.util.Dom.setStyle(this.TheLine, 'left', '0');
+                YAHOO.util.Dom.setStyle(this.TheLine, 'left', line.left);
                 YAHOO.util.Dom.setStyle(this.TheLine, 'height', line.height + 'px');
                 YAHOO.util.Dom.setStyle(this.TheLine, 'width', line.width);
                 YAHOO.util.Dom.addClass(this.TheLine, 'TDS_Line_Reader_Active');
@@ -571,10 +605,13 @@ TDS.LineReader = function (el) {
 	this._textContainerOnClick = function (e) {
 		var target = e.target || e.srcElement;
 
-		//EVEN THOUGH SPANS ARE NOT ADDED TO A LIST WHEN CLICK ON THEY
-		if (target.nodeName === 'SPAN') {
-			target = YAHOO.util.Dom.getAncestorBy(target, function () { return true; });
-		}
+	    // For those children nodes of <p>, handle the click event like on wrapper <p>
+	    // bug: https://bugz.airast.org/default.asp?166705#965321
+		if (target.nodeName != 'P') {
+            // get item boundary for the $.closest() search, typically, it would be the .bigTable <div>
+		    var itemBoundary = $(this._parentContainers[0]).parent().get(0);
+		    target = $(target).closest('p', itemBoundary).get(0);
+        }
 
 		var Y = YAHOO.util.Event.getXY(e)[1];
 		var elY = YAHOO.util.Region.getRegion(target);
@@ -736,11 +773,13 @@ TDS.LineReader = function (el) {
 	    var el_h = el.clientHeight,
 	        el_w = el.clientWidth,
 	        el_y = YAHOO.util.Dom.getY(el),
+	        el_left = $(el).css('text-indent'),
 	        el_padding = parseInt(YAHOO.util.Dom.getStyle(el, 'padding-top'));
 
 	    var ln_height = 0; 
-	            
-	    var el_line_height = YAHOO.util.Dom.getStyle(el, 'line-height');
+	    
+        // use .css() to get computed style all in 'px' unit, compatible with all style unit like em, inch, px. Using .css() to make it compatible with SecureBrowser
+	    var el_line_height = $(el).css('line-height');
 	    var el_font_size = YAHOO.util.Dom.getStyle(el, 'font-size');
 
 	    var pfel_lh = parseFloat(el_line_height);
@@ -803,12 +842,22 @@ TDS.LineReader = function (el) {
         //CREATE LINES UNTIL THE BOTTOM OF THE ELEMENT IS REACHED
         while (curr_pos < el_h) {
 
-			var linObj = new that.line();
-			linObj.height = ln_height;
+            // for those left over space without content at the bottom of the element, like <p>, only render them as a line if they have larger height than half ln_height
+            // this prevent some weird look lines in some particular browsers (different browsers may have slightly different clientHeights, which the el_h depends on)
+            if (el_h - curr_pos < ln_height / 2) {
+                break;
+            }
+
+            var linObj = new that.line();
+
+            // for those left over space without content at the bottom of the element, assign all the left over space (normally smaller than ln_height) to the line reader instead of the whole ln_height, 
+            // which might cover part of the lower lines of text.
+			linObj.height = (el_h - curr_pos) > ln_height ? ln_height : el_h - curr_pos;
 			linObj.width = el_w;
 			linObj.top = (curr_pos + el_padding) + ssOffset;
 			linObj.element = el;
 			linObj.bottom = linObj.top + linObj.height;
+			linObj.left = el_left || 0; // text-indent attribute default value is 0
 
 			for (var i = 0; i < spansArray.length; i++) {
 			    if (spansArray[i].bottom > linObj.top && spansArray[i].bottom < linObj.bottom) {

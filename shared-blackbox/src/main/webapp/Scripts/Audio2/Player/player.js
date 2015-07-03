@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function (tds) {
 
     var _services = new TDS.Audio.Services(),
@@ -68,7 +76,21 @@
 
             sources.push(source);
         }
+        //Prefer ogg on firefox to prevent codec problems
+        var oggFix = TDS.getAppSetting('tds.audio.oggFix', true);
+        if (oggFix && sources.length && Util.Browser.getFirefoxVersion() > 0) {
+           
+            for (var i = 0; i < sources.length; i++)
+            {
+                source = sources[i];
+                if (source.type.indexOf('audio/ogg') != -1) {
+                    sources.splice(i, 1);
+                    sources.unshift(source);
+                    break;
+                }
+            }
 
+        }
         return sources;
     };
 

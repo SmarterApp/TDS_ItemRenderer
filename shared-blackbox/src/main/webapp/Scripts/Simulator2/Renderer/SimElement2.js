@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /** **************************************************************************
 * @class SimElement
 * @superclass SimItem
@@ -258,11 +266,15 @@ Simulator.SimElement = function (sim) {
 
     // Convenience functions for debugging
     function debug(str1, str2, trace) {
-        dbg().debug(source, str1, str2, trace);
+        if (sim) {
+            dbg().debug(source, str1, str2, trace);
+        }
     }
 
     function debugf(str1, str2, trace) {
-        dbg().debugf(source, str1, str2, trace);
+        if (sim) {
+            dbg().debugf(source, str1, str2, trace);
+        }
     }
 
 };

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function(TS) {
 
     // configure save options
@@ -9,34 +17,60 @@
         var type = contentItem.responseType.toLowerCase();
         var format = contentItem.format.toLowerCase();
 
-        if (type == 'grid' || type == 'simulator' || type == 'scratchpad') {
+        /*
+        Options:
+        auto = timer
+        implicit = next/back
+        explicit = manual
+        focusChange = item change
+        */
+
+        if (type == 'grid' || type == 'scratchpad') {
             options.auto = false;
             options.implicit = true;
             options.explicit = true;
+            options.focusChange = true;
+        } else if (type == 'simulator') {
+            options.auto = false;
+            options.implicit = true;
+            options.explicit = true;
+            options.focusChange = false;
         } else if (type == 'microphone') {
             options.auto = false;
             options.implicit = true;
             options.explicit = true;
+            options.focusChange = false;
         } else if (format == 'mc' || format == 'si' /* scoring entry */) {
+            // NOTE: MC sends responses in real time
             options.auto = false;
             options.implicit = false;
             options.explicit = false;
+            options.focusChange = false;
         } else if (format == 'eq' /* equation editor */) {
             options.auto = false;
             options.implicit = true;
             options.explicit = true;
+            options.focusChange = true;
         } else if (format == 'asi' /* scaffolding */) {
             options.auto = false;
             options.implicit = true;
             options.explicit = false;
+            options.focusChange = true;
+        } else if (format == 'generic instruction') { // instructional item
+            options.auto = false;
+            options.implicit = true;
+            options.explicit = false;
+            options.focusChange = true;
         } else if (type == 'na') { /* no response type specified so nothing to save */
             options.auto = false;
             options.implicit = false;
             options.explicit = false;
+            options.focusChange = false;
         } else {
             options.auto = true;
             options.implicit = true;
             options.explicit = true;
+            options.focusChange = true;
         }
     }
 
@@ -51,17 +85,17 @@
         this.isSelected = false;
         this.isRequired = false;
         this.isValid = false;
-        this.prefetched = false;
-
         this.value = null;
         this.comment = '';
     };
 
     // get the content item
     Item.prototype.getContentItem = function () {
-        var contentPage = this.page.getContentPage();
-        if (contentPage) {
-            return contentPage.getItem(this.position);
+        if (this.page) {
+            var contentPage = this.page.getContentPage();
+            if (contentPage) {
+                return contentPage.getItem(this.position);
+            }
         }
         return null;
     };
@@ -71,7 +105,8 @@
         var options = {
             auto: false,
             implicit: false,
-            explicit: false
+            explicit: false,
+            focusChange: false
         };
         var contentItem = this.getContentItem();
         if (contentItem) {
@@ -83,7 +118,12 @@
     // Reset the response data structure.
     // NOTE: this should get called only after this has been done on the server.
     Item.prototype.reset = function () {
-        this.sequence = 0;
+        // in the database, reset:
+        //   1) flags existing responses as removed
+        //   2) inserts a new response with a NULL value
+        // we need to increment sequence to reflect the new NULL response value
+        ++this.sequence;
+
         this.value = null;
         this.isSelected = false;
         this.isValid = false;
@@ -156,8 +196,8 @@
             return true;
         }
 
-        // if the response has never been saved the handler has empty string (empty textarea) and the items original value is null, then nothing has changed
-        if (lastValue == null && (currentValue == null || currentValue.length == 0 || !response.isValid)) {
+        // if we never responded and the response is empty then don't save anything
+        if (lastValue == null && response.empty) {
             return false;
         }
 

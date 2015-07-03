@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 This is the code for the review screen where they can go back into the test or complete.
 */
@@ -6,11 +14,27 @@ This is the code for the review screen where they can go back into the test or c
 
     function TestReview() {
         TestReview.superclass.constructor.call(this, 'sectionTestReview');
-        this.addClick('btnReviewTest', this.viewGroup);
-        this.addClick('btnCompleteTest', this.score);
     };
 
     YAHOO.lang.extend(TestReview, Sections.Base);
+
+    TestReview.prototype.init = function () {
+
+        // when we are showing drop down this is used to go back into the test
+        this.addClick('btnReviewTest', this.viewGroup);
+
+        // listen for test complete
+        this.addClick('btnCompleteTest', this.score);
+
+        // listen for test pause and hide/show button
+        var pauseEnabled = TDS.getAppSetting('tds.reviewshell.pauseEnabled', false);
+        if (pauseEnabled) {
+            this.addClick('btnPauseTest', this.pause);
+        } else {
+            $('#btnPauseTest').remove();
+        }
+
+    };
 
     TestReview.prototype.load = function () {
 
@@ -187,16 +211,33 @@ This is the code for the review screen where they can go back into the test or c
         var showItemScoreReportSummary = accProps.showItemScoreReportSummary();
         var showItemScoreReportResponses = accProps.showItemScoreReportResponses();
 
-        // create function for submitting the test
-        var submitTest = function() {
-            TDS.Dialog.showPrompt(msgSubmitTest, function() {
-                TDS.Student.API.scoreTest(hideTestScore, showItemScoreReportSummary, showItemScoreReportResponses).then(function(summary) {
-                    if (summary) {
-                        this.request('next', summary);
-                    }
-                }.bind(this));
-            }.bind(this));
-        }.bind(this);
+        var self = this;
+
+        // score the test
+        function scoreTest() {
+            var surveyData = TestReview.Survey.getData();
+            return TDS.Student.API.scoreTest(hideTestScore, showItemScoreReportSummary, showItemScoreReportResponses, surveyData).then(function (summary) {
+                if (summary) {
+                    self.request('next', summary);
+                }
+            });
+        }
+
+        // submit the test
+        function submitTest() {
+            // confirm if want to submit test
+            TDS.Dialog.showPrompt(msgSubmitTest, function () {
+                // check if survey is enabled
+                if (TestReview.Survey.isSupported()) {
+                    TestReview.Survey.show();
+                } else {
+                    scoreTest();
+                }
+            });
+        }
+
+        // when submitting survey score the test
+        TestReview.Survey.on('submit', scoreTest);
 
         // check if the test can be completed
         var testInfo = TDS.Student.Storage.getTestInfo();
@@ -207,10 +248,33 @@ This is the code for the review screen where they can go back into the test or c
                 } else {
                     TDS.Dialog.showAlert(msgCannotComplete);
                 }
-            }.bind(this));
+            });
         } else {
             submitTest();
         }
+    };
+
+    TestReview.prototype.pause = function() {
+
+        // get the restart mins
+        var oppRestartMins = -1;
+        var testInfo = TDS.Student.Storage.getTestInfo();
+        if (testInfo) {
+            oppRestartMins = testInfo.oppRestartMins;
+        }
+
+        // get the pause message
+        var pauseMessage = ErrorCodes.get('Pause', [oppRestartMins]);
+
+        // show pause warning
+        TDS.Dialog.showPrompt(pauseMessage, function() {
+            // tell server to pause
+            TDS.Student.API.pauseTest('manual from review').then(function () {
+                // go back to login page
+                TDS.logout();
+            });
+        });
+
     };
 
     Sections.TestReview = TestReview;

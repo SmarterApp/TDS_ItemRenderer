@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Utilities used for content manager or widgets. 
 */
@@ -157,7 +165,12 @@ Utilities used for content manager or widgets.
     CM.getSelection = function (doc) {
         if (typeof window.rangy == 'object') {
             try {
-                return window.rangy.getSelection(doc);
+                if (Util.Browser.isAndroid()) {
+                    // for android browser, retrieve the prestored text that has been selected
+                    return Util.SecureBrowser.getSelectedText();
+                } else {
+                    return window.rangy.getSelection(doc);
+                }
             } catch (ex) {
             }
         }

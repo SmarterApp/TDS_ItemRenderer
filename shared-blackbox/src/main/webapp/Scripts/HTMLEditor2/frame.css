@@ -53,19 +53,23 @@ textarea {
 /* @end */
 
 /* makes most of the body clickable without causing scroll bar to be visible*/
-body.cke_editable {
-	position: absolute;
-	overflow: auto;
-	top: .3em;
-	bottom: .3em;
-	left: .3em;
-	right: .3em;
-}
 html {
 	position: relative;
 	height: 100%;
 }
-
+body.cke_editable {
+	position: absolute;
+	overflow: auto;
+	/* CKEditor fix: padding causes errors */
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	/* CKEditor fix: border adds spacing back */
+	border: solid .3em transparent;
+	-moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
 .TDS_PS_L1 { 
 	font-size: 1.065em; 
 }
@@ -78,10 +82,10 @@ html {
 .TDS_PS_L4 { 
 	font-size: 2.5em; 
 }
+/* CKEditor fix: margin causes errors */
 .cke_editable ul, 
 .cke_editable ol {
-	margin-left: .5em;
-	list-style: inside;
+	padding-left: 1.5em;
 }
 .cke_editable ol {
 	list-style-type: decimal;

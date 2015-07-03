@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Widget for desmos equation editor.
 */
@@ -5,39 +13,51 @@ Widget for desmos equation editor.
 (function (CM) {
 
     ///////////////////////////////////
-    function match(page, item) {
+    function match_ITS(page, item) {
         var id = 'EquationEditor_' + item.position;
         var el = document.getElementById(id);
-        if (el && !CM.getAccommodationProperties().hasBraille()) {   // Braille tests get a plain text response area
-            return new CM.WidgetConfig(id, el);
+        if (el && !page.getAccProps().hasBraille()) {   // Braille tests get a plain text response area
+            return new CM.WidgetConfig(id, el, item.rendererSpec);
         }
         return false;
     }
 
-    function Widget_EQ(page, item, config) {
+    function Widget_EQ(wdgId, element, config) {
         this.eq = null; // equation editor instance
-    }
+    } 
 
-    CM.registerWidget('equationeditor', Widget_EQ, match);
+    // register old ITS interaction
+    CM.registerWidget('equationeditor', Widget_EQ, match_ITS);
 
-    Widget_EQ.prototype.load = function() {
+    // register QTI custom interaction
+    var match_QTI = CM.QTI.createWidgetMatch('customInteraction', 'eq');
+    CM.registerWidget('qti.eq', Widget_EQ, match_QTI);
 
-        var item = this.entity;
+    Widget_EQ.prototype.load = function () {
+        var page = this.page,
+            item = this.entity,
+            containerEl = this.element,
+            renderXml = this.config;
 
-        var content = item.rendererSpec;
-        //old tool rendererspec to new tool renderer spec
-        if (!(item.rendererSpec && item.rendererSpec.indexOf('<editorRow>') != -1)) {
-            content = MathEditorContent.Config.EquationAdapter.convertToDesmosXml(item.rendererSpec);            
+        if (typeof renderXml !== "string")
+            renderXml = Util.Xml.serializeToString(renderXml);
+
+        // check: renderxml format if v2 then process into desmos format
+        if (!(renderXml && renderXml.indexOf('<editorRow>') != -1)) {
+            renderXml = MathEditorContent.Config.EquationAdapter.convertToDesmosXml(renderXml);
         }
 
-        // create equation editor
-        var data = MathEditorContent.Config.PreviewFormatter.getPreviewXmlDoc(content);
-        var containerDom = document.getElementById('EquationEditor_' + item.position);
-        var oldClasses = containerDom.getAttribute('class');
-        containerDom.setAttribute('class', oldClasses + ' no-highlight lr-skip');
+        // convert render xmlstring into preview doc i.e mathml to latex
+        var renderDoc = MathEditorContent.Config.PreviewFormatter.getPreviewXmlDoc(renderXml);
+
+        var oldClasses = containerEl.getAttribute('class');
+        containerEl.setAttribute('class', oldClasses + ' no-highlight lr-skip');
+
+        // create desmos instance
         var debug = false; //TURN OFF in Production
-        var eq = MathEditorWidget(containerDom, data, debug ? function (msg) { /*eventcallback for widget*/ /*console.log(msg);*/ } : function (msg) { });
-        this.eq = eq;
+
+        // this.eq must be assigned before we call item.setResponse
+        var eq = this.eq = MathEditorWidget(containerEl, renderDoc, debug ? function (msg) { /*eventcallback for widget*/ /*console.log(msg);*/ } : function (msg) { });
 
         // try to set response if there is a value (in case we are doing a review or page refresh)
         if (item.value != null) {
@@ -47,16 +67,14 @@ Widget for desmos equation editor.
         // create and add EQ component
         var eqComponent = {
             id: 'EQ_' + item.position,
-            focus: function() { eq.focus(); },
-            blur: function() { eq.unfocus(); }
+            focus: function () { eq.focus(); },
+            blur: function () { eq.unfocus(); }
         };
 
         item.addComponent(eqComponent);
 
         // check when EQ component is active        
-        var eqContainer = containerDom;
-
-        YUE.on(eqContainer, 'click', function () {
+        YUE.on(containerEl, 'click', function () {
             item.setActiveComponent(eqComponent);
         });
 
@@ -64,43 +82,7 @@ Widget for desmos equation editor.
         if (item.isReadOnly()) {
             eq.setMode('readOnly');
         }
-
-
     };
-
-    /**
-    * Zooming.   Blackbox zoom levels do really scary things with text font sizes.  MathJax
-    * has to position things via absolutes, and the interaction between our scary css em
-    * zoom and the absolute positions can really mess up the html.   
-    *
-    * This sets the MathJax internal scaling = Page scaling of fonts which will then ensure
-    * the cursor actually ends up in the right places when zooming in.
-    */
-    /*
-    Widget_EQ.prototype.zoom = function(level) {
-
-        if (isNaN(level)) return;
-
-        var eq = this.eq;
-
-        var scale = { 0: 0.8, 1: 1.2, 2: 1.4, 3: 1.5, 4: 1.5 };
-        MathJax.Hub.Config({
-            showMathMenu: false,
-            "HTML-CSS": {
-                scale: 150 * scale[level] //Render the bounding boxes correctly
-            }
-        });
-
-        eq.CFG.fontTest();
-
-        var eds = eq.getEditors();
-        for (var i = 0; i < eds.length; ++i) {
-            eds[i] && eds[i].Update && eds[i].Update();
-        }
-
-        eq.unfocus();
-    };
-    */
 
     Widget_EQ.prototype.getResponse = function() {
         var eq = this.eq;
@@ -132,7 +114,7 @@ Widget for desmos equation editor.
     function match_EQA(page, item) {
         var id = 'EquationEditor_' + item.position;
         var el = document.getElementById(id);
-        if (el && CM.getAccommodationProperties().hasBraille()) {
+        if (el && page.getAccProps().hasBraille()) {
             return new CM.WidgetConfig(id, el);
         }
         return false;
@@ -147,6 +129,7 @@ Widget for desmos equation editor.
     Widget_EQA.prototype.load = function() {
         var item = this.entity;
         var textAreaEl = HTML.TEXTAREA();
+        textAreaEl.disabled = item.isReadOnly();
         this.textAreaEl = textAreaEl;
         var containerEl = this.element;
         containerEl.appendChild(textAreaEl);

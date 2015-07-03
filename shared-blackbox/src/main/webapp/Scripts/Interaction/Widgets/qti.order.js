@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿// This module is used for setting up the hottext interactions (e.x., selectables, draggables)
 (function (CM) {
 
@@ -54,6 +62,10 @@
         // add element to the dom
         containerEl.appendChild(interactionEl);
     }
+    
+    Widget_Order.prototype.show = function () {
+        this.interaction.prepareForShow();
+    };
 
     Widget_Order.prototype.getResponse = function () {
         // get the first group responses

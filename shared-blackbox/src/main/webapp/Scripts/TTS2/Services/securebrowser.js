@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 
 This is the generic API for SB's. Right now the only
@@ -35,15 +43,18 @@ function TTSService_Generic() {
     };
 
     this.supportsVolumeControl = function () {
-        return false;
+        // we only allow volume control for TTS on iOS browser later than version 3.0
+        return (Util.Browser.isIOS() && Util.Browser.getSecureVersion() > 3);
     };
 
     this.supportsPitchControl = function () {
-        return false;
+        // we only allow pitch control for TTS on iOS browser later than version 3.0
+        return (Util.Browser.isIOS() && Util.Browser.getSecureVersion() > 3);
     };
 
     this.supportsRateControl = function () {
-        return false;
+        // we only allow rate control for TTS on iOS browser later than version 3.0
+        return (Util.Browser.isIOS() && Util.Browser.getSecureVersion() > 3);
     };
 
     this.isSupported = function () {
@@ -192,33 +203,48 @@ function TTSService_Generic() {
 
     // get the current volume
     this.getVolume = function () {
-        return this.currentVolume;
+        // return this.currentVolume;
+        return Math.min(this.browserComponent.tts.getVolume(), 10);
     };
 
     this.setVolume = function (level) {
-        this.currentVolume = level;
+        // this.currentVolume = level;
+        if (typeof (level) != 'number') return false; // validate type
+        if (level < 0 || level > 10) return false; // validate range
+        if (this.getVolume() == level) return false;    // no need to change
+        this.browserComponent.tts.setVolume(level);
         return true;
     };
 
     // get the current pitch
     this.getPitch = function () {
-        return this.pitch;
+        // return this.pitch;
+        return Math.min(this.browserComponent.tts.getPitch(), 20);
     };
 
     // set pitch to a new value
     this.setPitch = function (level) {
-        this.pitch = level;
+        // this.pitch = level;
+        if (typeof (level) != 'number') return false; // validate type
+        if (level < 0 || level > 20) return false; // validate range
+        if (this.getPitch() == level) return false;    // no need to change
+        this.browserComponent.tts.setPitch(level);
         return true;
     };
 
     // get the current rate
     this.getRate = function () {
-        return this.rate;
+        // return this.rate;
+        return Math.min(this.browserComponent.tts.getRate(), 20);
     };
 
     // set rate to a new value
     this.setRate = function (level) {
-        this.rate = level;
+        // this.rate = level;
+        if (typeof (level) != 'number') return false; // validate type
+        if (level < 0 || level > 20) return false; // validate range
+        if (this.getRate() == level) return false;    // no need to change
+        this.browserComponent.tts.setRate(level);
         return true;
     };
 

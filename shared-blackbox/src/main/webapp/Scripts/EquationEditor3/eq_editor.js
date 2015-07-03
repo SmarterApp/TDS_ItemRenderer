@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 (function () {
     var P = (function (prototype, ownProperty, undefined) {
         // helper functions that also help minification
@@ -1411,12 +1419,10 @@
 
             //hack: by default use textarea for eq
             //enable soft/bluetooth keyboard below parameter is used for tablets only
-            window.MathEditorWidgetUseKeyboard = true;
+            window.MathEditorWidgetUseKeyboard = true;                        
+            if (is_ios) window.MathEditorWidgetUseKeyboard = false;
+            var useTextarea = window.MathEditorWidgetUseKeyboard;
             
-            var useTextarea = true;
-            if (is_ios || is_android) useTextarea = false;
-            if (window.MathEditorWidgetUseKeyboard == true) useTextarea = true;
-
             var textareaSpan = root.textarea = useTextarea ?
                 $('<span class="mq-textarea"><textarea></textarea></span>')
               : $('<span class="mq-textarea"><span tabindex=0></span></span>'),
@@ -6338,12 +6344,30 @@
 
             //Keep track of mathquill focus
             this.lastFocusedMathquill = $inputs.find('.mathquill-editable:first');
-            $inputs.on('focusin', function (e) {
-                var focusedMathquill = $(e.target).closest('.mathquill-editable');
-                if (focusedMathquill.length) {
-                    self.lastFocusedMathquill = focusedMathquill;
-                }
-            });
+            // Sandeep K: attach focus to touch or click event instead of focusin
+            var is_ios = navigator.userAgent.match(/(iPad|iPhone|iPod)/i) !== null;
+            //console.log('######******* ios' + is_ios);
+            if (is_ios) {
+                $inputs.on('touchstart click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var focusedMathquill = $(e.target).closest('.mathquill-editable');
+                    if (focusedMathquill.length) {
+                        self.lastFocusedMathquill = focusedMathquill;
+                    }
+                    self.lastFocusedMathquill.mathquill('focus');
+                });
+            } else {
+                $inputs.on('focusin', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var focusedMathquill = $(e.target).closest('.mathquill-editable');
+                    if (focusedMathquill.length) {
+                        self.lastFocusedMathquill = focusedMathquill;
+                    }
+                    //self.lastFocusedMathquill.mathquill('focus');
+                });
+            }           
 
             //compile the restrictfeature
             if (this.restrictContentFlag) this.restrictContentKeys.compile();
@@ -6391,7 +6415,7 @@
 
         function RegexMap(options) {
             var regexList = [];
-            var terms = [], variableRegex = '', digitsRegex = '(\\d|\.)?';
+            var terms = [], variableRegex = '', digitsRegex = '(\\d)?';
             // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp
             // these characters should be escaped  "\ ^ $ * + ? . ( ) | { } [ ]"
             var escapeTerms = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
@@ -6414,9 +6438,9 @@
                 terms.forEach(function (term) {
                     if (term.length == 1 && /^[a-zA-Z]$/g.test(term)) {
                         variables.push(term);
-                    } else if (term.length == 1 && /[\d\.]/.test(term)) { //test if term is 0-9.; todo: if you find one skip others
+                    } else if (term.length == 1 && /[\d]/.test(term)) { //test if term is 0-9; todo: if you find one skip others
                         allowDigits = true;
-                    } else if (term.length == 1 && /[\+\-\/\_\^><=\(\)\*\|]/.test(term)) { //test if term is +-/_^<>()|*
+                    } else if (term.length == 1 && /[\+\-\.\/\_\^><=\(\)\*\|]/.test(term)) { //test if term is +-./_^<>()|*
                         operatorsAllowed += '|' + term.replace(escapeTerms, "\\$&");
                         allowOperators = true;
                     } else {
@@ -6438,11 +6462,13 @@
                 return this;
             };
             this.match = function (input) {
+                input = input.replace(escapeTerms, "\\$&"); //format the input for escape characters
                 //process valid variable tokens at the beginning of the ctrlSeq
                 input = input.replace(variableRegex, '');
                 if (input.length == 0)
                     return true;
-
+                
+                input = input.replace(/\\/g, ""); //undo input format
                 //ctrlSeq without variable tokens
                 return regexList.some(function (regexp) {
                     var result = regexp.test(input);
@@ -6591,9 +6617,14 @@
             }
 
             self.eventCallback("  Creating Item: " + text);
+            // added touch event to the keypad buttons, delay between touch and click causing unexpected event triggers
             return $('<div class="keypad-item">').text(text)
             .addClass($xml.attr('class')).attr('aria-label', ariaLabel)
-            .on('click', function () {
+            .on('touchstart click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                //console.log('#### touchstart/click:' + evt);
+
                 var mq = self.lastFocusedMathquill.mathquill('focus');
                 if (wrap) { //Wrap the following or selected terms in parens, e.g. for inserting trig functions
                     mq.mathquill('cmd', '(', true).mathquill('onKey', 'Left').mathquill('cmd', cmd).mathquill('onKey', 'Right');

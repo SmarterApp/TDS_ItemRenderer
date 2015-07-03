@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 This file is used to listen for test shell key events.
 */
@@ -5,11 +13,8 @@ This file is used to listen for test shell key events.
 // process the keys that are pressed
 function onkeyevent(e, type, key, keyCode, charCode, target) {
 
-    if (!TestShell.enableKeyEvents) {
-        return KeyEventResult.Allow;
-    }
-
     // check if someone hit escape
+    // bug 170010 Allow ESC to close tools and dialogs even if key events are disabled
     if (type == 'keydown' && keyCode == 27) {
 
         // hide all dialogs if the context menu is now showing
@@ -17,6 +22,10 @@ function onkeyevent(e, type, key, keyCode, charCode, target) {
 
         // close tutorial
         ContentManager.Dialog.hide();
+    }
+
+    if (!TestShell.enableKeyEvents) {
+        return KeyEventResult.Allow;
     }
 
     // check if tutorial is showing

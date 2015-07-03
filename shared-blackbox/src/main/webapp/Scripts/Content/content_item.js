@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function(CM, Entity) {
 
     function Item(page, bankKey, itemKey, filePath, format, responseType, grade, subject, position) {
@@ -80,6 +88,24 @@
         return null;
     };
 
+    Item.prototype.setQuestionLabel = function (text) {
+        $('.questionNumber', this.getElement()).text(text);
+    };
+
+    Item.prototype.getQuestionLabel = function () {
+        return $('.questionNumber', this.getElement()).text();
+    };
+
+    // add description text to item element header
+    Item.prototype.setQuestionHeader = function (text) {
+        // get the item element header
+        var header = $('.questionLabel', this.getElement())[0];
+        
+        if (header) {
+            header.innerHTML = text;
+        }
+    };
+
     // get item illustration element
     Item.prototype.getIllustrationElement = function () {
         var doc = this._page.getDoc();
@@ -93,8 +119,13 @@
     };
 
     // get the response container
-    // Bug 113503 return an array of elements instead of container
-    Item.prototype.getResponseArea = function () {
+    Item.prototype.getResponseArea = function() {
+        var itemEl = this.getElement();
+        return $('.answerCell, .answerContainer', itemEl).get(0);
+    };
+
+    // get the response elements for TTS
+    Item.prototype.getResponseTTS = function () {
 
         var doc = this._page.getDoc();
         if (!doc) return null;

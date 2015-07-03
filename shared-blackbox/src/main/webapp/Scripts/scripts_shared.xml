@@ -2,57 +2,58 @@
 
     <!-- YUI 2 -->
     <fileSet name="libs-YUI" compress="false">
-        <input>Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js</input>
-        <input>Libraries/YUI/event-mouseenter/event-mouseenter-min.js</input>
-        <input>Libraries/YUI/event-delegate/event-delegate-min.js</input>
-        <input>Libraries/YUI/selector/selector-min.js</input>
-        <input>Libraries/YUI/json-old/json-min.js</input>
-        <input>Libraries/YUI/connection/connection-min.js</input>
-        <input>Libraries/YUI/get/get-min.js</input>
-        <input>Libraries/YUI/cookie/cookie-min.js</input>
-        <input>Libraries/YUI/storage/storage-min.js</input>
-        <input>Libraries/YUI/element/element-min.js</input>
-        <input>Libraries/YUI/button/button-min.js</input>
-        <input>Libraries/YUI/animation/animation-min.js</input>
-        <input>Libraries/YUI/dragdrop/dragdrop-min.js</input>
-        <input>Libraries/YUI/container/container-min.js</input>
-        <input>Libraries/YUI/container/containerariaplugin-min.js</input>
-        <input>Libraries/YUI/event-simulate/event-simulate-min.js</input>
+	<input>Libraries/yahoo/yui2/build/yahoo/yahoo-min.js</input>
+        <input>Libraries/yahoo/yui2/build/dom/dom-min.js</input>
+        <input>Libraries/yahoo/yui2/build/event/event-min.js</input>
+        <input>Libraries/yahoo/yui2/build/event-mouseenter/event-mouseenter-min.js</input>
+        <input>Libraries/yahoo/yui2/build/event-delegate/event-delegate-min.js</input>
+        <input>Libraries/yahoo/yui2/build/selector/selector-min.js</input>
+        <input>Libraries/yahoo/yui2/build/json-old/json-min.js</input>
+        <input>Libraries/yahoo/yui2/build/connection/connection-min.js</input>
+        <input>Libraries/yahoo/yui2/build/get/get-min.js</input>
+        <input>Libraries/yahoo/yui2/build/cookie/cookie-min.js</input>
+        <input>Libraries/yahoo/yui2/build/element/element-min.js</input>
+        <input>Libraries/yahoo/yui2/build/button/button-min.js</input>
+        <input>Libraries/yahoo/yui2/build/animation/animation-min.js</input>
+        <input>Libraries/yahoo/yui2/build/dragdrop/dragdrop-min.js</input>
+        <input>Libraries/yahoo/yui2/build/container/container-min.js</input>
+        <input>Libraries/yahoo/yui2/build/container/containerariaplugin-min.js</input>
+        <input>Libraries/yahoo/yui2/build/event-simulate/event-simulate-min.js</input>
 
         <!-- test shell -->
-        <input>Libraries/YUI/menu/menu-min.js</input>
-        <input>Libraries/YUI/menu/menuariaplugin-min.js</input>
-        <input>Libraries/YUI/tabview/tabview-min.js</input>
-        <input>Libraries/YUI/slider/slider-min.js</input>
+        <input>Libraries/yahoo/yui2/build/menu/menu-min.js</input>
+        <input>Libraries/yahoo/yui2/build/menu/menuariaplugin-min.js</input>
+        <input>Libraries/yahoo/yui2/build/tabview/tabview-min.js</input>
+        <input>Libraries/yahoo/yui2/build/slider/slider-min.js</input>
 
     </fileSet>
 
     <!-- YUI 2 (debug) -->
     <fileSet name="libs-YUI-debug" compress="false">
-        <input>Libraries/YUI/yahoo/yahoo.js</input>
-        <input>Libraries/YUI/dom/dom.js</input>
-        <input>Libraries/YUI/event/event.js</input>
-        <input>Libraries/YUI/event-mouseenter/event-mouseenter.js</input>
-        <input>Libraries/YUI/event-delegate/event-delegate.js</input>
-        <input>Libraries/YUI/selector/selector.js</input>
-        <input>Libraries/YUI/json-old/json-min.js</input>
-        <input>Libraries/YUI/connection/connection.js</input>
-        <input>Libraries/YUI/get/get-min.js</input>
-        <input>Libraries/YUI/cookie/cookie.js</input>
-        <input>Libraries/YUI/storage/storage.js</input>
-        <input>Libraries/YUI/element/element.js</input>
-        <input>Libraries/YUI/button/button.js</input>
-        <input>Libraries/YUI/animation/animation.js</input>
-        <input>Libraries/YUI/dragdrop/dragdrop.js</input>
-        <input>Libraries/YUI/container/container.js</input>
-        <input>Libraries/YUI/container/containerariaplugin.js</input>
-        <input>Libraries/YUI/event-simulate/event-simulate.js</input>
+        <input>Libraries/yahoo/yui2/build/yahoo/yahoo.js</input>
+        <input>Libraries/yahoo/yui2/build/dom/dom.js</input>
+        <input>Libraries/yahoo/yui2/build/event/event.js</input>
+        <input>Libraries/yahoo/yui2/build/event-mouseenter/event-mouseenter.js</input>
+        <input>Libraries/yahoo/yui2/build/event-delegate/event-delegate.js</input>
+        <input>Libraries/yahoo/yui2/build/selector/selector.js</input>
+        <input>Libraries/yahoo/yui2/build/json-old/json-min.js</input>
+        <input>Libraries/yahoo/yui2/build/connection/connection.js</input>
+        <input>Libraries/yahoo/yui2/build/get/get-min.js</input>
+        <input>Libraries/yahoo/yui2/build/cookie/cookie.js</input>
+        
+        <input>Libraries/yahoo/yui2/build/element/element.js</input>
+        <input>Libraries/yahoo/yui2/build/button/button.js</input>
+        <input>Libraries/yahoo/yui2/build/animation/animation.js</input>
+        <input>Libraries/yahoo/yui2/build/dragdrop/dragdrop.js</input>
+        <input>Libraries/yahoo/yui2/build/container/container.js</input>
+        <input>Libraries/yahoo/yui2/build/container/containerariaplugin.js</input>
+        <input>Libraries/yahoo/yui2/build/event-simulate/event-simulate.js</input>
 
         <!-- test shell -->
-        <input>Libraries/YUI/menu/menu.js</input>
-        <input>Libraries/YUI/menu/menuariaplugin.js</input>
-        <input>Libraries/YUI/tabview/tabview.js</input>
-        <input>Libraries/YUI/slider/slider.js</input>
+        <input>Libraries/yahoo/yui2/build/menu/menu.js</input>
+        <input>Libraries/yahoo/yui2/build/menu/menuariaplugin.js</input>
+        <input>Libraries/yahoo/yui2/build/tabview/tabview.js</input>
+        <input>Libraries/yahoo/yui2/build/slider/slider.js</input>
 
     </fileSet>
 
@@ -62,9 +63,15 @@
 	
     <fileSet name="libs-rangy" compress="false">
         <input>Libraries/rangy/rangy-core.js</input> <!-- BUG: Needs to have a semicolon added to the end of file -->
-        <input>Libraries/rangy/rangy-cssclassapplier.js</input>
+        <input>Libraries/rangy/rangy-classapplier.js</input>
+	<input>Libraries/rangy/rangy-highlighter.js</input>
     </fileSet>
 
+	<fileSet name="libs-rangy-debug" compress="false">
+        <input>Libraries/rangy/uncompressed/rangy-core.js</input>
+        <input>Libraries/rangy/uncompressed/rangy-classapplier.js</input>
+        <input>Libraries/rangy/uncompressed/rangy-highlighter.js</input>
+    </fileSet>
     <fileSet name="libs-jQuery" compress="false">
         <input>Libraries/jQuery/jquery-1.11.1.min.js</input>
     </fileSet>
@@ -80,11 +87,6 @@
 
     <fileSet name="libs-captionator" compress="false">
         <input append=";">Libraries/captionator/captionator-min.js</input>
-    </fileSet>
-
-    <fileSet name="libs-hammerjs" compress="false">
-        <input>Libraries/hammerjs/hammer.min.js</input>
-        <input>Libraries/hammerjs/jquery.hammer.js</input>
     </fileSet>
 
     <fileSet name="webaudio" compress="true">
@@ -119,11 +121,6 @@
         <input>WebAudio/lib/goog.math.Long.js</input>
         <input>WebAudio/encoding/worker.webaudio.encoder.opus.js</input>
     </fileSet>
-
-    <fileSet name="es5-shim" compress="false">
-        <input>Libraries/es5-shim/es5-shim.min.js</input>
-        <input>Libraries/es5-shim/es5-sham.min.js</input>
-    </fileSet>
     
     <fileSet name="libs-jwplayer" compress="false">
         <input>Libraries/jwplayer/jwplayer.js</input>
@@ -133,18 +130,20 @@
     <fileSet name="libs-tracekit" compress="false">
       <input>Libraries/TraceKit/tracekit.js</input>
     </fileSet>
+    <fileSet name="libs-parsley" compress="false">
+      <input>Libraries/parsley/parsley.min.js</input>
+    </fileSet>
   
     <!-- Basic 3rd party libraries -->
     <fileSet name="libs" compress="false">        
         <reference set="libs-tracekit" />
+	<input>Libraries/pep/pep.js</input>
         <reference set="libs-YUI" />
         <reference set="libs-jQuery" />
         <input>Libraries/soundmanager2/script/soundmanager2-nodebug-jsmin.js</input>
         <input>Libraries/FlashDetect/flash_detect_min.js</input>
         <reference set="libs-rangy" />
         <input>Libraries/q/q.min.js</input>
-        <reference set="es5-shim" />
-        <reference set="libs-hammerjs" />
     </fileSet>
 
     <!-- Secure browser implementations-->
@@ -152,9 +151,11 @@
 
         <!-- api -->
         <input>SecureBrowser/Summit/air_mobile_2.js</input>
+	<input>SecureBrowser/amplify.js</input>
         <input>SecureBrowser/factory.js</input>
         <input>SecureBrowser/base.js</input>
         <input>SecureBrowser/firefox.js</input>
+	<input>SecureBrowser/certified.js</input>
         <input>SecureBrowser/chrome.js</input>
         <input>SecureBrowser/mobile.android.js</input>
         <input>SecureBrowser/mobile.ios.js</input>
@@ -162,6 +163,7 @@
         <!-- recorders -->
         <input>SecureBrowser/base.recorder.js</input>
         <input>SecureBrowser/firefox.recorder.js</input>
+	<input>SecureBrowser/certified.recorder.js</input>
         <input>SecureBrowser/mobile.recorder.js</input>
 
         <!-- validators -->
@@ -223,14 +225,17 @@
     <fileSet name="tools">
         <input>Tools/tds.js</input>
         <input>Tools/tds_config.js</input>
+	<input>Tools/tds_lang.js</input>
         <input>Tools/tds_diagnostics.js</input>
-        <input>Tools/tds_ToolManager.js</input>
         <input>Tools/tds_dialog.js</input>
+        <input>Tools/tds_ToolManager.js</input>
         <input>Tools/tds_keyboard.js</input>
         <input>Tools/tds_button.js</input>
         <input>Tools/tds_aria.js</input>
+	<input>Tools/tds_promisetimer.js</input>
         <input>Tools/tds_xhr.js</input>
-        <!-- <input>Tools/tds_CLS.js</input> --> <!-- Not needed anymore -->
+        <input>Tools/tds_xhrbatch.js</input>
+	<input>Tools/tds_xhrtimer.js</input>
         <input>Tools/tds_help.js</input>
         <input>Tools/tds_cache.js</input>
         <input>Tools/tds_timeout.js</input> <!-- test shell -->
@@ -289,29 +294,13 @@
         <input>TTS2/parse.js</input>
         <input>TTS2/highlighter.js</input>
         <input>TTS2/selector.js</input>
-        <input>TTS2/languagemanager.js</input>
         <input>TTS2/ui.js</input>
         <input>TTS2/menu.js</input>
         <input>TTS2/Services/securebrowser.js</input>
         <input>TTS2/Services/firefox.js</input>
-        <input>TTS2/Services/chrome.js</input>
-    </fileSet>
-
-    <fileSet name="audio">
-        <input>Audio/audio.js</input>
-        <input>Audio/java.js</input>
-        <input>Audio/services.js</input>
-        <input>Audio/Recorder/recorder.js</input>
-        <input>Audio/Recorder/recorder.sb.js</input>
-        <!--<input>Audio/Recorder/recorder.java.js</input>-->
-        <input>Audio/Player/player.js</input>
-        <input>Audio/Player/player.queue.js</input>
-        <input>Audio/ui.js</input>
-    </fileSet>
-
-    <fileSet name="content-audio">
-        <input>Audio/Player/plugin.js</input>
-        <input>Audio/Recorder/widget.js</input>
+        <input>TTS2/Services/certified.js</input>
+ 	
+	<input>TTS2/Services/chrome.js</input>
     </fileSet>
 
     <fileSet name="audio2">
@@ -394,6 +383,7 @@
         <input>Content/Plugins/Item/comment.js</input>
         <input>Content/Plugins/Item/mark.js</input>
         <input>Content/Plugins/Item/reset.js</input>
+	<input>Content/Plugins/Item/instruction.js</input>
 
         <!-- Plugins (general) -->
         <input>Content/Plugins/pagination.js</input>
@@ -405,6 +395,7 @@
         <input>Content/Plugins/caretbrowser.js</input>
         <input>Content/Plugins/strikethrough.js</input>
 		<input>Content/Plugins/mathjax.js</input>
+		<input>Content/Plugins/language.js</input>
 
     </fileSet>
 
@@ -439,23 +430,20 @@
     <!-- HTML Editor 2 -->
     <fileSet name="content-editor2">
 
-        <input>Libraries/ckeditor/4.4/ckeditor.js</input>
-        <input>Libraries/ckeditor/4.4/lang/en.js</input>
-        <input>Libraries/ckeditor/4.4/styles.js</input>
-        <input>Libraries/ckeditor/4.4/plugins/table/dialogs/table.js</input>
+        <input>Libraries/ckeditor/4.4.7/ckeditor.js</input>
+        <input>Libraries/ckeditor/4.4.7/lang/en.js</input>
+        <input>Libraries/ckeditor/4.4.7/styles.js</input>
+        <input>Libraries/ckeditor/4.4.7/plugins/table/dialogs/table.js</input>
 
         <input>HTMLEditor2/plugins/spellchecker/plugin.js</input>
         <input>HTMLEditor2/plugins/clipboard/plugin.js</input>
         <input>HTMLEditor2/plugins/clipboard/lang/en.js</input>
         <input>HTMLEditor2/plugins/keymaphelp/plugin.js</input>
         <input>HTMLEditor2/plugins/keymaphelp/dialogs/keymaphelp.js</input>
-        <input>HTMLEditor2/plugins/keymaphelp/dialogs/lang/en.js</input>
-        <input>HTMLEditor2/plugins/keymaphelp/dialogs/lang/es.js</input>
         <input>HTMLEditor2/plugins/tdsspecialchar/plugin.js</input>
         <input>HTMLEditor2/plugins/tdsspecialchar/lang/en.js</input>
         <input>HTMLEditor2/plugins/tdsspecialchar/lang/es.js</input>
-        <input>HTMLEditor2/plugins/tdsspecialchar/dialogs/lang/en.js</input>
-        <input>HTMLEditor2/plugins/tdsspecialchar/dialogs/lang/es.js</input>
+        
         <input>HTMLEditor2/plugins/tdsspecialchar/dialogs/tdsspecialchar.js</input>
         <input>HTMLEditor2/base.js</input>
         <input>HTMLEditor2/dialog.js</input>
@@ -604,6 +592,7 @@
         <input>Simulator2/Renderer/Input/SectionDivider2.js</input>
         <input>Simulator2/Renderer/Input/UpDownCounter2.js</input>
         <input>Simulator2/Renderer/Input/TextConstant2.js</input>
+	<input>Simulator2/Renderer/Input/ImageElement2.js</input>
         <input>Simulator2/Renderer/Control/CommandElement2.js</input>
         <input>Simulator2/Renderer/Control/Button2.js</input>
         <input>Simulator2/Renderer/Display/DataDisplayElement2.js</input>
@@ -644,7 +633,7 @@
     <!-- Measurement Tools -->
     <fileSet name="content-mt">
         <reference set="libs-raphael" />
-        <input>Libraries/MillionMunkeys/PiMunkey_1_4/PiObject.js</input>
+        <input>MeasurementTools/MillionMunkeys/PiMunkey_1_4/PiObject.js</input>
         <input>MeasurementTools/Set.js</input>
         <input>MeasurementTools/Canvas.js</input>
         <input>MeasurementTools/StraightLine.js</input>
@@ -653,20 +642,6 @@
         <input>MeasurementTools/Compass.js</input>
         <input>MeasurementTools/Arc.js</input>
         <input>Content/Modules/module_mt.js</input>
-    </fileSet>
-
-    <!-- Equation Editor 2 -->
-    <fileSet name="content-eq2">
-        <input>EquationEditor2/config.js</input>
-        <input>EquationEditor2/content.js</input>
-        <input>EquationEditor2/editor.js</input>
-        <input>EquationEditor2/xml2jsonv2.js</input>
-        <input>EquationEditor2/widget.js</input>
-    </fileSet>
-
-    <!-- Equation Editor 2 accessibility (No MathJax) -->
-    <fileSet name="content-eq2-accessibility">
-        <input>EquationEditor2/widget.js</input>
     </fileSet>
 
     <!-- Equation Editor 3 -->
@@ -679,12 +654,6 @@
     <!-- Equation Editor 3 accessibility (No Desmos) -->
     <fileSet name="content-eq3-accessibility">
         <input>EquationEditor3/widget.js</input>
-    </fileSet>
-
-    <!-- Slideshow -->
-    <fileSet name="content-slideshow">
-        <input>Slideshow/sm2-show.js</input>
-        <input>Content/Modules/module_slideshow.js</input>
     </fileSet>
     
     <!-- Slideshow2 -->
@@ -807,20 +776,6 @@
         <input>QTI/base.js</input>
         <input>QTI/textEntry.js</input>
         <input>QTI/inlineChoice.js</input>
-    </fileSet>
-
-    <fileSet name="content-notes">
-        <input>Notes/main.js</input>
-        <input>Notes/dialog.js</input>
-        <input>Notes/base.js</input>
-        <input>Notes/textarea.js</input>
-        <input>Notes/scratchpad.js</input>
-        <input>Notes/dropdown.js</input>
-        <input>Notes/equation.js</input>
-        <input>Notes/factory.js</input>
-
-        <!-- Disabled this since we switched back to Comments infrastructure -->
-        <!--<input>Content/Modules/module_notes.js</input>-->
     </fileSet>
 
     <!-- Modules -->

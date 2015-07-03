@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿window.TDS = window.TDS || {};
 
 (function(TDS) {
@@ -153,6 +161,7 @@
         var panel = new YAHOO.widget.Dialog(id, {
             draggable: true,
             constraintoviewport: true,
+            modal: false,
             close: true,
             //width: '600px',
             //height: '600px',
@@ -165,6 +174,13 @@
         // create html
         var htmlBody = [];
         htmlBody.push('<iframe id="frame-' + id + '" frameborder="0" title="' + header + '" marginheight="0" marginwidth="0" height="100%" width="100%"></iframe>'); // scrolling="yes"
+
+        // add anchor tag so tab stays in dialog
+        if (TDS.Dialog.isAccessible()) {
+            var msgEndLink = Messages.getAlt('TDSDialog.Label.EndLink', 'End of the dialog');
+            htmlBody.push('<a href="#" tabindex="0" role="presentation" class="yui-panel-bottom">' + msgEndLink + '</a>');
+        }
+        
         htmlBody.push('<div class="yui-panel-mask"></div>');
 
         // add html
@@ -185,6 +201,10 @@
             return YUD.getElementsByClassName('yui-panel-mask', 'div', panel.element)[0];
         };
 
+        panel.getBottomElement = function() {
+            return $(panel.innerElement).find('a.yui-panel-bottom');
+        };
+
         panel.isShowing = function() {
             return TM.isShowing(id);
         };
@@ -200,6 +220,11 @@
 
             YUD.addClass(panel.innerElement, 'tool');
 
+            // move close button to the top of dialog element
+            var $closeButton = $(panel.innerElement).find('.container-close');
+            $closeButton.detach();
+            $closeButton.insertBefore($(panel.innerElement).find('h2'));
+
             // create class name for this tool
             // var className = 'tool-' + header.replace(/\s+/g, '').toLowerCase();
             var className = 'tool-' + name;
@@ -212,6 +237,11 @@
 
             // load
             panel.load();
+            
+            // fix tab if we are making dialog modal
+            if (TDS.Dialog.isAccessible()) {
+                TDS.Dialog.fixTabLoop(panel, true);
+            }
 
         }, panel, true);
 
@@ -232,21 +262,22 @@
         }
 
         // fire specific panel events
-        panel.beforeShowEvent.subscribe(function() {
+        panel.beforeShowEvent.subscribe(function () {
             panel.refresh();
         });
 
         // fire specific panel events
         panel.showEvent.subscribe(function() {
             TM.Events.fire('onShow', panel);
+            TDS.ARIA.hideContent();
 
             // focus on panel
-            setTimeout(function() {
+            setTimeout(function () {
                 TM._overlayManager.focus(panel);
             }, 0);
         });
 
-        panel.beforeHideEvent.subscribe(function() {
+        panel.beforeHideEvent.subscribe(function () {
             // BUG: When selecting text in dialog frame select boxes can't get focused
             // STEPS: Open help, select text, leave text selected and close help.. no select boxes work (grades or global accs)
             if (Util.Browser.isSecure() && !Util.Browser.isMac()) {
@@ -257,6 +288,7 @@
 
         panel.hideEvent.subscribe(function() {
             TM.Events.fire('onHide', panel);
+            TDS.ARIA.showContent();
             Util.Dom.focusWindow(2); // (BUG #26524)
         });
 
@@ -291,6 +323,20 @@
             frame.src = url;
         }
 
+        function disableContextMenu (iframe) {
+
+            // do this for chromebook only
+            if (!Util.Browser.isChromeOS()) {
+                return;
+            }
+
+            $(Util.Frame.getFrames(iframe)).each(function() {
+                $(this).contents().on('contextmenu', function () {
+                    return false;
+                });
+            });
+        };
+
         // function handler for when frame loads
         function onFrameLoaded() {
 
@@ -306,6 +352,8 @@
             YUE.removeListener(frame, 'load', onFrameLoaded);
 
             var frameDoc = Util.Dom.getFrameContentDocument(frame);
+
+            disableContextMenu(frame);
 
             // check for access to the frame (if external site we don't have privileges)
             var allowAccess = true;
@@ -391,15 +439,15 @@
         if (!messageKey) {
             return;
         }
-
         var url;
-        if (Util.String.isHttpProtocol(messageKey)) {
+        if (!Messages.has(messageKey)) {
             url = messageKey;
-        } else if (Messages.has(messageKey)) {
+        }else{
             url = Messages.get(messageKey);
+        }
+
+        if (!Util.String.isHttpProtocol(url)) {
             url = TDS.baseUrl + 'Pages/' + url; // urls start in the /Pages/ (seems hacky)
-        } else {
-            return; // no url found
         }
 
         TM.loadFrameUrl(container, frame, url, fn);
@@ -448,7 +496,7 @@
             panel.show();
         }
     };
-
+    
     TM.toggle = function(id) {
         var panel = TM.get(id);
         if (!panel) {

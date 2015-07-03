@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/* OPTIONS CLASS */
 // XML: <Question> <QuestionPart> <Options>
 Grid.Model.Options = function()
@@ -36,7 +44,7 @@ Grid.Model.Options = function()
     this.gridSpacing = 0; // the spacing in between the grid lines
     this.snapToGrid = false; // snap to the grid spacing?
     this.snapRadius = 0;
-    this.selectionTolerance = 0; // NOTE: this is not used
+    this.selectionTolerance = 10;
     
     // FEEDBACK:
     this.showFeedback = true;

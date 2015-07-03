@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /**
  *  This control is an attempt to provide a simple clean interface to using the TTS library.
  *    See README for basic code structure of the TTS application at large
@@ -48,10 +56,8 @@ TTS.Control = function(cfg) {
     var _eM = this.getEventManager();
     var _highObj = new TTS.Parse.Highlighter();
     var _manager = null;
-    this.languageManager = new TTS.Parse.LanguageManager();
     var _currentDomEntity = null; //hacked here... need to put switch back in   
     _highObj.subscribe(_eM);
-   
     
     this.getConfig = function(){
         return _cfg;
@@ -81,14 +87,16 @@ TTS.Control = function(cfg) {
         if ((node.nodeType == 3) || (node.nodeType == 4) || (node.nodeType == 8)) {
             return this.getMarkedLanguage(node.parentNode);
         }
-        var language = node.getAttribute('lang');
+        var language = tds.language.getITSAttribute(node);
         if (language) {
             return language;
         } else {
-            if (failIfNotFound) return null;
+            if (failIfNotFound) {
+                return null;
+            }
             var entity = this.getCurrentDomEntity();
             if (entity) {
-                this.languageManager.addLanguageTags(entity.getElement());
+                tds.language.tagElements(entity.getElement());
             }
             return this.getMarkedLanguage(node, true);
         }
@@ -267,9 +275,9 @@ TTS.Control.prototype.play = function (domNode,language) {
         this.stop();//Stop any playing that might be in progress
         
         if (!language) language = this.getMarkedLanguage(domNode);
-        if (!language) language = this.languageManager.getDefaultLanguage();
-        var pn = new TTS.Parse.ParseNode(language, domNode);
-        this.playParseNode(pn,language);
+        if (!language) language = tds.language.getITSDefault();
+        this.pn = new TTS.Parse.ParseNode(language, domNode);
+        this.playParseNode(this.pn,language);
     } catch (e) {
         this.Error(e);
     }
@@ -281,11 +289,16 @@ TTS.Control.prototype.playSelection = function(sel,language){
     try {
         this.stop();//Stop any playing that might be in progress
 
-        if (!language) language = this.languageManager.getDefaultLanguage();
+        if (!language) language = tds.language.getITSDefault();
         var selector = new TTS.Parse.Selector(sel, language);
-        if (selector==null) return null;
-        var pn = selector.collectNodes();
-        this.playParseNode(pn, language);
+        if (selector == null) return null;
+        
+        if (sel && typeof sel.collapseToStart == "function") {
+            sel.collapseToStart(); // Bug 165805 Remove highlight from selected range
+        }
+
+        this.pn = selector.collectNodes();
+        this.playParseNode(this.pn, language);
     } catch (e) {
         this.Error(e);
     }
@@ -295,7 +308,10 @@ TTS.Control.prototype.playSelection = function(sel,language){
 //jon: add try/catch block
 TTS.Control.prototype.playParseNode = function (pn, language) {
     try {
+        this.stop(); //Bug 170112/16 - Stop any playing that might be in progress
+
         var speakString = pn.CompileSpeakString();
+        this.pn = pn;
         speakString = TTS.Util.replaceLeadDirectives(speakString);
         // Bug 114921 Shorten back-to-back silences by reducing them to 1msec duration
         speakString = TTS.Util.shortenSilence(speakString);
@@ -325,7 +341,17 @@ TTS.Control.prototype.isAvailable = function(){
     return TTS.Manager.isAvailable();
 };
 
+TTS.Control.prototype.canResume = function() {
+    return TTS.Manager.canResume();
+};
+
 TTS.Control.prototype.resume = function(){ //Resume the audio
+    var lang = this.pn.getLanguage();
+    var node = this.pn.getNode();
+    
+    // Bug 159933 - Reparse the node before resuming in case DOM was modified, which breaks tracking
+    this.pn = new TTS.Parse.ParseNode(lang, node); 
+    this.getHighlighter().setParseNodeRoot(this.pn);
     TTS.Manager.resume();
 };
 
@@ -334,7 +360,7 @@ TTS.Control.prototype.stop = function () //Stops the audio
     TTS.Manager.stop();
 };
 
-TTS.Control.prototype.pause = function(){ //Pause
+TTS.Control.prototype.pause = function () { //Pause
     TTS.Manager.pause();
 };
 

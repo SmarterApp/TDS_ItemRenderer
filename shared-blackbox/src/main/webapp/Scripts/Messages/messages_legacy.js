@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿(function() {
 
     function getDisplayMessage(translation)
@@ -71,8 +79,40 @@
             return getAlt(key, match);
         });
     }
+
+    // add a new message for a key
+    function set(key, text, language) {
+        var id = 0, context = '';
+        language = language || 'ENU';
+        // check if the context exists
+        var messageContext = TDS.messages.getContext(context);
+        if (!messageContext) {
+            // create context
+            messageContext = TDS.messages.addContext(context);
+        }
+        // check if message key exists
+        var message = messageContext.getMessage(key);
+        if (!message) {
+            // create message key
+            message = messageContext.addMessage(id, key);
+        }
+        // check if there is already a message for this key in our language 
+        var translations = message.getTranslations();
+        var currentTranslation = Util.Array.find(translations, function (translation) {
+            return (translation.getLanguage() == language);
+        });
+        if (currentTranslation) {
+            // modify message for existing language
+            currentTranslation._clientMessage = text;
+        } else {
+            // add new message for language
+            message.addTranslation(text, language, null, null);
+        }
+        return message;
+    }
     
     window.Messages = {        
+        set: set,
         get: get,
         getAlt: getAlt,
         has: has,

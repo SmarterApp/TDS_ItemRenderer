@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿TestShell.CoverPages = 
 {
     _collection: new Util.Structs.Map()    
@@ -36,6 +44,13 @@ ContentManager.onPageEvent('rendering', function(contentPage)
     // get cover page info for the page
     var cpInfo = page.getCoverPageInfo();
     if (cpInfo == null) return;
+
+    // check if cover pages is explicitly disabled (by default Jeremy/Jon want it enabled)
+    var accs = Accommodations.Manager.getDefault();
+    var accType = accs.getType('Cover Pages');
+    if (accType && accType.isSelected('TDS_CP0')) {
+        return;
+    }
 
     // check if we have already created the cover page
     var coverPage = TestShell.CoverPages.get(cpInfo.id);

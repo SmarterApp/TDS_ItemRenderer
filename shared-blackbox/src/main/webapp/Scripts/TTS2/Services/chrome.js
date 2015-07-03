@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 // TTS service: Secure Browser
 function TTSService_Chrome()
 {
@@ -50,6 +58,10 @@ function TTSService_Chrome()
                         //TTS.Config.Debug && console.log("TTS Chrome event Status.", event.data.type, event);
                         // We get status updates from the background telling us about speech progress
                         thisObj.status = event.data.result;
+                        if (thisObj.status == TTS.Status.Playing) {
+                            clearTimeout(thisObj.showingProgress);
+                            TTS.Manager.Events.onHideProgress.fire();
+                        }
                         break;
                     case 'TTS WORD':
                         //TTS.Config.Debug && console.log("TTS Chrome event WORD.", event.data.type, event);
@@ -101,7 +113,7 @@ function TTSService_Chrome()
 
     this.play = function(text)
     {
-      console.log("We never actually get to the play?.", text, this.currentVoice);
+        console.log("We never actually get to the play?.", text, this.currentVoice);
         // rate: 1.0 is the default rate, normally around 180 to 220 words per minute. 2.0 is twice as fast, and 0.5 is half as fast
         // pitch: between 0 and 2 inclusive, with 0 being lowest and 2 being highest. 1.0 corresponds to a voice's default pitch. 
         // volume: between 0 and 1 inclusive, with 0 being lowest and 1 being highest, with a default of 1.0.         
@@ -121,6 +133,10 @@ function TTSService_Chrome()
                 this.EventManager && this.EventManager.fire({ subject: 'TTS WORD', index: 0 }); 
             }
         }
+        clearTimeout(this.showingProgress);
+        this.showingProgress = setTimeout(function () {
+            TTS.Manager.Events.onShowProgress.fire(Messages.getAlt('TDSTTS.Label.TTSwait', 'Waiting for Text-to-Speech'));
+        }, 1000);
         return true;
     };
 

@@ -31,7 +31,7 @@
 					    'en';
 
 				    CKEDITOR.scriptLoader.load(CKEDITOR.getUrl(plugin.path + 'dialogs/lang/' + langCode + '.js'), function () {
-					    CKEDITOR.tools.extend( editor.lang.specialchar, plugin.langEntries[ langCode ] );
+					    CKEDITOR.tools.extend( editor.lang.tdsspecialchar, plugin.langEntries[ langCode ] );
 					    editor.openDialog( pluginName );
 				    } );
 			    },
@@ -41,7 +41,7 @@
 
 		    // Register the toolbar button.
 		    editor.ui.addButton && editor.ui.addButton( 'TDSSpecialChar', {
-		        label: editor.lang.specialchar.toolbar,
+		        label: editor.lang.tdsspecialchar.toolbar,
                 icon: pluginName,
 			    command: pluginName,
 			    toolbar: 'insert,50'

@@ -1,9 +1,20 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/*
 Section: "Is This Your Test?". 
 Shows list of approved accommodations. 
 */
 
 Sections.TestVerify = (function (Sections) {
+
+    var api = TDS.Student.API;
+    var storage = TDS.Student.Storage;
 
     // this is the approved accs as they looked when we entered this section
     var approvedAccs = null;
@@ -36,13 +47,13 @@ Sections.TestVerify = (function (Sections) {
         segmentsContainer.innerHTML = '';
 
         // set student info
-        var session = TDS.Student.Storage.getTestSession();
+        var session = storage.getTestSession();
         if (session) {
             YUD.get('lblVerifySessionID').innerHTML = session.id;
         }
 
         // show form selector if proxy mode
-        this.renderForms(LoginShell.testForms);
+        this.renderForms(LoginShell.formGroups);
 
         // check for accommodations
         if (approval.segmentsAccommodations) {
@@ -59,7 +70,8 @@ Sections.TestVerify = (function (Sections) {
 
     };
 
-    TestVerify.prototype.renderForms = function(testForms) {
+    TestVerify.prototype.renderForms = function (formGroups) {
+
         var verifyForm = YUD.get('verifyTestForm');
         if (verifyForm == null) {
             return;
@@ -74,7 +86,16 @@ Sections.TestVerify = (function (Sections) {
         verifyFormSelector.options.length = 0;
 
         // check if any forms
-        if (testForms == null || testForms.length == 0) {
+        if (!formGroups || formGroups.length == 0) {
+            YUD.setStyle(verifyForm, 'display', 'none');
+            return;
+        }
+
+        // if test is being resumed after started, then don't show form selection
+        var testSelection = storage.getTestProperties(),
+            oppInfo = storage.getOppInfo();
+        if (testSelection.status === api.TestSelectionStatus.Resume &&
+            oppInfo.status === api.OpportunityStatus.Suspended) {
             YUD.setStyle(verifyForm, 'display', 'none');
             return;
         }
@@ -82,10 +103,10 @@ Sections.TestVerify = (function (Sections) {
         verifyFormSelector[0] = new Option('Select a form', '');
 
         // add test forms
-        for (var i = 0; i < testForms.length; i++) {
-            var testForm = testForms[i];
-            verifyFormSelector[i + 1] = new Option(testForm.id, testForm.key);
-        }
+        formGroups.forEach(function (formGroup, formIdx) {
+            var formSegment = formGroup.segments[0];
+            verifyFormSelector[formIdx + 1] = new Option(formSegment.label, formSegment.key);
+        });
 
         YUD.setStyle(verifyForm, 'display', 'block');
     };
@@ -129,29 +150,35 @@ Sections.TestVerify = (function (Sections) {
         return (ddlTestForms.options.length > 0) ? ddlTestForms.value : null;
     };
 
-    TestVerify.prototype.approve = function() {
-        // get the selected form key
-        var selectedFormKey = this.getSelectedTestForm();
+    TestVerify.prototype.approve = function () {
 
-        // validate selected form key if it exists
-        if (YAHOO.lang.isString(selectedFormKey)) {
+        var ddlTestForms = YUD.get('ddlTestForms');
+
+        // check if any forms to select
+        if (ddlTestForms.options.length) {
+
             // check if a form was selected
-            if (selectedFormKey == '') {
+            if (ddlTestForms.selectedIndex == 0) {
                 var defaultError = 'Must select a test form';
                 TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.MustSelectForm', defaultError));
                 return;
             }
 
-            // if the testee has allowed form keys then make sure one of them match what was selected
-            var formKeys = LoginShell.testeeForms;
+            // find the selected form group
+            var formGroupIdx = ddlTestForms.selectedIndex - 1;
+            var formGroup = LoginShell.formGroups[formGroupIdx];
 
-            if (YAHOO.lang.isArray(formKeys) && (formKeys.length > 0) && formKeys.indexOf(selectedFormKey) == -1) {
+            // check if form is enabled
+            if (!formGroup || !formGroup.enabled) {
                 var defaultError = 'The selected test form does not match what is allowed for the student';
                 TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.FormSelectionInvalid', defaultError));
                 return;
             }
 
-            LoginShell.formSelection = selectedFormKey;
+            // save form keys
+            LoginShell.formKeys = formGroup.segments.map(function (segment) {
+                return segment.key;
+            });
         }
 
         // check if user changed accs and make css changes
@@ -169,7 +196,7 @@ Sections.TestVerify = (function (Sections) {
 
     // The student clicked the "No" button to reject approved accommodations
     TestVerify.prototype.deny = function () {
-        var testee = TDS.Student.Storage.getTestee();
+        var testee = storage.getTestee();
         if (testee && testee.isGuest) {
             this.denyGuest();
         } else {
@@ -186,7 +213,7 @@ Sections.TestVerify = (function (Sections) {
         LoginShell.clearTestAccommodations();
 
         // go back
-        TDS.Student.API.denyApproval().then(function() {
+        api.denyApproval().then(function () {
             this.request('back');
         }.bind(this));
     };
@@ -198,7 +225,7 @@ Sections.TestVerify = (function (Sections) {
     TestVerify.prototype.denyGuest = function() {
         // Manually ask if they want to log out and then deny opp
         TDS.Dialog.showPrompt(Messages.get('Global.Label.LogoutVerify'), function() {
-            TDS.Student.API.denyApproval().then(function() {
+            api.denyApproval().then(function () {
                 TDS.logout();
             }.bind(this));
         });

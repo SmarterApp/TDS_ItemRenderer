@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿TTS = window.TTS || {};
 TTS.Parse = window.TTS.Parse || {};
 
@@ -71,6 +79,9 @@ TTS.Parse.Highlighter = function (doc) {
         var state = TTS.Manager.getStatus();
         if (state && state != TTS.Status.Paused) {
             highlightRange(_currentRange);
+        } else {
+            unhighlightRange(_currentRange);
+            _currentRange = null;
         }
     };
 
@@ -123,6 +134,9 @@ TTS.Parse.Highlighter = function (doc) {
             }
         }
     });
+    this.setParseNodeRoot = function(pn) {
+        _parseNodeRoot = pn;
+    };
 
     this.setSpeakString = function (speakString, pn) {
         _speakString = speakString;
@@ -196,7 +210,9 @@ TTS.Parse.Highlighter = function (doc) {
         //this is really a stub that can be changed to modify the pattern based on the browser, OS, or other things that may
         //influence the interpetation of word boundaries. This is only used for highlighting, so a mistake is very transient--the whole word might not
         // be highlighted.
-        return new RegExp("[\s.;()]*[a-zA-Z0-9,\'\-]+[\r\t .:;()?]", 'm'); //this needs to be a much better regEx
+        // Bug 112651 - Added unicodes for accented (etc) characters for Spanish TTS
+        // http://stackoverflow.com/questions/5436824/matching-accented-characters-with-javascript-regexes
+        return new RegExp("[\s.;()]*[a-zA-Z\u00C0-\u017F0-9,\'\-]+[\r\t .:;()?]", 'm'); //this needs to be a much better regEx
     };
 
     _wordEndingPattern = getWordEndingPattern();

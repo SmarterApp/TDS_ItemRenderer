@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 /*
 Strikethrough mode for MC/MS.
 In the future I want to add "strikeable" as a class
@@ -34,6 +42,26 @@ to any elements that can be striked through.
     function Mode_Strike() {}
 
     Modes.register('strikethrough', Mode_Strike);
+
+    // BUG: This does not work well with a single item
+    // this is called when in strikethrough mode and a click is detected to see if we're done with strikethrough
+    /*Mode_Strike.prototype.canDisable = function (entity, evt) {
+
+        if (entity instanceof ContentItem) {
+
+            // If click was on the active item's scroll bar then don't exit strikethrough mode
+            if ($(evt.target).hasClass('theQuestions')) {
+                return false;
+            }
+
+            // If the click was inside of the active item itself then don't exit strikethrough mode
+            if ($.contains(entity.getElement(), evt.target)) {
+                return false;
+            }
+        }
+
+        return true;
+    };*/
 
     // this is called when someone clicks on an option
     Mode_Strike.prototype.select = function (el) {

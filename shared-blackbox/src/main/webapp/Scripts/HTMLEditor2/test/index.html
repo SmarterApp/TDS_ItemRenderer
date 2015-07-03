@@ -3,25 +3,26 @@
 <head>
     <title>HTML Editor 2</title>
 
-    <link href="../../Libraries/YUI/button/assets/skins/sam/button.css" rel="stylesheet" media="all" type="text/css">
-    <link href="../../Libraries/YUI/container/assets/skins/sam/container.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../Libraries/yahoo/yui2/build/button/assets/skins/sam/button.css" rel="stylesheet" media="all" type="text/css">
+    <link href="../../Libraries/yahoo/yui2/build/container/assets/skins/sam/container.css" rel="stylesheet" media="all" type="text/css">
     <link href="../../../Shared/CSS/normalize.css" rel="stylesheet" media="all" type="text/css">
-    <link href="../../../Shared/CSS/modernshell.css" rel="stylesheet" media="all" type="text/css">
     <link href="../../../Shared/CSS/dialogs.css" rel="stylesheet" media="all" type="text/css">
     <link href="../../Slideshow/show.css" rel="stylesheet" media="all" type="text/css">
     <link href="../../../Shared/CSS/items.css" rel="stylesheet" media="all" type="text/css">
-    
+
     <!-- YUI -->
-    <script src="../../Libraries/YUI/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript"></script>
-    <script src="../../Libraries/YUI/json-old/json-min.js" type="text/javascript"></script>
-    <script src="../../Libraries/YUI/connection/connection.js" type="text/javascript"></script>
-    <script src="../../Libraries/YUI/element/element.js" type="text/javascript"></script>
-    <script src="../../Libraries/YUI/button/button.js" type="text/javascript"></script>
-    <script src="../../Libraries/YUI/container/container.js" type="text/javascript"></script>
-    <script src="../../Libraries/YUI/dragdrop/dragdrop.js" type="text/javascript"></script>
-    <script src="../../Libraries/YUI/YUI3-min.js" type="text/javascript"></script>
-	
-    <script src="../../Libraries/jQuery/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="../../Libraries/yahoo/yui2/build/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript"></script>
+    <script src="../../Libraries/yahoo/yui2/build/json-old/json-min.js" type="text/javascript"></script>
+    <script src="../../Libraries/yahoo/yui2/build/connection/connection.js" type="text/javascript"></script>
+    <script src="../../Libraries/yahoo/yui2/build/element/element.js" type="text/javascript"></script>
+    <script src="../../Libraries/yahoo/yui2/build/button/button.js" type="text/javascript"></script>
+    <script src="../../Libraries/yahoo/yui2/build/container/container.js" type="text/javascript"></script>
+    <script src="../../Libraries/yahoo/yui2/build/dragdrop/dragdrop.js" type="text/javascript"></script>
+
+    <script src="../../Libraries/jQuery/jquery-1.11.1.min.js" type="text/javascript"></script>
+
+    <script src="../../Libraries/hammerjs/hammer.min.js" type="text/javascript"></script>
+    <script src="../../Libraries/hammerjs/jquery.hammer.js" type="text/javascript"></script>
 
     <!-- Utils -->
     <script type="text/javascript" src="../../Utilities/util.js"></script>
@@ -39,14 +40,19 @@
     <script type="text/javascript" src="../../Utilities/util_querystring.js"></script>
     <script type="text/javascript" src="../../Utilities/util_mozilla.js"></script>
     <script type="text/javascript" src="../../Messages/messages_legacy.js"></script>
- 
+
+    <!-- TDS -->
+    <script type="text/javascript" src="../../Tools/tds.js"></script>
+    <script type="text/javascript" src="../../Tools/tds_dialog.js"></script>
+    <script type="text/javascript" src="../../Tools/tds_aria.js"></script>
+
     <!-- Editor -->
-    <script src="../../Libraries/ckeditor/4.3/ckeditor.js" type="text/javascript"></script>
-    <script src="../../Libraries/ckeditor/4.3/lang/en.js" type="text/javascript"></script>
-    <script src="../../Libraries/ckeditor/4.3/styles.js" type="text/javascript"></script>
-    <script src="../../Libraries/ckeditor/4.3/plugins/table/dialogs/table.js" type="text/javascript"></script>
-    <script src="../../Libraries/ckeditor/4.3/plugins/specialchar/dialogs/specialchar.js" type="text/javascript"></script>
-    <script src="../../Libraries/ckeditor/4.3/plugins/specialchar/dialogs/lang/en.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.4/ckeditor.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.4/lang/en.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.4/styles.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.4/plugins/table/dialogs/table.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.4/plugins/specialchar/dialogs/specialchar.js" type="text/javascript"></script>
+    <script src="../../Libraries/ckeditor/4.4/plugins/specialchar/dialogs/lang/en.js" type="text/javascript"></script>
 	
     <script src="../../SpellCheck/spellcheck.js" type="text/javascript"></script>
     <script src="../../SpellCheck/spellcheck_manager.js" type="text/javascript"></script>
@@ -54,12 +60,22 @@
     <script src="../../SpellCheck/spellcheck_mozilla.js" type="text/javascript"></script>
 		
     <script src="../../HTMLEditor2/plugins/spellchecker/plugin.js" type="text/javascript"></script>
-    <script src="../../HTMLEditor2/plugins/keymaphelp/plugin.js" type="text/javascript"></script>
     <script src="../../HTMLEditor2/plugins/clipboard/plugin.js" type="text/javascript"></script>
     <script src="../../HTMLEditor2/plugins/clipboard/lang/en.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/keymaphelp/plugin.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/keymaphelp/dialogs/keymaphelp.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/keymaphelp/dialogs/lang/en.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/keymaphelp/dialogs/lang/es.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/tdsspecialchar/plugin.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/tdsspecialchar/lang/en.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/tdsspecialchar/lang/es.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/tdsspecialchar/dialogs/lang/en.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/tdsspecialchar/dialogs/lang/es.js" type="text/javascript"></script>
+    <script src="../../HTMLEditor2/plugins/tdsspecialchar/dialogs/tdsspecialchar.js" type="text/javascript"></script>
     <script src="../../HTMLEditor2/base.js" type="text/javascript"></script>
     <script src="../../HTMLEditor2/dialog.js" type="text/javascript"></script>
     <script src="../../HTMLEditor2/table.js" type="text/javascript"></script>
+
 
 </head>
 
@@ -72,9 +88,7 @@
 		<tr>
 			<td style='width: 100px;'></td>
 			<td style='width: 600px; height: 300px;'>
-				<div id='editor_Container' autocorrect='off' autocomplete='off' class='EditorContainer'>
-					<textarea autocorrect='off' autocomplete='off' style='display: none;' spellcheck='false'></textarea>
-				</div>
+				<div id='editor_Container' autocorrect='off' autocomplete='off' class='EditorContainer'></div>
 			</td>
 			<td style='width: 100px;'></td>
 		</tr>

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 ﻿/**********************/
 /* MC OPTION GROUP    */
 /**********************/
@@ -71,9 +79,14 @@
     MC.prototype.setValue = function(optionKey) {
         var option = this.getOption(optionKey);
         if (!option) {
+            // no option with this key
+            var selected = this.getSelected();
+            if (selected) {
+                // deselect existing
+                selected.deselect();
+            }
             return false;
-        } // no option with this key
-
+        }
         option.select();
         return true;
     };

@@ -1,3 +1,11 @@
+//*******************************************************************************
+// Educational Online Test Delivery System
+// Copyright (c) 2015 American Institutes for Research
+//
+// Distributed under the AIR Open Source License, Version 1.0
+// See accompanying file AIR-License-1_0.txt or at
+// http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+//*******************************************************************************
 TTS.Status = {
     NotSupported: 'NotSupported', //tts initialization failed.
     Uninitialized: 'Uninitialized', // tts is not initialized
@@ -24,6 +32,13 @@ TTS.VoicePack = function(voicename, priority, language, available, isDefault){
 // TTS manager singleton.. all public calls go through here
 TTS.Manager ={
     Events: {
+        // bug 161482 - Long passages cause excessive waiting for TTS to begin
+        // when the TTS is requested to play, show progress spinner until playing begins
+        onShowProgress: new YAHOO.util.CustomEvent('onShowProgress', TTS.Manager, false, YAHOO.util.CustomEvent.FLAT),
+        
+        // when the TTS has started playing, hide progress spinner
+        onHideProgress: new YAHOO.util.CustomEvent('onHideProgress', TTS.Manager, false, YAHOO.util.CustomEvent.FLAT),
+        
 	    // when the TTS service provider is available to the TTS manager for initialization and use
 	    onServiceLoad: new YAHOO.util.CustomEvent('onServiceLoad', TTS.Manager, false, YAHOO.util.CustomEvent.FLAT),
 	    
@@ -85,7 +100,8 @@ TTS.Manager ={
 
 	_knownVoicePacks: [],
 
-  _knownLanguages: {}, //see comment for TTS.Manager.isKnownLanguage
+	_knownLanguages: {}, //see comment for TTS.Manager.isKnownLanguage
+    _pausedEl: null,
 
   _initialized: false
 	
@@ -157,18 +173,20 @@ TTS.Manager.init = function (forceInit) { //set forceInit to true if this is a r
     }
 
 
-    try{
+    try {
         // create the SB service and initialize it.
         // If you are running in SB, use the SB's native TTS capabilities. Otherwise, rely on the applet based TTS
         var service = null;
 
-
-        // check for native SB and SB service exists
-        if (Util.Browser.isSecure() && Util.Browser.getSecureVersion() > 0 &&
+        // check for certified SB and SB service exists
+        if (Util.Browser.isSecure() && Util.Browser.isCertified()) {
+            service = new TTSService_Certified();
+        } // check for native SB and SB service exists
+        else if (Util.Browser.isSecure() && Util.Browser.getSecureVersion() > 0 &&
             YAHOO.lang.isFunction(TTSService_SB) && !Util.Browser.isMobile()) {
             service = new TTSService_SB();
         }// check for java service (this also requires java)
-        else if (typeof TTSService_Applet != 'undefined' && YAHOO.lang.isFunction(TTSService_Applet)){
+        else if (typeof TTSService_Applet != 'undefined' && YAHOO.lang.isFunction(TTSService_Applet)) {
             service = new TTSService_Applet();
         } // check for mobile secure browser
         else if (Util.Browser.isSecure() && (Util.Browser.isAndroid() || (Util.Browser.isIOS() && (Util.Browser.getSecureVersion() >= 2)))) {
@@ -179,22 +197,17 @@ TTS.Manager.init = function (forceInit) { //set forceInit to true if this is a r
         }
 
         // check if TTS is supported and load it
-        if (!service || !service.isSupported()){
+        if (!service || !service.isSupported() || !service.load()) {
             TTS.Manager._changeStatus(TTS.Status.NotSupported);
             return false;
         }
-
 
         // save service reference
         TTS.Manager._service = service;
         TTS.Manager.log('initializing');
         TTS.Manager._changeStatus(TTS.Status.Initializing);
 
-        // try and load service
-        if (!service || !service.load()) {
-            return false;
-        }
-    } catch (ex) {
+    } catch(ex) {
         // init threw an exception
         console.error("Failed to load a service.", ex);
         TTS.Manager.log(ex);
@@ -219,21 +232,17 @@ TTS.Manager._initService = function() {
     TTS.Manager.Events.onInitSuccess.fire();
 
     // fire volume event
-    TTS.Manager._lastVolume = TTS.Manager.getVolume();
     TTS.Manager.Events.onVolumeChange.fire(TTS.Manager._lastVolume);
 
     // fire pitch event
-    TTS.Manager._lastPitch = TTS.Manager.getPitch();
     TTS.Manager.Events.onPitchChange.fire(TTS.Manager._lastPitch);
 
     // fire rate event
-    TTS.Manager._lastRate = TTS.Manager.getRate();
     TTS.Manager.Events.onRateChange.fire(TTS.Manager._lastRate);
 
     // fire voice event
     TTS.Manager._lastVoice = TTS.Manager.getVoice();
     TTS.Manager.Events.onVoiceChange.fire(TTS.Manager._lastVoice);
-
 
     var service = TTS.Manager._service;
     if(service && service.subscribe){
@@ -354,6 +363,14 @@ TTS.Manager.stop = function() {
     }
 };
 
+TTS.Manager._getCurrentEl = function () {
+    var currentDomEnt = TTS.getInstance().getCurrentDomEntity();
+    if (currentDomEnt) {
+        return currentDomEnt.getElement();
+    }
+    return false;
+};
+
 TTS.Manager.pause = function(){
     if (!TTS.Manager._serviceFuncExists('pause')) {
         return false;
@@ -361,7 +378,15 @@ TTS.Manager.pause = function(){
     if (TTS.Manager.getStatus() != TTS.Status.Playing) {
         return false;
     }
+    TTS.Manager._pausedEl = this._getCurrentEl();
     return TTS.Manager._service.pause();
+};
+
+TTS.Manager.canResume = function () {
+    if (this._getCurrentEl() != TTS.Manager._pausedEl) {
+        return false;
+    }
+    return true;
 };
 
 TTS.Manager.resume = function () {
@@ -378,6 +403,7 @@ TTS.Manager.resume = function () {
         TTS.Manager._statusPollingInterval = TTS.Manager._statusPollingIntervalActive;
         TTS.Manager._updateStatus();
     }
+
     return TTS.Manager._service.resume();
 };
 
@@ -414,6 +440,7 @@ TTS.Manager.loadUserSettings = function(){
         if (curVoicePack) {
             curLang = curVoicePack.Language;
         }
+
         TTS.Manager.setVolume(TTS.Config.User.getVolume(curLang));
         TTS.Manager.setPitch(TTS.Config.User.getPitch(curLang));
         TTS.Manager.setRate(TTS.Config.User.getRate(curLang));
@@ -473,6 +500,7 @@ TTS.Manager.setVolume = function(level) {
     try{
         TTS.Manager._service.setVolume(level);
         TTS.Manager.Events.onVolumeChange.fire(level);
+        TTS.Manager._lastVolume = level;
     }catch (ex){
         console.error("Failed to set the volume.", ex, level);
     }
@@ -517,7 +545,8 @@ TTS.Manager.setPitch = function(level) {
     try{
         TTS.Manager._service.setPitch(level);
         TTS.Manager.Events.onPitchChange.fire(level);
-    } catch(ex) {
+        TTS.Manager._lastPitch = level;
+    } catch (ex) {
         console.error("Failed to set the pitch", ex, level);
         TTS.Manager.log(ex);
     }
@@ -530,7 +559,7 @@ TTS.Manager.getRate = function() {
     return TTS.Manager._service.getRate();
 };
 
-TTS.Manager.setRate = function(level) {
+TTS.Manager.setRate = function (level) {
     if (!TTS.Manager._serviceFuncExists('setRate')) {
         return false;
     }
@@ -541,7 +570,8 @@ TTS.Manager.setRate = function(level) {
     try{
         TTS.Manager._service.setRate(level);
         TTS.Manager.Events.onRateChange.fire(level);
-    }catch(ex){
+        TTS.Manager._lastRate = level;
+    } catch (ex) {
         console.error("Failed to set the TTS Manager Rate information.", ex, level);
         TTS.Manager.log(ex);
     }
@@ -592,14 +622,19 @@ TTS.Manager._updateStatus = function() {
 };
 
 // this is called when a status change occurs
-TTS.Manager._changeStatus = function(currentStatus) {
+TTS.Manager._changeStatus = function (currentStatus) {
     TTS.Manager._lastStatus = currentStatus;
 
-    // if this is the first time we are playing we need to fix the volume (for issues on OS X 10.4?)
+    // if this is the first time we are playing we need to fix the volume (for issues on OS X?)
     if (currentStatus == TTS.Status.Playing && !TTS.Manager._volumeFix) {
         if (!TTS.Manager._volumeFix) {
-            var volume = TTS.Manager._lastVolume > 0 ? TTS.Manager._lastVolume : 10;
+            var volume = TTS.Manager._lastVolume >= 0 ? TTS.Manager._lastVolume : 10; // 10 is max volume
             TTS.Manager.setVolume(volume);
+            var pitch = TTS.Manager._lastPitch >= 0 ? TTS.Manager._lastPitch : 10; // 10 is medium pitch
+            TTS.Manager.setPitch(pitch);
+            var rate = TTS.Manager._lastRate >= 0 ? TTS.Manager._lastRate : 10; // 10 is moderate rate
+            TTS.Manager.setRate(rate);
+
             TTS.Manager._volumeFix = true;
         }
     }
