@@ -11,11 +11,12 @@
 
 		<div id="infoBar" role="banner">
 			<div id="jumpQuestions">
-				<label id="jumpLabel" i18n-content="TestShellModern.Label.Items">Items:</label> <select id="ddlNavigation" name="ddlNavigation" aria-labelledby="jumpLabel jumpGo"></select> <input id="jumpGo"
-					type="button" value="Go" aria-controls="ddlNavigation" style="display: none;" />
+				<label id="jumpLabel" i18n-content="TestShellModern.Label.Items">Items:</label> <select id="ddlNavigation" name="ddlNavigation" aria-labelledby="jumpLabel"></select> <input id="jumpGo"
+					type="button" value="Go" aria-label="Press enter to jump to question" style="display: none;" />
 			</div>
 			<h1 id="lblTestName"></h1>
 			<h2 id="lblStudentName"></h2>
+			<span class="sessionID"></span>
 			<div id="smallButtons">
 				<a href="#" id="btnHelp" aria-haspopup="true">Help</a> <a href="#" id="btnSettings" aria-haspopup="true">Settings</a> <a href="#" id="proctorLogout" aria-hidden="true" style="display: none;">Log
 					Out</a>
@@ -29,14 +30,21 @@
 		</nav>
 	</div>
 
-	<div class="alertBar alertClosed" aria-hidden="true" role="alertdialog">
-		<a href="#" class="alertDismiss">Open or Close</a>
-		<ul class="alertContent"></ul>
+	<!-- alertActive shows the dialog, alertClosed is added after a student dismisses the dialog
+<div class="alertBar alertActive" role="alertdialog">
+<div class="alertBar alertActive alertClosed" role="alertdialog">
+-->
+	<div class="alertBar alertClosed" aria-live="assertive" aria-atomic="true">
+		<a href="#" class="alertDismiss" role="button" aria-expanded="false"> <span class="alertDismissOpen">Open alerts</span> <span class="alertDismissClose">Close alerts</span>
+		</a>
+		<ul class="alertContent" aria-relevant="additions"></ul>
 	</div>
 
 	<div id="contents" role="main">
 		<div id="reviews"></div>
 	</div>
+
+	<div id="tool-ClosedCaptioning" class="tdsClosedCaptioning" aria-live="polite" aria-label="Captioning for current audio"></div>
 
 </cc:implementation>
 </html>

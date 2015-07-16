@@ -87,6 +87,7 @@ TODO: Add support for vertical.
         bgSlider.className = 'slide_controls_slider_bg';
         bgSlider.style.width = sliderWidth + 'px';
         bgSlider.setAttribute('tabindex', 0); // adds keyboard support
+		bgSlider.setAttribute('touch-action', 'none');
         container.appendChild(bgSlider);
 
         var timelineContainer = document.createElement('div');
@@ -102,6 +103,7 @@ TODO: Add support for vertical.
         thumbSlider.id = 'slider_image_' + this._id;
         thumbSlider.className = 'slide_controls_img';
         thumbSlider.style.position= 'absolute';
+		thumbSlider.setAttribute('touch-action', 'none');
         bgSlider.appendChild(thumbSlider);
 
         // Create YUI slider control
