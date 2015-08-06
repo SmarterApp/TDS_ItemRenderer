@@ -42,7 +42,8 @@ public class XmlUtils
 
   public static Document createDocument (String xml) {
     Document document = null;
-    xml = xml.replace ("&#xA0;", " ");
+//  sb-1395	
+//  xml = xml.replace ("&#xA0;", " ");
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance ();
       DocumentBuilder builder = factory.newDocumentBuilder ();

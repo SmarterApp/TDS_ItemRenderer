@@ -38,6 +38,7 @@ import tds.itemrenderer.data.xml.wordlist.Html;
 import tds.itemrenderer.data.xml.wordlist.Itemrelease;
 import tds.itemrenderer.data.xml.wordlist.Keyword;
 import tds.itemrenderer.processing.ITSDocumentProcessingException;
+import tds.itemrenderer.processing.ITSUrlResolver2;
 import AIR.Common.Json.JsonHelper;
 import AIR.Common.Utilities.SpringApplicationContext;
 import AIR.Common.Utilities.TDSStringUtils;
@@ -117,7 +118,7 @@ public abstract class WordListHandlerBase
     for (String item : itemIndex) {
       Map<String, String> htmlTabs = new HashMap<> ();
       try {
-        getWordListEntry (htmlTabs, item);
+        getWordListEntry (htmlTabs, item, filePath);
       } catch (Exception exp) {
         String message = TDSStringUtils.format ("Error parsing item {0}-{1} index {2}", bankKey, itemKey, itemIndex);
         throw new TDSHttpException (HttpStatus.NOT_FOUND.value (), message);
@@ -170,7 +171,7 @@ public abstract class WordListHandlerBase
    * @param reader
    * @param itemIndex
    */
-  protected void getWordListEntry (Map<String, String> htmlTabs, String itemIndex) {
+  protected void getWordListEntry (Map<String, String> htmlTabs, String itemIndex, String fileName) {
     List<Keyword> keywords = _itemRelease.getItem ().getKeywordList ().getKeyword ();
     for (Keyword keyword : keywords) {
       if (StringUtils.isBlank (keyword.getIndex ()) || !keyword.getIndex ().equals (itemIndex)) {
@@ -187,7 +188,9 @@ public abstract class WordListHandlerBase
           continue;
         }
         if (!isBlankHtmlContent(html.getContent ())) {
-          htmlTabs.put (wtype, html.getContent ());
+          ITSUrlResolver2 resolver = new ITSUrlResolver2(fileName);
+          String content=resolver.resolveResourceUrls (html.getContent ());
+          htmlTabs.put (wtype, content);
         }
       }
 

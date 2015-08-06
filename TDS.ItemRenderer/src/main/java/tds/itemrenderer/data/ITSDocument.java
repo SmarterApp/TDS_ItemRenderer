@@ -129,5 +129,11 @@ public class ITSDocument extends ITSDocumentXml
     }
     return maxScore;
   }
+  
+  @Override
+  public String getFormat ()
+  {
+    return getAttributeValue ("itm_att_Item Format");
+  }
 
 }

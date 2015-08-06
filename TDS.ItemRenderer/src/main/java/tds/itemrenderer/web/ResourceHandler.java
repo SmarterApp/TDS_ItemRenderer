@@ -190,11 +190,11 @@ public class ResourceHandler extends FileHttpHandler
       altPath.append (Path.getFileNameWithoutExtension (file));
       altPath.append ("_");
       altPath.append (altTag);
-      altPath.append (Path.getExtension (file));
-
+      altPath.append ("." + Path.getExtension (file));
+      String fixedPath = CaseInsensitiveFileNameFilter.getFile (pathDecoded, altPath.toString ());
       // check if file exists (otherwise we will ignore this path)
-      if (new File (pathDecoded + altPath.toString ()).exists ()) {
-        physicalPath = pathDecoded + altPath.toString ();
+      if (new File (pathDecoded + fixedPath).exists ()) {
+        physicalPath = pathDecoded + fixedPath;
       }
     }
 
