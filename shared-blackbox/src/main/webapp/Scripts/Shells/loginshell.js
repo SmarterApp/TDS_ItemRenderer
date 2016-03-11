@@ -6,7 +6,7 @@
 // See accompanying file AIR-License-1_0.txt or at
 // http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
 //*******************************************************************************
-﻿// entry point into the javascript from the login shell
+// entry point into the javascript from the login shell
 function init() {
     LoginShell.init();
 }
@@ -474,15 +474,23 @@ LoginShell.clearBrowser = function() {
     Util.SecureBrowser.emptyClipBoard();
 
     var querystring = Util.QueryString.parse();
+    // This cookie is set by the secure browser launch protocol when a student Id is validated against a session.
+    var isSbLaunchProtocolRedirect = YAHOO.util.Cookie.exists("TDS-SB-Launch-Protocol");
+    if (isSbLaunchProtocolRedirect) {
+        localStorage.setItem('isSbLaunchProtocolRedirect', isSbLaunchProtocolRedirect);
+    } else {
+        localStorage.removeItem('isSbLaunchProtocolRedirect');
+    }
 
     // clear student data if we are explicitly logging out or not trying to enter a specific section. 
-    if (querystring.logout || querystring.section == null) {
+    if (querystring.logout || querystring.section == null && !isSbLaunchProtocolRedirect) {
         Util.Browser.eraseCookie('TDS-Student-Auth');
         Util.Browser.eraseCookie('TDS-Student-Data');
     }
 
     // delete these cookies in all cases.
     Util.Browser.eraseCookie('TDS-Student-Accs');
+    Util.Browser.eraseCookie('TDS-SB-Launch-Protocol');
 
     // Check if we should clear all cookies. 
     // Don't clear cookies if proxy login because the

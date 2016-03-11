@@ -39,6 +39,17 @@ Util.Browser.readCookie = function(name) {
     return null;
 };
 
+Util.Browser.readSubCookie = function(name, subName) {
+    var cookie = this.readCookie(name);
+    var subCookies = decodeURIComponent(cookie).split("&");
+    for (var i = 0; i < subCookies.length; i++) {
+        var pair = subCookies[i].split('=');
+        if (decodeURIComponent(pair[0]) == subName) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+};
+
 // clear a specific cookie
 Util.Browser.eraseCookie = function(name) {
     this.createCookie(name, "", -1);

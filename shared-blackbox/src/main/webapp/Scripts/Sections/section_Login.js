@@ -6,7 +6,7 @@
 // See accompanying file AIR-License-1_0.txt or at
 // http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
 //*******************************************************************************
-﻿Sections.Login = function()
+Sections.Login = function()
 {
     Sections.Login.superclass.constructor.call(this, 'sectionLogin');
 
@@ -321,19 +321,29 @@ Sections.Login.prototype.validate = function ()
     }
 
     // get login fields
-    var keyValues = [];
-
-    Util.Array.each(TDS.Config.loginRequirements, function (loginReq) {
-        var input = this.getLoginInput(loginReq.id); // form control
-        var value = YAHOO.lang.trim(input.value); // trimmed form value
-        var keyValue = loginReq.id + ':' + value;
-        keyValues.push(keyValue);
-
-    }, this);
-
-    // get forbidden apps
+    var keyValues = [];;
+    var sessionID;
+    // Get forbidden apps
     var forbiddenApps = Util.SecureBrowser.getForbiddenApps();
-    var sessionID = this.getSessionID();
+
+    // If this is a login from a secure browser launch protocol redirect, then we need to get the student login data
+    // from the TDS-Student-Data cookie. With the launch protocol, we will only validate session ID and student ID.
+    if (localStorage.getItem('isSbLaunchProtocolRedirect')) {
+        var studentId = Util.Browser.readSubCookie("TDS-Student-Data", "T_ID");
+        sessionID = Util.Browser.readSubCookie("TDS-Student-Data", "S_ID")
+        // Set the launch protocol flag so login service knows to validate only session ID and student ID
+        keyValues.push("SBLaunchProtocol:true");
+        keyValues.push("ID:" + studentId);
+    } else {
+        Util.Array.each(TDS.Config.loginRequirements, function (loginReq) {
+            var input = this.getLoginInput(loginReq.id); // form control
+            var value = YAHOO.lang.trim(input.value); // trimmed form value
+            var keyValue = loginReq.id + ':' + value;
+            keyValues.push(keyValue);
+
+        }, this);
+        sessionID = this.getSessionID();
+    }
 
     var loginCallback = function(loginInfo) {
         console.log('Login Info', loginInfo);
@@ -364,9 +374,11 @@ Sections.Login.prototype.checkForRedirect = function (loginForm) {
     // field names that we get from the browser.
     var oname = 'globalRedirectSettings';
     var appString = "accommodationStringP";
-    
     var self = this;
-    if (typeof (window[oname]) == "object") {
+
+    if (localStorage.getItem('isSbLaunchProtocolRedirect')) {
+        loginForm.onsubmit();
+    } else if (typeof (window[oname]) == "object") {
         Util.Array.each(TDS.Config.loginRequirements, function (loginReq) {
             self.setLoginInput(loginReq.id, window[oname][Sections.Login._loginInputPrefix + loginReq.id]);
         });
