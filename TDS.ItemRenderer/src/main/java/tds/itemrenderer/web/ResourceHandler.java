@@ -51,6 +51,7 @@ public class ResourceHandler extends FileHttpHandler
     _validExtensions.put ("png", true);
     _validExtensions.put ("jpg", true);
     _validExtensions.put ("gif", true);
+    _validExtensions.put ("svg", true);
 
     // AUDIO:
     _validExtensions.put ("ogg", true); // Ogg Vorbis

@@ -20,7 +20,11 @@ WordListPanel.bankKeyHdr = "bankKey";
 WordListPanel.itemKeyHdr = "itemKey";
 WordListPanel.indexHdr = "index";
 WordListPanel.AccType = "Word List";
+WordListPanel.AccIllustrationType = "Illustration Glossary";
 WordListPanel.AccNoAccs = "TDS_WL0";
+WordListPanel.AccIllistrationAccs = "TDS_WL_Illustration";
+WordListPanel.AccNoIllustrationAccs = "TDS_ILG0";
+WordListPanel.AccShowIllustrationAccs = "TDS_ILG1";
 WordListPanel.AccHdr = "TDS_ACCS";
 
 // Arbitrary name of div that will contain the word list panel
@@ -35,7 +39,7 @@ WordListPanel.tabCurrent = 0;
 WordListPanel.requestQ = {};
 WordListPanel.tagQ = {};
 
-// URL that we agree on with server 
+// URL that we agree on with server
 WordListPanel.xhrUrl = "Pages/API/WordList.axd";
 // method name that we agree on with server, per AIR convention.
 WordListPanel.xhrMethod = "resolve";
@@ -127,8 +131,8 @@ WordListPanel.processClick = function (entry, headerText) {
 WordListPanel.sendRequest = function (wl_item) {
     var bankKey = wl_item.wl_res.bankKey;
     var itemKey = wl_item.wl_res.itemKey;
- 
-    // build the form post data 
+
+    // build the form post data
     var str = WordListPanel.bankKeyHdr + "=" + bankKey.toString() + "&" + WordListPanel.itemKeyHdr + "=" + itemKey.toString();
 
     // Build a URL query list of all word list values for this bank/item that we need
@@ -138,15 +142,21 @@ WordListPanel.sendRequest = function (wl_item) {
         strValues = strValues + '&index=' + value;
     });
 
-    if (strValues == '') { // No words that we don’t already know? Then we're done.
+    if (strValues == '') { // No words that we donï¿½t already know? Then we're done.
         WordListPanel.ProcessTagQ(itemKey);
-        return;     
+        return;
     }
 
     str = str + strValues;
 
     // get the selected WL accommodations
-    var wlCodes = Accommodations.Manager.getCurrent().getType(WordListPanel.AccType).getCodes(true);
+    var accommodationManager = Accommodations.Manager.getCurrent();
+    var wlCodes = accommodationManager.getType(WordListPanel.AccType).getCodes(true);
+
+    var ilgs = accommodationManager.getType(WordListPanel.AccIllustrationType).getCodes(true);
+    if (ilgs.length != 0 && ilgs[0] == WordListPanel.AccShowIllustrationAccs) {
+        wlCodes.push(WordListPanel.AccIllistrationAccs);
+    }
 
     // build acc codes post
     for (var i = 0, ii = wlCodes.length; i < ii; i++) {
@@ -157,7 +167,7 @@ WordListPanel.sendRequest = function (wl_item) {
     }
 
     var urlString = TDS.baseUrl + WordListPanel.xhrUrl + "/" + WordListPanel.xhrMethod;
-    
+
     // This is a hack for ItemPreview and related tools, which is different from Student.
     // If WordListPanel.xhrUrl looks like a fully-qualified URL then use it alone, otherwise
     // construct the URL from baseUrl (Student app).
@@ -177,30 +187,50 @@ WordListPanel.IsWordListEnabled = function () {
 
     var accs = Accommodations.Manager.getCurrent();
     var wlType = accs.getType(WordListPanel.AccType);
+    var ilgType = accs.getType(WordListPanel.AccIllustrationType);
+
+    var doesGlossaryExist = false;
+    var doesIllustrationExist = false;
 
     // check if type exists
-    if (!wlType) {
-        return false;
-    }
+    if (wlType) {
+        // check if values exist
+        var wlValues = wlType.getSelected();
+        if (wlValues.length != 0) {
+            doesGlossaryExist = true; // set to true temporarily, unless the No Word List value is found
 
-    // check if values exist
-    var wlValues = wlType.getSelected();
-    if (wlValues.length == 0) {
-        return false;
-    }
-
-    // If one of the acc strings is 'no word list', don't enable word list.
-    for (var i = 0; i < wlValues.length; ++i) {
-        var codes = wlValues[i].getCodes();
-        for (var j = 0; j < codes.length; ++j) {
-            if (codes[j] == WordListPanel.AccNoAccs) {
-                return false;
+            // If one of the acc strings is 'no word list', don't enable word list.
+            for (var i = 0; i < wlValues.length; ++i) {
+                var codes = wlValues[i].getCodes();
+                for (var j = 0; j < codes.length; ++j) {
+                    if (codes[j] == WordListPanel.AccNoAccs) {
+                        doesGlossaryExist = false;
+                        break;
+                    }
+                }
             }
         }
     }
 
-    // if we got here then 'TDS_WL0' was not included
-    return true;
+    if (ilgType) {
+        // check if values exist
+        var ilgValues = ilgType.getSelected();
+        if (ilgValues.length != 0) {
+            // see if the Illustration Glossary is turned on
+            for (var i = 0; i < ilgValues.length; ++i) {
+                var codes = ilgValues[i].getCodes();
+                for (var j = 0; j < codes.length; ++j) {
+                    if (codes[j] == WordListPanel.AccShowIllustrationAccs) {
+                        doesIllustrationExist = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
+    return doesGlossaryExist || doesIllustrationExist;
 };
 
 // Helper function to show the word view panel
