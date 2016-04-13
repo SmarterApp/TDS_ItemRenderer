@@ -31,9 +31,16 @@ WordListPanel.AccHdr = "TDS_ACCS";
 WordListPanel.divId = "WordListTool";
 WordListPanel.toolDiv = null; // singleton panel container div
 WordListPanel.panel = null; // singleton word list panel
+WordListPanel.resizer = null; // resizer for the panel
+WordListPanel.generalPanelWidth = 320; // default size for tex glossaries
+WordListPanel.minImageSize = 200;
+WordListPanel.absoluteMinPanelWidth = 110; // if we so less than this the tab over extends the panel so don't go less than this
+WordListPanel.zoomFactor = 1;
 WordListPanel.tabView = null; // singleton panel content div
 WordListPanel.tabCount = 0; // used for hotkey tabbing in WL pane
 WordListPanel.tabCurrent = 0;
+WordListPanel.heightPadding = 91;
+WordListPanel.widthPadding = 40;
 
 // Save word list yet-to-be-sent requests in a queue
 WordListPanel.requestQ = {};
@@ -153,9 +160,12 @@ WordListPanel.sendRequest = function (wl_item) {
     var accommodationManager = Accommodations.Manager.getCurrent();
     var wlCodes = accommodationManager.getType(WordListPanel.AccType).getCodes(true);
 
-    var ilgs = accommodationManager.getType(WordListPanel.AccIllustrationType).getCodes(true);
-    if (ilgs.length != 0 && ilgs[0] == WordListPanel.AccShowIllustrationAccs) {
-        wlCodes.push(WordListPanel.AccIllistrationAccs);
+    var ilgType = accommodationManager.getType(WordListPanel.AccIllustrationType);
+    if (ilgType != null) {
+        var ilgs = ilgType.getCodes(true);
+        if (ilgs.length != 0 && ilgs[0] == WordListPanel.AccShowIllustrationAccs) {
+            wlCodes.push(WordListPanel.AccIllistrationAccs);
+        }
     }
 
     // build acc codes post
@@ -245,6 +255,10 @@ WordListPanel.setPanel = function (hd, bd) {
 
         WordListPanel.tabView = new YAHOO.widget.TabView(WordListPanel.tabbedDivName);
 
+        // clear out "remebered" panel sizes since this is starting fresh
+        WordListPanel.determineDefaultPanelSizes();
+        WordListPanel.initializeIllustration();
+
         // Count # of tabs in word list panel
         WordListPanel.tabCount = 0;
         while (WordListPanel.tabView.getTab(WordListPanel.tabCount) != null) {
@@ -267,12 +281,132 @@ WordListPanel.setPanel = function (hd, bd) {
 
             oTabEl = this.get("activeTab").get("element");
             $(oTabEl).attr('aria-title', 'Selected');
+
+            WordListPanel.handleResizing();
         });
+
+        WordListPanel.handleResizing();
 
         setTimeout(function() {
             WordListPanel.postProcessAudioTags();
         }.bind(this), 1); //Panels can behave in a scary fashion
     }
+};
+
+WordListPanel.panelSizes = {};
+
+WordListPanel.savePanelSize = function() {
+    var panel = $('#' + WordListPanel.panel.id);
+    var activeTabId = $(WordListPanel.tabView.get('activeTab').get('element')).find('a').attr('href');
+
+    var size = WordListPanel.panelSizes[activeTabId] || {};
+
+    size.width = panel.width();
+    size.height = panel.height();
+    size.baseWidth = size.width / WordListPanel.zoomFactor;
+    size.baseHeight = size.height / WordListPanel.zoomFactor;
+
+    WordListPanel.panelSizes[activeTabId] = size;
+
+    // keep width and height in sync with data-width and data-height
+    panel.attr('data-width', panel.width());
+    panel.attr('data-height', panel.height());
+};
+
+WordListPanel.determineDefaultPanelSizes = function() {
+    // reset
+    WordListPanel.panelSizes = {};
+
+    // get each tab content div
+    var contentDivs = $(WordListPanel.panel.body).find('div.yui-content > div');
+
+    for (var i=0; i < contentDivs.length; i++) {
+        var width = WordListPanel.generalPanelWidth; // default width for a standard text glossary
+        var height = ''; // no specific height for a standard text glossary
+
+        // is this an illustration glossary content area
+        var img = $(contentDivs[i]).find('img');
+
+        if (img.length == 1) {
+            width = img.width() + WordListPanel.widthPadding;
+            height = img.height() + WordListPanel.heightPadding;
+        }
+
+        // the # is because that is what the href has which we use for the lookup later on
+        WordListPanel.panelSizes['#' + contentDivs[i].id] = {
+            width: width,
+            height: height,
+            baseWidth: width / WordListPanel.zoomFactor,
+            baseHeight: height == '' ? '' : height / WordListPanel.zoomFactor
+        }
+    }
+};
+
+WordListPanel.handleResizing = function() {
+    var activeTabId = $(WordListPanel.tabView.get('activeTab').get('element')).find('a').attr('href');
+
+    if (WordListPanel.panelSizes[activeTabId]) {
+        var panel = $('#' + WordListPanel.panel.id);
+        panel.width(WordListPanel.panelSizes[activeTabId].width).height(WordListPanel.panelSizes[activeTabId].height);
+        panel.attr('data-width', WordListPanel.panelSizes[activeTabId].width);
+
+        if (WordListPanel.panelSizes[activeTabId].height) {
+            panel.attr('data-height', WordListPanel.panelSizes[activeTabId].height);
+        } else {
+            panel.attr('data-height', panel.height());
+        }
+    } else {
+        WordListPanel.savePanelSize();
+    }
+
+    var tabContent = $(WordListPanel.tabView.get('activeTab').get('content'));
+    if (tabContent.find('img').length == 1) {
+        var resizeConfig = {
+            handles: ['br'],
+            ratio: true,
+            status: false
+        };
+
+        if (WordListPanel.illustrationRatio > 1) {
+            resizeConfig.minWidth = WordListPanel.minImageSize + WordListPanel.widthPadding;
+        }
+        else {
+            resizeConfig.minHeight = WordListPanel.minImageSize + WordListPanel.heightPadding;
+            resizeConfig.minWidth = WordListPanel.absoluteMinPanelWidth;
+        }
+
+        WordListPanel.resizer = new YAHOO.util.Resize(WordListPanel.panel.id, resizeConfig);
+
+        WordListPanel.resizer.on('resize', function(args) {
+            WordListPanel.resizeIllustration(args.width - WordListPanel.widthPadding, args.height - WordListPanel.heightPadding);
+
+            this.cfg.setProperty("height", args.height + "px");
+
+            WordListPanel.savePanelSize();
+        }, WordListPanel.panel, true);
+
+        // Setup startResize handler, to constrain the resize width/height
+        // if the constraintoviewport configuration property is enabled.
+        WordListPanel.resizer.on('startResize', function(args) {
+
+            if (this.cfg.getProperty("constraintoviewport")) {
+                var D = YAHOO.util.Dom;
+
+                var clientRegion = D.getClientRegion();
+                var elRegion = D.getRegion(this.element);
+
+                WordListPanel.resizer.set("maxWidth", clientRegion.right - elRegion.left - YAHOO.widget.Overlay.VIEWPORT_OFFSET);
+                WordListPanel.resizer.set("maxHeight", clientRegion.bottom - elRegion.top - YAHOO.widget.Overlay.VIEWPORT_OFFSET);
+            } else {
+                WordListPanel.resizer.set("maxWidth", null);
+                WordListPanel.resizer.set("maxHeight", null);
+            }
+        }, WordListPanel.panel, true);
+    } else if (WordListPanel.resizer != null) {
+        WordListPanel.resizer.destroy();
+    }
+
+
 };
 
 // Set up the word list pane.  Should only be done once.
@@ -298,7 +432,13 @@ WordListPanel.InitializePane = function() {
 
         toolDiv.appendChild(WordListPanel.toolDiv);
 
-        WordListPanel.panel = new YAHOO.widget.Panel("wordListPanel", { width: "320px", zindex: 1004, visible: false, constraintoviewport: true, modal: true });
+        WordListPanel.panel = new YAHOO.widget.Panel("wordListPanel", {
+            width: "200px",
+            zindex: 1004,
+            visible: false,
+            constraintoviewport: true,
+            modal: true,
+            autofillheight: "body" });
     }
 
     WordListPanel.panel.render(WordListPanel.toolDiv);
@@ -350,6 +490,56 @@ WordListPanel.RenderHtmlTabs = function (messages) {
     return tabString;
 };
 
+WordListPanel.illustrationWidth = null;
+WordListPanel.illustrationHeight = null;
+WordListPanel.illustrationRatio = 1; // > 1 means width is bigger than height
+WordListPanel.initializeIllustration = function() {
+    var bd = WordListPanel.panel.body;
+    try {
+        if (!bd) return;
+
+        var imgEls = YAHOO.util.Selector.query('img', bd) || [];
+
+        if (imgEls.length == 1) {
+            var img = $(imgEls[0]);
+
+            // zooming looks for these attributes
+            img.attr('data-width', img.width());
+            img.attr('data-height', img.height());
+
+            WordListPanel.illustrationWidth = img.width();
+            WordListPanel.illustrationHeight = img.height();
+            WordListPanel.illustrationRatio = WordListPanel.illustrationWidth / WordListPanel.illustrationHeight;
+
+            return true;
+        }
+    } catch (e) {
+        console.error("Error initializing the illustration (error, dom).", e, bd);
+    }
+
+    return false;
+};
+
+WordListPanel.resizeIllustration = function(w, h) {
+    var bd = WordListPanel.panel.body;
+    try {
+        if (!bd) return;
+
+        var imgEls = YAHOO.util.Selector.query('img', bd) || [];
+
+        if (imgEls.length == 1) {
+            var img = $(imgEls[0]);
+
+            img.attr('width', w);
+            img.attr('height', h);
+            img.attr('data-width', w);
+            img.attr('data-height', h);
+        }
+    } catch (e) {
+        console.error("Error resizing the illustration (error, dom).", e, bd);
+    }
+};
+
 /**
  *  We must support the creation of audio elements in word panels, this requires us to
  *  process things into sound manager sounds for certain browser types.
@@ -377,7 +567,7 @@ WordListPanel.postProcessAudioTags = function () {
                 // Bug 132322: use indexOf instead of contains for x-browser compatibilty
                 if (href.indexOf('.ogg') != -1 || (href.indexOf('.m4a') != -1)) {
 
-                    // give it some stylin'                    
+                    // give it some stylin'
                     YUD.addClass(span, 'sound_repeat');
 
                     // Url decoder expects stuff to go inside html so we need to unHTML encode the href:
@@ -403,3 +593,22 @@ WordListPanel.IsVisible = function() {
 
     return false;
 };
+
+// content manager events
+(function(CM) {
+
+    if (!CM) return;
+
+    // when zooming a page we are on update elements
+    CM.onPageEvent('zoom', function (page, level) {
+        console.log('zoom event level', level);
+        WordListPanel.zoomFactor = level;
+
+        for (var key in WordListPanel.panelSizes) {
+            var val = WordListPanel.panelSizes[key];
+            WordListPanel.panelSizes[key].width = val.baseWidth * level;
+            WordListPanel.panelSizes[key].height = val.baseHeight == '' ? '' : val.baseHeight * level;
+        }
+    });
+
+})(window.ContentManager);

@@ -7,8 +7,8 @@
 // http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
 //*******************************************************************************
 ﻿/*
-Used for zooming the html, images and other media for content manager.
-*/
+ Used for zooming the html, images and other media for content manager.
+ */
 
 (function (CM) {
 
@@ -24,7 +24,7 @@ Used for zooming the html, images and other media for content manager.
         { css: 'TDS_PS_L3', factor: 1.75 },
         { css: 'TDS_PS_L4', factor: 2 }
     ];
-    
+
     // get the css class for a level
     function getLevelClass(level) {
         if (LEVELS[level]) {
@@ -80,7 +80,11 @@ Used for zooming the html, images and other media for content manager.
     // get all the zoomable images
     function getImages(parentEl) {
         if (!parentEl) return [];
-        return $('img', parentEl).toArray();
+        return Util.Array.concat(
+            $('img', parentEl).toArray(),
+            $('#wordListPanel').toArray(),
+            $('#wordListPanel img').toArray()
+        );
     }
 
     // get all the zoomable flash objects
@@ -238,7 +242,7 @@ Used for zooming the html, images and other media for content manager.
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     // Zoom class
     function Zoom(defaultZoomCSS) {
 
@@ -255,7 +259,7 @@ Used for zooming the html, images and other media for content manager.
         // set current level
         this.currentLevel = this.defaultLevel;
     }
-    
+
     // get the current css
     Zoom.prototype.getCSS = function () {
         return LEVELS[this.currentLevel].css;
@@ -264,7 +268,7 @@ Used for zooming the html, images and other media for content manager.
     Zoom.prototype.getFactor = function() {
         return LEVELS[this.currentLevel].factor;
     };
-    
+
     Zoom.prototype.addDocument = function (doc, options) {
 
         // set default document
@@ -279,8 +283,8 @@ Used for zooming the html, images and other media for content manager.
 
         // check if document is already added
         if (this._zoomables.some(function (obj) {
-            return (obj.document == doc);
-        })) {
+                return (obj.document == doc);
+            })) {
             return false;
         }
 
@@ -383,7 +387,7 @@ Used for zooming the html, images and other media for content manager.
     };
 
     window.ContentZoom = Zoom;
-    
+
 })(window.ContentManager);
 
 // content manager events
