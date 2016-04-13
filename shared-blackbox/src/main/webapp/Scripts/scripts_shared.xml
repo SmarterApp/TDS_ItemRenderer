@@ -25,6 +25,7 @@
         <input>Libraries/yahoo/yui2/build/menu/menuariaplugin-min.js</input>
         <input>Libraries/yahoo/yui2/build/tabview/tabview-min.js</input>
         <input>Libraries/yahoo/yui2/build/slider/slider-min.js</input>
+        <input>Libraries/yahoo/yui2/build/resize/resize-min.js</input>
 
     </fileSet>
 
