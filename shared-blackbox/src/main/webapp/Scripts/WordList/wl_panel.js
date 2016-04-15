@@ -255,15 +255,17 @@ WordListPanel.setPanel = function (hd, bd) {
 
         WordListPanel.tabView = new YAHOO.widget.TabView(WordListPanel.tabbedDivName);
 
+        // Count # of tabs in word list panel
+        WordListPanel.tabCount = 0;
+        WordListPanel.absoluteMinPanelWidth = 24; // left and right padding of the panel as a whole
+        while (WordListPanel.tabView.getTab(WordListPanel.tabCount) != null) {
+            WordListPanel.absoluteMinPanelWidth += $(WordListPanel.tabView.getTab(WordListPanel.tabCount).get('element')).outerWidth(true);
+            WordListPanel.tabCount++;
+        }
+
         // clear out "remebered" panel sizes since this is starting fresh
         WordListPanel.determineDefaultPanelSizes();
         WordListPanel.initializeIllustration();
-
-        // Count # of tabs in word list panel
-        WordListPanel.tabCount = 0;
-        while (WordListPanel.tabView.getTab(WordListPanel.tabCount) != null) {
-            WordListPanel.tabCount++;
-        }
 
         WordListPanel.tabCurrent = 0; // Set currently selected tab index
 
@@ -321,16 +323,18 @@ WordListPanel.determineDefaultPanelSizes = function() {
     var contentDivs = $(WordListPanel.panel.body).find('div.yui-content > div');
 
     for (var i=0; i < contentDivs.length; i++) {
-        var width = WordListPanel.generalPanelWidth; // default width for a standard text glossary
+        var width = WordListPanel.generalPanelWidth * WordListPanel.zoomFactor; // default width for a standard text glossary
         var height = ''; // no specific height for a standard text glossary
 
         // is this an illustration glossary content area
         var img = $(contentDivs[i]).find('img');
 
         if (img.length == 1) {
-            width = img.width() + WordListPanel.widthPadding;
-            height = img.height() + WordListPanel.heightPadding;
+            width = (img.width() + WordListPanel.widthPadding) * WordListPanel.zoomFactor;
+            height = (img.height() + WordListPanel.heightPadding) * WordListPanel.zoomFactor;
         }
+
+        width = Math.max(WordListPanel.absoluteMinPanelWidth, width);
 
         // the # is because that is what the href has which we use for the lookup later on
         WordListPanel.panelSizes['#' + contentDivs[i].id] = {
@@ -368,12 +372,12 @@ WordListPanel.handleResizing = function() {
         };
 
         if (WordListPanel.illustrationRatio > 1) {
-            resizeConfig.minWidth = WordListPanel.minImageSize + WordListPanel.widthPadding;
+            resizeConfig.minWidth = Math.max(WordListPanel.minImageSize + WordListPanel.widthPadding, WordListPanel.absoluteMinPanelWidth);
         }
         else {
             resizeConfig.minHeight = WordListPanel.minImageSize + WordListPanel.heightPadding;
             resizeConfig.minWidth = WordListPanel.absoluteMinPanelWidth;
-        }
+        }WordListPanel
 
         WordListPanel.resizer = new YAHOO.util.Resize(WordListPanel.panel.id, resizeConfig);
 
@@ -503,9 +507,8 @@ WordListPanel.initializeIllustration = function() {
         if (imgEls.length == 1) {
             var img = $(imgEls[0]);
 
-            // zooming looks for these attributes
-            img.attr('data-width', img.width());
-            img.attr('data-height', img.height());
+            // set image size based on zoom factor the first time
+            WordListPanel.resizeIllustration(img.width() * WordListPanel.zoomFactor, img.height() * WordListPanel.zoomFactor);
 
             WordListPanel.illustrationWidth = img.width();
             WordListPanel.illustrationHeight = img.height();
