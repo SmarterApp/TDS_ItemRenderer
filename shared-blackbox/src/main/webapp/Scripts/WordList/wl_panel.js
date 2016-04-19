@@ -39,8 +39,6 @@ WordListPanel.zoomFactor = 1;
 WordListPanel.tabView = null; // singleton panel content div
 WordListPanel.tabCount = 0; // used for hotkey tabbing in WL pane
 WordListPanel.tabCurrent = 0;
-WordListPanel.heightPadding = 91;
-WordListPanel.widthPadding = 40;
 
 // Save word list yet-to-be-sent requests in a queue
 WordListPanel.requestQ = {};
@@ -330,8 +328,8 @@ WordListPanel.determineDefaultPanelSizes = function() {
         var img = $(contentDivs[i]).find('img');
 
         if (img.length == 1) {
-            width = (img.width() + WordListPanel.widthPadding) * WordListPanel.zoomFactor;
-            height = (img.height() + WordListPanel.heightPadding) * WordListPanel.zoomFactor;
+            width = (img.width() + WordListPanel.getPanelExtraWidth()) * WordListPanel.zoomFactor;
+            height = (img.height() + WordListPanel.getPanelExtraHeight()) * WordListPanel.zoomFactor;
         }
 
         width = Math.max(WordListPanel.absoluteMinPanelWidth, width);
@@ -344,6 +342,34 @@ WordListPanel.determineDefaultPanelSizes = function() {
             baseHeight: height == '' ? '' : height / WordListPanel.zoomFactor
         }
     }
+};
+
+// calculates the additional panel pixels that need to be added on top of the image height
+WordListPanel.getPanelExtraHeight = function() {
+    var height = 0;
+    var panel = $('#' + WordListPanel.panel.id);
+
+    // header bar height
+    height += panel.find('.hd').outerHeight(true);
+
+    // tab height
+    height += panel.find('.bd ul.yui-nav').outerHeight(true);
+
+    // padding of the body div
+    height += panel.find('.bd').innerHeight() - panel.find('.bd').height();
+
+    // padding of the content div
+    height += panel.find('.bd .yui-content').innerHeight() - panel.find('.bd .yui-content').height();
+
+    // extra space for resize handle
+    height += 6;
+
+    return height; // 91
+};
+
+// calculates the additional panel pixels that need to be added on top of the image width
+WordListPanel.getPanelExtraWidth = function() {
+    return 40;
 };
 
 WordListPanel.handleResizing = function() {
@@ -372,17 +398,17 @@ WordListPanel.handleResizing = function() {
         };
 
         if (WordListPanel.illustrationRatio > 1) {
-            resizeConfig.minWidth = Math.max(WordListPanel.minImageSize + WordListPanel.widthPadding, WordListPanel.absoluteMinPanelWidth);
+            resizeConfig.minWidth = Math.max(WordListPanel.minImageSize + WordListPanel.getPanelExtraWidth(), WordListPanel.absoluteMinPanelWidth);
         }
         else {
-            resizeConfig.minHeight = WordListPanel.minImageSize + WordListPanel.heightPadding;
+            resizeConfig.minHeight = WordListPanel.minImageSize + WordListPanel.getPanelExtraHeight();
             resizeConfig.minWidth = WordListPanel.absoluteMinPanelWidth;
         }WordListPanel
 
         WordListPanel.resizer = new YAHOO.util.Resize(WordListPanel.panel.id, resizeConfig);
 
         WordListPanel.resizer.on('resize', function(args) {
-            WordListPanel.resizeIllustration(args.width - WordListPanel.widthPadding, args.height - WordListPanel.heightPadding);
+            WordListPanel.resizeIllustration(args.width - WordListPanel.getPanelExtraWidth(), args.height - WordListPanel.getPanelExtraHeight());
 
             this.cfg.setProperty("height", args.height + "px");
 
