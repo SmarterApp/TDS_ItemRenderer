@@ -20,6 +20,7 @@
         xml += 'currentPage="' + data.currentPage + '" ';
         xml += 'lastPage="' + data.lastPage + '" ';
         xml += 'prefetch="' + data.prefetch + '" ';
+        xml += 'pageDuration="' + data.pageDuration + '" ';
         xml += '>';
 
         // write accs

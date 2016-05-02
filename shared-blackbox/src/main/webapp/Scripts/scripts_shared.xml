@@ -224,6 +224,7 @@
 
     <!-- Tools -->
     <fileSet name="tools">
+        <input>Tools/item_duration_timer.js</input>
         <input>Tools/tds.js</input>
         <input>Tools/tds_config.js</input>
 	<input>Tools/tds_lang.js</input>

@@ -479,9 +479,9 @@ The main test shell entry code.
             }
 
             // check if item allows for implicit save (next/back)
-            if (saveRequest == TS.SaveRequest.Implicit && !saveOptions.implicit) {
-                return;
-            }
+            // if (saveRequest == TS.SaveRequest.Implicit && !saveOptions.implicit) {
+            //     return;
+            // }
 
             // check if item allows for focus change save (switching items)
             if (saveRequest == TS.SaveRequest.FocusChange && !saveOptions.focusChange) {
@@ -501,11 +501,6 @@ The main test shell entry code.
 
                 // disable spell check so we can save
                 contentItem.editor.commands.spellchecker.exec();
-            }
-
-            // check if response is dirty (this will try and get the items response, so if doing so is unsafe then be careful)
-            if (!item.isDirty()) {
-                return;
             }
 
             // HACK: finalize grid

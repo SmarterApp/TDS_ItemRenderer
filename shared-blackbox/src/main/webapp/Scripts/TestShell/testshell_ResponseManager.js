@@ -230,10 +230,17 @@ TestShell.ResponseManager._createRequest = function() {
 
     // get last page number
     var lastPageNum = 0;
+    var pageDuration = 0;
+
     var lastGroup = TestShell.PageManager.getLastGroup();
     if (lastGroup) {
         lastPageNum = lastGroup.pageNum;
     }
+
+    if (this._outgoingResponses.length > 0) {
+        pageDuration = ItemDurationTimer.getPageDuration();
+    }
+    ItemDurationTimer.startTimerForPage();
 
     // create data for TestResponseReader.cs
     var data = {
@@ -243,7 +250,8 @@ TestShell.ResponseManager._createRequest = function() {
         lastPage: lastPageNum,
         prefetch: TestShell.Config.prefetch,
         accommodations: TDS.Student.Storage.serializeAccs(),
-        responses: this._outgoingResponses
+        responses: this._outgoingResponses,
+        pageDuration: pageDuration
     };
 
     return TestShell.Xml.createRequest(data);
