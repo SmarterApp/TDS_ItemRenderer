@@ -372,6 +372,67 @@ WordListPanel.getPanelExtraWidth = function() {
     return 40;
 };
 
+// check to see if the panel flows outside the browser window
+//  if so then the user might not be able to access the close and resize buttons
+//  this will move the window to try to fit and if it can't then resize it smaller to fit
+WordListPanel.handlePanelOutsideWindow = function() {
+    var panel = $('#' + WordListPanel.panel.id + "_c"); // hacky
+    var moveLeft = 0;
+    var moveTop = 0;
+
+    var widthGap = window.innerWidth - (panel.offset().left + panel.outerWidth());
+    if (widthGap < 5) {
+        // move to the left so it fits on the screen
+        moveLeft = widthGap - 10;
+    }
+
+    var heightGap = window.innerHeight - (panel.offset().top + panel.outerHeight());
+    if (heightGap < 5) {
+        // move up so it fits on the screen
+        moveTop = heightGap - 10;
+    }
+
+
+    if (moveLeft != 0 || moveTop != 0) {
+        var newLeft = panel.position().left + moveLeft;
+        var newTop = panel.position().top + moveTop;
+        var shrinkToFit = false;
+
+        if (newLeft < 0) {
+            newLeft = 0;
+            shrinkToFit = true;
+        }
+        if (newTop < 0) {
+            newTop = 0;
+            shrinkToFit = true;
+        }
+
+        // move to new position
+        panel.css({
+            left: newLeft + 'px',
+            top: newTop + 'px'
+        });
+
+        // even after moving, the panel doesn't fit on the screen so we must shrink it
+        if (shrinkToFit) {
+            var newWidth = 0;
+            var newHeight = 0;
+
+            if (WordListPanel.illustrationRatio > 1) {
+                // width is greater than height
+                newWidth = window.innerWidth - 10;
+                newHeight = newWidth / WordListPanel.illustrationRatio;
+            } else {
+                newHeight = window.innerHeight - 10;
+                newWidth = newHeight * WordListPanel.illustrationRatio;
+            }
+
+            WordListPanel.resizeIllustration(newWidth, newHeight);
+        }
+    }
+
+};
+
 WordListPanel.handleResizing = function() {
     var activeTabId = $(WordListPanel.tabView.get('activeTab').get('element')).find('a').attr('href');
 
@@ -403,7 +464,7 @@ WordListPanel.handleResizing = function() {
         else {
             resizeConfig.minHeight = WordListPanel.minImageSize + WordListPanel.getPanelExtraHeight();
             resizeConfig.minWidth = WordListPanel.absoluteMinPanelWidth;
-        }WordListPanel
+        }
 
         WordListPanel.resizer = new YAHOO.util.Resize(WordListPanel.panel.id, resizeConfig);
 
@@ -638,6 +699,8 @@ WordListPanel.IsVisible = function() {
             WordListPanel.panelSizes[key].width = val.baseWidth * level;
             WordListPanel.panelSizes[key].height = val.baseHeight == '' ? '' : val.baseHeight * level;
         }
+
+        WordListPanel.handlePanelOutsideWindow();
     });
 
 })(window.ContentManager);
