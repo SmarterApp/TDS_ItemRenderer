@@ -560,11 +560,31 @@ WordListPanel.InitializePane = function() {
 
 // From parsed JSON POST response, construct the YUI Tab formats with the response.
 WordListPanel.RenderHtmlTabs = function (messages) {
+    var entries = messages.Entries;
+    if (entries.length > 1) {
+        // since there is more than 1, let's see if there is an Illustration type to move first
+        var firstItem = 0;
+        for (var j=1; j < messages.Entries.length; j++) {
+            if (entries[j].wlType == 'illustration') {
+                firstItem = j;
+                break;
+            }
+        }
+
+        entries = [];
+        entries.push(messages.Entries[firstItem]);
+        for (var j=0; j < messages.Entries.length; j++) {
+            if (j != firstItem) {
+                entries.push(messages.Entries[j]);
+            }
+        }
+    }
+
     var tabString = "<div id=\"" + WordListPanel.tabbedDivName + "\" class=\"yui-navset\"> \r\n";
     tabString = tabString + "<ul class=\"yui-nav\">\r\n";
     var contentString = " <div class=\"yui-content\">\r\n";
     var i;
-    for (i = 0; i < messages.Entries.length; ++i) {
+    for (i = 0; i < entries.length; ++i) {
         tabString = tabString + "<li";
         if (i == 0) {
             tabString = tabString + " class=\"selected\" aria-title=\"Selected\"";
@@ -572,9 +592,9 @@ WordListPanel.RenderHtmlTabs = function (messages) {
         tabString = tabString + "> <a href=\"#word-list-" + i.toString();
 
         // Try to find wl in i18n
-        var wlTypeTranslation = Messages.get('TDS.WordList.' + messages.Entries[i].wlType);
+        var wlTypeTranslation = Messages.get('TDS.WordList.' + entries[i].wlType);
         tabString = tabString + "\">" + wlTypeTranslation + "</a></li>\r\n";
-        contentString = contentString + "<div id=\"word-list-" + i.toString() + "\"><p>" + messages.Entries[i].wlContent + "</p></div>";
+        contentString = contentString + "<div id=\"word-list-" + i.toString() + "\"><p>" + entries[i].wlContent + "</p></div>";
     }
     tabString = tabString + "</ul>";
     tabString = tabString + contentString + "</div>";
