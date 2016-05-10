@@ -261,7 +261,7 @@ WordListPanel.setPanel = function (hd, bd) {
             WordListPanel.tabCount++;
         }
 
-        // clear out "remebered" panel sizes since this is starting fresh
+        // clear out "remembered" panel sizes since this is starting fresh
         WordListPanel.determineDefaultPanelSizes();
         WordListPanel.initializeIllustration();
 
@@ -282,10 +282,12 @@ WordListPanel.setPanel = function (hd, bd) {
             oTabEl = this.get("activeTab").get("element");
             $(oTabEl).attr('aria-title', 'Selected');
 
-            WordListPanel.handleResizing();
+            WordListPanel.initializeResizing();
         });
 
-        WordListPanel.handleResizing();
+        WordListPanel.initializeResizing();
+        WordListPanel.fitPanelToIllustrationSize();
+        WordListPanel.handlePanelOutsideWindow();
 
         setTimeout(function() {
             WordListPanel.postProcessAudioTags();
@@ -294,6 +296,41 @@ WordListPanel.setPanel = function (hd, bd) {
 };
 
 WordListPanel.panelSizes = {};
+
+WordListPanel.fitPanelToIllustrationSize = function() {
+    var bd = WordListPanel.panel.body;
+    try {
+        if (!bd) return;
+
+        var imgEls = YAHOO.util.Selector.query('img', bd) || [];
+
+        if (imgEls.length == 1) {
+            var img = $(imgEls[0]);
+
+            var newWidth = img.width() + WordListPanel.getPanelExtraWidth();
+            var newHeight = img.height() + WordListPanel.getPanelExtraHeight();
+
+            newWidth = Math.max(newWidth, WordListPanel.absoluteMinPanelWidth);
+
+            var panel = $('#' + WordListPanel.panel.id);
+            var activeTabId = $(WordListPanel.tabView.get('activeTab').get('element')).find('a').attr('href');
+
+            var size = WordListPanel.panelSizes[activeTabId] || {};
+            size.width = newWidth;
+            size.height = newHeight;
+            size.baseWidth = size.width / WordListPanel.zoomFactor;
+            size.baseHeight = size.height / WordListPanel.zoomFactor;
+
+            WordListPanel.panelSizes[activeTabId] = size;
+
+            panel.width(newWidth).height(newHeight);
+            panel.attr('data-width', size.baseWidth); // newWidth);
+            panel.attr('data-height', size.baseHeight); // newHeight);
+        }
+    } catch (e) {
+        console.error("Error fitting panel to illustration.", e);
+    }
+};
 
 WordListPanel.savePanelSize = function() {
     var panel = $('#' + WordListPanel.panel.id);
@@ -309,8 +346,8 @@ WordListPanel.savePanelSize = function() {
     WordListPanel.panelSizes[activeTabId] = size;
 
     // keep width and height in sync with data-width and data-height
-    panel.attr('data-width', panel.width());
-    panel.attr('data-height', panel.height());
+    panel.attr('data-width', size.baseWidth); // panel.width());
+    panel.attr('data-height', size.baseHeight); // panel.height());
 };
 
 WordListPanel.determineDefaultPanelSizes = function() {
@@ -328,8 +365,8 @@ WordListPanel.determineDefaultPanelSizes = function() {
         var img = $(contentDivs[i]).find('img');
 
         if (img.length == 1) {
-            width = (img.width() + WordListPanel.getPanelExtraWidth()) * WordListPanel.zoomFactor;
-            height = (img.height() + WordListPanel.getPanelExtraHeight()) * WordListPanel.zoomFactor;
+            width = (img.width() + WordListPanel.getPanelExtraWidth());
+            height = (img.height() + WordListPanel.getPanelExtraHeight());
         }
 
         width = Math.max(WordListPanel.absoluteMinPanelWidth, width);
@@ -369,7 +406,7 @@ WordListPanel.getPanelExtraHeight = function() {
 
 // calculates the additional panel pixels that need to be added on top of the image width
 WordListPanel.getPanelExtraWidth = function() {
-    return 40;
+    return 40 * WordListPanel.zoomFactor;
 };
 
 // check to see if the panel flows outside the browser window
@@ -396,15 +433,16 @@ WordListPanel.handlePanelOutsideWindow = function() {
     if (moveLeft != 0 || moveTop != 0) {
         var newLeft = panel.position().left + moveLeft;
         var newTop = panel.position().top + moveTop;
-        var shrinkToFit = false;
+        var shrinkHeightToFit = false;
+        var shrinkWidthToFit = false;
 
         if (newLeft < 0) {
             newLeft = 0;
-            shrinkToFit = true;
+            shrinkWidthToFit = true;
         }
         if (newTop < 0) {
             newTop = 0;
-            shrinkToFit = true;
+            shrinkHeightToFit = true;
         }
 
         // move to new position
@@ -414,11 +452,11 @@ WordListPanel.handlePanelOutsideWindow = function() {
         });
 
         // even after moving, the panel doesn't fit on the screen so we must shrink it
-        if (shrinkToFit) {
+        if (shrinkWidthToFit || shrinkHeightToFit) {
             var newWidth = 0;
             var newHeight = 0;
 
-            if (WordListPanel.illustrationRatio > 1) {
+            if (shrinkWidthToFit) {
                 // width is greater than height
                 newWidth = window.innerWidth - 10;
                 newHeight = newWidth / WordListPanel.illustrationRatio;
@@ -427,22 +465,27 @@ WordListPanel.handlePanelOutsideWindow = function() {
                 newWidth = newHeight * WordListPanel.illustrationRatio;
             }
 
-            WordListPanel.resizeIllustration(newWidth, newHeight);
+            WordListPanel.resizeIllustration(newWidth - WordListPanel.getPanelExtraWidth(), newHeight - WordListPanel.getPanelExtraHeight());
         }
     }
 
 };
 
-WordListPanel.handleResizing = function() {
+WordListPanel.getActiveTabPanelSize = function() {
     var activeTabId = $(WordListPanel.tabView.get('activeTab').get('element')).find('a').attr('href');
+    return WordListPanel.panelSizes[activeTabId];
+};
 
-    if (WordListPanel.panelSizes[activeTabId]) {
+WordListPanel.initializeResizing = function() {
+    var activePanelSize = WordListPanel.getActiveTabPanelSize();
+
+    if (activePanelSize) {
         var panel = $('#' + WordListPanel.panel.id);
-        panel.width(WordListPanel.panelSizes[activeTabId].width).height(WordListPanel.panelSizes[activeTabId].height);
-        panel.attr('data-width', WordListPanel.panelSizes[activeTabId].width);
+        panel.width(activePanelSize.width).height(activePanelSize.height);
+        panel.attr('data-width', activePanelSize.width);
 
-        if (WordListPanel.panelSizes[activeTabId].height) {
-            panel.attr('data-height', WordListPanel.panelSizes[activeTabId].height);
+        if (activePanelSize.height) {
+            panel.attr('data-height', activePanelSize.height);
         } else {
             panel.attr('data-height', panel.height());
         }
@@ -469,11 +512,7 @@ WordListPanel.handleResizing = function() {
         WordListPanel.resizer = new YAHOO.util.Resize(WordListPanel.panel.id, resizeConfig);
 
         WordListPanel.resizer.on('resize', function(args) {
-            WordListPanel.resizeIllustration(args.width - WordListPanel.getPanelExtraWidth(), args.height - WordListPanel.getPanelExtraHeight());
-
-            this.cfg.setProperty("height", args.height + "px");
-
-            WordListPanel.savePanelSize();
+            WordListPanel.resizeHelper(args.width, args.height, this, true);
         }, WordListPanel.panel, true);
 
         // Setup startResize handler, to constrain the resize width/height
@@ -500,6 +539,23 @@ WordListPanel.handleResizing = function() {
 
 };
 
+WordListPanel.doZoomResize = function() {
+    if (!WordListPanel.IsVisible()) return;
+
+    var activePanelSize = WordListPanel.getActiveTabPanelSize();
+
+    WordListPanel.resizeHelper(activePanelSize.width, activePanelSize.height, WordListPanel.panel, false);
+};
+
+WordListPanel.resizeHelper = function(w, h, panel, isResize) {
+    WordListPanel.resizeIllustration(w - WordListPanel.getPanelExtraWidth(), h - WordListPanel.getPanelExtraHeight());
+
+    panel.cfg.setProperty("height", h + "px");
+
+    if (isResize)
+        WordListPanel.savePanelSize();
+};
+
 // Set up the word list pane.  Should only be done once.
 WordListPanel.InitializePane = function() {
 
@@ -524,7 +580,7 @@ WordListPanel.InitializePane = function() {
         toolDiv.appendChild(WordListPanel.toolDiv);
 
         WordListPanel.panel = new YAHOO.widget.Panel("wordListPanel", {
-            width: "200px",
+            width: "600px",
             zindex: 1004,
             visible: false,
             constraintoviewport: true,
@@ -615,11 +671,11 @@ WordListPanel.initializeIllustration = function() {
             var img = $(imgEls[0]);
 
             // set image size based on zoom factor the first time
-            WordListPanel.resizeIllustration(img.width() * WordListPanel.zoomFactor, img.height() * WordListPanel.zoomFactor);
-
             WordListPanel.illustrationWidth = img.width();
             WordListPanel.illustrationHeight = img.height();
             WordListPanel.illustrationRatio = WordListPanel.illustrationWidth / WordListPanel.illustrationHeight;
+
+            WordListPanel.resizeIllustration(WordListPanel.illustrationWidth * WordListPanel.zoomFactor, WordListPanel.illustrationHeight * WordListPanel.zoomFactor);
 
             return true;
         }
@@ -720,6 +776,7 @@ WordListPanel.IsVisible = function() {
             WordListPanel.panelSizes[key].height = val.baseHeight == '' ? '' : val.baseHeight * level;
         }
 
+        WordListPanel.doZoomResize();
         WordListPanel.handlePanelOutsideWindow();
     });
 

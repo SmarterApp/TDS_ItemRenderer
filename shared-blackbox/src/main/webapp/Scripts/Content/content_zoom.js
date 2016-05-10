@@ -82,8 +82,7 @@
         if (!parentEl) return [];
         return Util.Array.concat(
             $('img', parentEl).toArray(),
-            $('#wordListPanel').toArray(),
-            $('#wordListPanel img').toArray()
+            $('#wordListPanel').toArray()
         );
     }
 
