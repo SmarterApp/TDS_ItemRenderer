@@ -125,6 +125,9 @@ Sections.Login.prototype.load = function ()
     // submit it now.
     this.checkForRedirect(loginForm);
 
+    // Check if the routersession query param is passed to pre populate session id.
+    this.checkQueryStringRouterSession();
+
     // load currently running apps (some mobile browsers require we do this)
     Util.SecureBrowser.loadProcessList();
 };
@@ -421,4 +424,19 @@ Sections.Login.prototype.setBrowserInfo = function()
 
     var lblVerEl = document.getElementById('lblLoginBrowserVer');
     lblVerEl.innerHTML = TDS.BrowserInfo.label;
+};
+
+// If routersession is passed, set this as the session id.
+// Also make user input not disabled for student to enter username.
+// routersession is passed as part1-part2-part3
+Sections.Login.prototype.checkQueryStringRouterSession = function()
+{
+    var querystring = Util.QueryString.parse();
+
+    if (querystring.routersession)
+    {
+        this.disableUserInput(false);
+        this.disableSessionInput(false);
+        this.setSessionID(querystring.routersession);
+    }
 };
