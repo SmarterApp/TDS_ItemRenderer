@@ -1,3 +1,4 @@
 fw-install
 fw-jperf-00
 fw-jperf-01
+fw-perf-final
