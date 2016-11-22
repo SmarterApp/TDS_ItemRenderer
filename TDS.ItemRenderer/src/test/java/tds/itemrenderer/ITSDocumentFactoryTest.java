@@ -31,7 +31,7 @@ public class ITSDocumentFactoryTest extends AbstractTest
     URL url = getClass ().getResource ("/items/item-187-1126.xml");
     IITSDocument itsDocument  = ITSDocumentFactory.loadUri2 (url.getFile (), null, false);
     assertEquals("I-187-1126", itsDocument.getID ());
-    assertEquals("mc", itsDocument.getFormat ());
+    assertEquals("MC", itsDocument.getFormat ());
     assertEquals("8", itsDocument.getLayout ());
     assertEquals("<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>", itsDocument.getContent ("ENU").getStem ());
   }

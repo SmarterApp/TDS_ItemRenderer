@@ -35,6 +35,9 @@ public class ITSContent
   private ITSQTI              _qti;
   private final List<Element>        _genericElements = new ArrayList<>();
 
+  private static final String ACC_TYPE_BRAILLE_TRANSCRIPT = "Braille Transcript";
+  private static final String ACC_CODE_BRAILLE_TRANSCRIPT = "TDS_BrailleTrans1";
+
   public ITSContent () {
   }
 
@@ -146,16 +149,18 @@ public class ITSContent
     this._qti = _qti;
   }
 
-  public ITSAttachment GetBrailleTypeAttachment (AccLookup accLookup) {
+  public List<ITSAttachment> GetBrailleTypeAttachment (AccLookup accLookup) {
+    List<ITSAttachment> brailleAttachments = new ArrayList<ITSAttachment>();
+
     // check if there are any attachments
-    if (_attachments == null)
-      return null;
+    if (_attachments == null || _attachments.isEmpty())
+      return brailleAttachments;
 
     String brailleType = null;
     AccProperties accProps = new AccProperties (accLookup);
     
     if (accProps.getBrailleType () == null) {
-      return null;
+      return brailleAttachments;
     }
 
     // using the accommodation code for braille type figure out what the ITS
@@ -174,19 +179,41 @@ public class ITSContent
 
     // check if the braille type was found
     if (brailleType == null)
-      return null;
+      return brailleAttachments;
 
     final String brailleTypeFinal = brailleType;
 
     // check if the tests braille type matches the attachments subtype (which is
     // a braille type as well)
-    return (ITSAttachment) CollectionUtils.find (_attachments, new Predicate ()
+    ITSAttachment mainBrailleAttachment = (ITSAttachment) CollectionUtils.find (_attachments, new Predicate ()
     {
       @Override
       public boolean evaluate (Object attachment) {
         return StringUtils.equalsIgnoreCase (brailleTypeFinal, ((ITSAttachment) attachment).getSubType ());
       }
     });
+
+    if (mainBrailleAttachment != null) {
+      brailleAttachments.add(mainBrailleAttachment);
+    }
+
+    // check for a transcript version, if the student is assigned the accommodation
+    if (accLookup.exists(ACC_TYPE_BRAILLE_TRANSCRIPT, ACC_CODE_BRAILLE_TRANSCRIPT)) {
+      final String transcriptBrailleType = brailleTypeFinal + "_transcript";
+
+      ITSAttachment transcriptBrailleAttachment = (ITSAttachment) CollectionUtils.find(_attachments, new Predicate() {
+        @Override
+        public boolean evaluate(Object attachment) {
+          return StringUtils.equalsIgnoreCase(transcriptBrailleType, ((ITSAttachment) attachment).getSubType());
+        }
+      });
+
+      if (transcriptBrailleAttachment != null) {
+        brailleAttachments.add(transcriptBrailleAttachment);
+      }
+    }
+
+    return brailleAttachments;
   }
 
   public List<Element> getGenericElements () {
