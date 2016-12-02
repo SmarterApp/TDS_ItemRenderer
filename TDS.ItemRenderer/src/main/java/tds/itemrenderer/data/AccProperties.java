@@ -49,7 +49,7 @@ public class AccProperties    {
       return true;
 
     // otherwise check if language has braille support or braille type is selected
-    return (getLanguage().endsWith("-Braille") || isExistsAndNotEquals("BrailleType", "TDS_BT0"));
+    return (getLanguage().endsWith("-Braille") || isExistsAndNotEquals("Braille Type", "TDS_BT0"));
   }
 
   /**

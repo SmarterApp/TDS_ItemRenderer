@@ -81,9 +81,9 @@
             return true;
         }
 
-        // otherwise check if language has braille support
+        // otherwise check if language has braille support or braille type is selected
         var language = this.getLanguage();
-        return Util.String.endsWith(language, '-Braille');
+        return Util.String.endsWith(language, '-Braille') || this.existsAndNotEquals('Braille Type', 'TDS_BT0');
     };
 
     PropsProto.getBrailleType = function() {
