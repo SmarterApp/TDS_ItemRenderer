@@ -304,7 +304,7 @@ public class AccProperties    {
     String selectedCode = this.getCode(type);
 
     // make sure there is something selected and if there is that it doesn't equal the valye passed in
-    return (selectedCode != null && selectedCode != code);
+    return (selectedCode != null && !selectedCode.equals(code));
   }
 
   //#endregion
