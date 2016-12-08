@@ -164,8 +164,6 @@ TestShell.ResponseManager.hasFatalLastError = function()
 // move any responses in the queue to outgoing and send
 TestShell.ResponseManager.processQueue = function()
 {
-    //If you're waiting on a response from proctor, you shouldn't be submitting questions
-    if(TestShell.SegmentManager.getXhrState() == TestShell.SegmentManager.XhrState.Waiting) return;
     // stop current timer for processing queue
     if (this._timerDelay) this._timerDelay.cancel();
 

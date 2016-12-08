@@ -6,7 +6,8 @@
 // See accompanying file AIR-License-1_0.txt or at
 // http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
 //*******************************************************************************
-﻿TestShell.Segment = function(id, position, label, isPermeable, entryApproval, exitApproval, itemReview, updatePermeable)
+
+TestShell.Segment = function(id, position, label, isPermeable, entryApproval, exitApproval, itemReview, updatePermeable)
 {
     this._id = id;
     this._position = position;
