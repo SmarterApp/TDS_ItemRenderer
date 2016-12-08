@@ -194,7 +194,8 @@ TestShell.ResponseManager.processQueue = function()
     shiftQueues(this._pendingResponses, this._outgoingResponses);
 
     // check if there is pending work
-    if (this._pingResponses || this._outgoingResponses.length > 0)
+    if ((this._pingResponses || this._outgoingResponses.length > 0)
+        && TestShell.SegmentManager.getXhrState() != TestShell.SegmentManager.XhrState.Waiting)
     {
         // delay execution of sending in case someone has more work to do
         this._timerDelay = YAHOO.lang.later(1, this, this._sendOutgoing);
