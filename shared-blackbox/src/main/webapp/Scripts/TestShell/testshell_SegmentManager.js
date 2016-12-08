@@ -391,8 +391,10 @@ TestShell.SegmentManager._process = function()
         this.getXhrState() == TestShell.SegmentManager.XhrState.Checking) return;
 
     // make sure we are not trying to send responses
-    if (TestShell.ResponseManager.getPendingResponses().length > 0 ||
-        TestShell.ResponseManager.getOutgoingResponses().length > 0) return;
+    if ((TestShell.ResponseManager.getPendingResponses().length > 0 ||
+        TestShell.ResponseManager.getOutgoingResponses().length > 0)
+        && TestShell.SegmentManager.getXhrState() != TestShell.SegmentManager.XhrState.Waiting
+        && TestShell.SegmentManager.getXhrState() != TestShell.SegmentManager.XhrState.None) return;
 
     // make sure we are not trying to load any content
     if (TestShell.ContentLoader._xhrManager.getOutstandingCount() > 0) return;
