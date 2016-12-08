@@ -199,6 +199,9 @@ TestShell.ResponseManager.processQueue = function()
         // delay execution of sending in case someone has more work to do
         this._timerDelay = YAHOO.lang.later(1, this, this._sendOutgoing);
         return true;
+    } else if((this._pingResponses || this._outgoingResponses.length > 0)
+        && TestShell.SegmentManager.getXhrState() == TestShell.SegmentManager.XhrState.Waiting) {
+        TestShell.SegmentManager._process();
     }
     // send out action if one
     else if (TestShell.xhrManager.hasAction())
