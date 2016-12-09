@@ -209,7 +209,7 @@ TDS.Help = (function (TDS) {
     HelpGuide.getKey = function() {
         var key = 'Global.Path.Help';
         var accProps = TDS.getAccProps();
-        if (accProps && accProps.isStreamlinedMode()) {
+        if (accProps && (accProps.isStreamlinedMode() || accProps.hasBraille())) {
             if (Messages.has(key + '.Streamlined')) {
                 key = key + '.Streamlined';
             }
