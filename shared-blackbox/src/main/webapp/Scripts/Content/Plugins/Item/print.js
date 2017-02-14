@@ -1,4 +1,3 @@
-//*******************************************************************************
 // Educational Online Test Delivery System
 // Copyright (c) 2015 American Institutes for Research
 //
@@ -7,15 +6,14 @@
 // http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
 //*******************************************************************************
 /*
-Item Tool: Print 
-NOTE: To test this in itempreview add querystring "printable=true"
+Item Tool: Print
 */
 
 (function(CM) {
 
     function match(page, entity, content) {
-        // check if item and it is printable
-        if (entity instanceof ContentItem && content.printable) {
+        // check if item
+        if (entity instanceof ContentItem) {
             // check if the print acc is enabled for items
             var accProps = page.getAccProps();
             return accProps.hasPrintItem() ||
