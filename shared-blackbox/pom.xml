@@ -6,15 +6,8 @@
 	<name>shared-blackbox</name>
 
 	<parent>
-		<groupId>org.opentestsystem.shared</groupId>
-		<artifactId>shared-master</artifactId>
-		<version>1.0.1-BUILD-SNAPSHOT</version>
+		<groupId>org.opentestsystem.delivery</groupId>
+		<artifactId>item-renderer-master</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-
-	<dependencies>
-
-	</dependencies>
-	<build>
-
-	</build>
 </project>
