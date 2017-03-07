@@ -9,10 +9,6 @@
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
-	<properties>
-		<resource-bundler.version>0.0.1-SNAPSHOT</resource-bundler.version>
-	</properties>
-
 	<name>tds-itemRenderer</name>
 	<dependencies>
 		<!-- Smarter Balance Dependencies -->
@@ -25,9 +21,9 @@
 			<artifactId>shared-xml</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>AIR</groupId>
-			<artifactId>ResourceBundler</artifactId>
-			<version>${resource-bundler.version}</version>
+			<groupId>org.opentestsystem.delivery</groupId>
+			<artifactId>resource-bundler</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- External Dependencies -->

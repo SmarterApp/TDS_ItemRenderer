@@ -15,6 +15,7 @@
   <modules>
     <module>shared-blackbox</module>
     <module>TDS.ItemRenderer</module>
+    <module>resource-bundler</module>
   </modules>
 
   <scm>
