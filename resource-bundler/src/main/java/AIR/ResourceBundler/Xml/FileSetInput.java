@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Educational Online Test Delivery System 
- * Copyright (c) 2014 American Institutes for Research
+ * Copyright (c) 2016 American Institutes for Research
  *       
  * Distributed under the AIR Open Source License, Version 1.0 
  * See accompanying file AIR-License-1_0.txt or at
@@ -10,10 +10,14 @@
 
 package AIR.ResourceBundler.Xml;
 
-import AIR.Common.Utilities.Path;
+import java.io.File;
+import java.util.regex.Pattern;
 
+import org.apache.commons.io.FilenameUtils;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
+
+import AIR.Common.Utilities.Path;
 
 public class FileSetInput implements IFileSetEntry
 {
@@ -49,7 +53,7 @@ public class FileSetInput implements IFileSetEntry
   public void parse (Element fileEl)
   {
     // get file path
-    setPath (fileEl.getValue ());
+		setPath(_fileSet.resolveFile(fileEl.getValue()));
     Attribute attrib = null;
 
     attrib = fileEl.getAttribute ("prepend");
@@ -57,8 +61,101 @@ public class FileSetInput implements IFileSetEntry
 
     attrib = fileEl.getAttribute ("append");
     _append = (attrib != null) ? attrib.getValue () : null;
+	}
+
+	public String tryGetPathRelativeTo(String from, PathFormatter pathFormatter) {
+		String relativePath;
+		relativePath = getPathRelativeTo(from, pathFormatter);
+		return relativePath;
+
+	}
+
+	public String getPathRelativeTo(String from, PathFormatter pathFormatter) {
+		if (pathFormatter == null) {
+			pathFormatter = new PathFormatter();
   }
 
+		String formattedPath = pathFormatter.format(_path);
+		return getRelative(from, formattedPath);
+	}
+
+	// Equivalent to .net PathEx.getRelative()
+	public String getRelative(String basePath, String targetPath) {
+
+		targetPath = targetPath.replace('\\', '/');
+		basePath = basePath.replace('\\', '/');
+
+		String pathSeparator = "/";
+		// Normalize the paths
+		String normalizedTargetPath = FilenameUtils.normalizeNoEndSeparator(targetPath);
+		String normalizedBasePath = FilenameUtils.normalizeNoEndSeparator(basePath);
+
+		// Undo the changes to the separators made by normalization
+		normalizedTargetPath = FilenameUtils.separatorsToUnix(normalizedTargetPath);
+		normalizedBasePath = FilenameUtils.separatorsToUnix(normalizedBasePath);
+
+		String[] base = normalizedBasePath.split(Pattern.quote(pathSeparator));
+		String[] target = normalizedTargetPath.split(Pattern.quote(pathSeparator));
+
+		// First get all the common elements. Store them as a string,
+		// and also count how many of them there are.
+		StringBuffer common = new StringBuffer();
+
+		int commonIndex = 0;
+		while (commonIndex < target.length && commonIndex < base.length
+				&& target[commonIndex].equals(base[commonIndex])) {
+			common.append(target[commonIndex] + pathSeparator);
+			commonIndex++;
+		}
+
+		if (commonIndex == 0) {
+			// No single common path element. This most
+			// likely indicates differing drive letters, like C: and D:.
+			// These paths cannot be relativized.
+			try {
+				throw new Exception("No common path element found for '" + normalizedTargetPath + "' and '"
+						+ normalizedBasePath + "'");
+			} catch (Exception e) {
+
+			}
+		}
+
+		// The number of directories we have to backtrack depends on whether the
+		// base is a file or a dir
+		// For example, the relative path from
+		//
+		// /foo/bar/baz/gg/ff to /foo/bar/baz
+		//
+		// ".." if ff is a file
+		// "../.." if ff is a directory
+		//
+		// The following is a heuristic to figure out if the base refers to a
+		// file or dir. It's not perfect, because
+		// the resource referred to by this path may not actually exist, but
+		// it's the best I can do
+		boolean baseIsFile = true;
+
+		File baseResource = new File(normalizedBasePath);
+
+		if (baseResource.exists()) {
+			baseIsFile = baseResource.isFile();
+
+		} else if (basePath.endsWith(pathSeparator)) {
+			baseIsFile = false;
+		}
+
+		StringBuffer relative = new StringBuffer();
+
+		if (base.length != commonIndex) {
+			int numDirsUp = baseIsFile ? base.length - commonIndex - 1 : base.length - commonIndex;
+
+			for (int i = 0; i < numDirsUp; i++) {
+				relative.append(".." + pathSeparator);
+			}
+		}
+		relative.append(normalizedTargetPath.substring(common.length()));
+		return relative.toString();
+	}
   @Override
   public String toString ()
   {

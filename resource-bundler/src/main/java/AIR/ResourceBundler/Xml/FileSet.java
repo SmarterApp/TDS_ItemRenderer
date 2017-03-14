@@ -224,6 +224,11 @@ public class FileSet implements IFileSetEntry
     }
   }
 
+  public String resolveFile(String file)
+  {
+      return _parentResources.resolveFile(file);
+  }
+  
   private void parseFileInput (Element fileEl) {
     FileSetInput resourceFile = new FileSetInput (this);
     resourceFile.parse (fileEl);
@@ -242,12 +247,12 @@ public class FileSet implements IFileSetEntry
     // add files
     FileSet fileSet = _parentResources.getFileSet (setName);
 
-    if (fileSet == null) {
-      throw new ResourcesException (String.format ("Could not find the reference set \"%s\".", setName));
+    if (fileSet != null) {
+        _entries.add (fileSet);
     }
 
-    _entries.add (fileSet);
   }
+
 
   private void parseExclude (Element excludeEl) {
     Attribute setAttrib = excludeEl.getAttribute ("set");
