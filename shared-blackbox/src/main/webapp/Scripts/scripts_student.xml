@@ -104,6 +104,8 @@
         <input>TestShell/testshell_Modules.js</input>
         
         <!-- modules -->
+        <!-- SB-1506-Intelligent-Muting. Added new brailleonly.js file -->
+        <input>TestShell/Modules/brailleonly.js</input>
         <input>TestShell/Modules/automute.js</input>
         <input>TestShell/Modules/calculator.js</input>
         <input>TestShell/Modules/dictionary.js</input>

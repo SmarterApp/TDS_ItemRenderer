@@ -331,6 +331,8 @@ These are fixes for YUI 2. Most of them have to do with touch support.
     YAHOO.widget.ContextMenu.prototype.focus = function () {
         if (!this.hasFocus() && !this.cfg.getProperty('suppressInitialFocus')) {
             this.setInitialFocus();
+            /* SB-1505 : Initial selection was not default for menu item when user uses enter or space key */
+            this.setInitialSelection();
         }
     };
 })(window.YAHOO);

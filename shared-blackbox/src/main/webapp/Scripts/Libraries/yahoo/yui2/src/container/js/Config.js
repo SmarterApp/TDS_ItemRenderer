@@ -396,7 +396,7 @@
 
                                     this.eventQueue.push([queueItemCheckKey, 
                                         queueItemCheckValue]);
-
+ 
                                     this.eventQueue[q] = null;
                                     break;
 

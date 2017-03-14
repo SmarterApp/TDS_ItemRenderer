@@ -72,7 +72,8 @@ TestShell.Comments.Base.prototype.render = function() {
         close: false,
         fixedcenter: true,
         width: '450px',
-        height: '150px',
+   // SB-1505-UI-Consistency-Enhancements: Removing notepad border height because it doesn't cover the whole notepad 
+   //   height: '150px',
         zindex: 999,
         postmethod: 'none',
         autofillheight: false

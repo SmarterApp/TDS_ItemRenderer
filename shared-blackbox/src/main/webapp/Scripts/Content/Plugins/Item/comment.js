@@ -54,7 +54,8 @@ Item Tool: Comment
         var messageLabel = CM.getCommentLabel();
         menu.addMenuItem('entity', {
             text: Messages.get(messageLabel),
-            classname: 'comment',
+            // SB-1505: adding 'Notepad' class to notepad menu item to change it's icon
+            classname: 'comment Notepad',
             onclick: { fn: this.toggle.bind(this) }
         });
     }

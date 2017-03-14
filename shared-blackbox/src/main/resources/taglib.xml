@@ -1,8 +1,22 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+<facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
    http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
 	version="2.0">
 	<namespace>http://airast.org/jsfcustom</namespace>
+	<tag>
+		<tag-name>SoundCheckWrapper</tag-name>
+		<component>
+			<component-type>SoundCheckWrapper</component-type>
+		</component>
+	</tag>
+	<tag>
+		<tag-name>NextStepWrapper</tag-name>
+		<component>
+			<component-type>NextStepWrapper</component-type>
+		</component>
+	</tag>
 	<tag>
 		<tag-name>ResourcesLink</tag-name>
 		<component>

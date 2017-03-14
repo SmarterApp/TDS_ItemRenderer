@@ -23,7 +23,7 @@ YAHOO.lang.extend(Sections.Instructions, Sections.Base);
 
 Sections.Instructions.prototype.init = function ()
 {
-    var container = YUD.get('quickQuide');
+    var container = YUD.get('quickGuide');
     var frame = YUD.get('helpFrame');
     var url = TDS.Help.getUrl();
 

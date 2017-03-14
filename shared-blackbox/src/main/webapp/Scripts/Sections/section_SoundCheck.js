@@ -385,7 +385,7 @@ Sections.SoundCheck.prototype.init = function () {
         else if (requiresRecorder)
         {
             // show check recorder UI
-            showRecorderCheck();
+        	showRecorderCheck();
         }
     };
 

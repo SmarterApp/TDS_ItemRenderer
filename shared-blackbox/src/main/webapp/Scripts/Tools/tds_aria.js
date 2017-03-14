@@ -18,7 +18,8 @@ JAWS user setting is an option in the program list
 TDS.ARIA = (function() {
 
     // TODO: people should be able to register these
-    var SELECTOR_ARIA_HIDDEN = '.tds-ot-wrapper, #topBar, #contents';
+	// SB-1504: added #btnNextBottom, hiding the button
+    var SELECTOR_ARIA_HIDDEN = '.tds-ot-wrapper, #topBar, #contents, #btnNextBottom';
 
     var aria = {};
 

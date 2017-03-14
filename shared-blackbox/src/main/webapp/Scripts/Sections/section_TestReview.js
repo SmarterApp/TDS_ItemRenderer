@@ -9,6 +9,9 @@
 ﻿/*
 This is the code for the review screen where they can go back into the test or complete.
 */
+/*
+This is the code for the review screen where they can go back into the test or complete.
+*/
 
 (function (TDS, Sections) {
 
@@ -19,9 +22,6 @@ This is the code for the review screen where they can go back into the test or c
     YAHOO.lang.extend(TestReview, Sections.Base);
 
     TestReview.prototype.init = function () {
-
-        // when we are showing drop down this is used to go back into the test
-        this.addClick('btnReviewTest', this.viewGroup);
 
         // listen for test complete
         this.addClick('btnCompleteTest', this.score);
@@ -39,95 +39,44 @@ This is the code for the review screen where they can go back into the test or c
     TestReview.prototype.load = function () {
 
         // show marked warning text
-        this.setMarked(window.groups);
+        this.showMarked(window.groups);
 
         // show unanswered warning text
-        this.setUnanswered(window.groups);
+        this.showUnanswered(window.groups);
 
         // fill select box
-        this.setGroups(window.groups);
+        this.render(window.groups);
     };
 
     // show warning div if any question is marked for review
-    TestReview.prototype.setMarked = function(groups) {
+    TestReview.prototype.showMarked = function(groups) {
         var marked = groups.some(function (group) {
             return group.items.some(function(item) {
                 return item.marked;
             });
         });
         if (marked) {
-            $('#markedWarning').show();
+            $('.markedWarning').show();
         }
     };
 
     // show warning div if any question is unanswered
-    TestReview.prototype.setUnanswered = function (groups) {
+    TestReview.prototype.showUnanswered = function (groups) {
         var unanswered = groups.some(function (group) {
             return group.items.some(function(item) {
                 return !item.answered;
             });
         });
         if (unanswered) {
-            $('#unansweredWarning').show();
+            $('.unansweredWarning').show();
         }
     };
 
-    TestReview.prototype.setGroups = function (groups) {
-        var accProps = Accommodations.Manager.getCurrentProps();
-        if (accProps && accProps.isReviewScreenLayoutListView()) {
-            this.renderListView(groups);
-        } else {
-            this.renderDropDown(groups);
-        }
-    };
-
-    TestReview.prototype.renderDropDown = function (groups) {
-
-        var ddlNavigation = YUD.get('ddlNavigation');
-        ddlNavigation.options.length = 0; // clear selectbox
-
-        groups.forEach(function(group) {
-
-            // create label
-            var label = '';
-            var firstItem = Util.Array.first(group.items);
-            var firstPos = firstItem ? firstItem.position : 0;
-            var lastItem = Util.Array.last(group.items);
-            var lastPos = lastItem ? lastItem.position : 0;
-            var marked = group.items.some(function(item) {
-                return item.marked;
-            });
-
-            // check if the nav acc says to use tasks for labels
-            var accProps = Accommodations.Manager.getDefaultProperties();
-            if (accProps && accProps.getNavigationDropdown() == 'TDS_NavTk') {
-                //if the task accommodation is set we would need to say something like "task".
-                //the task number is simply the group number starting with 1.
-                label = Messages.getAlt('TDSShellObjectsJS.Label.TaskLabel', 'Task ') + group.page;
-            } else {
-                label = firstPos;
-                if (firstPos != lastPos) {
-                    label += ' - ' + lastPos;
-                }
-            }
-
-            if (marked) {
-                label += ' (' + Messages.get('TDSShellObjectsJS.Label.Marked') + ')';
-            }
-
-            // add selectbox option
-            ddlNavigation[ddlNavigation.length] = new Option(label, group.page);
-        });
-
-    };
-
-    TestReview.prototype.renderListView = function (groups) {
-
+    // render the buttons for each item
+    TestReview.prototype.render = function (groups) {
+        
         // remove hard coded drop down 
         var $container = $('#sectionTestReview div.choices');
-        $('label', $container).remove(); // remove <label>
-        $('select', $container).remove(); // remove <select>
-        $('#btnReviewTest').remove(); // remove <button> "Review My Answers"
 
         // create <div class="pages"> 
         var pagesEl = document.createElement('div');
@@ -174,29 +123,6 @@ This is the code for the review screen where they can go back into the test or c
         pagesEl.appendChild(listEl);
         $container.prepend(pagesEl);
 
-    };
-
-    TestReview.prototype.viewGroup = function(group) {
-        var ddlNavigation = YUD.get('ddlNavigation');
-
-        if (ddlNavigation.value == '') {
-            //we need to show a warning e.g. "Please select a page first". however, depending
-            //on the accommodation of the navigation drop down we may need to replace the "page" with something else e.g. "task".
-            var label = Messages.get('TDSShellObjectsJS.Label.PageLabel').toLowerCase();
-            // check if the nav acc says to use tasks for labels
-            var defaultAccProps = Accommodations.Manager.getDefaultProperties();
-            if (defaultAccProps && defaultAccProps.getNavigationDropdown() == 'TDS_NavTk') {
-                //overwrite the label value.
-                label = Messages.get('TDSShellObjectsJS.Label.TaskLabel').toLowerCase();
-            }
-            var pageFirstMessage = Messages.get('ReviewShell.Message.PageFirst', [label]);
-            TDS.Dialog.showAlert(pageFirstMessage);
-
-            return;
-        }
-
-        // get test shell url
-        TDS.redirectTestShell(ddlNavigation.value);
     };
 
     TestReview.prototype.score = function() {

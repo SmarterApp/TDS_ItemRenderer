@@ -348,10 +348,6 @@
         return this.existsAndNotEquals('Hardware Checks', 'TDS_HW0');
     };
 
-    PropsProto.isAutoMute = function() {
-        return this.isSelected('Mute System Volume', 'TDS_Mute1');
-    };
-
     // check if masking tool is showing on test shell
     PropsProto.hasMaskingEnabled = function() {
         return this.isSelected('Masking', 'TDS_Masking1');
@@ -474,6 +470,26 @@
         return this.isSelected('Prefetch Item Rules', 'TDS_PIR_Any');
     };
     
+    // SB-1506-Intelligent-Muting. Added support for options to mute passages only or items only.
+    // Check muting options. 
+    /*
+    Mute System Volume	TDS_Mute0	OFF (Read Items and Passages Aloud)
+    Mute System Volume	TDS_Mute1	ON (Do not read anything aloud)
+    Mute System Volume	TDS_Mute2	Only Read Passages Aloud (JAWS 16+ Users Only)
+    Mute System Volume	TDS_Mute3	Only Read Items Aloud (JAWS 16+ Users Only)
+    */
+
+    PropsProto.isAutoMuted = function () {
+        return this.isSelected('Mute System Volume', 'TDS_Mute1');
+    };
+
+    PropsProto.isPassageMuted = function () {
+        return !this.isAutoMuted() && this.isSelected('Mute System Volume', 'TDS_Mute3');
+    };
+
+    PropsProto.isItemMuted = function () {
+        return !this.isAutoMuted() && this.isSelected('Mute System Volume', 'TDS_Mute2');
+    };
     Accs.Properties = Props;
 
 })(Accommodations);

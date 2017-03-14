@@ -43,9 +43,8 @@ Mozilla.allowPrivileged = function()
     // check for PrivilegeManager (only in Mozilla browers)
     try
     {
-        if (typeof netscape == 'object' &&
-            typeof netscape.security == 'object' &&
-            typeof netscape.security.PrivilegeManager == 'object') {
+        //SB-1506-Intelligent-Muting. Use enableComponents which support both SecureBrowser 8.1 and 9.0
+    	if (Mozilla.enableComponents()) {
             return Mozilla.SecurityPrivilege.Available;
         }
     }
@@ -67,6 +66,8 @@ Mozilla.allowPrivileged = function()
 
     return Mozilla.SecurityPrivilege.Unavailable;
 };
+
+
 
 // Enables heightened privileges when executing a function.
 // You can call this without a callback if you want to see if this browser supports execute privileges.
@@ -97,25 +98,39 @@ Mozilla.execPrivileged = function (callback, browserMinVersion, browserMaxVersio
         maxBrowser > 0 && Util.Browser.getFirefoxVersion() >= maxBrowser)
         return false;    
 
-    try
-    {
-        // Allows special browser privileges when executing a function. This only applies to the current scope
-        // and calls within it. Once the scope is exited the privileges revert back.
-        // DEV: If you are using regular FF make sure set about:config "signed.applets.codebase_principal_support" as true.
-        netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
-        Mozilla._universalConnect = Mozilla.UniversalConnect.Allowed;
-    }
-    catch (ex)
-    {
-        Mozilla._lastException = ex;
-
-        // approval was denied!
-        Mozilla._universalConnect = Mozilla.UniversalConnect.Denied;
-        return false;
-    }
-
+    // SB-1506-Intelligent-Muting. Removed try/catch as not needed
+    Mozilla._universalConnect = Mozilla.UniversalConnect.Allowed;
+    
     if (typeof (callback) == 'function') callback();
     return true;
+};
+
+// SB-1506-Intelligent-Muting. This new function is needed because Secure Browser 9.0 is based on Firefox 45+
+// which does not support enablePrivilege API anymore.
+Mozilla.enableComponents = function () {
+
+    if (typeof Mozilla._components !== 'undefined') {
+        return Mozilla._components;
+    }
+
+    var components = null;
+
+    if (window.SecureBrowser && typeof SecureBrowser.Components == 'object') {
+        // SB 9+ method of getting the components object
+        components = window.Components = SecureBrowser.Components;
+    } else if (window.netscape && netscape.security && netscape.security.PrivilegeManager) {
+        // SB 8 and prior method of getting the components object
+        try {
+            netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect"); // enable privilege manager
+            components = Components;
+        } catch (e) {
+            ;
+        }
+    }
+
+    Mozilla._components = components;
+
+    return components !== null;
 };
 
 // a helper function for getting a preference value
@@ -380,60 +395,19 @@ Mozilla.disableScreenshots = function () {
     return true;
 };
 
-// add window functions in this block
-(function (Mozilla, Components) {
+//SB-1506-Intelligent-Muting. Below functions are obsolete 
+//put the browser into full screen
+Mozilla.fullscreen = function () {
+    console.log('Mozilla.fullscreen is obsolete. Please remove calls to it.');
+};
 
-    function getWindowMediator() {
-        return Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
-    }
+// move the browser window to specific x/y
+Mozilla.moveWindowTo = function (x, y) {
+    console.log('Mozilla.moveWindowTo is obsolete. Please remove calls to it.');
+};
 
-    function getRecentWindow() {
-        var wm = getWindowMediator();
-        return wm.getMostRecentWindow("navigator:browser");
-    }
+// resize the browser window
+Mozilla.resizeWindowTo = function (width, height) {
+    console.log('Mozilla.resizeWindowTo is obsolete. Please remove calls to it.');
+};
 
-    // put the browser into full screen
-    Mozilla.fullscreen = function () {
-        try {
-            return Mozilla.execPrivileged(function () {
-                var win = getRecentWindow();
-                if (win) {
-                    win.moveTo(0, 0);
-                    win.resizeTo(screen.width, screen.height);
-                    win.BrowserFullScreen();
-                }
-            });
-        } catch (ex) {
-            return false;
-        }
-    };
-
-    // move the browser window to specific x/y
-    Mozilla.moveWindowTo = function (x, y) {
-        try {
-            return Mozilla.execPrivileged(function () {
-                var win = getRecentWindow();
-                if (win) {
-                    win.moveTo(x, y);
-                }
-            });
-        } catch (ex) {
-            return false;
-        }
-    };
-
-    // resize the browser window
-    Mozilla.resizeWindowTo = function (width, height) {
-        try {
-            return Mozilla.execPrivileged(function () {
-                var win = getRecentWindow();
-                if (win) {
-                    win.resizeTo(width, height);
-                }
-            });
-        } catch (ex) {
-            return false;
-        }
-    };
-
-})(window.Mozilla, window.Components);

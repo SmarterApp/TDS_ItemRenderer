@@ -34,7 +34,12 @@ function TTSService_SB()
 
     this.isSupported = function ()
     {
-        return typeof (Runtime) == 'function' || (Components && Components.classes["@mozilla.org/securebrowser;1"]);
+    	// SB-1506-Intelligent-Muting. Use enableComponents to support both SB 8.1 and 9.0
+        var components = Mozilla.enableComponents();
+        if (!components) {
+            return false;
+        }
+        return components.classes["@mozilla.org/securebrowser;1"];
     };
 
     this.load = function () {
@@ -42,19 +47,17 @@ function TTSService_SB()
             if (!this.isSupported()) {
                 return false;
             }
-            if (typeof(Runtime) == 'function') {
-                this.runtime = new Runtime();
-            } else {
-                var success = Mozilla.execPrivileged(function() {
-                    var sbClass = Components.classes["@mozilla.org/securebrowser;1"];
-                    if (sbClass) {
-                        this.runtime = sbClass.createInstance(Components.interfaces.mozISecureBrowser);
-                    }
-                }.bind(this));
-                if (!success) {
+            
+            var success = Mozilla.execPrivileged(function() {
+                var sbClass = Components.classes["@mozilla.org/securebrowser;1"];
+                if (sbClass) {
+                    this.runtime = sbClass.createInstance(Components.interfaces.mozISecureBrowser);
+                 }
+            }.bind(this));
+            if (!success) {
                     console.log('SB runtime component failed to load');
-                }
             }
+            
 
             // check if this was a SB and we got the runtime
             if (!this.runtime) {

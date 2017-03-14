@@ -225,6 +225,11 @@ The main test shell entry code.
         TS.UI.Events.btnNext.subscribe(function() {
             TS.Navigation.next();
         });
+        
+        // SB-1504: Binding the bottom next button in testshell to next button's event handler
+        TS.UI.Events.btnNextBottom.subscribe(function() {
+        	TS.Navigation.next();
+        });
 
         TS.UI.Events.btnEnd.subscribe(function() {
             TS.complete();

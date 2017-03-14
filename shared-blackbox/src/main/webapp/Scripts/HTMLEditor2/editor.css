@@ -202,3 +202,37 @@ div.cke_dialog_contents_body {
 	-webkit-border-radius: 0px 3px 3px 0px;
 	border-radius: 0px 3px 3px 0px;
 }
+
+/* @group custom_eq_editor styles for mobile */
+.platform_ios .cke_editable .mathquill-rendered-math .mathquill-editable,
+	.platform_android .cke_editable .mathquill-rendered-math .mathquill-editable,
+	.platform_ios .cke_editable .mathquill-editable .mathquill-root-block,
+	.platform_android .cke_editable .mathquill-editable .mathquill-root-block
+	{
+	border: none;
+	margin: 0;
+	padding: 0;
+	min-width: 1em;
+	width: auto;
+}
+
+.platform_ios .cke_widget_wrapper:hover>.mathml.cke_widget_element,
+	.platform_android .cke_widget_wrapper:hover>.mathml.cke_widget_element
+	{
+	outline-color: #6cb9d6;
+	cursor: pointer;
+}
+
+.platform_ios .cke_editable .mathquill-rendered-math .mathquill-editable,
+	.platform_android .cke_editable .mathquill-rendered-math .mathquill-editable
+	{
+	cursor: pointer;
+}
+
+.platform_ios .cke_widget_wrapper>.mathml, .platform_android .cke_widget_wrapper>.mathml
+	{
+	margin: 0 0.2em;
+}
+
+/* @end */
+

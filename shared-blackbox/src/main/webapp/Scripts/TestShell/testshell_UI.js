@@ -120,6 +120,8 @@ Test shell general user interface functionality.
         this.Nodes.btnPause = YUD.get('btnPause');
         this.Nodes.btnBack = YUD.get('btnBack');
         this.Nodes.btnNext = YUD.get('btnNext');
+        // SB-1504
+        this.Nodes.btnNextBottom = YUD.get('btnNextBottom');
         this.Nodes.btnEnd = YUD.get('btnEnd');
         this.Nodes.btnResults = YUD.get('btnResults');
         this.Nodes.btnHelp = YUD.get('btnHelp'); // required for global context menu
@@ -230,9 +232,13 @@ Test shell general user interface functionality.
             }
             enableControl('btnBack', allowBack);
             enableControl('btnNext', true);
+            // SB-1504: Enabling next button at the bottom of testshell page
+            enableControl('btnNextBottom', true);
         } else {
             enableControl('btnBack', false);
             enableControl('btnNext', false);
+            // SB-1504: Disabling next button at the bottom of testshell page
+            enableControl('btnNextBottom', false);
         }
 
         enableControl('btnEnd', TS.isTestCompleted());
@@ -490,8 +496,9 @@ Test shell general user interface functionality.
 
         // No, Yes
         var buttons = [
-            { text: obj.noLabel, handler: noHandler, isDefault: true }, // NOTE: If isDefault is set on yes then tabbing seems to have problems
-            { text: obj.yesLabel, handler: yesHandler }
+        	{ text: obj.yesLabel, handler: yesHandler },
+            { text: obj.noLabel, handler: noHandler, isDefault: true } // NOTE: If isDefault is set on yes then tabbing seems to have problems
+            
         ];
 
         // Logout

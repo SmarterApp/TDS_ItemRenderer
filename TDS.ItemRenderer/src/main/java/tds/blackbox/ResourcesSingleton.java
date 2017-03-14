@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Educational Online Test Delivery System Copyright (c) 2014 American
+ * Educational Online Test Delivery System Copyright (c) 2016 American
  * Institutes for Research
  * 
  * Distributed under the AIR Open Source License, Version 1.0 See accompanying
@@ -8,15 +8,14 @@
  ******************************************************************************/
 package tds.blackbox;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
-import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,18 +23,19 @@ import AIR.Common.Configuration.AppSetting;
 import AIR.Common.Configuration.AppSettings;
 import AIR.Common.Helpers.CaseInsensitiveMap;
 import AIR.Common.Utilities.Path;
-import AIR.Common.Utilities.TDSStringUtils;
 import AIR.Common.Web.UrlHelper;
 import AIR.Common.Web.Session.HttpContext;
 import AIR.Common.Web.Session.Server;
 import AIR.ResourceBundler.Xml.FileSet;
 import AIR.ResourceBundler.Xml.FileSetInput;
+import AIR.ResourceBundler.Xml.PathFormatter;
 import AIR.ResourceBundler.Xml.Resources;
 import AIR.ResourceBundler.Xml.ResourcesException;
 import AIR.WebResources.CachePrefetchMode;
 import AIR.WebResources.IStylePathHandler;
 import AIR.WebResources.ManifestSingleton;
 
+/*A helper class for ResourcesLink to load a resource file*/
 public class ResourcesSingleton
 {
   private static final Logger                 _logger          = LoggerFactory.getLogger (ResourcesSingleton.class);
@@ -44,6 +44,46 @@ public class ResourcesSingleton
                                                                                                                      // locking
   private static final Map<String, Resources> _resourcesLookup = new CaseInsensitiveMap<Resources> ();
   private static IStylePathHandler            _stylePathHandler;
+	/* SB-1505: start merge */
+
+	private static final String _defaultClientStylePath = "AIR";
+
+	/// <summary>
+	/// Get the client style path.
+	/// </summary>
+	/// <remarks>
+	/// StudentSettings.GetClientStylePath()
+	/// </remarks>
+	public static String getResourcesPathFormatArgs() {
+		String str = _resourcePathFormatArgsHandler();
+		str = (str != null) ? str : _defaultClientStylePath;
+		return str;
+	}
+
+	private static String _resourcePathFormatArgsHandler() {
+		return "SBAC";
+	}
+
+	public static String formatResourcePath(String path) {
+		// check for replacement
+		if (path.indexOf("%s") > 0) {
+			String formatArgs = getResourcesPathFormatArgs();
+			String resourcePath = String.format(path, formatArgs);
+
+			String physicalPath = resourcePath.startsWith("~") ? Server.mapPath(resourcePath) : resourcePath;
+
+			if (!new File(physicalPath).exists()) {
+				formatArgs = _defaultClientStylePath;
+				resourcePath = String.format(path, formatArgs);
+			}
+
+			path = resourcePath;
+		}
+
+		return path;
+	}
+
+	/* SB-1505: end merge */
 
   public static String getStylePath () {
     return (_stylePathHandler != null) ? _stylePathHandler.execute () : "AIR";
@@ -80,6 +120,7 @@ public class ResourcesSingleton
   }
 
   public static Resources load (String virtualPath) throws ResourcesException {
+		virtualPath = formatResourcePath(virtualPath);
     String filePath = Server.mapPath (virtualPath);
     Resources resources = get (filePath);
 
@@ -111,10 +152,7 @@ public class ResourcesSingleton
 
   public static String resolveUrl (String virtualPath, boolean includeCacheID, boolean includeCheckSum) throws URISyntaxException {
     // check for replacement
-    if (StringUtils.indexOf (virtualPath, "{0}") >= 0) {
-      String stylePath = getStylePath ();
-      virtualPath = TDSStringUtils.format (virtualPath, stylePath);
-    }
+		virtualPath = formatResourcePath(virtualPath);
 
     // resolve url
     String url = UrlHelper.resolveFullUrl (virtualPath);
@@ -154,11 +192,9 @@ public class ResourcesSingleton
    * @throws ResourcesException 
    */
   public static List<String> getFilePaths (String resourceFileVirtualPath, String resourceID, boolean addCRC) throws URISyntaxException, ResourcesException {
+		String resourceFileDir = Path.getDirectoryName(resourceFileVirtualPath);
+		String rootVirtualPath = Server.mapPath("~/");
     List<String> returnList = new ArrayList<String> ();
-    String resourceFileName = Path.getFileName (resourceFileVirtualPath);
-
-    // e.x. "~/shared/"
-    String resourceVirtualPath = StringUtils.replace (resourceFileVirtualPath, resourceFileName, "");
 
     // get all the top level resources
     Resources resources = load (resourceFileVirtualPath);
@@ -175,20 +211,18 @@ public class ResourcesSingleton
       Iterator<FileSetInput> fileIterator = fileSet.getFileInputs ();
       while (fileIterator.hasNext ()) {
         FileSetInput fileSetInput = fileIterator.next ();
-        filePaths.add (fileSetInput.getPath ());
+				String relativePath = fileSetInput.tryGetPathRelativeTo(rootVirtualPath, new PathFormatter());
+				filePaths.add(relativePath);
       }
     } else
       // <-- debug is disabled and there is a combined output
-      filePaths.add (fileSet.getOutput ());
+			filePaths.add(Path.combine(resourceFileDir, fileSet.getOutput()));
 
     for (String filePath : filePaths) {
-      // e.x.,
-      // "~/shared/../scripts/libraries/yui/button/assets/skins/sam/button.css"
-      String resourceFileResolved = Path.combine (resourceVirtualPath, filePath, "/");
-
-      // e.x.,
-      // "/student/scripts/libraries/yui/button/assets/skins/sam/button.css"
-      returnList.add (resolveUrl (resourceFileResolved));
+			if (Path.isAbsolute(filePath))
+				returnList.add(filePath);
+			else
+				returnList.add(resolveUrl(filePath));
     }
 
     return returnList;

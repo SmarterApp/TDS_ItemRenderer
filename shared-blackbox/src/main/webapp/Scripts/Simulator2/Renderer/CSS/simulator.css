@@ -1602,6 +1602,10 @@
    clear: both;
 }
 
+.panelSingle .inputpanelrow:nth-child(1) .dropDown:nth-child(1) {
+	margin-top: .5em;
+}
+
 .inputpanelcell {
     float: left;
     margin-right: 10px;

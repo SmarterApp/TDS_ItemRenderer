@@ -52,7 +52,8 @@
 
     function load() {
         var accProps = TDS.getAccommodationProperties();
-        if(accProps && accProps.isAutoMute()) {
+        //SB-1506-Intelligent-Muting.  Use new isAutoMuted rather than isAutoMute function from accs.props.js (just a more consistent name)
+        if(accProps && accProps.isAutoMuted()) {
             engageAutomute();
         }
     }

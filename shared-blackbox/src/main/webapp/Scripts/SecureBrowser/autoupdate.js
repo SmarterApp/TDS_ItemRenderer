@@ -49,7 +49,11 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
             if (this.curState == this.State.NOT_INITIALIZED) {
                 try {
                     // Check if the update services/interfaces are available in this browser
-                    netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect"); // enable privilege manager
+                    
+                	//SB-1506-Intelligent-Muting. Use enableComponents to support both SB8.1 and 9.0 
+                	if(!Mozilla.enableComponents()){
+                		return false;
+                	}
 
                     // Import JavaScript code modules
                     var Cu = Components.utils;

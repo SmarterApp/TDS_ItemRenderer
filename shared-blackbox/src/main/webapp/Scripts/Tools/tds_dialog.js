@@ -177,8 +177,9 @@
 
         // No, Yes
         var buttons = [
-            { text: 'Global.Label.No', handler: handleNo, isDefault: true },
-            { text: 'Global.Label.Yes', handler: handleYes }
+        	{ text: 'Global.Label.Yes', handler: handleYes, isDefault: true },
+            { text: 'Global.Label.No', handler: handleNo }
+            
         ];
 
         return showDialog(header, message, buttons);
@@ -231,8 +232,9 @@
         };
 
         var buttons = [
-            { text: 'Global.Label.Cancel', altText: 'Cancel', handler: handleCancel, isDefault: true },
-            { text: 'Global.Label.Ok', altText: 'Ok', handler: handleOk }
+        	 { text: 'Global.Label.Ok', altText: 'Ok', handler: handleOk },
+            { text: 'Global.Label.Cancel', altText: 'Cancel', handler: handleCancel, isDefault: true }
+           
         ];
 
         var bodyHtml = '<span class="tds-dialogMessage">' + message + '</span>';

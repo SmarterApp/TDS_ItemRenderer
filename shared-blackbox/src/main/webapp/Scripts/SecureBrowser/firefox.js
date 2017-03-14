@@ -24,19 +24,16 @@ The Desktop version of the secure browser built on top of the firefox platform.
 
     Firefox.prototype.initialize = function() {
         try {
-            if (typeof (Runtime) == 'function') {
-                this.runtime = new Runtime();
-            } else {
-                var success = Mozilla.execPrivileged(function() {
-                    var sbClass = Components.classes["@mozilla.org/securebrowser;1"];
-                    if (sbClass) {
-                        this.runtime = sbClass.createInstance(Components.interfaces.mozISecureBrowser);
+            
+             var success = Mozilla.execPrivileged(function() {
+             var sbClass = Components.classes["@mozilla.org/securebrowser;1"];
+             if (sbClass) {
+                     this.runtime = sbClass.createInstance(Components.interfaces.mozISecureBrowser);
                     }
-                }.bind(this));
-                if (!success) {
+             }.bind(this));
+             if (!success) {
                     console.log('SB runtime component failed to load');
-                }
-            }
+             }
 
             // check if this was a SB and we got the runtime
             if (!this.runtime) {
@@ -245,7 +242,9 @@ The Desktop version of the secure browser built on top of the firefox platform.
         Util.log("Suspending breach detection");
 
         try {
-            netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+            // SB-1506-Intelligent-Muting. Use enableComponents to support both SB 8.1 and 9.0              
+            Mozilla.enableComponents();        	
+            
             var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
             var w = wm.getMostRecentWindow("navigator:browser");
             var hiddenWindowRef = w.openDialog("chrome://bmakiosk/content/hiddenWindow.xul", "hidden", "alwaysLowered=yes,titlebar=no");
@@ -329,7 +328,7 @@ The Desktop version of the secure browser built on top of the firefox platform.
     Firefox.prototype.canKillProcess = function () {
         // we can and only need to kill process for Secure Browser 8 or later versions running on Windows 8.0 and 8.1
         return (Util.Browser.isWindows()
-            && ((Util.Browser.getWindowsNTVersion() == 6.2) || (Util.Browser.getWindowsNTVersion() == 6.3))
+            && Util.Browser.getWindowsNTVersion() >= 6.2  // SB-1506-Intelligent-Muting. Check for any version above 6.2
             && Util.Browser.getSecureVersion() >= 8);
     };
 
@@ -556,7 +555,8 @@ The Desktop version of the secure browser built on top of the firefox platform.
         };
 
         try {
-            netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+            // SB-1506-Intelligent-Muting. Use enableComponents to support both SB 8.1 and 9.0
+        	Mozilla.enableComponents();
             var os = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
             os.addObserver(observer, "sb-security-breach", false);
             Util.log('Listening for sb-security-breach events');
@@ -571,7 +571,8 @@ The Desktop version of the secure browser built on top of the firefox platform.
     */
     Firefox.prototype.disableSecurityBreachDetection = function() {
         try {
-            netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+        	// SB-1506-Intelligent-Muting. Use enableComponents to support both SB 8.1 and 9.0
+        	Mozilla.enableComponents();
             var os = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
             var observers = os.enumerateObservers('sb-security-breach');
             while (observers.hasMoreElements()) {

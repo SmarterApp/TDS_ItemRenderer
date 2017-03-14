@@ -159,6 +159,21 @@
             menuInstance.setInitialFocus = function () { };
             menuInstance.setInitialSelection = function () { };
         }
+        
+         /*SB-1505 : Listener for Space and Enter Key for Menu Item Start*/
+		(new YAHOO.util.KeyListener(contextMenu.element, {
+			keys : [ 32, 13 ]
+		}, {
+			fn : function(evt, args) {
+				// stop event to prevent Enter key event from closing ET modal
+				YUE.stopEvent(args[1]);
+				if (menuInstance.activeItem) {
+					menuInstance.activeItem.clickEvent.fire(evt);
+					menuInstance.hide();
+				}
+			}
+		})).enable();
+		/*SB-1505 : Listener for Space and Enter Key for Menu Item End*/
 
     };
 

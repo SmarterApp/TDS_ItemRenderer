@@ -1,4 +1,4 @@
-.slides_parsed .hidden, .slides_config .hidden, .slideshowContainer .hidden, .slides_audio {
+.slides_parsed .hidden, .slides_config .hidden, .slides_container .hidden, .slides_audio {
 	display:none;
 }
 /*.slides_container {
@@ -15,15 +15,39 @@
 	-moz-box-shadow: 0em 0em .2em #666;
 	box-shadow: 0em 0em .2em #666;
 	overflow: hidden;
+	position: relative;
+	display: inline-block;
+}
+
+.thePassage.contextAreaFocus .slide *, .stemContainer.contextAreaFocus .slide *,
+	.illustrationContainer.contextAreaFocus .slide *, .interactionPrompt.contextAreaFocus .slide *
+	{
+	-moz-user-select: -moz-none !important;
+	-webkit-user-select: none !important;
+	-ms-user-select: none !important;
 }
 .slide img {
-	width: 100%;
+	width: auto;
+	height: auto;
+	max-width: 100%;
+	max-height: 100%;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
 }
 .slide_controls_contain {
 	margin-top: .3em;
 	display: block;
 	height: 31px;
 	width: 302px;
+}
+
+.slide_controls_contain.controls-disabled {
+	opacity: .2;
+	pointer-events: none;
 }
 .slide_controls_slider {
   	float: left;
@@ -266,4 +290,50 @@
 }
 .TDS_PS_L4 .slide_controls_stop_btn:hover, .TDS_PS_L4 .slide_controls_stop_btn:active {
 	background-position: center -1870px;
+}
+
+.systemDialog-control legend, .systemDialog_TTSSettings legend {
+	font-weight: bold;
+}
+
+.systemDialog-control legend, .systemDialog-control fieldset {
+	margin-bottom: 10px;
+}
+
+.systemDialog_TTSSettings .systemDialog_slider_label {
+	clear: both;
+}
+
+.slide-audio audio {
+	visibility: hidden;
+}
+
+.passage-expanded .slides_container, .passage-expanded .slideshow,
+	.layout_34 .slides_container, .layout_34 .slideshow {
+	-webkit-box-shadow: 0em 0em .2em #666;
+	-moz-box-shadow: 0em 0em .2em #666;
+	box-shadow: 0em 0em .2em #666;
+	width: 87%;
+	padding: 40px 0;
+}
+
+.passage-expanded .slide, .TDS_PS_L1 .passage-expanded .slide,
+	.TDS_PS_L2 .passage-expanded .slide, .TDS_PS_L3 .passage-expanded .slide,
+	.TDS_PS_L4 .passage-expanded .slide, .layout_34 .slide, .TDS_PS_L1 .layout_34 .slide,
+	.TDS_PS_L2 .layout_34 .slide, .TDS_PS_L3 .layout_34 .slide, .TDS_PS_L4 .layout_34 .slide
+	{
+	width: 90%;
+	height: auto;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	box-shadow: none !important;
+	vertical-align: middle;
+	text-align: center;
+	border: none;
+}
+
+.TDS_PS_L1 .passage-expanded .slide, .TDS_PS_L2 .passage-expanded .slide,
+	.TDS_PS_L3 .passage-expanded .slide, .TDS_PS_L1 .layout_34 .slide,
+	.TDS_PS_L2 .layout_34 .slide, .TDS_PS_L3 .layout_34 .slide {
+	width: 85%;
 }

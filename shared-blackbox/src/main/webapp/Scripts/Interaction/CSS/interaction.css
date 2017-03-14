@@ -1,4 +1,4 @@
-.response_hottext .stemContainer {
+.response_hottext .stemContainer, .iat-interaction-container .response_hottext {
 	line-height: 1.3em;
 }
 /************/
@@ -259,6 +259,20 @@ ol.insteraction, ul.insteraction {
 	font-size: 4.5em; 
 }
 
+/* @group horizontal order group */
+.order-group.order-group-horizontal:after {
+	display: block;
+	content: '';
+	clear: both;
+}
+
+.order-group-horizontal .interaction.order-choice {
+	float: left;
+}
+
+.order-group-horizontal .order-proxy {
+	width: inherit;
+}
 
 /* @end */
 

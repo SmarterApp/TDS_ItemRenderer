@@ -370,6 +370,7 @@
         <input>Content/Modules/module_asl.js</input>
 
         <!-- Plugins for passages -->
+        <input>Content/Plugins/Passage/styles.js</input>
         <input>Content/Plugins/Passage/illustration.js</input>
         <input>Content/Plugins/Passage/tools.js</input>
         <input>Content/Plugins/Passage/menu.js</input>

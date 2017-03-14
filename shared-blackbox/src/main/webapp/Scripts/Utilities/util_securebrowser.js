@@ -26,8 +26,19 @@
 			    Mozilla.setPreference('general.useragent.extra.kiosk', '5.5 Firefox/3.6.28');
         } else if (ua.indexOf('AIRSecureBrowser/5.6') != -1 && ua.indexOf('Firefox/3.6.28') == -1) { // SB 5.6
 			    Mozilla.setPreference('general.useragent.extra.kiosk', '5.6 Firefox/3.6.28');
+        } else if (ua.indexOf('AIRSecureBrowser/8.0') != -1 && ua.indexOf('Windows NT 6.3') != -1) {
+            // SB-1506-Intelligent-Muting. Secure Browser 8.0 does not report the correct NT version for Windows 10, so we need to fix the user agent
+            var windowsNTMajorVersionRegistryKeyValue = Util.SecureBrowser.readRegistryValue(Util.SecureBrowser.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "CurrentMajorVersionNumber");
+            var windowsNTMinorVersionRegistryKeyValue = Util.SecureBrowser.readRegistryValue(Util.SecureBrowser.HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", "CurrentMinorVersionNumber");
+            // if the two registry keys exist, we use the keys to determine the Windows NT version.
+            if (windowsNTMajorVersionRegistryKeyValue != null && windowsNTMinorVersionRegistryKeyValue != null) {
+                var ntVersion = parseFloat(windowsNTMajorVersionRegistryKeyValue) + parseFloat(windowsNTMinorVersionRegistryKeyValue) / 10;
+                if (ntVersion == 10) {
+                    ua = ua.replace(new RegExp('Windows NT 6.3', 'g'), 'Windows NT 10.0');
+                    Mozilla.setPreference("general.useragent.override", ua);
+                }
+            }
         }
-
     };
 
 })(Util.SecureBrowser, Mozilla);

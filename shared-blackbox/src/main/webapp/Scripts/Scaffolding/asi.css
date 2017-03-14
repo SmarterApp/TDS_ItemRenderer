@@ -1,5 +1,3 @@
-﻿
-
 .asi-container {
 	overflow:hidden;
     width: 100%;
@@ -71,11 +69,7 @@
 	
 }
 .asi-response-shown .optionContent:hover{
-	/*background: #fff;
-	background: linear-gradient(top, #0b9bc7, #056c8b);
-	background: -moz-linear-gradient(top, #0b9bc7, #056c8b);
-	background: -webkit-linear-gradient(top, #0b9bc7, #056c8b);	
-	border: 0 solid white;*/
+	
 	
 	
 }
@@ -91,14 +85,7 @@
 	clear: both;
 	display: block;
 }
-/*
-.asi-response-shown img {
-	height: 85%;
-}
-.asi-response-shown p {
-	padding:0.2em;
-	height: 12%;
-}*/
+
 .asi-response-enabled {
  
 }
@@ -107,44 +94,43 @@
 {
     display:block;   
 	cursor: pointer;
-   /* width: 45px;  
-    height: 45px;  */
+
 }
 .asi-playback-button {
-/*    background-image: url("play.png");    */
-	background: url("ear-big-clear.png") no-repeat center center transparent;
+	/*replacing with SVG for smoother zooming*/
+	background: url("ear-clearStopped.svg") no-repeat center center transparent;
 	border: 0px solid #aaa;
 	border-radius: 10px;
 }
 .answerCell .asi-playback-button,
 .answerContainer .asi-playback-button{
-	background: url("ear-sm-clear.png") no-repeat center center transparent;
+	background: url("ear-clearStopped.svg") no-repeat center center transparent;
 }
 
 .asi-playback-button:hover{
-	background-image: url("ear-big-blue.png");
+	background-image: url("ear-blueStopped.svg") no-repeat center center transparent;
 }
 .answerCell .asi-playback-button:hover,
 .answerContainer .asi-playback-button:hover{
-	background: url("ear-sm-blue.png") no-repeat center center transparent;
+	background: url("ear-blueStopped.svg") no-repeat center center transparent;
 }
 
 .asi-stop-button {
-    background: url("ear-big-blue-playing.png") no-repeat center center transparent;
+    background: url("ear-clearPlaying.svg") no-repeat center center transparent;
 	border: 0px solid #aaa;
 	border-radius: 10px;
 }
 .answerCell .asi-stop-button,
 .answerContainer .asi-stop-button{
-	background: url("ear-sm-blue-playing.png") no-repeat center center transparent;
+	background: url("ear-clearPlaying.svg") no-repeat center center transparent;
 }
 
 .asi-stop-button:hover{
-	background-image: url("ear-big-clear-playing.png");
+	background-image: url("ear-bluePlaying.svg") no-repeat center center transparent;
 }
 .answerCell .asi-stop-button:hover,
 .answerContainer .asi-stop-button:hover{
-	background: url("ear-sm-blue-playing.png") no-repeat center center transparent;
+	background: url("ear-bluePlaying.svg") no-repeat center center transparent;
 }
 
 .asi-response-shown button, .asi-response-hidden button{
@@ -161,8 +147,7 @@
 
 
 .asi-response-enabled:hover {
-    /*border-color: #39B54A;
-	border-color: #0785AB;*/
+  
 	border-color: transparent;
 }
 
@@ -176,7 +161,7 @@
     filter:alpha(opacity=40); /* For IE8 and earlier */
 }
 .asi-response-subdued button{
-	/*background: transparent;*/
+
 	background: #eee;
 	border: transparent;
 }
@@ -211,24 +196,29 @@
 }
 
 .asi-complete-span{
-	position: absolute; 
+
 	border-radius: 10px 10px 10px 10px; 
 	padding: 3px; 
 	z-index: 10; 
-	top: 10%; 
 	left: 25%; 
 	width: 50%; 
-	height: 300px;
+	
 	text-align: center; 
 	box-shadow: -1px 2px 9px rgb(51, 51, 51); 
 	border: 3px solid rgb(30, 175, 227); 
 	line-height: 2em;
 	background: url(arrow.png) no-repeat center center #fff;
+	/* April 20, 2016, HSA asked window have a fixed position regardless of scroll status of the window */
+	position: fixed;
+	top: 50%;
+	margin-top: -150px;
+	height: 300px;
 }
-/*.layout25 .asi-complete-span{ I think we want this disabled with the moving of the Next Item window in 2015 */
-	/* left: 45%;  Changed to accomodate Hawaii Alt.  Was 25% */
-	/* width: 30em;  Changed to accomodate hawaii Alt.  Was 50% */
-/*}*/
+.layout_25 .asi-complete-span {
+	left: 40%;
+
+}
+
 
 .itemContainer.hiding .asi-complete-span {
     visibility: hidden;
@@ -237,24 +227,24 @@
 
 /*disable hover while subduded */
 .asi-response-subdued.asi-playback-button:hover{
-/*	background-color: #2A5D3F;*/
+
 	background-color: transparent;
 	background-repeat: no-repeat;
 }
 .asi-response-subdued.asi-playback-span.asi-stop-button{
-/*	background-color: #aa0000;*/
+
 	background-color: transparent;
 	background-repeat: no-repeat;
 }
 
 /*Disable hover on iOS due to goof ups*/
 .touch .asi-playback-button:hover{
-/*	background-color: #2A5D3F;*/
+
 	background-color: transparent;
 	background-repeat: no-repeat;
 }
 .touch .asi-stop-button:hover{
-/*	background-color: #AA0000;*/
+
 	background-color: transparent;
 	background-repeat: no-repeat;
 }

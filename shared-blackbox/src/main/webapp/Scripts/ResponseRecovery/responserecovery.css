@@ -1,4 +1,4 @@
-﻿/*window control*/
+/*window control*/
 #dialogResponseRecovery.yui-panel {
     max-height: 700px;
     height: 550px;
@@ -27,14 +27,15 @@
     position: relative;
     vertical-align: top;
     width: 30%;
+    background-color: rgba(204, 206, 206, 0.2);
 }
 .previewPanel {
     display: inline-block;
     font-size: 0.9em;
-    height: 468px;
+    height: 453px;
     overflow: auto;
-    /*padding: 0.5em;*/
-    position: relative;
+    padding: 0.5em;
+    position: absolute;
     vertical-align: top;
     width: 67%;
 }
@@ -72,28 +73,22 @@
 	padding: 0;
 	margin: 0;
 }
-ul.sittingList li {
-    background-color: #efefef;
-    border-bottom: 1px solid #fff;
-    font-weight: bold;
-}
+
 ul.versionList {
     list-style-type: none;
     margin-bottom: 0.6em;
     margin-top: 0.4em;
     padding: 0;
 }
+
 .sittingList h2 {
-    background: none repeat scroll 0 0 #efefef;
-    display: block;
-    font-size: 0.9em;
-    padding: 0.3em 0.3em 0.3em 0.5em;
-	margin: 0;
+	display: none;
 }
+
 ul.sittingList ul.versionList li {
     background: none repeat scroll 0 0 #fff;
     border-bottom: medium none;
-    border-radius: 5px 0 0 5px;
+    border-radius: 2px 0 0 2px;
     box-shadow: 1px 1px 2px 0 #000;
     font-size: 0.8em;
     font-weight: normal;
@@ -101,17 +96,24 @@ ul.sittingList ul.versionList li {
     margin-left: 2em;
     padding: 0.4em;
     text-align: right;
+    line-height: 1.8em;
 }
+/* color accomodations */
+.TDS_CCInvert ul.sittingList ul.versionList li {
+	background: #000;
+}
+
+.TDS_CCYellowB ul.sittingList ul.versionList li {
+	background: #039;
+}
+
+.TDS_CCWhiteN ul.sittingList ul.versionList li {
+	background: #003366;
+}
+/* end */
 ul.sittingList li.active {
 }
-ul.sittingList .active h2, ul.sittingList li:nth-child(odd).active h2 {
-    background-color: #ffc6e4;
-    color: #000;
-}
-ul.sittingList li ul.versionList li.active {
-    background: none repeat scroll 0 0 #a63270;
-    color: #fff;
-}
+
 .previewPanel button {
     background-color: transparent;
     border: medium none;
@@ -132,28 +134,7 @@ ul.sittingList li ul.versionList li.active {
 	background-color: #0d4373;
 	color: #fff;
 }
-ul.sittingList li:nth-child(odd) {
-    background-color: #dedede;
-}
 
-ul.sittingList li:nth-child(odd) h2 {
-    background-color: #dedede;
-}
-ul.sittingList .active.expanded {
-    background-color: #bf9fb0;
-}
-ul.sittingList .expanded h2 button, ul.sittingList .active.expanded h2 button {
-    background-image: url("updown.png");
-    background-position: -2px -50px;
-    background-repeat: no-repeat;
-    background-color: transparent;
-    border: none;
-    padding: 7px 10px;
-
-}
-ul.sittingList .expanded {
-    background-color: #898989;
-}
 ul.sittingList li h2 button {
     background-image: url("updown.png");
     background-position: -1px 1px;
@@ -166,29 +147,40 @@ ul.sittingList li h2 button {
 ul.sittingList li h2:hover,
 ul.sittingList ul.versionList li:hover,
 ul.sittingList .expanded h2:hover,
- ul.sittingList li.active:nth-child(2n+1) h2:hover,
-ul.sittingList li ul.versionList li.active:hover,
 ul.sittingList li:focus h2,
 ul.sittingList ul.versionList li:focus,
-ul.sittingList li.expanded:focus h2,
-ul.sittingList li ul.versionList li.active:focus{
+ul.sittingList li.expanded:focus h2{
 	background-color: #FFC9C6;
 }
-ul.sittingList li ul.versionList li.active:hover,
-ul.sittingList li ul.versionList li.active:focus,
-ul.sittingList li ul.versionList li.active:hover a,
-ul.sittingList li ul.versionList li.active:focus a
-ul.sittingList li ul.versionList li.active a:hover,
-ul.sittingList li ul.versionList li.active a:focus{
-	color:#a63270;
+
+ul.sittingList li ul.versionList li.focus {
+	background-color: #a63270;
+	color: #fff;
+}
+/* color correction*/
+.TDS_CCInvert ul.sittingList ul.versionList li:hover, .TDS_CCInvert ul.sittingList ul.versionList li:focus
+	{
+	background: rgba(100, 100, 100, 0.7);
+}
+.TDS_CCWhiteN ul.sittingList ul.versionList li:hover, .TDS_CCWhiteN ul.sittingList ul.versionList li:focus
+	{
+	background: rgba(0, 80, 160, 0.7);
 }
 
+.TDS_CCYellowB ul.sittingList ul.versionList li:hover, .TDS_CCYellowB ul.sittingList ul.versionList li:focus
+	{
+	background: rgba(0, 80, 160, 0.7);
+}
+
+.TDS_CCInvert ul.sittingList li ul.versionList li.focus, .TDS_CCWhiteN ul.sittingList li ul.versionList li.focus,
+	.TDS_CCYellowB ul.sittingList li ul.versionList li.focus {
+	background-color: #a63270;
+}
+/* end */
 li ul.versionList{
-	display: none;
+	display: block !important;
 }
-li.expanded ul.versionList{
-	display: block;
-}
+
 ul.versionList li, ul.sittingList li h2{
 	cursor: pointer;
 }
@@ -202,4 +194,12 @@ ul.versionList li, ul.sittingList li h2{
 ul.versionList a, ul.versionList a:visited{
 	color: #000;
 	text-decoration: none;
+}
+
+#tool-timeMachine .focus {
+	outline: none;
+}
+
+#dialogResponseRecovery .ft .button-group {
+	margin-top: 5px;
 }
