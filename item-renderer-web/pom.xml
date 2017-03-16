@@ -3,7 +3,8 @@
 	<groupId>org.opentestsystem.blackbox</groupId>
 	<artifactId>shared-blackbox</artifactId>
 	<packaging>war</packaging>
-	<name>shared-blackbox</name>
+	<name>item-renderer-web</name>
+	<description>Web components for displaying items</description>
 
 	<parent>
 		<groupId>org.opentestsystem.delivery</groupId>

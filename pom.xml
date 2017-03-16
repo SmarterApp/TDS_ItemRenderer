@@ -13,11 +13,10 @@
   </parent>
 
   <modules>
-    <module>shared-blackbox</module>
+    <module>item-renderer-web</module>
     <module>TDS.ItemRenderer</module>
     <module>resource-bundler</module>
   </modules>
-
 
   <build>
     <pluginManagement>
