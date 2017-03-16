@@ -8,9 +8,9 @@
  ******************************************************************************/
 package tds.itemrenderer;
 
-import java.net.URI;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.net.URI;
 
 import tds.itemrenderer.apip.APIPMode;
 import tds.itemrenderer.apip.APIPRuleGroup;
@@ -30,6 +30,7 @@ import tds.itemrenderer.processing.ITSProcessorApipTasks;
 import tds.itemrenderer.processing.ITSProcessorTasks;
 import tds.itemrenderer.processing.ITSUrlResolver;
 import tds.itemrenderer.processing.ITSUrlTask;
+import tds.itemrenderer.processing.ItemDataReader;
 
 /**
  * This is a simple public facade for loading ITS documents.
@@ -178,6 +179,33 @@ public class ITSDocumentFactory
 
     // run any processing
     executeProcessing (itsDocument, accommodations, resolveUrls);
+
+    return itsDocument;
+  }
+
+  /**
+   * Loads the IITSDocument
+   *
+   * @param uri            uri to the data
+   * @param accommodations {@link tds.itemrenderer.data.AccLookup} to use for processing
+   * @param reader         {@link tds.itemrenderer.processing.ItemDataReader} to read the data
+   * @param resolveUrls    {@code true} to resolve urls when processing
+   * @return {@link tds.itemrenderer.data.IITSDocument} populated and processed
+   */
+  public static IITSDocument load(URI uri, AccLookup accommodations, ItemDataReader reader, boolean resolveUrls) {
+    // create parser
+    ITSDocumentParser<ITSDocument> itsParser = new ITSDocumentParser<ITSDocument>();
+
+    // parse xml
+    ITSDocument itsDocument = itsParser.load(uri, ITSDocument.class, reader);
+
+    // check if valid xml
+    if (!itsDocument.getValidated()) {
+      throw new RuntimeException(String.format("The XML schema was not valid for the file \"%s\"", uri.toString()));
+    }
+
+    // run any processing
+    executeProcessing(itsDocument, accommodations, resolveUrls);
 
     return itsDocument;
   }

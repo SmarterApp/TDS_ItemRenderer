@@ -8,21 +8,25 @@
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
+import AIR.Common.Utilities.Path;
+import AIR.Common.Utilities.SpringApplicationContext;
+import AIR.Common.Web.FileFtpHandler;
+import AIR.Common.Web.FtpResourceException;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import tds.itemrenderer.configuration.RendererSettings;
 import tds.itemrenderer.data.ITSAttachment;
@@ -67,10 +71,6 @@ import tds.itemrenderer.data.xml.itemrelease.Passage;
 import tds.itemrenderer.data.xml.itemrelease.Qti;
 import tds.itemrenderer.data.xml.itemrelease.RelatedElementInfo;
 import tds.itemrenderer.data.xml.itemrelease.Resource;
-import AIR.Common.Utilities.Path;
-import AIR.Common.Utilities.SpringApplicationContext;
-import AIR.Common.Web.FileFtpHandler;
-import AIR.Common.Web.FtpResourceException;
 
 /**
  * Used for parsing the raw ITS Document XML into a ITS Document object.
@@ -78,120 +78,150 @@ import AIR.Common.Web.FtpResourceException;
  * @author Shiva BEHERA [sbehera@air.org]
  * 
  */
-public class ITSDocumentParser<T extends ITSDocumentXml>
-{
+public class ITSDocumentParser<T extends ITSDocumentXml> {
 
-  private static final Logger      _logger      = LoggerFactory.getLogger (ITSDocumentParser.class);
+  private static final Logger _logger = LoggerFactory.getLogger(ITSDocumentParser.class);
 
-  private static final JAXBContext _jaxbContext = getJaxbContext ();
-  
-  private T                        _document;
+  private static final JAXBContext _jaxbContext = getJaxbContext();
 
-  private Itemrelease              _itemRelease;
-  
+  private T _document;
 
-  public ITSDocumentParser () {
+  private Itemrelease _itemRelease;
+
+
+  public ITSDocumentParser() {
   }
 
   /**
    * Gets JAXB context
-   * 
+   *
    * @return JAXBContext
    */
-  private static JAXBContext getJaxbContext () {
+  private static JAXBContext getJaxbContext() {
     try {
-      return JAXBContext.newInstance (Itemrelease.class);
+      return JAXBContext.newInstance(Itemrelease.class);
     } catch (JAXBException e) {
-      _logger.error (e.getMessage (), e);
+      _logger.error(e.getMessage(), e);
     }
     return null;
   }
 
   /**
    * Loads and parses the XML into the ITS document.
-   * 
+   *
    * @param filePath
    * @param itsDocumentXmlType
    * @return ITS Document
    */
-  public T load (String filePath, Class<T> itsDocumentXmlType) {
-    _document = ITSDocumentXmlFactory.create (itsDocumentXmlType);
-    _document.setBaseUri (filePath);
+  public T load(String filePath, Class<T> itsDocumentXmlType) {
+    _document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
+    _document.setBaseUri(filePath);
     return loadDocument();
   }
 
   /**
-   * Loads and parses the XML into the ITS document.
-   * 
-   * @param uri
-   * @param itsDocumentXmlType
-   * @return ITS Document
+   * Loads and parses the item XML data
+   *
+   * @param uri                URI to the data
+   * @param itsDocumentXmlType The document xml type
+   * @param itemDataReader     {@link tds.itemrenderer.processing.ItemDataReader} used to read data
+   * @return T the loaded item
    */
-  public T loadUri (URI uri, Class<T> itsDocumentXmlType) {
-    if (RendererSettings.getDenyExternalContent () && uri.getScheme () != "file") {
-      throw new UnauthorizedAccessException ("Cannot load external content.");
-    }
-    _document = ITSDocumentXmlFactory.create (itsDocumentXmlType);
-    _document.setBaseUri (ITSDocumentHelper.getUriOriginalString (uri));
-    return loadDocument();
-  }
-
-  /**
-   * loads document with XML data
-   * @return T  ITSDocumentXml
-   */
-  public T loadDocument() {
-    FileFtpHandler fileFtpHandler = SpringApplicationContext.getBean ("fileFtpHandler", FileFtpHandler.class);
-    if (fileFtpHandler.allowScheme (_document.getBaseUri ()))   {
-      parseXml (true); // load from ftp site
-    }
-    else  {
-      parseXml (false); // load from local drive
-    }
-    readMain ();
-    _document.setIsLoaded (true);
+  public T load(final URI uri, final Class<T> itsDocumentXmlType, final ItemDataReader itemDataReader) {
+    _document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
+    _document.setBaseUri(uri.toString());
+    parseDocument(uri, itemDataReader);
+    readMain();
+    _document.setIsLoaded(true);
     return _document;
   }
 
   /**
    * Loads and parses the XML into the ITS document.
-   * 
-   * @param itsDoc
+   *
+   * @param uri
+   * @param itsDocumentXmlType
+   * @return ITS Document
    */
-  public void loadFromItemRelease (T itsDocument) {
+  public T loadUri(URI uri, Class<T> itsDocumentXmlType) {
+    if (RendererSettings.getDenyExternalContent() && uri.getScheme() != "file") {
+      throw new UnauthorizedAccessException("Cannot load external content.");
+    }
+    _document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
+    _document.setBaseUri(ITSDocumentHelper.getUriOriginalString(uri));
+    return loadDocument();
+  }
+
+  /**
+   * loads document with XML data
+   *
+   * @return T  ITSDocumentXml
+   */
+  public T loadDocument() {
+    FileFtpHandler fileFtpHandler = SpringApplicationContext.getBean("fileFtpHandler", FileFtpHandler.class);
+    if (fileFtpHandler.allowScheme(_document.getBaseUri())) {
+      parseXml(true); // load from ftp site
+    } else {
+      parseXml(false); // load from local drive
+    }
+    readMain();
+    _document.setIsLoaded(true);
+    return _document;
+  }
+
+  /**
+   * Loads and parses the XML into the ITS document.
+   *
+   * @param itsDocument the document
+   */
+  public void loadFromItemRelease(T itsDocument) {
     _document = itsDocument;
-    parseXml (false);
-    readMain ();
-    _document.setIsLoaded (true);
+    parseXml(false);
+    readMain();
+    _document.setIsLoaded(true);
   }
 
   /**
    * Parse XML and store results in the classes in
    * {@code tds.itemrenderer.data.xml.itemrelease} package
-   * 
+   *
    * @param isFtp if getting XML from FTP
-   * 
    */
-  private void parseXml (boolean isFtp) {
+  private void parseXml(boolean isFtp) {
     try {
-      Unmarshaller jaxbUnmarshaller = _jaxbContext.createUnmarshaller ();
+      Unmarshaller jaxbUnmarshaller = _jaxbContext.createUnmarshaller();
       if (isFtp) {
         InputStream inputStream = null;
         try {
-          _document.setBaseUri (_document.getBaseUri ().replace ("\\", "/"));
-          inputStream = new ByteArrayInputStream (FileFtpHandler.getBytes (new URI (_document.getBaseUri ())));
+          _document.setBaseUri(_document.getBaseUri().replace("\\", "/"));
+          inputStream = new ByteArrayInputStream(FileFtpHandler.getBytes(new URI(_document.getBaseUri())));
         } catch (FtpResourceException | URISyntaxException e) {
-          throw new ITSDocumentProcessingException (e);
+          throw new ITSDocumentProcessingException(e);
         }
-        _itemRelease = (Itemrelease) jaxbUnmarshaller.unmarshal (inputStream);
+        _itemRelease = (Itemrelease) jaxbUnmarshaller.unmarshal(inputStream);
       } else {
-        _itemRelease = (Itemrelease) jaxbUnmarshaller.unmarshal (new File (_document.getBaseUri ()));
+        _itemRelease = (Itemrelease) jaxbUnmarshaller.unmarshal(new File(_document.getBaseUri()));
       }
-      _document.setValidated (true);
+      _document.setValidated(true);
+    } catch (JAXBException e) {
+      String message = "The XML schema was not valid for the file \"" + _document.getBaseUri() + "\"";
+      throw new ITSDocumentProcessingException(message + " " + e.getMessage(), e);
+    }
+  }
+
+  private T parseDocument(final URI uri, final ItemDataReader reader) {
+    try (final InputStream inputStream = reader.readData(uri)) {
+      Unmarshaller jaxbUnmarshaller = _jaxbContext.createUnmarshaller();
+      _itemRelease = (Itemrelease) jaxbUnmarshaller.unmarshal(inputStream);
+      _document.setValidated(true);
+    } catch (IOException ioException) {
+      throw new ITSDocumentProcessingException(ioException);
     } catch (JAXBException e) {
       String message = "The XML schema was not valid for the file \"" + _document.getBaseUri () + "\"";
       throw new ITSDocumentProcessingException (message + " " + e.getMessage (), e);
     }
+
+    return _document;
   }
 
   /**
