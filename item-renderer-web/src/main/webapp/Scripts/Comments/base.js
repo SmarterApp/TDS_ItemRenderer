@@ -93,8 +93,8 @@ TestShell.Comments.Base.prototype.render = function() {
 
     // BUTTONS:
     var buttons = [
-        { text: Messages.get('Cancel'), handler: { fn: this.hide, scope: this} },
-        { text: Messages.get('Submit and Close'), handler: { fn: this.submit, scope: this }, isDefault: true }
+        { text: Messages.get('Submit and Close'), handler: { fn: this.submit, scope: this }, isDefault: true },
+        { text: Messages.get('Cancel'), handler: { fn: this.hide, scope: this} }
     ];
 
     dialog.cfg.queueProperty("buttons", buttons);
