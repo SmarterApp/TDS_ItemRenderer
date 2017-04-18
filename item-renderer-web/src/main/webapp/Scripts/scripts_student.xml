@@ -210,6 +210,8 @@
         <input>Calculator/textCanvas.js</input>
         <input>Calculator/excanvas.js</input>
         <input>Calculator/css_browser_selector.js</input>
+        <input>Calculator/desmos/calculator.js</input>
+        <input>Calculator/tds_calculator.js</input>
     </fileSet>
 
 </resources>
