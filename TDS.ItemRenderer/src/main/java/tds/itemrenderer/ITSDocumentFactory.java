@@ -48,7 +48,7 @@ public class ITSDocumentFactory
    * @param accProperties
    * @return APIPMode
    */
-  private static APIPMode getAPIPMode (AccProperties accProperties) {
+  public static APIPMode getAPIPMode (AccProperties accProperties) {
     APIPMode apipMode = APIPMode.None;
 
     // check for braille accommodation
@@ -64,7 +64,7 @@ public class ITSDocumentFactory
     return apipMode;
   }
 
-  private static APIPXmlProcessor createAPIPProcessor (APIPMode
+  public static APIPXmlProcessor createAPIPProcessor (APIPMode
       apipMode, String apipCode) {
 
     // get APIP rule group
