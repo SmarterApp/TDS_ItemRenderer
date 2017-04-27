@@ -13,30 +13,33 @@ import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSContent;
 import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.processing.ITSDocumentParser;
 import tds.itemrenderer.processing.ITSHtmlSanitizeTask;
 import tds.itemrenderer.processing.ITSProcessorApipTasks;
 import tds.itemrenderer.processing.ITSProcessorTasks;
 import tds.itemrenderer.processing.ITSUrlResolver;
 import tds.itemrenderer.processing.ITSUrlTask;
-import tds.itemrenderer.processing.ItemDataReader;
+import tds.itemrenderer.processing.ItemDataService;
 import tds.itemrenderer.service.ItemDocumentService;
 
 public class ITSDocumentService implements ItemDocumentService {
-  private final ItemDataReader reader;
+  private final ItemDataService itemDataService;
   private final ItemDocumentSettings settings;
+  private final ITSDocumentParser<ITSDocument> documentParser;
 
-  public ITSDocumentService(final ItemDataReader reader, ItemDocumentSettings settings) {
-    this.reader = reader;
+  public ITSDocumentService(final ItemDataService itemDataService,
+                            final ITSDocumentParser<ITSDocument> documentParser,
+                            final ItemDocumentSettings settings) {
+    this.itemDataService = itemDataService;
     this.settings = settings;
+    this.documentParser = documentParser;
   }
 
   @Override
   public IITSDocument loadItemDocument(URI uri, AccLookup accommodations, boolean resolveUrls) {
-    // create parser
-    tds.itemrenderer.processing.ITSDocumentParser<ITSDocument> itsParser = new tds.itemrenderer.processing.ITSDocumentParser<>();
 
     // parse xml
-    ITSDocument itsDocument = itsParser.load(uri, ITSDocument.class, reader);
+    ITSDocument itsDocument = documentParser.load(uri, ITSDocument.class, itemDataService);
 
     // check if valid xml
     if (!itsDocument.getValidated()) {
