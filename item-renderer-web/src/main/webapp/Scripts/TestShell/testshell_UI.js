@@ -496,8 +496,8 @@ Test shell general user interface functionality.
 
         // No, Yes
         var buttons = [
-        	{ text: obj.yesLabel, handler: yesHandler },
-            { text: obj.noLabel, handler: noHandler, isDefault: true } // NOTE: If isDefault is set on yes then tabbing seems to have problems
+        	{ text: obj.yesLabel, handler: yesHandler, isDefault: true },
+            { text: obj.noLabel, handler: noHandler }
             
         ];
 
