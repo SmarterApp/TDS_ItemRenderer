@@ -11,12 +11,17 @@ package tds.itemrenderer.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.apache.commons.lang.StringUtils;
 
 import tds.itemrenderer.data.ITSTypes.ITSEntityType;
 import AIR.Common.Helpers._Ref;
 
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
+
 // Represents ITS XML data and well known attributes.
+@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
 public class ITSDocument extends ITSDocumentXml
 {
   @Override
