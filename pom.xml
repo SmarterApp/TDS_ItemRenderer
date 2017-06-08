@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.opentestsystem.delivery</groupId>
+  <artifactId>item-renderer-master</artifactId>
+  <packaging>pom</packaging>
+  <name>item-renderer-master</name>
+  <version>3.1.0.RELEASE</version>
+
+  <parent>
+    <groupId>org.opentestsystem.shared</groupId>
+    <artifactId>shared-master</artifactId>
+    <version>3.1.0.RELEASE</version>
+  </parent>
+
+  <modules>
+    <module>item-renderer-web</module>
+    <module>TDS.ItemRenderer</module>
+    <module>resource-bundler</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagNameFormat>@{project.version}</tagNameFormat>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>release</releaseProfiles>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <scm>
+    <connection>scm:git:https://github.com/SmarterApp/TDS_ItemRenderer.git</connection>
+    <developerConnection>scm:git:git://github.com/SmarterApp/TDS_ItemRenderer.git</developerConnection>
+    <url>https://github.com/SmarterApp/TDS_ItemRenderer</url>
+    <tag>3.1.0.RELEASE</tag>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <name>airdev-releases</name>
+      <url>https://airdev.jfrog.io/airdev/libs-releases-local</url>
+    </repository>
+  </distributionManagement>
+
+</project>

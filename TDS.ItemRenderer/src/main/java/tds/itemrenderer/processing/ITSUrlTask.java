@@ -8,7 +8,6 @@
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
-import tds.itemrenderer.configuration.RendererSettings;
 import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
@@ -19,8 +18,16 @@ import tds.itemrenderer.data.ITSTypes.ITSContextType;
  */
 public class ITSUrlTask implements IProcessorTask<String>
 {
-  
- /**
+  private ITSUrlResolver urlResolver;
+
+  public ITSUrlTask(final ITSUrlResolver itsUrlResolver) {
+    this.urlResolver = itsUrlResolver;
+  }
+
+  public ITSUrlTask() {
+  }
+
+  /**
   * Gets content supported
   * 
   */
@@ -39,8 +46,9 @@ public class ITSUrlTask implements IProcessorTask<String>
    * @return
   */
   public String process(ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
- 
-      ITSUrlResolver urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri());
+      if(urlResolver == null) {
+        urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri());
+      }
  
       // check if content is HTML and not the grid context
       if ((contentType.getValue () & ITSContentType.Html.getValue ()) == ITSContentType.Html.getValue ()  && 

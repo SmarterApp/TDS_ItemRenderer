@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itemrelease version="2.0">
+  <item format="mi" id="666" version="49" bankkey="187">
+    <attriblist>
+      <attrib attid="itm_item_id">
+        <name>Item: ITS ID</name>
+        <val>666</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_subject">
+        <name>Item: Subject</name>
+        <val>MATH</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_item_desc">
+        <name>Item: Item Description</name>
+        <val>ePP_HS_B3_031 - SB OP</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_FTUse">
+        <name>Fieldtest Use</name>
+        <val>PracTest::MG11::S1::SP13 (2); Math Training HS::SP 14 (3); Math Training HS::SP 14::Braille (3); Math Training HS::SP 14::Spanish (3);</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_OPUse">
+        <name>Operational Use</name>
+        <val></val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Answer Key">
+        <name>Item: Answer Key</name>
+        <val>MI</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Grade">
+        <name>Item: Grade</name>
+        <val>9</val>
+        <desc>9</desc>
+      </attrib>
+      <attrib attid="itm_att_Item Format">
+        <name>Item: Item Format</name>
+        <val>MI</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Page Layout">
+        <name>Item: Page Layout</name>
+        <val>1</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Response Type">
+        <name>Item: Response Type</name>
+        <val>TableMatch</val>
+        <desc></desc>
+      </attrib>
+      <attrib attid="itm_att_Item Point">
+        <name>Item: Item Point</name>
+        <val>1</val>
+        <desc></desc>
+      </attrib>
+    </attriblist>
+    <tutorial id="1080" bankkey="187" />
+    <resourceslist>
+      <resource type="wordList" id="1742" index="1" bankkey="187" />
+    </resourceslist>
+    <statistic />
+    <MachineRubric filename="Item_666_v49.qrx" xmlns:its-scripts="urn:its-scripts" />
+    <content language="ENU" version="2.0" xmlns:its-scripts="urn:its-scripts" approvedVersion="49">
+      <qti spec="itemBody"><![CDATA[<matchInteraction responseIdentifier="RESPONSE" minAssociations="1" maxAssociations="0"><prompt /><simpleMatchSet><simpleAssociableChoice identifier="1"><p style="">2</p></simpleAssociableChoice><simpleAssociableChoice identifier="2"><p style="">7</p></simpleAssociableChoice><simpleAssociableChoice identifier="3"><p style="">-2</p></simpleAssociableChoice><simpleAssociableChoice identifier="4"><p style="">-7</p></simpleAssociableChoice></simpleMatchSet><simpleMatchSet><simpleAssociableChoice identifier="a"><p style="font-weight:bold; ">Yes</p></simpleAssociableChoice><simpleAssociableChoice identifier="b"><p style="font-weight:bold; ">No</p></simpleAssociableChoice></simpleMatchSet></matchInteraction>]]></qti>
+      <stem><![CDATA[<p style=""><span id="item_666_TAG_3" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>Consider<span class="its-tag" data-tag-ref="item_666_TAG_3" data-tag-boundary="end"></span> the function <img id="item_666_Object1" style="vertical-align:middle;" src="item_666_v49_Object1_png16malpha.png" width="135" height="19" />.</p><p style="">Are the numbers in the chart zeros of the function?</p><p style=""><span id="item_666_TAG_4" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>Select<span class="its-tag" data-tag-ref="item_666_TAG_4" data-tag-boundary="end"></span> Yes or No in each <span id="item_666_TAG_6_BEGIN">row.</span></p>]]></stem>
+      <attachmentlist>
+        <attachment id="braillefile1" type="BRF" subtype="nemeth" file="item_666_enu_nemeth.brf" />
+        <attachment pass="true" id="aslfile1" type="ASL" subtype="STEM" file="item_666_ASL_STEM.MP4" />
+      </attachmentlist>
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae2">
+            <contentLinkInfo itsLinkIdentifierRef="item_666_Object1" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>F of x equals x squared minus 5 x minus 14.</audioShortDesc>
+                <audioLongDesc>F of x equals x squared minus 5 x minus 14.</audioLongDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>f  the quantity  x  ,   is equal to  x  raised to the power of 2  minus  5   x  minus  14</brailleTextString>
+                <brailleCode type="Nemeth">f(x) .k x~2"-5x-14</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+          <accessElement identifier="ae4">
+            <contentLinkInfo itsLinkIdentifierRef="item_666_TAG_6_BEGIN" type="Text">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <textToSpeechPronunciation>row. The chart has 2 columns and 4 rows. From left to right the column headings reed, Yes, No. From top to bottom the row headings reed, 2, 7, negative 2, negative 7.</textToSpeechPronunciation>
+                <textToSpeechPronunciationAlternate>row. The chart has 2 columns and 4 rows. From left to right the column headings reed, Yes, No. From top to bottom the row headings reed, 2, 7, negative 2, negative 7.</textToSpeechPronunciationAlternate>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>row.</brailleTextString>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+    <content language="ESN" version="2.0" approvedVersion="46">
+      <qti spec="itemBody"><![CDATA[<matchInteraction responseIdentifier="RESPONSE" minAssociations="1" maxAssociations="0"><prompt /><simpleMatchSet><simpleAssociableChoice identifier="1" matchMax="0"><p style="">2</p></simpleAssociableChoice><simpleAssociableChoice identifier="2" matchMax="0"><p style="">7</p></simpleAssociableChoice><simpleAssociableChoice identifier="3" matchMax="0"><p style="">-2</p></simpleAssociableChoice><simpleAssociableChoice identifier="4" matchMax="0"><p style="">-7</p></simpleAssociableChoice></simpleMatchSet><simpleMatchSet><simpleAssociableChoice identifier="a" matchMax="0"><p style="font-weight:bold; ">Sí</p></simpleAssociableChoice><simpleAssociableChoice identifier="b" matchMax="0"><p style="font-weight:bold; ">No</p></simpleAssociableChoice></simpleMatchSet></matchInteraction>]]></qti>
+      <stem><![CDATA[<p style="">Considera la función <img id="item_666_Object2" style="vertical-align:middle;" src="item_666_v46_Object2_png16malpha.png" width="135" height="19" />.</p><p style="">¿Son los números en la tabla ceros de la función?</p><p style="">Selecciona Sí o NO en cada hilera.</p><p class="languagedivider">&#xA0;</p><p style=""><span id="item_666_TAG_3" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="1"></span>Consider<span class="its-tag" data-tag-ref="item_666_TAG_3" data-tag-boundary="end"></span> the function <img id="item_666_Object1" style="vertical-align:middle;" src="item_666_v46_Object1_png16malpha.png" width="135" height="19" />.</p><p style="">Are the numbers in the chart zeros of the function?</p><p style=""><span id="item_666_TAG_4" class="its-tag" data-tag="word" data-tag-boundary="start" data-word-index="2"></span>Select<span class="its-tag" data-tag-ref="item_666_TAG_4" data-tag-boundary="end"></span> Yes or No in each row.</p>]]></stem>
+      <attachmentlist />
+      <apipAccessibility>
+        <accessibilityInfo>
+          <accessElement identifier="ae2">
+            <contentLinkInfo itsLinkIdentifierRef="item_666_Object1" type="Equation">
+              <objectLink />
+            </contentLinkInfo>
+            <relatedElementInfo>
+              <readAloud>
+                <audioShortDesc>F of x equals x squared minus 5 x minus 14.</audioShortDesc>
+                <audioLongDesc>F of x equals x squared minus 5 x minus 14.</audioLongDesc>
+              </readAloud>
+              <brailleText>
+                <brailleTextString>f  the quantity  x  ,   is equal to  x  raised to the power of 2  minus  5   x  minus  14</brailleTextString>
+                <brailleCode type="Nemeth">f(x) .k x~2"-5x-14</brailleCode>
+              </brailleText>
+            </relatedElementInfo>
+          </accessElement>
+        </accessibilityInfo>
+      </apipAccessibility>
+    </content>
+  </item>
+</itemrelease>

@@ -4,7 +4,7 @@
  * 
  * Distributed under the AIR Open Source License, Version 1.0 See accompanying
  * file AIR-License-1_0.txt or at
- * https://bitbucket.org/sbacoss/eotds/wiki/AIR_Open_Source_License
+ * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
  *************************************************************************/
 
 package tds.itemrenderer.data;

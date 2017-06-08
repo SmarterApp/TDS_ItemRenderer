@@ -1,0 +1,205 @@
+/*window control*/
+#dialogResponseRecovery.yui-panel {
+    max-height: 700px;
+    height: 550px;
+    width: 700px;
+}
+#dialogResponseRecovery .bd
+{
+    padding: 0;
+}
+#dialogResponseRecovery .ft
+{
+    border-top: 1px solid #000;
+}
+
+#tool-timeMachine {
+    display: block;
+    font-family: arial,helvetica,sans-serif;
+    overflow: hidden;
+    position: relative;
+}
+.draftsPanel {
+    border-right: 1px solid #000;
+    display: inline-block;
+    height: 468px;
+    overflow: auto;
+    position: relative;
+    vertical-align: top;
+    width: 30%;
+    background-color: rgba(204, 206, 206, 0.2);
+}
+.previewPanel {
+    display: inline-block;
+    font-size: 0.9em;
+    height: 453px;
+    overflow: auto;
+    padding: 0.5em;
+    position: absolute;
+    vertical-align: top;
+    width: 67%;
+}
+    .previewPanel p, .previewPanel h1, .previewPanel h2, .previewPanel h3, .previewPanel h4, .previewPanel h5, .previewPanel blockquote
+    {
+        padding: 0.2em 0.2em 0.2em 0.2em;
+    }
+#tool-timeMachine .previewPanel strong
+{
+    font-weight: bold;
+}
+#tool-timeMachine .previewPanel em
+{
+    font-style: italic;
+}
+#tool-timeMachine .previewPanel u
+{
+    text-decoration: underline;
+}
+#tool-timeMachine .previewPanel ul, #tool-timeMachine .previewPanel ol, #tool-timeMachine .previewPanel dl
+{
+    
+}
+#tool-timeMachine .previewPanel ul{ list-style-type: disc; list-style-position: inside;}
+#tool-timeMachine .previewPanel ol{ list-style-type: decimal; list-style-position: inside;}
+#tool-timeMachine .previewPanel ul ul { list-style-type: circle;}
+#tool-timeMachien .previewPanel ol ol{ list-style-type: lower-latin; }
+#tool-timeMachine .previewPanel li, #tool-timeMachine .previewPanel dd, #tool-timeMachine .previewPanel dt
+{
+    padding-left: 1.2em;
+}
+
+
+.sittingList {
+	padding: 0;
+	margin: 0;
+}
+
+ul.versionList {
+    list-style-type: none;
+    margin-bottom: 0.6em;
+    margin-top: 0.4em;
+    padding: 0;
+}
+
+.sittingList h2 {
+	display: none;
+}
+
+ul.sittingList ul.versionList li {
+    background: none repeat scroll 0 0 #fff;
+    border-bottom: medium none;
+    border-radius: 2px 0 0 2px;
+    box-shadow: 1px 1px 2px 0 #000;
+    font-size: 0.8em;
+    font-weight: normal;
+    margin-bottom: 0.5em;
+    margin-left: 2em;
+    padding: 0.4em;
+    text-align: right;
+    line-height: 1.8em;
+}
+/* color accomodations */
+.TDS_CCInvert ul.sittingList ul.versionList li {
+	background: #000;
+}
+
+.TDS_CCYellowB ul.sittingList ul.versionList li {
+	background: #039;
+}
+
+.TDS_CCWhiteN ul.sittingList ul.versionList li {
+	background: #003366;
+}
+/* end */
+ul.sittingList li.active {
+}
+
+.previewPanel button {
+    background-color: transparent;
+    border: medium none;
+    color: #000000;
+    cursor: pointer;
+    display: block;
+    font-size: 93%;
+    margin: 0;
+    min-height: 2em;
+    padding: 0 1em;
+    transition: background-color 0.2s ease-in 0s, color 0.2s ease-in 0s;
+	color: #0d4373;
+	border: 1px solid #0e4878;
+	border-radius: 5px;
+	
+}
+.previewPanel button:hover{
+	background-color: #0d4373;
+	color: #fff;
+}
+
+ul.sittingList li h2 button {
+    background-image: url("updown.png");
+    background-position: -1px 1px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    padding: 7px 10px;
+    vertical-align: top;
+}
+ul.sittingList li h2:hover,
+ul.sittingList ul.versionList li:hover,
+ul.sittingList .expanded h2:hover,
+ul.sittingList li:focus h2,
+ul.sittingList ul.versionList li:focus,
+ul.sittingList li.expanded:focus h2{
+	background-color: #FFC9C6;
+}
+
+ul.sittingList li ul.versionList li.focus {
+	background-color: #a63270;
+	color: #fff;
+}
+/* color correction*/
+.TDS_CCInvert ul.sittingList ul.versionList li:hover, .TDS_CCInvert ul.sittingList ul.versionList li:focus
+	{
+	background: rgba(100, 100, 100, 0.7);
+}
+.TDS_CCWhiteN ul.sittingList ul.versionList li:hover, .TDS_CCWhiteN ul.sittingList ul.versionList li:focus
+	{
+	background: rgba(0, 80, 160, 0.7);
+}
+
+.TDS_CCYellowB ul.sittingList ul.versionList li:hover, .TDS_CCYellowB ul.sittingList ul.versionList li:focus
+	{
+	background: rgba(0, 80, 160, 0.7);
+}
+
+.TDS_CCInvert ul.sittingList li ul.versionList li.focus, .TDS_CCWhiteN ul.sittingList li ul.versionList li.focus,
+	.TDS_CCYellowB ul.sittingList li ul.versionList li.focus {
+	background-color: #a63270;
+}
+/* end */
+li ul.versionList{
+	display: block !important;
+}
+
+ul.versionList li, ul.sittingList li h2{
+	cursor: pointer;
+}
+.invisible{
+	display: block;
+	height: 0;
+	width: 0;
+	position: absolute;
+	overflow: hidden;
+}
+ul.versionList a, ul.versionList a:visited{
+	color: #000;
+	text-decoration: none;
+}
+
+#tool-timeMachine .focus {
+	outline: none;
+}
+
+#dialogResponseRecovery .ft .button-group {
+	margin-top: 5px;
+}

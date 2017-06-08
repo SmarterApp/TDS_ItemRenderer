@@ -1,0 +1,127 @@
+.format_ebsr .interactionPrompt {
+	border-top: solid 1px #DBDBDB;
+	margin: 0 0em 1em;
+	padding-top: .5em;
+}
+
+.format_ebsr h3, .iat-ebsr-header h3 {
+	background-color: #DBDBDB;
+	display: inline-block;
+	clear: both;
+	font-style: normal;
+	font-weight: bold;
+	color: #000000;
+	text-align: center;
+	padding-right: .2em;
+	padding-left: .2em;
+	line-height: 1.5em;
+}
+.iat-ebsr-header {
+	border-bottom: solid 1px #DBDBDB;
+	margin-bottom: 0.5em;
+}
+
+.EBSR_ms .optionClicker {
+}
+.EBSR_ms:hover .optionClicker {
+}
+.EBSR_ms.optionSelected .optionClicker, 
+.EBSR_ms.optionSelected:hover .optionClicker {
+
+}
+
+.EBSR_mc .optionClicker {
+
+}
+.EBSR_mc:hover .optionClicker {
+
+}
+.EBSR_mc.optionSelected .optionClicker, .EBSR_mc.optionSelected:hover .optionClicker {
+
+}
+
+/* 1 */
+.TDS_PS_L1 .EBSR_ms .optionClicker {
+
+}
+.TDS_PS_L1 .EBSR_ms:hover .optionClicker {
+
+}
+.TDS_PS_L1 .EBSR_ms.optionSelected .optionClicker, 
+.TDS_PS_L1 .EBSR_ms.optionSelected:hover .optionClicker {
+
+}
+
+.TDS_PS_L1 .EBSR_mc .optionClicker {
+
+}
+.TDS_PS_L1 .EBSR_mc:hover .optionClicker {
+
+}
+.TDS_PS_L1 .EBSR_mc.optionSelected .optionClicker {
+
+}
+
+/* 2 */
+.TDS_PS_L2 .EBSR_ms .optionClicker {
+
+}
+.TDS_PS_L2 .EBSR_ms:hover .optionClicker {
+
+}
+.TDS_PS_L2 .EBSR_ms.optionSelected .optionClicker, 
+.TDS_PS_L2 .EBSR_ms.optionSelected:hover .optionClicker {
+	
+}
+
+.TDS_PS_L2 .EBSR_mc .optionClicker {
+	
+}
+.TDS_PS_L2 .EBSR_mc:hover .optionClicker {
+	
+}
+.TDS_PS_L2 .EBSR_mc.optionSelected .optionClicker {
+	
+}
+/* 3 */
+.TDS_PS_L3 .EBSR_ms .optionClicker {
+	
+}
+.TDS_PS_L3 .EBSR_ms:hover .optionClicker {
+	
+}
+.TDS_PS_L3 .EBSR_ms.optionSelected .optionClicker, 
+.TDS_PS_L3 .EBSR_ms.optionSelected:hover .optionClicker {
+	
+}
+
+.TDS_PS_L3 .EBSR_mc .optionClicker {
+	
+}
+.TDS_PS_L3 .EBSR_mc:hover .optionClicker {
+	
+}
+.TDS_PS_L3 .EBSR_mc.optionSelected .optionClicker {
+	
+}
+/* 4 */
+.TDS_PS_L4 .EBSR_ms .optionClicker {
+	
+}
+.TDS_PS_L4 .EBSR_ms:hover .optionClicker {
+	
+}
+.TDS_PS_L4 .EBSR_ms.optionSelected .optionClicker, 
+.TDS_PS_L4 .EBSR_ms.optionSelected:hover .optionClicker {
+	
+}
+
+.TDS_PS_L4 .EBSR_mc .optionClicker {
+	
+}
+.TDS_PS_L4 .EBSR_mc:hover .optionClicker {
+	
+}
+.TDS_PS_L4 .EBSR_mc.optionSelected .optionClicker {
+	
+}

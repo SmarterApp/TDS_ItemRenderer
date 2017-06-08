@@ -8,22 +8,17 @@
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
+import AIR.Common.Utilities.Path;
+import AIR.Common.Utilities.SpringApplicationContext;
+import AIR.Common.Web.FileFtpHandler;
+import AIR.Common.Web.FtpResourceException;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.input.XmlStreamReader;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 import tds.itemrenderer.configuration.RendererSettings;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSAttribute;
@@ -67,129 +62,188 @@ import tds.itemrenderer.data.xml.itemrelease.Passage;
 import tds.itemrenderer.data.xml.itemrelease.Qti;
 import tds.itemrenderer.data.xml.itemrelease.RelatedElementInfo;
 import tds.itemrenderer.data.xml.itemrelease.Resource;
-import AIR.Common.Utilities.Path;
-import AIR.Common.Utilities.SpringApplicationContext;
-import AIR.Common.Web.FileFtpHandler;
-import AIR.Common.Web.FtpResourceException;
+
+import javax.annotation.Nullable;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.apache.commons.io.Charsets.UTF_8;
 
 /**
  * Used for parsing the raw ITS Document XML into a ITS Document object.
+ * NOTE: This class makes additional resource calls to saturate an ITS Document
+ * with referenced resources.
  * 
  * @author Shiva BEHERA [sbehera@air.org]
  * 
  */
-public class ITSDocumentParser<T extends ITSDocumentXml>
-{
+public class ITSDocumentParser<T extends ITSDocumentXml> {
 
-  private static final Logger      _logger      = LoggerFactory.getLogger (ITSDocumentParser.class);
+  private static final Logger _logger = LoggerFactory.getLogger(ITSDocumentParser.class);
 
-  private static final JAXBContext _jaxbContext = getJaxbContext ();
-  
-  private T                        _document;
+  private static final JAXBContext _jaxbContext = getJaxbContext();
 
-  private Itemrelease              _itemRelease;
-  
+  @Nullable
+  private final RendererSpecService rendererSpecService;
 
-  public ITSDocumentParser () {
+  /**
+   * Constructor
+   */
+  public ITSDocumentParser() {
+    this(null);
+  }
+
+  /**
+   * Constructor
+   *
+   * @param rendererSpecService A renderer spec reader
+   */
+  public ITSDocumentParser(@Nullable final RendererSpecService rendererSpecService) {
+    this.rendererSpecService = rendererSpecService;
   }
 
   /**
    * Gets JAXB context
-   * 
+   *
    * @return JAXBContext
    */
-  private static JAXBContext getJaxbContext () {
+  private static JAXBContext getJaxbContext() {
     try {
-      return JAXBContext.newInstance (Itemrelease.class);
-    } catch (JAXBException e) {
-      _logger.error (e.getMessage (), e);
+      return JAXBContext.newInstance(Itemrelease.class);
+    } catch (final JAXBException e) {
+      _logger.error(e.getMessage(), e);
+      throw new IllegalStateException("Cannot initialize JaxbContext", e);
     }
-    return null;
   }
 
   /**
    * Loads and parses the XML into the ITS document.
-   * 
+   *
    * @param filePath
    * @param itsDocumentXmlType
    * @return ITS Document
    */
-  public T load (String filePath, Class<T> itsDocumentXmlType) {
-    _document = ITSDocumentXmlFactory.create (itsDocumentXmlType);
-    _document.setBaseUri (filePath);
-    return loadDocument();
+  public T load(String filePath, Class<T> itsDocumentXmlType) {
+    final T document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
+    document.setBaseUri(filePath);
+    return loadDocument(document);
+  }
+
+  /**
+   * Loads and parses the item XML data
+   *
+   * @param uri                URI to the data
+   * @param itsDocumentXmlType The document xml type
+   * @param itemDataService     {@link ItemDataService} used to read data
+   * @return T the loaded item
+   */
+  public T load(final URI uri, final Class<T> itsDocumentXmlType, final ItemDataService itemDataService) {
+    final T document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
+    document.setBaseUri(uri.toString());
+    final Itemrelease itemrelease = parseDocument(document, uri, itemDataService);
+    readMain(document, itemrelease);
+    document.setIsLoaded(true);
+    return document;
   }
 
   /**
    * Loads and parses the XML into the ITS document.
-   * 
+   *
    * @param uri
    * @param itsDocumentXmlType
    * @return ITS Document
    */
-  public T loadUri (URI uri, Class<T> itsDocumentXmlType) {
-    if (RendererSettings.getDenyExternalContent () && uri.getScheme () != "file") {
-      throw new UnauthorizedAccessException ("Cannot load external content.");
+  public T loadUri(final URI uri, final Class<T> itsDocumentXmlType) {
+    if (RendererSettings.getDenyExternalContent() && uri.getScheme() != "file") {
+      throw new UnauthorizedAccessException("Cannot load external content.");
     }
-    _document = ITSDocumentXmlFactory.create (itsDocumentXmlType);
-    _document.setBaseUri (ITSDocumentHelper.getUriOriginalString (uri));
-    return loadDocument();
-  }
-
-  /**
-   * loads document with XML data
-   * @return T  ITSDocumentXml
-   */
-  public T loadDocument() {
-    FileFtpHandler fileFtpHandler = SpringApplicationContext.getBean ("fileFtpHandler", FileFtpHandler.class);
-    if (fileFtpHandler.allowScheme (_document.getBaseUri ()))   {
-      parseXml (true); // load from ftp site
-    }
-    else  {
-      parseXml (false); // load from local drive
-    }
-    readMain ();
-    _document.setIsLoaded (true);
-    return _document;
+    final T document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
+    document.setBaseUri(ITSDocumentHelper.getUriOriginalString(uri));
+    return loadDocument(document);
   }
 
   /**
    * Loads and parses the XML into the ITS document.
-   * 
-   * @param itsDoc
+   *
+   * @param itsDocument the document
    */
-  public void loadFromItemRelease (T itsDocument) {
-    _document = itsDocument;
-    parseXml (false);
-    readMain ();
-    _document.setIsLoaded (true);
+  public void loadFromItemRelease(T itsDocument) {
+    final Itemrelease itemrelease = parseXml(itsDocument, false);
+    readMain(itsDocument, itemrelease);
+    itsDocument.setIsLoaded(true);
+  }
+
+  /**
+   * loads document with XML data
+   *
+   * @return T  ITSDocumentXml
+   */
+  private T loadDocument(final T document) {
+    final FileFtpHandler fileFtpHandler = SpringApplicationContext.getBean("fileFtpHandler", FileFtpHandler.class);
+    final Itemrelease itemrelease;
+    if (fileFtpHandler.allowScheme(document.getBaseUri())) {
+      itemrelease = parseXml(document, true); // load from ftp site
+    } else {
+      itemrelease = parseXml(document, false); // load from local drive
+    }
+    readMain(document, itemrelease);
+    document.setIsLoaded(true);
+    return document;
   }
 
   /**
    * Parse XML and store results in the classes in
    * {@code tds.itemrenderer.data.xml.itemrelease} package
-   * 
+   *
+   * @param document  The target document
    * @param isFtp if getting XML from FTP
-   * 
    */
-  private void parseXml (boolean isFtp) {
+  private Itemrelease parseXml(final T document, final boolean isFtp) {
     try {
-      Unmarshaller jaxbUnmarshaller = _jaxbContext.createUnmarshaller ();
+      final Unmarshaller jaxbUnmarshaller = _jaxbContext.createUnmarshaller();
+      final Itemrelease itemrelease;
       if (isFtp) {
         InputStream inputStream = null;
         try {
-          _document.setBaseUri (_document.getBaseUri ().replace ("\\", "/"));
-          inputStream = new ByteArrayInputStream (FileFtpHandler.getBytes (new URI (_document.getBaseUri ())));
+          document.setBaseUri(document.getBaseUri().replace("\\", "/"));
+          inputStream = new ByteArrayInputStream(FileFtpHandler.getBytes(new URI(document.getBaseUri())));
         } catch (FtpResourceException | URISyntaxException e) {
-          throw new ITSDocumentProcessingException (e);
+          throw new ITSDocumentProcessingException(e);
         }
-        _itemRelease = (Itemrelease) jaxbUnmarshaller.unmarshal (inputStream);
+        itemrelease = (Itemrelease) jaxbUnmarshaller.unmarshal(inputStream);
       } else {
-        _itemRelease = (Itemrelease) jaxbUnmarshaller.unmarshal (new File (_document.getBaseUri ()));
+        itemrelease = (Itemrelease) jaxbUnmarshaller.unmarshal(new File(document.getBaseUri()));
       }
-      _document.setValidated (true);
+      document.setValidated(true);
+      return itemrelease;
+    } catch (final JAXBException e) {
+      final String message = "The XML schema was not valid for the file \"" + document.getBaseUri() + "\"";
+      throw new ITSDocumentProcessingException(message + " " + e.getMessage(), e);
+    }
+  }
+
+  private Itemrelease parseDocument(final T document, final URI uri, final ItemDataService itemDataService) {
+    try (final InputStream xmlStream = new ByteArrayInputStream(itemDataService.readData(uri).getBytes(UTF_8))) {
+      Unmarshaller jaxbUnmarshaller = _jaxbContext.createUnmarshaller();
+      final Itemrelease itemrelease = (Itemrelease) jaxbUnmarshaller.unmarshal(xmlStream);
+      document.setValidated(true);
+      return itemrelease;
+    } catch (IOException ioException) {
+      throw new ITSDocumentProcessingException(ioException);
     } catch (JAXBException e) {
-      String message = "The XML schema was not valid for the file \"" + _document.getBaseUri () + "\"";
+      String message = "The XML schema was not valid for the file \"" + document.getBaseUri () + "\"";
       throw new ITSDocumentProcessingException (message + " " + e.getMessage (), e);
     }
   }
@@ -200,50 +254,50 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * the contents and store them in {@code tds.itemrenderer.data} package
    * classes
    */
-  private void readMain () {
+  private void readMain (final T document, final Itemrelease itemrelease) {
 
-    if (_itemRelease.getVersion () != null) {
-      _document.setVersion (Double.parseDouble (_itemRelease.getVersion ().trim ()));
+    if (itemrelease.getVersion () != null) {
+      document.setVersion (Double.parseDouble (itemrelease.getVersion ().trim ()));
     } else {
-      _document.setVersion (1.0);
+      document.setVersion (1.0);
     }
 
-    if (_document.getVersion () == 0) {
+    if (document.getVersion () == 0) {
       return;
     }
 
-    if (_itemRelease.getItemPassage () != null) {
-      if (_itemRelease.getItemPassage ().getClass () == Passage.class) {
-        _document.setType (ITSEntityType.Passage);
+    if (itemrelease.getItemPassage () != null) {
+      if (itemrelease.getItemPassage ().getClass () == Passage.class) {
+        document.setType (ITSEntityType.Passage);
       } else {
-        _document.setType (ITSEntityType.Item);
+        document.setType (ITSEntityType.Item);
       }
     }
 
     // make sure the document was defined as either an item or passage
-    if (_document.getType () == ITSEntityType.Unknown) {
+    if (document.getType () == ITSEntityType.Unknown) {
       return;
     }
 
     // get item/passage info
-    ItemPassage item = _itemRelease.getItemPassage ();
-    _document.setFormat (item.getFormat ());
+    ItemPassage item = itemrelease.getItemPassage ();
+    document.setFormat (item.getFormat ());
     if (item.getId () != null) {
-      _document.setId (Long.parseLong (item.getId ().trim ()));
+      document.setId (Long.parseLong (item.getId ().trim ()));
     }
     if (item.getBankkey () != null) {
-      _document.setBankKey (Long.parseLong (item.getBankkey ().trim ()));
+      document.setBankKey (Long.parseLong (item.getBankkey ().trim ()));
     }
     if (item.getVersion () != null) {
-      _document.setApprovedVersion (Integer.parseInt (item.getVersion ().trim ()));
+      document.setApprovedVersion (Integer.parseInt (item.getVersion ().trim ()));
     }
 
     if (item.getAttriblist () != null) {
-      readAttributes ();
+      readAttributes (document, itemrelease);
     }
     if (item.getTutorial () != null) {
       ITSTutorial itsTutorial = new ITSTutorial ();
-      _document.setTutorial (itsTutorial);
+      document.setTutorial (itsTutorial);
       if (item.getTutorial ().getId () != null) {
         itsTutorial.setId (Long.parseLong (item.getTutorial ().getId ().trim ()));
       }
@@ -254,7 +308,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
 
     if (item.getSoundcue () != null) {
       ITSSoundCue itsSoundCue = new ITSSoundCue ();
-      _document.setSoundCue (itsSoundCue);
+      document.setSoundCue (itsSoundCue);
       if (item.getSoundcue ().getId () != null) {
         itsSoundCue.setId (Long.parseLong (item.getSoundcue ().getId ().trim ()));
       }
@@ -263,17 +317,17 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
       }
     }
     if (item.getRendererSpec () != null) {
-      _document.setRendererSpec (readRendererSpec ());
+      document.setRendererSpec (readRendererSpec (document, itemrelease));
     }
 
     if (item.getMachineRubric () != null) {
-      _document.setMachineRubric (readMachineRubric ());
+      document.setMachineRubric (readMachineRubric (document, itemrelease));
     }
     if (item.getGridanswerspace () != null) {
-      _document.setGridAnswerSpace (item.getGridanswerspace ().trim ());
+      document.setGridAnswerSpace (item.getGridanswerspace ().trim ());
     }
-    readContents ();
-    readResources ();
+    readContents (document, itemrelease);
+    readResources (document, itemrelease);
 
   }
 
@@ -282,23 +336,31 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * 
    * @return processed RendererSpec contents
    */
-  private String readRendererSpec () {
-    String rendererSpec = null;
-    if (_itemRelease.getItemPassage ().getRendererSpec () != null) {
-      String fileName = _itemRelease.getItemPassage ().getRendererSpec ().getFilename ();
-      if (fileName != null) {
-        fileName = fileName.trim ();
+  private String readRendererSpec (final T document, final Itemrelease itemrelease) {
+    if (itemrelease.getItemPassage ().getRendererSpec () == null) {
+      return null;
+    }
 
-        String rendererSpecPath = _document.getBaseUri ().replace (Path.getFileName (_document.getBaseUri ()), "");
-        rendererSpecPath += fileName;
+    String fileName = itemrelease.getItemPassage ().getRendererSpec ().getFilename ();
+    if (fileName == null) {
+      return itemrelease.getItemPassage().getRendererSpec().getValue();
+    }
 
-        URI rendererSpecUri = ITSDocumentHelper.createUri(rendererSpecPath);
-        rendererSpec = ITSDocumentHelper.getContents (rendererSpecUri);
-      } else {
-        rendererSpec = _itemRelease.getItemPassage ().getRendererSpec ().getValue ();
+    fileName = fileName.trim ();
+
+    String rendererSpecPath = document.getBaseUri ().replace (Path.getFileName (document.getBaseUri ()), "");
+    rendererSpecPath += fileName;
+
+    if (rendererSpecService != null) {
+      try {
+        return rendererSpecService.findOne(rendererSpecPath);
+      } catch (final IOException e) {
+        throw new ITSDocumentProcessingException("Problem reading Renderer Spec", e);
       }
     }
-    return rendererSpec;
+
+    URI rendererSpecUri = ITSDocumentHelper.createUri(rendererSpecPath);
+    return ITSDocumentHelper.getContents (rendererSpecUri);
   }
 
   /**
@@ -307,11 +369,11 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * @return populated ITSMachineRubric
    * 
    */
-  private ITSMachineRubric readMachineRubric () {
-    MachineRubric machineRubric = _itemRelease.getItemPassage ().getMachineRubric ();
+  private ITSMachineRubric readMachineRubric (final T document, final Itemrelease itemrelease) {
+    MachineRubric machineRubric = itemrelease.getItemPassage ().getMachineRubric ();
     ITSMachineRubric itsMachineRubric = new ITSMachineRubric ();
-    if (_itemRelease.getItemPassage ().getMachineRubric () != null) {
-      String fileName = _itemRelease.getItemPassage ().getMachineRubric ().getFilename ();
+    if (itemrelease.getItemPassage ().getMachineRubric () != null) {
+      String fileName = itemrelease.getItemPassage ().getMachineRubric ().getFilename ();
       if (fileName != null) {
         itsMachineRubric.setType (ITSMachineRubricType.Uri);
         fileName = fileName.trim ();
@@ -320,7 +382,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
         // machineRubric.Data =
         // Path.Combine(Path.GetDirectoryName(_document.BaseUri), fileName);
 
-        String baseUri = _document.getBaseUri ();
+        String baseUri = document.getBaseUri ();
         if (!baseUri.startsWith ("file:/") && !baseUri.startsWith ("ftp:/")) {
           baseUri = new File (baseUri).toURI ().toString();
         } 
@@ -342,8 +404,8 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * Populates ITSAttribute from Attrib
    * 
    */
-  private void readAttributes () {
-    ItemPassage item = _itemRelease.getItemPassage ();
+  private void readAttributes (final T document, final Itemrelease itemrelease) {
+    ItemPassage item = itemrelease.getItemPassage ();
     for (Attrib attrib : item.getAttriblist ().getAttrib ()) {
       ITSAttribute attib = new ITSAttribute ();
       attib.setId (attrib.getAttid ());
@@ -351,7 +413,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
       attib.setId (attrib.getAttid ());
       attib.setDescription (attrib.getDesc ().trim ());
       attib.setValue (attrib.getVal ().trim ());
-      _document.addAttribute (attib);
+      document.addAttribute (attib);
     }
   }
 
@@ -359,9 +421,9 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * Populates ITSResource from Resource
    * 
    */
-  private void readResources () {
-    if (_itemRelease.getItemPassage ().getResourceslist () != null) {
-      List<Resource> resources = _itemRelease.getItemPassage ().getResourceslist ().getResource ();
+  private void readResources (final T document, final Itemrelease itemrelease) {
+    if (itemrelease.getItemPassage ().getResourceslist () != null) {
+      List<Resource> resources = itemrelease.getItemPassage ().getResourceslist ().getResource ();
       if (resources != null && resources.size () > 0) {
         for (Resource resource : resources) {
           ITSResource itsResource = new ITSResource ();
@@ -372,7 +434,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
           if (resource.getBankkey () != null) {
             itsResource.setBankKey (Long.parseLong (resource.getBankkey ().trim ()));
           }
-          _document.getResources ().add (itsResource);
+          document.getResources ().add (itsResource);
         }
       }
     }
@@ -383,8 +445,8 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * Populates ITSContent from Content
    * 
    */
-  private void readContents () {
-    ItemPassage item = _itemRelease.getItemPassage ();
+  private void readContents (final T document, final Itemrelease itemrelease) {
+    ItemPassage item = itemrelease.getItemPassage ();
     for (Content content : item.getContent ()) {
       ITSContent itsContent = new ITSContent ();
       itsContent.setLanguage (content.getLanguage ());
@@ -407,7 +469,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
         itsContent.setTitle (content.getTitle ());
       }
       if (content.getOptionlist () != null) {
-        itsContent.setOptions (readOptions (content.getOptionlist ()));
+        itsContent.setOptions (readOptions (document, content.getOptionlist ()));
       }
       if (content.getKeyboard () != null) {
         itsContent.setKeyboard (readKeyboard (content.getKeyboard ()));
@@ -416,10 +478,10 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
         itsContent.setApip (readApip (content.getApipAccessibility ()));
       }
       if (content.getAttachmentlist () != null) {
-        itsContent.setAttachments (readAttachments (content.getAttachmentlist ().getAttachment ()));
+        itsContent.setAttachments (readAttachments (document, content.getAttachmentlist ().getAttachment ()));
       }
       processGenericElements(itsContent, content);
-      _document.addContent (itsContent);
+      document.addContent (itsContent);
     }
 
   }
@@ -486,12 +548,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
     return itsKeyboard;
   }
 
-  /**
-   * 
-   * @param options
-   * @return
-   */
-  private ITSOptionList readOptions (Optionlist optionlist) {
+  private ITSOptionList readOptions (final T document, final Optionlist optionlist) {
     List<Option> options = optionlist.getOption ();
     ITSOptionList itsOptionList = new ITSOptionList ();
     if (!StringUtils.isBlank (optionlist.getMinChoices ())) {
@@ -502,7 +559,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
     }
     if (options != null && options.size () > 0) {
       for (Option option : options) {
-        itsOptionList.add (readOption (option));
+        itsOptionList.add (readOption (document, option));
       }
     }
     return itsOptionList;
@@ -513,12 +570,12 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * @param option
    * @return
    */
-  private ITSOption readOption (Option option) {
+  private ITSOption readOption (final T document, final Option option) {
     // right now we are on <option>
     ITSOption itsOption = new ITSOption ();
     String name = option.getName ().trim ();
 
-    if (StringUtils.containsIgnoreCase (_document.getFormat (), "SI")) {
+    if (StringUtils.containsIgnoreCase (document.getFormat (), "SI")) {
       // e.g., <name>Option NR</name>
       itsOption.setKey (name.replaceAll("\\u00a0"," ").split (" ")[1]);
     } else {
@@ -538,9 +595,9 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * 
    * @return
    */
-  private String getFilePath ()
+  private String getFilePath (final T document)
   {
-    return _document.getBaseUri ().replace (Path.getFileName (_document.getBaseUri ()), "");
+    return document.getBaseUri ().replace (Path.getFileName (document.getBaseUri ()), "");
   }
 
   /**
@@ -548,7 +605,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
    * @param attachments
    * @return
    */
-  private List<ITSAttachment> readAttachments (List<Attachment> attachments) {
+  private List<ITSAttachment> readAttachments (final T document, final List<Attachment> attachments) {
     List<ITSAttachment> itsAttachments = new ArrayList<ITSAttachment> ();
 
     if (attachments != null && attachments.size () > 0) {
@@ -561,7 +618,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml>
         itsAttachment.setFile (attachment.getFile ());
 
         if (!StringUtils.isEmpty (itsAttachment.getFile ()))  {
-          itsAttachment.setFile (getFilePath () + itsAttachment.getFile ());
+          itsAttachment.setFile (getFilePath (document) + itsAttachment.getFile ());
         }
 
         itsAttachments.add (itsAttachment);
