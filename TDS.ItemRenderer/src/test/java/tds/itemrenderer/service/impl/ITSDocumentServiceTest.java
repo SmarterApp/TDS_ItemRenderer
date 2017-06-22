@@ -1,6 +1,18 @@
+/***************************************************************************************************
+ * Educational Online Test Delivery System
+ * Copyright (c) 2017 Regents of the University of California
+ *
+ * Distributed under the AIR Open Source License, Version 1.0
+ * See accompanying file AIR-License-1_0.txt or at
+ * http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
+ *
+ * SmarterApp Open Source Assessment Software Project: http://smarterapp.org
+ * Developed by Fairway Technologies, Inc. (http://fairwaytech.com)
+ * for the Smarter Balanced Assessment Consortium (http://smarterbalanced.org)
+ **************************************************************************************************/
+
 package tds.itemrenderer.service.impl;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +20,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
