@@ -12,6 +12,12 @@
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
 
+TDS.ItemRenderer/.idea/*
+shared-blackbox/.idea/*
+.idea/*
+shared-blackbox/shared-blackbox.iml
+TDS.ItemRenderer/item-renderer.iml
+**/*.iml
 # Sensitive or high-churn files:
 .idea/dataSources.ids
 .idea/dataSources.xml

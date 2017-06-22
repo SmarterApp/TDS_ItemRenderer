@@ -1,0 +1,87 @@
+.TDS_Line_Reader {
+  	position: absolute;
+  	display: block;
+  	top: 0;
+  	left: 0;
+  	width: 0px;
+  	z-index: 0;
+  	
+  	background-color: #99e5fa;
+  	background-color: rgba(0, 191, 243, .2);
+	border: solid 1px #00bff3;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-moz-border-radius:  3px;
+	-webkit-border-radius:  3px;
+    border-radius: 3px;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.TDS_Line_Reader_bgActive {
+    background-color: rgba(0, 191, 243, 0.2);
+    border: solid 1px #00bff3;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-border-radius:  3px;
+    -webkit-border-radius:  3px;
+    border-radius: 3px;
+    margin: -1px;
+}
+
+.TDS_CCBlue .TDS_Line_Reader, 
+.TDS_CCBlue2 .TDS_Line_Reader, 
+.TDS_CCYellowB .TDS_Line_Reader, 
+.TDS_CCBlue .TDS_Line_Reader_bgActive, 
+.TDS_CCBlue2 .TDS_Line_Reader_bgActive, 
+.TDS_CCYellowB .TDS_Line_Reader_bgActive {
+	background-color: rgba(244,167,0,0.2);
+	border-color: #f48300;
+}
+
+
+.TDS_Line_Reader_Relative_Pos {
+  position: relative;
+}
+
+.TDS_Line_Reader_Active {
+  	visibility: visible;
+  	width: 100%;
+}
+.pageWrapper.hiding .TDS_Line_Reader_Active {
+  	visibility: hidden;
+}
+
+
+.browser_ie.browserVer_9 .TDS_Line_Reader_Active, .browser_ie.browserVer_10 .TDS_Line_Reader_Active {
+  	min-height: 1em;
+}
+
+.TDS_Line_Reader_Btn {
+
+}
+
+.TDS_Line_Reader_Btn_Active {
+
+}
+
+.lr-enabled #btnLineReader .icon,
+.lr-enabled #btnLineReader:active .icon,
+.lr-enabled #btnLineReader:focus .icon,
+.lr-enabled #btnLineReader:hover .icon{
+    background-color: #e46f37;
+	background-position: center -2973px;
+	border-color: #fff;
+	box-shadow: 0 0 3px #b4b4b4;
+}
+
+/* when line reader is on, increase line-height to avoid extrordinary height element messing up*/
+.lr-enabled .pageWrapper.showing p {
+	line-height: 2em !important;
+}
+
+.lr-enabled #contentDialogPages .pageWrapper.showing p {
+	line-height: inherit !important;
+}

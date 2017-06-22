@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://java.sun.com/jsf/passthrough"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:cc="http://java.sun.com/jsf/composite" xmlns:tds="http://airast.org/jsfcustom" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<cc:interface componentType="tds.itemrenderer.webcontrols.LayoutMulti">
+	<cc:attribute name="templateStimulus" type="java.lang.String" default="Stimulus_WAI.xhtml" />
+	<cc:attribute name="templateStem" type="java.lang.String" default="Stem_WAI.xhtml" />
+	<cc:attribute name="templateWai" type="java.lang.Boolean" default="true" />
+</cc:interface>
+<cc:implementation>
+	<c:set target="#{cc}" property="templateStimulus" value="#{cc.attrs.templateStimulus}" />
+	<c:set target="#{cc}" property="templateStem" value="#{cc.attrs.templateStem}" />
+	<c:set target="#{cc}" property="templateWai" value="#{cc.attrs.templateWai}" />
+
+	<div class="grouping">
+
+		<tds:PlaceHolder iD="Stimulus" binding="#{cc.stimulus}" />
+
+		<div class="theQuestions">
+
+			<tds:QuestionRepeater id="Questions" var="dataitem" binding="#{cc.questions}">
+
+				<div id="Item_#{dataitem.data.position}"
+					class="item questionAnswerGroup itemContainer 
+               format_#{fn:toLowerCase(dataitem.data.item.format)} 
+               response_#{fn:replace(fn:toLowerCase(dataitem.data.item.responseType), ' ', '')} 
+               #{(dataitem.data.isFirst) ? 'firstItem' : '' } 
+               #{(dataitem.data.isLast) ? 'lastItem' : '' }">
+
+					<h3 id="QuestionNumber_#{dataitem.data.position}" class="questionNumber">#{dataitem.data.label}</h3>
+					<div class="toolsContainer itemTools"></div>
+					<div class="illustration">
+						<tds:PlaceHolder id="Illustration" repeaterElementName="Illustration" />
+					</div>
+					<tds:PlaceHolder id="Stem" repeaterElementName="Stem" />
+
+					<div class="response" title="Response">
+						<div class="optionGroup">
+							<tds:PlaceHolder id="Answer" repeaterElementName="Answer" />
+						</div>
+					</div>
+
+				</div>
+
+			</tds:QuestionRepeater>
+
+		</div>
+
+	</div>
+
+</cc:implementation>
+
+</html>

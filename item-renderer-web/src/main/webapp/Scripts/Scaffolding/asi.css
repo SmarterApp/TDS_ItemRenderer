@@ -1,0 +1,261 @@
+.asi-container {
+	overflow:hidden;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.asi-stem {
+    margin-bottom: 1em;
+	position: relative;
+	min-height: 6.5em;
+}
+.asi-stem p, .asi-stem table {
+	padding: 0.2em 0.2em 0.2em 7em;
+}
+
+/*.asi-stem p img {
+	height: 200px;
+}*/
+.asi-stem span {
+	display: inline-block;
+	vertical-align:top;
+}
+
+.loading:first-child{
+	text-align: center;
+}
+
+.asi-response-shown, .asi-response-hidden{
+	display:inline-block;
+	margin-right: 2em;
+	vertical-align: middle;
+	margin-bottom: 0.5em;
+}
+.response_scaffoldingvertical .asi-response-shown, .response_scaffoldingvertical .asi-response-hidden{
+	display:block;
+	margin-right: 0;
+}
+
+.asi-response-shown div, .asi-response-hidden div{
+	box-shadow: 0 0 0.2em #aaa, inset 0 0 4px 1px #fff;
+	border: 2px solid #aaa;
+	min-width: 11.5em;
+	border-radius: 5px;
+	min-height: 7em;
+}
+.touch .asi-response-shown div, .touch .asi-response-hidden div{
+	min-width: 5.5em; /*Jeremy noticed that 11.5em was too wide to fit on one line in iPad, reducing*/
+}
+.asi-response-shown, .asi-response-shown div, .asi-response-shown:hover, .asi-response-shown div:hover, .asi-response-shown img{
+	cursor: pointer;
+}
+.asi-response-shown div:hover{
+	border-color: #0785AB;
+	
+}
+
+.asi-response-shown .optionContent, .asi-response-hidden .optionContent
+{
+	margin: 0 auto 0;
+	clear: none;
+	display: block;
+	text-align: left;
+	background: #fff;
+	background: linear-gradient(top, #eee, #bbb);
+	background: -moz-linear-gradient(top, #eee, #bbb);
+	background: -webkit-linear-gradient(top, #eee, #bbb);	
+	border: 0 solid white;
+	
+}
+.asi-response-shown .optionContent:hover{
+	
+	
+	
+}
+
+
+.loading .asi-response-shown .optionContent{ text-align: left;}
+
+.asi-response-shown{
+	border: 3px solid transparent;
+}
+.asi-response-shown div .optionContent img{
+	margin: 0 auto 0;
+	clear: both;
+	display: block;
+}
+
+.asi-response-enabled {
+ 
+}
+
+.asi-playback-span 
+{
+    display:block;   
+	cursor: pointer;
+
+}
+.asi-playback-button {
+	/*replacing with SVG for smoother zooming*/
+	background: url("ear-clearStopped.svg") no-repeat center center transparent;
+	border: 0px solid #aaa;
+	border-radius: 10px;
+}
+.answerCell .asi-playback-button,
+.answerContainer .asi-playback-button{
+	background: url("ear-clearStopped.svg") no-repeat center center transparent;
+}
+
+.asi-playback-button:hover{
+	background-image: url("ear-blueStopped.svg") no-repeat center center transparent;
+}
+.answerCell .asi-playback-button:hover,
+.answerContainer .asi-playback-button:hover{
+	background: url("ear-blueStopped.svg") no-repeat center center transparent;
+}
+
+.asi-stop-button {
+    background: url("ear-clearPlaying.svg") no-repeat center center transparent;
+	border: 0px solid #aaa;
+	border-radius: 10px;
+}
+.answerCell .asi-stop-button,
+.answerContainer .asi-stop-button{
+	background: url("ear-clearPlaying.svg") no-repeat center center transparent;
+}
+
+.asi-stop-button:hover{
+	background-image: url("ear-bluePlaying.svg") no-repeat center center transparent;
+}
+.answerCell .asi-stop-button:hover,
+.answerContainer .asi-stop-button:hover{
+	background: url("ear-bluePlaying.svg") no-repeat center center transparent;
+}
+
+.asi-response-shown button, .asi-response-hidden button{
+	width: 100%;
+	border-radius: none;
+	height: 5em;
+}
+
+.answerCell .asi-stop-button, .answerCell .asi-playback-button,
+.answerContainer .asi-stop-button, .answerContainer .asi-playback-button{
+	border-radius: 5px;
+	margin-top: 1em;
+}
+
+
+.asi-response-enabled:hover {
+  
+	border-color: transparent;
+}
+
+/* For some reason scrolling is triggering hover on tables, removing the hover effect*/
+.touch .asi-response-enabled:hover{
+	border-color: #ddd;
+}
+
+.asi-response-subdued {
+    opacity:0.4;
+    filter:alpha(opacity=40); /* For IE8 and earlier */
+}
+.asi-response-subdued button{
+
+	background: #eee;
+	border: transparent;
+}
+
+.asi-response-emphasis {
+    border: 3px solid #0785AB;
+	box-shadow: 0 0 0.2em #666666;
+}
+
+.asi-response-hidden {
+	visibility: hidden;	
+}
+
+.asi-feedback-hidden {
+	display:none;	
+}
+.asi-feedback-shown {
+
+	display: none;
+}
+.asi-feedback-shown:empty{
+	display:none;
+}
+
+/*  Multiple Choice rebuild */
+.stemContainer.asi-stem button.asi-playback-span{
+	width: 6em;
+	height: 6em;
+	position: absolute;
+	top: 0.5em;
+	left: 0.5em;
+}
+
+.asi-complete-span{
+
+	border-radius: 10px 10px 10px 10px; 
+	padding: 3px; 
+	z-index: 10; 
+	left: 25%; 
+	width: 50%; 
+	
+	text-align: center; 
+	box-shadow: -1px 2px 9px rgb(51, 51, 51); 
+	border: 3px solid rgb(30, 175, 227); 
+	line-height: 2em;
+	background: url(arrow.png) no-repeat center center #fff;
+	/* April 20, 2016, HSA asked window have a fixed position regardless of scroll status of the window */
+	position: fixed;
+	top: 50%;
+	margin-top: -150px;
+	height: 300px;
+}
+.layout_25 .asi-complete-span {
+	left: 40%;
+
+}
+
+
+.itemContainer.hiding .asi-complete-span {
+    visibility: hidden;
+}
+
+
+/*disable hover while subduded */
+.asi-response-subdued.asi-playback-button:hover{
+
+	background-color: transparent;
+	background-repeat: no-repeat;
+}
+.asi-response-subdued.asi-playback-span.asi-stop-button{
+
+	background-color: transparent;
+	background-repeat: no-repeat;
+}
+
+/*Disable hover on iOS due to goof ups*/
+.touch .asi-playback-button:hover{
+
+	background-color: transparent;
+	background-repeat: no-repeat;
+}
+.touch .asi-stop-button:hover{
+
+	background-color: transparent;
+	background-repeat: no-repeat;
+}
+
+/* end Multiple Choice rebuild */
+
+/* ASI table stem CSS fixes*/
+.asi-stem table{
+  max-width: 100%;
+}
+
+.asi-stem table p{
+	padding: 0.2em;
+}

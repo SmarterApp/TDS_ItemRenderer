@@ -1,0 +1,1661 @@
+.hidden {
+  	display: none;
+}
+
+div.mje_container {
+  	margin-bottom: .5em;
+  	font-family: "Lucida Grande",Lucida,Verdana,sans-serif;
+}
+.mje_class_label {
+	margin-bottom: 1em;
+}
+/* sets consistent width when switching between tabs*/
+.mje_controls {
+	min-width: 425px;
+}
+.mje_row_btn_selected {
+  border-color:blue;
+  border-style:solid;
+  border-width:1px;
+}
+
+div.mje_selected_row {
+  border-color:green;
+  border-style:solid;
+  border-width:2px;
+}
+
+.mje_equation {
+  border-color:green;
+  border-style:solid;
+  border-width:1px;
+}
+
+.mje_equation_selected {
+  border-color:blue;
+  border-style:solid;
+  border-width:1px;
+}
+.mje_toggle_div {
+  border-style:solid;
+  border-width:1px;
+  z-index: 5;
+}
+div.mje_configure {
+  border-style:solid;
+  border-width:1px;
+}
+.mje_config_selector{
+  width: 200px;
+}
+input.mje_cursor_field {
+  width: 11px;
+}
+.mje_insert_select {
+  color: #00abf4;
+}
+.mje_replace_select{
+  color: red;
+}
+.mje_not_selected {
+  background-color: 'teal';
+}
+.mje_button_variable, .mje_dynamic_inputbox{
+	font-style:italic;
+}
+
+
+/*.mje_controls_content button{
+	padding: 0px !important;
+	background: url('images/button_bg.png') transparent repeat-x;
+}
+.row_color_dark button{
+	background: url('images/button_mid_bg.png') transparent repeat-x;
+}
+.row_color_gold button{
+	background: url('images/button_brown_bg.png') transparent repeat-x;
+} */
+.mje_row_Variables button{
+	font-style: italic;
+}
+.mje_editor_row{
+	width: 100%;
+	display: block;
+	clear:both;
+	overflow: hidden;
+}
+
+.mje_editor_row.mje_row_has_label .mje_label_span{
+	width: auto;
+	max-width: 50%;
+	text-align: right;
+	line-height: 1.8em;
+	vertical-align: middle;
+	display: inline-block;
+	font-size: 1.6em;
+	float: left;
+	font-family: STIXGeneral;
+    font-style: italic;
+	padding-right: 0.2em;
+	max-height: 1.8em;
+	overflow: hidden;
+	padding-left: 0.4em;
+}
+.mje_editor_row.mje_row_has_label .MathJax{
+	display:block;
+	float: none;
+	width: auto;
+}
+.mje_eq_ctl{
+	clear: both;
+	display: block;
+}
+
+.mje_editor_row .MathJax{
+}
+
+.keypad-row{
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	margin: 0;
+	padding: 0;
+}
+.keypad-grid-row{
+	margin-bottom: 4px;
+	padding-bottom: 0px;
+}
+.mje_simple_row:nth-child(2) {
+    border-top: medium none;
+}
+.keypad-rows .keypad-row{
+	margin-left: 94px;
+}
+.keypad-item {
+	background-color: transparent;
+	border: 1px solid #808080;
+	border-radius: 2px;
+  	-moz-border-radius: 2px;
+  	-webkit-border-radius: 2px;
+	display: inline-block;
+	height: 30px;
+	min-width: 19px;
+	overflow: hidden;
+	margin-right: 3px;
+	margin-bottom: 0px;
+	cursor: pointer;
+	text-align: center;
+	-webkit-transition: color .2s ease-in, background-color .2s ease-in, -webkit-box-shadow .2s ease-in;
+	-moz-transition: color .2s ease-in, background-color .2s ease-in, -moz-box-shadow .2s ease-in;
+	transition: color .2s ease-in, background-color .2s ease-in, box-shadow .2s ease-in;
+	padding: 0 0.2em;
+	line-height: normal;
+	font-family: STIXGeneral,Arial,Helvetica,sans-serif;
+}
+.TDS_PS_L0 .keypad-item{
+	line-height: 30px;
+}
+.mje_button:hover, .mje_button:focus {
+    border-color: #0785AB;
+    -webkit-box-shadow: 0em 0em .3em #666;
+	-moz-box-shadow: 0em 0em .3em #666;
+	box-shadow: 0em 0em .3em #666;
+}
+.mje_nav_next, .mje_nav_prev {
+	text-indent: -9999px;
+	background: url(images/next_back.png) no-repeat 6px 5px;
+	width: 30px;
+}
+.mje_nav_next:hover, .mje_nav_next:active,
+.TDS_CCYellowB .mje_nav_next:hover,.TDS_CCWhiteN .mje_nav_next:hover,.TDS_CCInvert .mje_nav_next:hover{
+	background-position: -94px 5px;
+}
+.TDS_CCYellowB .mje_nav_next{
+	background-position: 6px -45px;
+}
+.TDS_CCYellowB .mje_nav_next:hover{
+	background-position: -94px 5px;
+}
+.TDS_CCInvert .mje_nav_next,
+.TDS_CCWhiteN .mje_nav_next{
+	background-position: 6px -20px;
+}
+.TDS_CCInvert .mje_nav_next:hover,
+.TDS_CCWhiteN .mje_nav_next:hover{
+	background-position: -94px 5px;
+}
+.mje_nav_prev {
+	background-position: -194px 5px;
+}
+.TDS_CCYellowB .mje_nav_prev {
+	background-position: -194px -45px;
+}
+.TDS_CCInvert .mje_nav_prev,
+.TDS_CCWhiteN .mje_nav_prev {
+	background-position: -194px -20px;
+}
+.mje_nav_prev:hover, .mje_nav_prev:active {
+	background-position: -294px 5px;
+}
+
+
+
+/*Icons for Undo, Redo, and Delete*/
+.mje_nav_undo, .mje_nav_redo, .mje_nav_del{
+/*.mje_nav_undo, .mje_nav_redo{*/
+	background: url(images/undo_redo_delete.png) no-repeat 6px center;
+	text-indent: -9999px;
+	width: 30px;
+}
+.mje_nav_undo{
+	background-position: 7px center;
+}
+.mje_nav_undo:hover, .mje_nav_undo:active{
+	background-position: -92px center;
+}
+.mje_nav_redo{
+	background-position: -192px center;
+}
+.mje_nav_redo:hover, .mje_nav_redo:active{
+	background-position: -292px center;
+}
+.mje_nav_del{
+	background-position: -357px center;
+}
+.mje_nav_del:hover, .mje_nav_del:active{
+	background-position: -451px center;
+}
+
+.mje_button_grid_row {
+	display: block;
+	padding-bottom: 4px;
+}
+.mje_grid_row {
+	display: block;
+	float: left;
+	width: 85px;
+	border-right: solid 1px #ccc;
+	text-align: left;
+	padding-top: 3px;
+}
+
+.keypad-row{
+	border-left: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	display: block;
+	margin-left: 85px;
+	padding-left: 5px;
+	padding-top: 3px;
+	text-align: left;
+}
+
+.mje_simple_row:nth-child(2) {
+	border-top: none;
+}
+.mje_controls_content_el:after {
+	content: "";  
+	display: block;  
+	clear: both;  
+	visibility: hidden;  
+	font-size: 0;  
+	height: 0;
+}
+.mje_controls_content {
+	border: solid 1px #00abf4;
+  	-moz-border-radius: 0px 0px 5px 5px;
+  	-webkit-border-radius: 0px 0px 5px 5px;
+    border-radius: 0px 0px 5px 5px;
+  	padding: 3px;
+}
+.activeItem .mje_controls_content {
+	-webkit-box-shadow: 0em 0em .3em #999;
+	-moz-box-shadow: 0em 0em .3em #999;
+	box-shadow: 0em 0em .3em #999;
+}
+.mje_simple_row_title, .mje_grid_row_title {
+	display: block;
+    font-size: 0.5em;
+    padding-bottom: 0.2em;
+}
+.mje_grid_row_title {
+	padding-top:3px;
+}
+
+/* tabs */
+.mje_controls_tabs {
+	background-color: #e4e6e6;
+	background-color: rgba(230, 230, 230, .3);
+	margin-top: 3px;
+	padding: 0 3px;
+	border-top: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-left: solid 1px #ccc;
+	min-height: 30px;
+}
+.mje_controls_tabs:after {
+	content: "";  
+	display: block;  
+	clear: both;  
+	visibility: hidden;  
+	font-size: 0;  
+	height: 0;
+}
+.editor_controls_tabs_el {
+	float: left;
+	margin: 7px 2px -1px;
+	cursor: pointer;
+	border-top: solid 1px transparent;
+  	border-right: solid 1px transparent;
+  	border-left: solid 1px transparent;
+	padding: 2px 5px;
+}
+.editor_controls_tabs_el:hover {
+	border-color: #000;
+	background-color: #f0f2f2;
+}
+.mje_single_tab .editor_controls_tabs_el {
+	display: none;
+}
+.mje_nav {
+	float: left;
+	padding-left: 3px;
+}
+.mje_nav button {
+	background-color: transparent;
+	border: 1px solid #808080;
+	border-radius: 25px;
+  	-moz-border-radius: 25px;
+  	-webkit-border-radius: 25px;
+	display: block;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 5px;
+	overflow: hidden;
+	margin-right: 3px;
+	margin-top: 3px;
+	float: left;
+	cursor: pointer;
+	text-align: center;
+	font-size: 20px;
+	min-width: 25px;
+	-webkit-transition: color .2s ease-in, background-color .2s ease-in, -webkit-box-shadow .2s ease-in;
+	-moz-transition: color .2s ease-in, background-color .2s ease-in, -moz-box-shadow .2s ease-in;
+	transition: color .2s ease-in, background-color .2s ease-in, box-shadow .2s ease-in;
+}
+.mje_nav button:hover, .mje_nav button:focus {
+	background-color: #fff;
+	border-color: #00abf4;
+	color: #00abf4;
+	 -webkit-box-shadow: 0em 0em .1em #000;
+	-moz-box-shadow: 0em 0em .1em #000;
+	box-shadow: 0em 0em .1em #000;
+}
+
+.mje_numpad_input{
+  width: 60px;
+}
+
+div.mje_selected_tab, div.mje_selected_tab:hover {
+  	background-color: #fff;
+  	border-color: #00abf4;
+}
+.mje_question {
+  float: right;
+}
+
+
+.mje_button_fraction, .mje_button_sqrt, .mje_button_nrt, .mje_button_sup, .mje_button_sub, .mje_button_subsup, .mje_button_dot {
+	background: url(images/equations_level1.png) no-repeat center 200px;
+	width: 32px;
+	text-indent: -9999px;
+}
+.TDS_CCInvert .mje_button_fraction, .TDS_CCInvert .mje_button_sqrt, .TDS_CCInvert .mje_button_nrt, .TDS_CCInvert .mje_button_sup, .TDS_CCInvert .mje_button_sub, .TDS_CCInvert .mje_button_subsup, 
+.TDS_CCWhiteN .mje_button_fraction, .TDS_CCWhiteN .mje_button_sqrt, .TDS_CCWhiteN .mje_button_nrt, .TDS_CCWhiteN .mje_button_sup, .TDS_CCWhiteN .mje_button_sub, .TDS_CCWhiteN .mje_button_subsup {
+	background-image: url(images/equations_level1_white.png);
+}
+.TDS_CCYellowB .mje_button_fraction, .TDS_CCYellowB .mje_button_sqrt, .TDS_CCYellowB .mje_button_nrt, .TDS_CCYellowB .mje_button_sup, .TDS_CCYellowB .mje_button_sub, .TDS_CCYellowB .mje_button_subsup {
+	background-image: url(images/equations_level1_yellow.png);
+}
+.mje_button_fraction {
+	background-position: center -154px;
+    width: 20px;
+}
+.mje_button_sqrt {
+	background-position: center -194px;
+}
+.mje_button_nrt {
+	background-position: center -233px;
+	width: 36px;
+}
+.mje_button_sup {
+	background-position: center -272px;
+	width: 27px;
+}
+.mje_button_sub {
+	background-position: center -311px;
+	width: 27px;
+}
+.mje_button_subsup {
+	background-position: center -350px;
+	width: 28px;
+}
+.mje_button_dot{
+	background-position: center -460px;
+    width: 20px;
+}
+
+.TDS_PS_L1 .mje_button_fraction {
+	background-position: center -151px;
+    width: 20px;
+}
+.TDS_PS_L1 .mje_button_sqrt {
+	background-position: center -191px;
+}
+.TDS_PS_L1 .mje_button_nrt {
+	background-position: center -230px;
+	width: 36px;
+}
+.TDS_PS_L1 .mje_button_sup {
+	background-position: center -269px;
+	width: 27px;
+}
+.TDS_PS_L1 .mje_button_sub {
+	background-position: center -308px;
+	width: 27px;
+}
+.TDS_PS_L1 .mje_button_subsup {
+	background-position: center -347px;
+	width: 28px;
+}
+.TDS_PS_L1 .mje_button_dot {
+	background-position: center -457px;
+	width: 28px;
+}
+
+.TDS_PS_L2 .mje_button_fraction, .TDS_PS_L2 .mje_button_sqrt, .TDS_PS_L2 .mje_button_nrt, .TDS_PS_L2 .mje_button_sup, .TDS_PS_L2 .mje_button_sub, .TDS_PS_L2 .mje_button_subsup, .TDS_PS_L2 .mje_button_dot  {
+	background-image: url(images/equations_level2.png);
+}
+.TDS_CCInvert.TDS_PS_L2 .mje_button_fraction, .TDS_CCInvert.TDS_PS_L2 .mje_button_sqrt, .TDS_CCInvert.TDS_PS_L2 .mje_button_nrt, .TDS_CCInvert.TDS_PS_L2 .mje_button_sup, .TDS_CCInvert.TDS_PS_L2 .mje_button_sub, .TDS_CCInvert.TDS_PS_L2 .mje_button_subsup, 
+.TDS_CCWhiteN.TDS_PS_L2 .mje_button_fraction, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_sqrt, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_nrt, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_sup, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_sub, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_subsup {
+	background-image: url(images/equations_level2_white.png);
+}
+.TDS_CCInvert .mje_controls_content_el button,
+.TDS_CCWhiteN .mje_controls_content_el button{
+	color: white;
+}
+
+.TDS_CCYellowB.TDS_PS_L2 .mje_button_fraction, .TDS_CCYellowB.TDS_PS_L2 .mje_button_sqrt, .TDS_CCYellowB.TDS_PS_L2 .mje_button_nrt, .TDS_CCYellowB.TDS_PS_L2 .mje_button_sup, .TDS_CCYellowB.TDS_PS_L2 .mje_button_sub, .TDS_CCYellowB.TDS_PS_L2 .mje_button_subsup {
+	background-image: url(images/equations_level2_yellow.png);
+}
+.TDS_CCYellowB .mje_controls_content_el button{
+	color: #FFCC00;
+}
+
+.TDS_PS_L2 .mje_button_fraction {
+	background-position: center -190px;
+}
+.TDS_PS_L2 .mje_button_sqrt {
+	background-position: center -242px;
+	width: 42px;
+}
+.TDS_PS_L2 .mje_button_nrt {
+	background-position: center -292px;
+	width: 46px;
+}
+.TDS_PS_L2 .mje_button_sup {
+	background-position: center -341px;
+}
+.TDS_PS_L2 .mje_button_sub {
+	background-position: center -392px;
+}
+.TDS_PS_L2 .mje_button_subsup {
+	background-position: center -441px;
+}
+.TDS_PS_L2 .mje_button_dot {
+	background-position: center -619px;
+}
+
+.TDS_PS_L3 .mje_button_fraction, .TDS_PS_L3 .mje_button_sqrt, .TDS_PS_L3 .mje_button_nrt, .TDS_PS_L3 .mje_button_sup, .TDS_PS_L3 .mje_button_sub, .TDS_PS_L3 .mje_button_subsup, .TDS_PS_L3 .mje_button_dot, 
+.TDS_PS_L4 .mje_button_fraction, .TDS_PS_L4 .mje_button_sqrt, .TDS_PS_L4 .mje_button_nrt, .TDS_PS_L4 .mje_button_sup, .TDS_PS_L4 .mje_button_sub, .TDS_PS_L4 .mje_button_subsup , .TDS_PS_L4 .mje_button_dot{
+	background-image: url(images/equations_level3.png);
+}
+.TDS_CCInvert.TDS_PS_L3 .mje_button_fraction, .TDS_CCInvert.TDS_PS_L3 .mje_button_sqrt, .TDS_CCInvert.TDS_PS_L3 .mje_button_nrt, .TDS_CCInvert.TDS_PS_L3 .mje_button_sup, .TDS_CCInvert.TDS_PS_L3 .mje_button_sub, .TDS_CCInvert.TDS_PS_L3 .mje_button_subsup, 
+.TDS_CCInvert.TDS_PS_L4 .mje_button_fraction, .TDS_CCInvert.TDS_PS_L4 .mje_button_sqrt, .TDS_CCInvert.TDS_PS_L4 .mje_button_nrt, .TDS_CCInvert.TDS_PS_L4 .mje_button_sup, .TDS_CCInvert.TDS_PS_L4 .mje_button_sub, .TDS_CCInvert.TDS_PS_L4 .mje_button_subsup, 
+.TDS_CCWhiteN.TDS_PS_L3 .mje_button_fraction, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_sqrt, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_nrt, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_sup, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_sub, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_subsup, 
+.TDS_CCWhiteN.TDS_PS_L4 .mje_button_fraction, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_sqrt, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_nrt, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_sup, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_sub, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_subsup {
+	background-image: url(images/equations_level3_white.png);
+}
+
+.TDS_CCYellowB.TDS_PS_L3 .mje_button_fraction, .TDS_CCYellowB.TDS_PS_L3 .mje_button_sqrt, .TDS_CCYellowB.TDS_PS_L3 .mje_button_nrt, .TDS_CCYellowB.TDS_PS_L3 .mje_button_sup, .TDS_CCYellowB.TDS_PS_L3 .mje_button_sub, .TDS_CCYellowB.TDS_PS_L3 .mje_button_subsup, 
+.TDS_CCYellowB.TDS_PS_L4 .mje_button_fraction, .TDS_CCYellowB.TDS_PS_L4 .mje_button_sqrt, .TDS_CCYellowB.TDS_PS_L4 .mje_button_nrt, .TDS_CCYellowB.TDS_PS_L4 .mje_button_sup, .TDS_CCYellowB.TDS_PS_L4 .mje_button_sub, .TDS_CCYellowB.TDS_PS_L4 .mje_button_subsup {
+	background-image: url(images/equations_level3_yellow.png);
+}
+
+.TDS_PS_L3 .mje_button_fraction {
+	background-position: center -287px;
+}
+.TDS_PS_L3 .mje_button_sqrt {
+	background-position: center -362px;
+	width: 50px;
+}
+.TDS_PS_L3 .mje_button_nrt {
+	background-position: center -437px;
+	width: 56px;
+}
+.TDS_PS_L3 .mje_button_sup {
+	background-position: center -512px;
+}
+.TDS_PS_L3 .mje_button_sub {
+	background-position: center -587px;
+}
+.TDS_PS_L3 .mje_button_subsup {
+	background-position: center -662px;
+}
+.TDS_PS_L3 .mje_button_dot {
+	background-position: center -865px;
+}
+
+.TDS_PS_L4 .mje_button_fraction {
+	background-position: center -279px;
+}
+.TDS_PS_L4 .mje_button_sqrt {
+	background-position: center -354px;
+	width: 50px;
+}
+.TDS_PS_L4 .mje_button_nrt {
+	background-position: center -429px;
+	width: 56px;
+}
+.TDS_PS_L4 .mje_button_sup {
+	background-position: center -504px;
+}
+.TDS_PS_L4 .mje_button_sub {
+	background-position: center -579px;
+}
+.TDS_PS_L4 .mje_button_subsup {
+	background-position: center -654px;
+}
+.TDS_PS_L4 .mje_button_dot {
+	background-position: center -857px;
+}
+
+
+/* temp style for SBAC, hide labels */
+.mje_simple_row_title, .mje_grid_row_title {
+	display: none;
+}
+
+
+/* more bigger! */
+/*firefox/gecko doesn't handle zoom yet
+.browser_firefox .mje_container .MathJax, 
+.browser_airsecurebrowser.platform_windows .mje_container .MathJax, 
+.browser_airsecurebrowser.platform_osx .mje_container .MathJax, 
+.browser_airsecurebrowser.platform_linux .mje_container .MathJax, 
+.browser_airsecurebrowser.platform_unix .mje_container .MathJax {
+	-moz-transform: scale(1.5);
+    transform: scale(1.5);
+    margin-left: 17%;
+    margin-bottom: 1.5em;
+    margin-top: .5em;
+    width: 66%;
+}
+.mje_container .MathJax {
+    zoom:1.5;
+}*/
+  
+.mje_container {
+    min-height: 1.8em;
+    padding-top: .4em;
+}
+
+.MathJax * {
+	-moz-user-select: element !important;
+	-webkit-user-select: auto !important;
+	-ms-user-select: element !important;
+	user-select: element !important;
+}
+
+.noColumns .mje_container .MathJax {
+    /*max-width: 40em; going to try and disable for bug 93347 */
+}
+.noColumns layout1 .mje_container .MathJax {
+    max-width: inherit;
+}
+/*.platform_ios .mje_container .MathJax, 
+.platform_android .mje_container .MathJax {
+    -webkit-text-size-adjust: 150%;
+}*/
+.platform_android .mje_container input {
+	-webkit-user-modify: read-write-plaintext-only;
+}
+/* focus styles */
+.mje_container .MathJax {
+	min-height: 2.2em;
+	padding: .8em;
+}
+@-webkit-keyframes color_change {
+  from { color: #98e0ff; }
+  to { color: #00abf4; }
+}
+@-moz-keyframes color_change {
+  from { color: #98e0ff; }
+  to { color: #00abf4; }
+}
+@-ms-keyframes color_change {
+  from { color: #98e0ff; }
+  to { color: #00abf4; }
+}
+@keyframes color_change {
+  from { color: #98e0ff; }
+  to { color: #00abf4; }
+}
+.mje_insert_select {
+    -webkit-animation: color_change 1s infinite alternate;
+  	-moz-animation: color_change 1s infinite alternate;
+  	-ms-animation: color_change 1s infinite alternate;
+  	animation: color_change 1s infinite alternate;
+}
+/*Bug 74097 asked to get rid of the Arrow*/
+/*
+.mje_container .mje_insert_select:after {
+	display: inline-block;
+    content: "";
+    width: 15px;
+    height: .8em;
+    background: url(images/arrow.png) no-repeat center center;
+}*/
+.mje_box_selection.mje_insert_select
+{
+    display: none;
+}
+.mje_cursor_field.mje_allow_edit.mje_box_input 
+{
+    margin: 0;
+    
+}
+.math .mje_cursor_field.mje_allow_edit.mje_box_input 
+{
+    -moz-transform: translateY(2px);
+    max-height: 0.7em;
+    font-size: 0.6em;
+}
+
+
+
+.mje_cursor_field.mje_allow_edit {
+	border: solid 1px #00abf4;
+	color: #00abf4;
+    height: 1.5em !important;
+    padding: 0px !important;
+    margin: 0px 4px 3px;
+    -moz-transform: translateY(-5px);
+    transform: translateY(-5px);
+}
+.math .mje_cursor_field.mje_allow_edit {
+	font-size: 0.8em !important;
+    height: 0.8em !important;
+    -moz-transform: translateY(2px);
+    transform: translateY(2px);
+}
+.platform_ios .math .mje_cursor_field.mje_allow_edit, 
+.platform_android .math .mje_cursor_field.mje_allow_edit {
+	height: 1em !important;
+}
+/* for fake text box to be positioned by Justin */
+.mje_cursor_field2 {
+	border: solid 3px red;
+	pointer-events:none;
+	position: absolute;
+	display: block;
+}
+
+/* Removing CLIP from spans inside MathJax because it is cutting off our input boxes.  Fix for Bugs 74823, 74124, 74681 */
+/* Dear god I hope this works - Adam  
+ *
+ * (Unfortunately prevents selection of the numerator / denominator of functions." ~jcarlson.
+ * The suffering continues.
+.MathJax span{
+	clip: auto !important;
+}
+*/
+
+.mje_cursor_field.mje_allow_edit{
+	height: 1.3em !important;
+	}
+.math .mje_cursor_field.mje_allow_edit{
+	}
+.mje_cursor_field.mje_allow_edit, .math .mje_cursor_field.mje_allow_edit{
+	background: #00ABF4;
+    color: #FFFFFF;
+}
+
+
+/*Zoom level fixing for bug 75318  This stuff can be safely removed in any non-tds / AIR project */
+.TDS_PS_L1 .answerCell input.mje_cursor_field.mje_allow_edit, .TDS_PS_L1 .answerContainer input.mje_cursor_field.mje_allow_edit, .TDS_PS_L2 .answerCell input.mje_cursor_field.mje_allow_edit, .TDS_PS_L2 .answerContainer input.mje_cursor_field.mje_allow_edit, .TDS_PS_L3 .answerCell input.mje_cursor_field.mje_allow_edit, .TDS_PS_L3 .answerContainer input.mje_cursor_field.mje_allow_edit, .TDS_PS_L4 .answerCell input, .TDS_PS_L4 .answerContainer input.mje_cursor_field.mje_allow_edit{
+        margin-right: 0.2em;
+}
+
+/*(FogBugz:102615) bug fix to display the EQ editor textbox properly in IE10*/
+span.MathJax
+{
+	width:100%;
+}
+
+.keypad-row, .keypad-grid {
+    text-align:left;
+}
+
+/* Brought over from eq_editor.css */
+
+
+
+/* AIR Custom Styles*/
+.mathquill-rendered-math .mathquill-editable{
+	border: none;
+	
+}
+.mathquill-editable .mathquill-root-block, .input-box.mathquill-rendered-math.readOnly{
+	font-size: 1.5em;
+	border: 1px solid #bbb;
+	border-radius: 6px;
+	box-sizing: border-box;
+	margin: 0px !important;
+	padding: .2em !important;
+	/*text-indent: .2em;  This was causing issues, removing*/
+	text-indent: 0em;
+	overflow:auto;
+    width: auto;
+    display: block;
+	max-height: 3em;
+}
+.input-box.mathquill-rendered-math.readOnly {
+     background-color: #ccc;
+} 
+
+
+.mje_dynamic_inputbox .mathquill-editable
+{
+    width: auto;
+    min-width: 15em;
+	max-width: 100%;
+}
+/* Adding pading to the left side because of italics fonts*/
+.input.mje_dynamic_inputbox{
+	padding-left: 0.5em;
+}
+
+/*.mathquill-editable .mathquill-root-block.mq-hasCursor{
+	-moz-box-shadow:inset 0 0 5px 2px rgba(0,174,239,.3);
+   -webkit-box-shadow:inset 0 0 5px 2px rgba(0,174,239,.3);
+	box-shadow:inset 0 0 5px 2px rgba(0,174,239,.3);
+	border-color: #0089d1;
+}*/
+
+.mathquill-editable .mq-cursor{
+	min-width: 0.2em; /*Windows Chrome cursor appearance fix*/
+}
+.mathquill-editable .mq-cursor .mq-line{
+	border-color: #0089d1;
+}
+.mje_button_fraction, .mje_button_sqrt, .mje_button_nrt, .mje_button_sup, .mje_button_sub, .mje_button_subsup, .mje_button_dot {
+	background: url(images/equations_level1.png) no-repeat center 200px;
+}
+
+.mje_button_dot{
+	background-position: center -460px;
+}
+
+.mje_button_fraction {
+	background-position: center -154px;
+}
+.mje_button_sqrt {
+	background-position: center -194px;
+}
+.mje_button_nrt {
+	background-position: center -233px;
+}
+.mje_button_sup {
+	background-position: center -272px;
+}
+.mje_button_sub {
+	background-position: center -311px;
+}
+.mje_button_subsup {
+	background-position: center -350px;
+}
+.mje_button_dot{
+	background-position: center -460px;
+}
+.mje_button:hover, .mje_button:focus, .keypad-item:hover {
+    border-color: #0785AB;
+    box-shadow: 0 0 0.3em #666666;
+}
+.mathquill-rendered-math, .mathquill-root-block, .mathquill-editable{
+	/*width: 100%;*/
+}
+
+/*Toolbar Styles*/
+.toolbar {
+	padding-bottom: 3px;
+	padding-left: 3px;
+}
+.toolbar button {
+	background-color: transparent;
+	border: 1px solid #808080;
+	border-radius: 25px;
+	display: inline-block;
+  	-moz-border-radius: 25px;
+  	-webkit-border-radius: 25px;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 5px;
+	overflow: hidden;
+	margin-right: 3px;
+	margin-top: 3px;
+	cursor: pointer;
+	text-align: center;
+	font-size: 20px;
+	min-width: 25px;
+	-webkit-transition: color .2s ease-in, background-color .2s ease-in, -webkit-box-shadow .2s ease-in;
+	-moz-transition: color .2s ease-in, background-color .2s ease-in, -moz-box-shadow .2s ease-in;
+	transition: color .2s ease-in, background-color .2s ease-in, box-shadow .2s ease-in;
+}
+.toolbar button:hover, .toolbar button:focus {
+	background-color: #fff;
+	border-color: #00abf4;
+	color: #00abf4;
+	 -webkit-box-shadow: 0em 0em .1em #000;
+	-moz-box-shadow: 0em 0em .1em #000;
+	box-shadow: 0em 0em .1em #000;
+}
+
+.mje_numpad_input{
+  width: 60px;
+}
+
+div.mje_selected_tab, div.mje_selected_tab:hover {
+  	background-color: #fff;
+  	border-color: #00abf4;
+}
+.mje_question {
+  float: right;
+}
+
+/*Icons for Undo, Redo, and Delete*/
+.mje_nav_undo, .mje_nav_redo, .mje_nav_del{
+	background: url(images/undo_redo_delete.png) no-repeat 6px center;
+	text-indent: -9999px;
+	width: 30px;
+}
+.mje_nav_undo{
+	background-position: 7px 5px;
+}
+.mje_nav_undo:hover, .mje_nav_undo:active{
+	background-position: -92px 5px;
+}
+.mje_nav_redo{
+	background-position: -192px 5px;
+}
+.mje_nav_redo:hover, .mje_nav_redo:active{
+	background-position: -292px 5px;
+}
+.mje_nav_del{
+	background-position: -357px 5px;
+}
+.mje_nav_del:hover, .mje_nav_del:active{
+	background-position: -451px 5px;
+}
+.TDS_CCInvert .mje_nav_undo,
+.TDS_CCWhiteN .mje_nav_undo{
+	background-position: 7px -19px;
+}
+.TDS_CCInvert .mje_nav_undo:hover, .TDS_CCInvert .mje_nav_undo:active,
+.TDS_CCWhiteN .mje_nav_undo:hover, .TDS_CCWhiteN .mje_nav_undo:active{
+	background-position: -92px -19px;
+}
+.TDS_CCInvert .mje_nav_redo,
+.TDS_CCWhiteN .mje_nav_redo{
+	background-position: -192px -19px;
+}
+.TDS_CCInvert .mje_nav_redo:hover, .TDS_CCInvert .mje_nav_redo:active,
+.TDS_CCWhiteN .mje_nav_redo:hover, .TDS_CCWhiteN .mje_nav_redo:active{
+	background-position: -292px -19px;
+}
+.TDS_CCInvert .mje_nav_del,
+.TDS_CCWhiteN .mje_nav_del{
+	background-position: -357px -19px;
+}
+.TDS_CCInvert .mje_nav_del:hover, .TDS_CCInvert .mje_nav_del:active,
+.TDS_CCWhiteN .mje_nav_del:hover, .TDS_CCWhiteN .mje_nav_del:active{
+	background-position: -451px -19px;
+}
+.TDS_CCYellowB .mje_nav_undo{
+	background-position: 7px -45px;
+}
+.TDS_CCYellowB .mje_nav_undo:hover, .TDS_CCYellowB .mje_nav_undo:active{
+	background-position: -92px -45px;
+}
+.TDS_CCYellowB .mje_nav_redo{
+	background-position: -192px -45px;
+}
+.TDS_CCYellowB .mje_nav_redo:hover, .TDS_CCYellowB .mje_nav_redo:active{
+	background-position: -292px -45px;
+}
+.TDS_CCYellowB .mje_nav_del{
+	background-position: -357px -45px;
+}
+.TDS_CCYellowB .mje_nav_del:hover, .TDS_CCYellowB .mje_nav_del:active{
+	background-position: -451px -45px;
+}
+
+/* @group zooming */
+/*1*/
+.TDS_PS_L1 .keypad-item {
+	height: 35px;
+	min-width: 19px;
+	line-height: 35px;
+}
+.TDS_PS_L1 .mje_grid_row {
+	width: 100px;
+}
+.browser_ie.browserVer_10.TDS_PS_L1 .mje_grid_row{
+	width: 103px;
+}
+.TDS_PS_L1 .mje_button_grid_row {
+	min-height: 40px;
+}
+.TDS_PS_L1 .keypad-row{
+	margin-left: 100px;
+	min-height: 40px;
+}
+.browser_ie.browserVer_10.TDS_PS_L1 .mje_simple_row{
+	margin-left: 103px;
+}
+.TDS_PS_L1 .mje_controls {
+	min-width: 460px;
+}
+.TDS_PS_L1 .toolbar button {
+	border-radius: 25px;
+  	-moz-border-radius: 25px;
+  	-webkit-border-radius: 25px;
+	height: 25px;
+	line-height: 25px;
+	margin-top: 5px;
+	font-size: 25px;
+	min-width: 25px;
+}
+.TDS_PS_L1 .toolbar .mje_nav_del, 
+.TDS_PS_L1 .toolbar .mje_nav_next, 
+.TDS_PS_L1 .toolbar .mje_nav_prev,
+.TDS_PS_L1 .toolbar .mje_nav_redo,
+.TDS_PS_L1 .toolbar .mje_nav_undo {
+	margin-top: 3px;
+}
+
+/*2*/
+.TDS_PS_L2 .keypad-item {
+	height: 42px;
+	min-width: 25px;
+	line-height: 42px;
+}
+.TDS_PS_L2 .mje_grid_row {
+	width: 115px;
+}
+.browser_ie.browserVer_10.TDS_PS_L2 .mje_grid_row{
+	width: 115px;
+}
+.TDS_PS_L2 .mje_button_grid_row {
+	min-height: 45px;
+}
+.TDS_PS_L2 .keypad-row{
+	margin-left: 125px;
+	min-height: 45px;
+}
+.browser_ie.browserVer_10.TDS_PS_L2 .mje_simple_row{
+	margin-left: 115px;
+}
+.TDS_PS_L2 .mje_controls {
+	min-width: 530px;
+}
+.TDS_PS_L2 .toolbar button {
+	border-radius: 30px;
+  	-moz-border-radius: 30px;
+  	-webkit-border-radius: 30px;
+	height: 35px;
+	line-height: 30px;
+	margin-top: 6px;
+	font-size: 30px;
+	min-width: 42px;
+}
+.TDS_PS_L2 .toolbar .mje_nav_del, 
+.TDS_PS_L2 .toolbar .mje_nav_next, 
+.TDS_PS_L2 .toolbar .mje_nav_prev,
+.TDS_PS_L2 .toolbar .mje_nav_redo,
+.TDS_PS_L2 .toolbar .mje_nav_undo {
+	margin-top: 2px;
+}
+
+.TDS_PS_L2 .mje_nav_next, .TDS_PS_L2 .mje_nav_prev,
+.TDS_CCInvert.TDS_PS_L2 .mje_nav_next, .TDS_CCInvert.TDS_PS_L2 .mje_nav_prev,
+.TDS_CCYellowB.TDS_PS_L2 .mje_nav_next, .TDS_CCYellowB.TDS_PS_L2 .mje_nav_prev,
+.TDS_CCWhiteN.TDS_PS_L2 .mje_nav_next, .TDS_CCWhiteN.TDS_PS_L2 .mje_nav_prev{
+	background-image:  url("images/next_back_L2.png"); 
+}
+.TDS_PS_L2 .mje_nav_next, .TDS_PS_L2 .mje_nav_prev{
+	background-position: 6px 7px;
+}
+
+.TDS_PS_L2 .mje_nav_next:hover, .TDS_PS_L2 .mje_nav_next:active {
+	background-position: -94px 7px;
+}
+.TDS_PS_L2 .mje_nav_prev {
+	background-position: -194px 7px;
+}
+.TDS_PS_L2 .mje_nav_prev:hover, .TDS_PS_L2 .mje_nav_prev:active {
+	background-position: -294px 7px;
+}
+
+.TDS_PS_L2.TDS_CCInvert .mje_nav_next, .TDS_PS_L2.TDS_CCInvert .mje_nav_prev,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_next, .TDS_PS_L2.TDS_CCWhiteN .mje_nav_prev {
+	background-position: 6px -23px
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_next:hover, .TDS_PS_L2.TDS_CCInvert .mje_nav_next:active,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_next:hover, .TDS_PS_L2.TDS_CCWhiteN .mje_nav_next:active {
+	background-position: -94px -23px;
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_prev,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_prev {
+	background-position: -194px -23px;
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_prev:hover, .TDS_PS_L2.TDS_CCInvert .mje_nav_prev:active,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_prev:hover, .TDS_PS_L2.TDS_CCWhiteN .mje_nav_prev:active {
+	background-position: -294px -23px;
+}
+
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_next, .TDS_PS_L2.TDS_CCYellowB .mje_nav_prev{
+	background-position: 6px -53px
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_next:hover, .TDS_PS_L2.TDS_CCYellowB .mje_nav_next:active {
+	background-position: -94px -53px;
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_prev{
+	background-position: -194px -53px;
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_prev:hover, .TDS_PS_L2.TDS_CCYellowB .mje_nav_prev:active{
+	background-position: -294px -53px;
+}
+
+.TDS_PS_L2 .mje_nav_undo, .TDS_PS_L2 .mje_nav_redo, .TDS_PS_L2 .mje_nav_del{
+	background-image: url(images/undo_redo_delete_L2.png);	
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_undo,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_undo{
+	background-position: 7px -23px;
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_undo:hover, .TDS_PS_L2.TDS_CCInvert .mje_nav_undo:active,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_undo:hover, .TDS_PS_L2.TDS_CCWhiteN .mje_nav_undo:active{
+	background-position: -92px -23px;
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_redo,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_redo{
+	background-position: -192px -23px;
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_redo:hover, .TDS_PS_L2.TDS_CCInvert .mje_nav_redo:active,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_redo:hover, .TDS_PS_L2.TDS_CCWhiteN .mje_nav_redo:active{
+	background-position: -292px -23px;
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_del,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_del{
+	background-position: -357px -23px;
+}
+.TDS_PS_L2.TDS_CCInvert .mje_nav_del:hover, .TDS_PS_L2.TDS_CCInvert .mje_nav_del:active,
+.TDS_PS_L2.TDS_CCWhiteN .mje_nav_del:hover, .TDS_PS_L2.TDS_CCWhiteN .mje_nav_del:active{
+	background-position: -451px -23px;
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_undo{
+	background-position: 7px -53px;
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_undo:hover, .TDS_PS_L2.TDS_CCYellowB .mje_nav_undo:active{
+	background-position: -92px -53px;
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_redo{
+	background-position: -192px -53px;
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_redo:hover, .TDS_PS_L2.TDS_CCYellowB .mje_nav_redo:active{
+	background-position: -292px -53px;
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_del{
+	background-position: -357px -53px;
+}
+.TDS_PS_L2.TDS_CCYellowB .mje_nav_del:hover, .TDS_PS_L2.TDS_CCYellowB .mje_nav_del:active{
+	background-position: -451px -53px;
+}
+
+
+/*3*/
+.TDS_PS_L3 .keypad-body {
+	min-width: 640px;
+}
+.TDS_PS_L3 .keypad-item {
+	height: 52px;
+	min-width: 29px;
+	line-height: 52px;
+}
+.TDS_PS_L3 .mje_grid_row {
+	width: 132px;
+}
+.TDS_PS_L3 .mje_button_grid_row {
+	min-height: 55px;
+}
+.TDS_PS_L3 .keypad-row{
+	margin-left: 141px;
+	min-height: 55px;
+}
+.TDS_PS_L3 .mje_controls {
+	min-width: 640px;
+}
+.TDS_PS_L3 .toolbar button {
+	border-radius: 35px;
+  	-moz-border-radius: 35px;
+  	-webkit-border-radius: 35px;
+	height: 35px;
+	line-height: 35px;
+	margin-top: 6px;
+	font-size: 35px;
+	min-width: 42px;
+}
+.TDS_PS_L3 .toolbar .mje_nav_del, 
+.TDS_PS_L3 .toolbar .mje_nav_next, 
+.TDS_PS_L3 .toolbar .mje_nav_prev,
+.TDS_PS_L3 .toolbar .mje_nav_redo,
+.TDS_PS_L3 .toolbar .mje_nav_undo {
+	margin-top: 2px;
+}
+.TDS_PS_L3 .mje_nav_next, .TDS_PS_L3 .mje_nav_prev,
+.TDS_CCInvert.TDS_PS_L3 .mje_nav_next, .TDS_CCInvert.TDS_PS_L3 .mje_nav_prev,
+.TDS_CCYellowB.TDS_PS_L3 .mje_nav_next, .TDS_CCYellowB.TDS_PS_L3 .mje_nav_prev,
+.TDS_CCWhiteN.TDS_PS_L3 .mje_nav_next, .TDS_CCWhiteN.TDS_PS_L3 .mje_nav_prev{
+	background-image:  url("images/next_back_L2.png"); 
+}
+.TDS_PS_L3 .mje_nav_next, .TDS_PS_L3 .mje_nav_prev{
+	background-position: 6px 7px;
+}
+
+.TDS_PS_L3 .mje_nav_next:hover, .TDS_PS_L3 .mje_nav_next:active {
+	background-position: -94px 7px;
+}
+.TDS_PS_L3 .mje_nav_prev {
+	background-position: -194px 7px;
+}
+.TDS_PS_L3 .mje_nav_prev:hover, .TDS_PS_L3 .mje_nav_prev:active {
+	background-position: -294px 7px;
+}
+
+.TDS_PS_L3.TDS_CCInvert .mje_nav_next, .TDS_PS_L3.TDS_CCInvert .mje_nav_prev,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_next, .TDS_PS_L3.TDS_CCWhiteN .mje_nav_prev {
+	background-position: 6px -23px
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_next:hover, .TDS_PS_L3.TDS_CCInvert .mje_nav_next:active,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_next:hover, .TDS_PS_L3.TDS_CCWhiteN .mje_nav_next:active {
+	background-position: -94px -23px;
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_prev,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_prev {
+	background-position: -194px -23px;
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_prev:hover, .TDS_PS_L3.TDS_CCInvert .mje_nav_prev:active,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_prev:hover, .TDS_PS_L3.TDS_CCWhiteN .mje_nav_prev:active {
+	background-position: -294px -23px;
+}
+
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_next, .TDS_PS_L3.TDS_CCYellowB .mje_nav_prev{
+	background-position: 6px -53px
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_next:hover, .TDS_PS_L3.TDS_CCYellowB .mje_nav_next:active {
+	background-position: -94px -53px;
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_prev{
+	background-position: -194px -53px;
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_prev:hover, .TDS_PS_L3.TDS_CCYellowB .mje_nav_prev:active{
+	background-position: -294px -53px;
+}
+
+.TDS_PS_L3 .mje_nav_undo, .TDS_PS_L3 .mje_nav_redo, .TDS_PS_L3 .mje_nav_del{
+	background-image: url(images/undo_redo_delete_L2.png);	
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_undo,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_undo{
+	background-position: 7px -23px;
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_undo:hover, .TDS_PS_L3.TDS_CCInvert .mje_nav_undo:active,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_undo:hover, .TDS_PS_L3.TDS_CCWhiteN .mje_nav_undo:active{
+	background-position: -92px -23px;
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_redo,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_redo{
+	background-position: -192px -23px;
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_redo:hover, .TDS_PS_L3.TDS_CCInvert .mje_nav_redo:active,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_redo:hover, .TDS_PS_L3.TDS_CCWhiteN .mje_nav_redo:active{
+	background-position: -292px -23px;
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_del,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_del{
+	background-position: -357px -23px;
+}
+.TDS_PS_L3.TDS_CCInvert .mje_nav_del:hover, .TDS_PS_L3.TDS_CCInvert .mje_nav_del:active,
+.TDS_PS_L3.TDS_CCWhiteN .mje_nav_del:hover, .TDS_PS_L3.TDS_CCWhiteN .mje_nav_del:active{
+	background-position: -451px -23px;
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_undo{
+	background-position: 7px -53px;
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_undo:hover, .TDS_PS_L3.TDS_CCYellowB .mje_nav_undo:active{
+	background-position: -92px -53px;
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_redo{
+	background-position: -192px -53px;
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_redo:hover, .TDS_PS_L3.TDS_CCYellowB .mje_nav_redo:active{
+	background-position: -292px -53px;
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_del{
+	background-position: -357px -53px;
+}
+.TDS_PS_L3.TDS_CCYellowB .mje_nav_del:hover, .TDS_PS_L3.TDS_CCYellowB .mje_nav_del:active{
+	background-position: -451px -53px;
+}
+
+
+/*4*/
+.TDS_PS_L4 .keypad-body {
+	min-width: 800px;
+}
+.TDS_PS_L4 .keypad-item {
+	height: 68px;
+	min-width: 34px;
+	line-height: 68px;
+}
+.TDS_PS_L4 .mje_grid_row {
+	width: 163px;
+}
+.TDS_PS_L4 .mje_button_grid_row {
+	min-height: 72px;
+}
+.TDS_PS_L4 .keypad-grid-row{
+	min-width: 158px;
+}
+.TDS_PS_L4 .keypad-row{
+	margin-left: 163px;
+	min-height: 72px;
+}
+.TDS_PS_L4 .mje_controls {
+	min-width: 770px;
+}
+.TDS_PS_L4 .toolbar button {
+	border-radius: 40px;
+  	-moz-border-radius: 40px;
+  	-webkit-border-radius: 40px;
+	height: 40px;
+	line-height: 40px;
+	margin-top: 7px;
+	font-size: 40px;
+	min-width: 48px;
+}
+.TDS_PS_L4 .toolbar .mje_nav_del, 
+.TDS_PS_L4 .toolbar .mje_nav_next, 
+.TDS_PS_L4 .toolbar .mje_nav_prev,
+.TDS_PS_L4 .toolbar .mje_nav_redo,
+.TDS_PS_L4 .toolbar .mje_nav_undo{
+	margin-top: 3px;
+}
+.TDS_PS_L4 .mje_nav_next, .TDS_PS_L4 .mje_nav_prev,
+.TDS_CCInvert.TDS_PS_L4 .mje_nav_next, .TDS_CCInvert.TDS_PS_L4 .mje_nav_prev,
+.TDS_CCYellowB.TDS_PS_L4 .mje_nav_next, .TDS_CCYellowB.TDS_PS_L4 .mje_nav_prev,
+.TDS_CCWhiteN.TDS_PS_L4 .mje_nav_next, .TDS_CCWhiteN.TDS_PS_L4 .mje_nav_prev{
+	background-image:  url("images/next_back_L2.png"); 
+}
+.TDS_PS_L4 .mje_nav_next, .TDS_PS_L4 .mje_nav_prev{
+	background-position: 9px 9px;
+}
+
+.TDS_PS_L4 .mje_nav_next:hover, .TDS_PS_L4 .mje_nav_next:active {
+	background-position: -91px 9px;
+}
+.TDS_PS_L4 .mje_nav_prev {
+	background-position: -191px 9px;
+}
+.TDS_PS_L4 .mje_nav_prev:hover, .TDS_PS_L3 .mje_nav_prev:active {
+	background-position: -291px 9px;
+}
+
+.TDS_PS_L4.TDS_CCInvert .mje_nav_next, .TDS_PS_L4.TDS_CCInvert .mje_nav_prev,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_next, .TDS_PS_L4.TDS_CCWhiteN .mje_nav_prev {
+	background-position: 9px -21px
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_next:hover, .TDS_PS_L4.TDS_CCInvert .mje_nav_next:active,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_next:hover, .TDS_PS_L4.TDS_CCWhiteN .mje_nav_next:active {
+	background-position: -91px -21px;
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_prev,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_prev {
+	background-position: -191px -21px;
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_prev:hover, .TDS_PS_L4.TDS_CCInvert .mje_nav_prev:active,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_prev:hover, .TDS_PS_L4.TDS_CCWhiteN .mje_nav_prev:active {
+	background-position: -291px -21px;
+}
+
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_next, .TDS_PS_L4.TDS_CCYellowB .mje_nav_prev{
+	background-position: 9px -51px
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_next:hover, .TDS_PS_L4.TDS_CCYellowB .mje_nav_next:active {
+	background-position: -91px -51px;
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_prev{
+	background-position: -191px -51px;
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_prev:hover, .TDS_PS_L4.TDS_CCYellowB .mje_nav_prev:active{
+	background-position: -291px -51px;
+}
+
+.TDS_PS_L4 .mje_nav_undo, .TDS_PS_L4 .mje_nav_redo, .TDS_PS_L4 .mje_nav_del{
+	background-image: url(images/undo_redo_delete_L2.png);	
+}
+.TDS_PS_L4 .mje_nav_undo{
+	background-position: 12px 9px;
+}
+.TDS_PS_L4 .mje_nav_undo:hover, .TDS_PS_L4 .mje_nav_undo:active{
+	background-position: -87px 9px;
+}
+.TDS_PS_L4 .mje_nav_redo{
+	background-position: -187px 9px;
+}
+.TDS_PS_L4 .mje_nav_redo:hover, .TDS_PS_L4 .mje_nav_redo:active{
+	background-position: -287px 9px;
+}
+.TDS_PS_L4 .mje_nav_del{
+	background-position: -352px 9px;
+}
+.TDS_PS_L4 .mje_nav_del:hover, .TDS_PS_L4 .mje_nav_del:active{
+	background-position: -446px 9px;
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_undo,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_undo{
+	background-position: 12px -21px;
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_undo:hover, .TDS_PS_L4.TDS_CCInvert .mje_nav_undo:active,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_undo:hover, .TDS_PS_L4.TDS_CCWhiteN .mje_nav_undo:active{
+	background-position: -87px -21px;
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_redo,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_redo{
+	background-position: -187px -21px;
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_redo:hover, .TDS_PS_L4.TDS_CCInvert .mje_nav_redo:active,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_redo:hover, .TDS_PS_L4.TDS_CCWhiteN .mje_nav_redo:active{
+	background-position: -287px -21px;
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_del,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_del{
+	background-position: -354px -20px;
+}
+.TDS_PS_L4.TDS_CCInvert .mje_nav_del:hover, .TDS_PS_L4.TDS_CCInvert .mje_nav_del:active,
+.TDS_PS_L4.TDS_CCWhiteN .mje_nav_del:hover, .TDS_PS_L4.TDS_CCWhiteN .mje_nav_del:active{
+	background-position: -448px -20px;
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_undo{
+	background-position: 12px -51px;
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_undo:hover, .TDS_PS_L4.TDS_CCYellowB .mje_nav_undo:active{
+	background-position: -87px -51px;
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_redo{
+	background-position: -187px -51px;
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_redo:hover, .TDS_PS_L4.TDS_CCYellowB .mje_nav_redo:active{
+	background-position: -287px -51px;
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_del{
+	background-position: -352px -51px;
+}
+.TDS_PS_L4.TDS_CCYellowB .mje_nav_del:hover, .TDS_PS_L4.TDS_CCYellowB .mje_nav_del:active{
+	background-position: -447px -51px;
+}
+
+/* @end */
+
+.mje_button_fraction, .mje_button_sqrt, .mje_button_nrt, .mje_button_sup, .mje_button_sub, .mje_button_subsup, .mje_button_dot {
+	background: url(images/equations_level1.png) no-repeat center 200px;
+	width: 32px;
+	text-indent: -9999px;
+}
+
+/*Bug 142302 & 143556*/
+.browser_safari .keypad-item,
+.platform_ios .keypad-item,
+.platform_android.browser_airsecurebrowser .keypad-item
+{
+    vertical-align: middle;
+}
+.TDS_CCInvert .mje_button_fraction, .TDS_CCInvert .mje_button_sqrt, .TDS_CCInvert .mje_button_nrt, .TDS_CCInvert .mje_button_sup, .TDS_CCInvert .mje_button_sub, .TDS_CCInvert .mje_button_subsup, 
+.TDS_CCWhiteN .mje_button_fraction, .TDS_CCWhiteN .mje_button_sqrt, .TDS_CCWhiteN .mje_button_nrt, .TDS_CCWhiteN .mje_button_sup, .TDS_CCWhiteN .mje_button_sub, .TDS_CCWhiteN .mje_button_subsup, .TDS_CCInvert .mje_button_dot, .TDS_CCWhiteN .mje_button_dot{
+	background-image: url(images/equations_level1_white.png);
+}
+.TDS_CCYellowB .mje_button_fraction, .TDS_CCYellowB .mje_button_sqrt, .TDS_CCYellowB .mje_button_nrt, .TDS_CCYellowB .mje_button_sup, .TDS_CCYellowB .mje_button_sub, .TDS_CCYellowB .mje_button_subsup, .TDS_CCYellowB .mje_button_dot {
+	background-image: url(images/equations_level1_yellow.png);
+}
+.mje_button_fraction {
+	background-position: center -154px;
+    width: 20px;
+}
+.mje_button_sqrt {
+	background-position: center -194px;
+}
+.mje_button_nrt {
+	background-position: center -233px;
+	width: 36px;
+}
+.mje_button_sup {
+	background-position: center -272px;
+	width: 27px;
+}
+.mje_button_sub {
+	background-position: center -311px;
+	width: 27px;
+}
+.mje_button_subsup {
+	background-position: center -350px;
+	width: 28px;
+}
+.mje_button_dot{
+	background-position: center -460px;
+    width: 20px;
+}
+
+.TDS_PS_L1 .mje_button_fraction {
+	background-position: center -151px;
+    width: 20px;
+}
+.TDS_PS_L1 .mje_button_sqrt {
+	background-position: center -191px;
+}
+.TDS_PS_L1 .mje_button_nrt {
+	background-position: center -230px;
+	width: 36px;
+}
+.TDS_PS_L1 .mje_button_sup {
+	background-position: center -269px;
+	width: 27px;
+}
+.TDS_PS_L1 .mje_button_sub {
+	background-position: center -308px;
+	width: 27px;
+}
+.TDS_PS_L1 .mje_button_subsup {
+	background-position: center -347px;
+	width: 28px;
+}
+.TDS_PS_L1 .mje_button_dot {
+	background-position: center -457px;
+	width: 28px;
+}
+
+.TDS_PS_L2 .mje_button_fraction, .TDS_PS_L2 .mje_button_sqrt, .TDS_PS_L2 .mje_button_nrt, .TDS_PS_L2 .mje_button_sup, .TDS_PS_L2 .mje_button_sub, .TDS_PS_L2 .mje_button_subsup, .TDS_PS_L2 .mje_button_dot  {
+	background-image: url(images/equations_level2.png);
+}
+.TDS_CCInvert.TDS_PS_L2 .mje_button_fraction, .TDS_CCInvert.TDS_PS_L2 .mje_button_sqrt, .TDS_CCInvert.TDS_PS_L2 .mje_button_nrt, .TDS_CCInvert.TDS_PS_L2 .mje_button_sup, .TDS_CCInvert.TDS_PS_L2 .mje_button_sub, .TDS_CCInvert.TDS_PS_L2 .mje_button_subsup, .TDS_CCInvert.TDS_PS_L2 .mje_button_dot,
+.TDS_CCWhiteN.TDS_PS_L2 .mje_button_fraction, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_sqrt, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_nrt, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_sup, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_sub, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_subsup, .TDS_CCWhiteN.TDS_PS_L2 .mje_button_dot{
+	background-image: url(images/equations_level2_white.png);
+}
+.TDS_CCInvert .mje_controls_content_el button,
+.TDS_CCWhiteN .mje_controls_content_el button{
+	color: white;
+}
+
+.TDS_CCYellowB.TDS_PS_L2 .mje_button_fraction, .TDS_CCYellowB.TDS_PS_L2 .mje_button_sqrt, .TDS_CCYellowB.TDS_PS_L2 .mje_button_nrt, .TDS_CCYellowB.TDS_PS_L2 .mje_button_sup, .TDS_CCYellowB.TDS_PS_L2 .mje_button_sub, .TDS_CCYellowB.TDS_PS_L2 .mje_button_subsup,
+.TDS_CCYellowB.TDS_PS_L2 .mje_button_dot {
+	background-image: url(images/equations_level2_yellow.png);
+}
+.TDS_CCYellowB .mje_controls_content_el button{
+	color: #FFCC00;
+}
+
+.TDS_PS_L2 .mje_button_fraction {
+	background-position: center -190px;
+}
+.TDS_PS_L2 .mje_button_sqrt {
+	background-position: center -242px;
+	width: 42px;
+}
+.TDS_PS_L2 .mje_button_nrt {
+	background-position: center -292px;
+	width: 46px;
+}
+.TDS_PS_L2 .mje_button_sup {
+	background-position: center -341px;
+}
+.TDS_PS_L2 .mje_button_sub {
+	background-position: center -392px;
+}
+.TDS_PS_L2 .mje_button_subsup {
+	background-position: center -441px;
+}
+.TDS_PS_L2 .mje_button_dot {
+	background-position: center -619px;
+}
+
+.TDS_PS_L3 .mje_button_fraction, .TDS_PS_L3 .mje_button_sqrt, .TDS_PS_L3 .mje_button_nrt, .TDS_PS_L3 .mje_button_sup, .TDS_PS_L3 .mje_button_sub, .TDS_PS_L3 .mje_button_subsup, .TDS_PS_L3 .mje_button_dot, 
+.TDS_PS_L4 .mje_button_fraction, .TDS_PS_L4 .mje_button_sqrt, .TDS_PS_L4 .mje_button_nrt, .TDS_PS_L4 .mje_button_sup, .TDS_PS_L4 .mje_button_sub, .TDS_PS_L4 .mje_button_subsup , .TDS_PS_L4 .mje_button_dot{
+	background-image: url(images/equations_level3.png);
+}
+.TDS_CCInvert.TDS_PS_L3 .mje_button_fraction, .TDS_CCInvert.TDS_PS_L3 .mje_button_sqrt, .TDS_CCInvert.TDS_PS_L3 .mje_button_nrt,
+.TDS_CCInvert.TDS_PS_L3 .mje_button_sup, .TDS_CCInvert.TDS_PS_L3 .mje_button_sub, .TDS_CCInvert.TDS_PS_L3 .mje_button_subsup, 
+.TDS_CCInvert.TDS_PS_L3 .mje_button_dot,
+.TDS_CCInvert.TDS_PS_L4 .mje_button_fraction, .TDS_CCInvert.TDS_PS_L4 .mje_button_sqrt, .TDS_CCInvert.TDS_PS_L4 .mje_button_nrt, 
+.TDS_CCInvert.TDS_PS_L4 .mje_button_sup, .TDS_CCInvert.TDS_PS_L4 .mje_button_sub, .TDS_CCInvert.TDS_PS_L4 .mje_button_subsup, 
+.TDS_CCInvert.TDS_PS_L4 .mje_button_dot,
+.TDS_CCWhiteN.TDS_PS_L3 .mje_button_fraction, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_sqrt, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_nrt,
+.TDS_CCWhiteN.TDS_PS_L3 .mje_button_sup, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_sub, .TDS_CCWhiteN.TDS_PS_L3 .mje_button_subsup, 
+.TDS_CCWhiteN.TDS_PS_L3 .mje_button_dot,
+.TDS_CCWhiteN.TDS_PS_L4 .mje_button_fraction, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_sqrt, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_nrt,
+.TDS_CCWhiteN.TDS_PS_L4 .mje_button_sup, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_sub, .TDS_CCWhiteN.TDS_PS_L4 .mje_button_subsup, 
+.TDS_CCWhiteN.TDS_PS_L4 .mje_button_dot{
+	background-image: url(images/equations_level3_white.png);
+}
+
+.TDS_CCYellowB.TDS_PS_L3 .mje_button_fraction, .TDS_CCYellowB.TDS_PS_L3 .mje_button_sqrt, .TDS_CCYellowB.TDS_PS_L3 .mje_button_nrt, .TDS_CCYellowB.TDS_PS_L3 .mje_button_sup, .TDS_CCYellowB.TDS_PS_L3 .mje_button_sub, .TDS_CCYellowB.TDS_PS_L3 .mje_button_subsup, 
+.TDS_CCYellowB.TDS_PS_L3 .mje_button_dot,
+.TDS_CCYellowB.TDS_PS_L4 .mje_button_fraction, .TDS_CCYellowB.TDS_PS_L4 .mje_button_sqrt, .TDS_CCYellowB.TDS_PS_L4 .mje_button_nrt, .TDS_CCYellowB.TDS_PS_L4 .mje_button_sup, .TDS_CCYellowB.TDS_PS_L4 .mje_button_sub, .TDS_CCYellowB.TDS_PS_L4 .mje_button_subsup, 
+.TDS_CCYellowB.TDS_PS_L4 .mje_button_dot {
+	background-image: url(images/equations_level3_yellow.png);
+}
+
+.TDS_PS_L3 .mje_button_fraction {
+	background-position: center -287px;
+}
+.TDS_PS_L3 .mje_button_sqrt {
+	background-position: center -362px;
+	width: 50px;
+}
+.TDS_PS_L3 .mje_button_nrt {
+	background-position: center -437px;
+	width: 56px;
+}
+.TDS_PS_L3 .mje_button_sup {
+	background-position: center -512px;
+}
+.TDS_PS_L3 .mje_button_sub {
+	background-position: center -587px;
+}
+.TDS_PS_L3 .mje_button_subsup {
+	background-position: center -662px;
+}
+.TDS_PS_L3 .mje_button_dot {
+	background-position: center -865px;
+}
+
+.TDS_PS_L4 .mje_button_fraction {
+	background-position: center -279px;
+}
+.TDS_PS_L4 .mje_button_sqrt {
+	background-position: center -354px;
+	width: 50px;
+}
+.TDS_PS_L4 .mje_button_nrt {
+	background-position: center -429px;
+	width: 56px;
+}
+.TDS_PS_L4 .mje_button_sup {
+	background-position: center -504px;
+}
+.TDS_PS_L4 .mje_button_sub {
+	background-position: center -579px;
+}
+.TDS_PS_L4 .mje_button_subsup {
+	background-position: center -654px;
+}
+.TDS_PS_L4 .mje_button_dot {
+	background-position: center -857px;
+}
+
+/* @end */
+
+/* prevent EQ from expanding beyond the rest of the item */
+
+
+/* If "input" then we want 100% width */
+.widget-body .input
+{
+    width: auto;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+    display: block;
+}
+.noColumns .layout1 .widget-body .input {
+	max-width: 52em;
+}
+.noColumns .widget-body .input
+{
+    max-width: 40em;
+}
+
+.layout_8 .noColumns  .widget-body .input
+{
+    max-width: 60em;
+}
+
+/*limiting max width on iOS and Android items */
+
+.platform_ios .widget-body .input, .platform_ios .layout_8 .noColumns  .widget-body .input,
+.platform_android .widget-body .input, .platform_android .layout_8 .noColumns  .widget-body .input
+{
+    /*max-width: 49em; Was 40em, expanded to 50em because of bug 148814 - now REMOVED by the same bug */
+}
+
+/* if "mje-dynamic-inputbox" then we want width to be auto with a minimum*/
+    .widget-body .input.mje-dynamic-inputbox .mathquill-root-block
+    {
+        width: auto;
+        min-width: 10em;
+        max-width: 15em;
+        display: block;
+    }
+/* force left alignment of EQ item.  Also force minimum width for bug 145615 */
+.widget{
+	text-align: left !important;
+	/*min-width: 23em;*/
+}
+
+/* Add Square root style improvements */
+.mathquill-rendered-math sup.mq-nthroot{
+	margin-right: -0.7em !important;
+}
+.mathquill-rendered-math .mq-sqrt-prefix{
+	top: 0;
+}
+
+/*non-editable element display improvements*/
+.mathquill-root-block {
+    font-size: 1.5em;
+    vertical-align: middle;
+}
+.mathquill-editable {
+    font-size: 0.7em;
+    vertical-align: middle;
+}
+
+/*bug 143812 fix */
+.hiding span.mathquill-root-block {
+	overflow: hidden;  /*force overflow hide when the widget is being hidden*/
+}
+/*bug 146144 fix*/
+.mathquill-rendered-math .mq-fraction{
+	vertical-align: middle;
+}
+
+.mathquill-editable .mq-empty {
+    min-height: 1em;
+}

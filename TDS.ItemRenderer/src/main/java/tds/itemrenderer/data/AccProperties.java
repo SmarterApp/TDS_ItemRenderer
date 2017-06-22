@@ -48,8 +48,8 @@ public class AccProperties    {
     if (isSelected("Braille", "TDS_Braille1")) 
       return true;
 
-    // otherwise check if language has braille support
-    return (getLanguage().endsWith("-Braille"));
+    // otherwise check if language has braille support or braille type is selected
+    return (getLanguage().endsWith("-Braille") || isExistsAndNotEquals("Braille Type", "TDS_BT0"));
   }
 
   /**
@@ -304,7 +304,7 @@ public class AccProperties    {
     String selectedCode = this.getCode(type);
 
     // make sure there is something selected and if there is that it doesn't equal the valye passed in
-    return (selectedCode != null && selectedCode != code);
+    return (selectedCode != null && !selectedCode.equals(code));
   }
 
   //#endregion

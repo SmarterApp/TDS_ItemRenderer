@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:tds="http://airast.org/jsfcustom">
+
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no" />
+
+<link rel="apple-touch-icon" href="Images/icon.png" />
+
+<title>Calculator</title>
+
+<tds:ResourcesLink file="~/Scripts/scripts_student.xml" name="TDSCalculator" />
+
+<tds:CSSLink href="~/Scripts/Calculator/CSS/calc.css" rel="stylesheet" type="text/css" />
+<tds:CSSLink href="~/Scripts/Calculator/CSS/project.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+	//disable right click
+
+	var message = "";
+
+	function clickIE() {
+		if (document.all) {
+			(message);
+			return false;
+		}
+	}
+
+	function clickNS(e) {
+		if (document.layers || (document.getElementById &amp;&amp; !document.all)) {
+			if (e.which == 2 || e.which == 3) {
+				(message);
+				return false;
+			}
+		}
+	}
+	if (document.layers) {
+		document.captureEvents(Event.MOUSEDOWN);
+		document.onmousedown = clickNS;
+	} else {
+		document.onmouseup = clickNS;
+		document.oncontextmenu = clickIE;
+	}
+	document.oncontextmenu = new Function("return false");
+</script>
+
+</head>
+
+<body ondragstart="return false"
+	  draggable="false"
+	  ondragenter="event.dataTransfer.dropEffect='none'; event.stopPropagation(); event.preventDefault();"
+	  ondragover="event.dataTransfer.dropEffect='none';event.stopPropagation(); event.preventDefault();"
+	  ondrop="event.dataTransfer.dropEffect='none';event.stopPropagation(); event.preventDefault();">
+
+
+
+
+	<div class="error" id="errorDiv" style="display: none"></div>
+
+	<div id="calculatorwidget" class="desmos-calculatorWidget" style="display: none"></div>
+
+	<script type="text/javascript">
+		var bodyTag = (document.getElementsByTagName("body"))[0];
+		var browserPlatformStyle = css_browser_selector(navigator.userAgent);
+		bodyTag.className = bodyTag.className + ' ' + browserPlatformStyle;
+
+        var calculator = TdsCalculator.init();
+	</script>
+</body>
+</html>
+

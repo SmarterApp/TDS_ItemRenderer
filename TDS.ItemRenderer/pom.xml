@@ -1,34 +1,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<artifactId>item-renderer</artifactId>
+	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>org.opentestsystem.shared</groupId>
-		<artifactId>shared-master</artifactId>
-		<version>1.0.1</version>
+		<groupId>org.opentestsystem.delivery</groupId>
+		<artifactId>item-renderer-master</artifactId>
+		<version>3.1.1.RELEASE</version>
 	</parent>
 
-	<groupId>org.opentestsystem.delivery</groupId>
-	<artifactId>item-renderer</artifactId>
-	<version>0.0.1</version>
-	<packaging>jar</packaging>
-	
-	<scm>
-        <connection>scm:hg:https://bitbucket.org/sbacoss/itemrenderer_release</connection>
-        <developerConnection>scm:hg:https://bitbucket.org/sbacoss/itemrenderer_release</developerConnection>
-        <url>https://bitbucket.org/sbacoss/itemrenderer_release</url>
-    </scm>
-
-	
-	<properties>
-		<resource-bundler.version>0.0.1</resource-bundler.version>
-	</properties>
-
-	<name>TDS.ItemRenderer</name>
-	<url>http://maven.apache.org</url>
+	<name>tds-itemRenderer</name>
 	<dependencies>
+		<!-- Smarter Balance Dependencies -->
 		<dependency>
 			<groupId>org.opentestsystem.shared</groupId>
 			<artifactId>shared-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.opentestsystem.shared</groupId>
+			<artifactId>shared-xml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.opentestsystem.delivery</groupId>
+			<artifactId>resource-bundler</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- External Dependencies -->
+		<dependency>
+			<groupId>net.sf.supercsv</groupId>
+			<artifactId>super-csv</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -40,15 +42,13 @@
 			<artifactId>el-api</artifactId>
 			<version>6.0.37</version>
 		</dependency>
-		<dependency>
-			<groupId>org.opentestsystem.shared</groupId>
-			<artifactId>shared-xml</artifactId>
-		</dependency>
-		<!-- Spring Mock -->
+
+		<!-- This is used in a non test class (RendererServlet) so it needs to remain compile scope  -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-mock</artifactId>
 		</dependency>
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -65,21 +65,27 @@
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>AIR</groupId>
-			<artifactId>ResourceBundler</artifactId>
-			<version>${resource-bundler.version}</version>
-		</dependency>
-        <dependency>
-        	<groupId>net.sf.supercsv</groupId>
-	        <artifactId>super-csv</artifactId>
-	        <version>2.2.0</version>
-        </dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

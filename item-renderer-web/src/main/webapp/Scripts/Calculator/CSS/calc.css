@@ -1,0 +1,1568 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+iframe{
+	background: #fff;
+}
+body {
+	line-height: 1;
+	font-size:100%;
+	overflow: hidden;
+	background: url(../Images/arrows.gif) no-repeat -1000px -1000px;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+:focus {
+	outline: 0;
+}
+input:focus, select:focus {
+	outline: thin dotted gray;
+}
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* end reset */
+.calculatorWidget {
+	font-size:68%;
+	width:675px;
+	border: solid 1px #ccc;
+	-moz-box-shadow: .1em .1em 3px #ccc;
+	-webkit-box-shadow: .1em .1em 3px #ccc;
+	box-shadow: .1em .1em 3px #ccc;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	/*margin:1em;*/
+	position:relative;
+	font-family:Arial, Helvetica, sans-serif;
+	float: left;
+	/*background-color: #f9f9f9;*/
+	overflow: hidden;
+	background: url(../Images/lightGrey.png) repeat;
+}
+
+.desmos-calculatorWidget {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 99.75%;
+}
+
+#calculatorwidget{
+	margin-top: 0;
+}
+
+.webkit .scientific,
+.android .scientific{
+	width: 340px;
+}
+
+.calculatorWidget input {
+	background-color: transparent;
+}
+.calculatorWidget a {
+	display:block;
+	height:20px;
+	min-width:25px;
+	float:left;
+	border:solid 1px #ccc;
+	-moz-box-shadow: .1em .1em 3px #ccc;
+	-webkit-box-shadow: .1em .1em 3px #ccc;
+	box-shadow: .1em .1em 3px #ccc;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	margin-left:3px;
+	margin-bottom:3px;
+	text-decoration:none;
+	color:#000;
+	line-height:20px;
+	white-space:nowrap;
+	text-align:center;
+	padding:3px;
+	background-color:#fff;
+	font-weight: bold;
+
+}
+.calculatorWidget input[type="button"] {
+	display:block;
+	height:28px;
+	min-width:20px;
+	max-width: 30px;
+	float:left;
+	border:solid 1px #ccc;
+	-moz-box-shadow: .1em .1em 3px #ccc;
+	-webkit-box-shadow: .1em .1em 3px #ccc;
+	box-shadow: .1em .1em 3px #ccc;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	margin-left:3px;
+	margin-bottom:3px;
+	text-decoration:none;
+	color:#000;
+	line-height:20px;
+	white-space:nowrap;
+	text-align:center;
+	background-color: #fff;
+	font-weight: bold;
+	vertical-align: top;
+	font-size: 1em;
+}
+#ANS {
+	max-width: 45px;
+	text-align: center;
+}
+#RCL {
+	max-width: 30px;
+}
+
+#RCL {background-image: none; }
+input.disabled[type="button"]#RCL{ background-image: url("../Images/mediumGrey.png"); }
+
+
+#RCL, #ANS{  /*fixing added padding on these buttons*/
+	padding: 0;
+	/*margin: 0;
+	text-align: center;*/
+}
+.ie #RCL, .ie #ANS{
+	padding: 0 2px 0 2px;
+}
+.TDS_PS_L1 #RCL {
+	max-width: 38px;
+}
+.TDS_PS_L2 #RCL, .TDS_PS_L3 #RCL, .TDS_PS_L4 #RCL {
+	max-width: 42px;
+}
+/* Bug 34928 fixes  */
+/* This fix is now causing issue 94996.  Disabling */
+/*.TDS_PS_L2 .basic4 #calcControls{
+	width: 230px; was width: 228px;  is wider for Ubuntu was 225px;
+}*/
+
+.platform_linux .TDS_PS_L3 .basic4 #calcControls{
+	width: 240px;
+}
+.TDS_PS_L2.TDS_CalcBasic .tool-calculator, .TDS_PS_L3.TDS_CalcBasic .tool-calculator, .TDS_PS_L4.TDS_CalcBasic .tool-calculator{
+	width: 275px;
+}
+
+.calculatorWidget a:hover, .calculatorWidget input[type="button"]:hover {
+	background-color: #FC6;  /*removed "!important" because of bug 122700 */
+}
+.platform_ios .calculatorWidget a:hover, .platform_ios .calculatorWidget input[type="button"]:hover,
+.platform_android .calculatorWidget a:hover, .platform_android .calculatorWidget input[type="button"]:hover
+{
+	background-color: #fff;
+}
+.calculatorWidget a:focus, .calculatorWidget a:active, a.focused, .calculatorWidget input[type="button"]:focus, .calculatorWidget input[type="button"]:active, input[type="button"].focused {
+	background-color: #006699 !important;
+	color:#fff;
+}
+.numericDisplay {
+	height:45px;
+	line-height:30px;
+	padding-left:12px;
+	padding-right: 110px;
+}
+.basic4 .numericDisplay {
+	padding-right: 12px;
+	/*width:163px;*/
+}
+.basic6 .numericDisplay, .basicMem6 .numericDisplay {
+	padding-right: 12px;
+	/*width:260px;*/
+}
+
+.scientific .numericDisplay {
+	padding-right: 12px;
+	width:auto;
+}
+.nograph .numericDisplay {
+	padding-right: 12px;
+	width:auto;
+}
+.numericDisplay #textinput {
+	height:40px;
+	border-left:solid 1px #3cb878;
+	border-right:solid 1px #3cb878;
+	border-bottom:solid 1px #3cb878;
+	border-top:solid 1px #fff;
+	display:block;
+	width:100%;
+	background-color:#fffcd5;
+	font-size: 2em;
+	resize:none;
+	overflow: hidden;
+}
+.regressions .numericDisplay #textinput{
+	height: 75px;
+	overflow: auto;
+}
+.regressions .numericDisplay{
+	height: 80px;
+}
+.platform_mac .numericDisplay #textinput {
+	font-size: 1.75em;
+}
+.calcControls {
+	height:34px;
+	padding-left:10px;
+	padding-right: 10px;
+	/*background-color:#f3f3f3;*/
+	border-bottom: solid 1px #ccc;
+	border-top: solid 1px #ccc;
+	background: url(../Images/lightGrey.png) repeat;
+	overflow:hidden;
+}
+.calcControls #calcSwitch a.active {
+	background-color: #069 !important;
+	color:#fff;
+}
+.calcControls #calcClear, .calcControls #calcSwitch{
+	display: inline-block;
+	width: auto;
+}
+.calculatorWidget.inv{
+	min-width: 345px;
+}
+.calculatorWidget.modes4, .modes4 .calcControls, 
+.calculatorWidget.modes4.inv, .modes4.inv .calcControls{
+	min-width: 460px;
+}
+.calculatorWidget.modes3, .modes3 .calcControls, 
+.calculatorWidget.modes3.inv, .modes3.inv .calcControls{
+	min-width: 400px;
+}
+.calculatorWidget.modes2, .modes2 .calcControls, 
+.calculatorWidget.modes2.inv, .modes2.inv .calcControls{
+	min-width: 340px;
+}
+.TDS_PS_L1 .calculatorWidget.modes4, .TDS_PS_L1 .modes4 .calcControls,
+.TDS_PS_L1 .calculatorWidget.modes4.inv, .TDS_PS_L1 .modes4.inv .calcControls {
+    min-width: 690px;
+}
+
+.TDS_PS_L2 .calculatorWidget.modes4, .TDS_PS_L2 .modes4 .calcControls,
+.TDS_PS_L2 .calculatorWidget.modes4.inv, .TDS_PS_L2 .modes4.inv .calcControls {
+    min-width: 735px;
+}
+.TDS_PS_L3 .calculatorWidget.modes4, .TDS_PS_L3 .modes4 .calcControls,
+.TDS_PS_L3 .calculatorWidget.modes4.inv, .TDS_PS_L3 .modes4.inv .calcControls  {
+    min-width: 735px;
+}
+.TDS_PS_L4 .calculatorWidget.modes4, .TDS_PS_L4 .modes4 .calcControls,
+.TDS_PS_L4 .calculatorWidget.modes4.inv, .TDS_PS_L4 .modes4.inv .calcControls {
+    min-width: 735px;
+}
+.TDS_PS_L2 .calculatorWidget.matrices, .TDS_PS_L3 .calculatorWidget.matrices, .TDS_PS_L4 .calculatorWidget.matrices{
+	min-width: 685px;
+}
+
+
+
+@media screen and (orientation:landscape) {
+/*is breaking on modern shell
+.TDS_PS_L1 .calculatorWidget.modes4, .TDS_PS_L1 .modes4 .calcControls {
+    min-width: 550px;
+}
+ 
+.TDS_PS_L2 .calculatorWidget.modes4, .TDS_PS_L2 .modes4 .calcControls {
+	min-width: 640px;
+}*/
+}
+
+.advancedFunctions, .memory, .numberPad, .basicFunctions, .logicFunctions, .calcGraph, .hexPad, .misc, .regressionContainer, .yNumb, .matricesContainer {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	border: solid 1px #ededed;
+	margin-top:5px;
+	margin-right:2px;
+	margin-left:3px;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-bottom: 10px;
+	padding-left: 5px;
+	float:left;
+}
+.scientific .logicFunctions, .graphing .logicFunctions{
+	border: none;
+}
+.advancedFunctions {
+	width:75px;
+	font-size: .9em;
+}
+.memLogic {
+	width:55px;
+	float: left;
+}
+.memory {
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+.logicFunctions {
+	margin-top: 1px;
+	padding-bottom: 0px;
+	padding-top: 5px;
+}
+.memory input {
+	min-width:23px;
+	display:block;
+	clear:both;
+	margin-left:5px;
+	height:18px;
+	margin-bottom:5px;
+	border:solid 1px #EDEDED;
+	text-align: center;
+	/*background-color: #e5e5e5;*/
+	background: url(../Images/lightGrey.png) repeat;
+}
+.numbersWrap {
+	width: 133px;
+	float: left;
+}
+.numberPad, .basic4 .basicFunctions, .basic6 .basicFunctions, .basicMem6 .basicFunctions {
+	padding-bottom: 0px;
+	margin-bottom: 5px;
+}
+.basic4 .basicFunctions {
+	padding-bottom: 9px;
+}
+.hexPad {
+	margin-top: 1px;
+	padding-bottom: 0px;
+	padding-top: 5px;
+	display: none; /* disabled for now */
+}
+.numbersWrap a, .basic6 .basicFunctions a, .basicMem6 .basicFunctions a {
+	font-size:1.2em;
+	font-weight:bold;
+	height:23px;
+	line-height:23px;
+	margin-bottom:10px;
+	width:25px;
+}
+.basicFunctions {
+	width:40px;
+}
+.calcGraph {
+	float:left;
+	width:287px;
+}
+#canvas {
+	width:280px;
+	height:280px;
+	border:solid 1px #000;
+	float:left;
+	background-color:#fff;
+	margin-bottom:10px;
+}
+.coordinates {
+	display:none;
+}
+.graphControls {
+	/*background-color:#F9F9F9;*/
+	background: url(../Images/lightGrey.png) repeat;
+	height:45px;
+	padding-left:10px;
+	position:absolute;
+	right:0;
+	top:0;
+	width:85px;
+	border-left:solid 1px #ccc;
+}
+.graphControls span {
+	width:25px;
+	display:block;
+	float:left;
+}
+.graphControls a {
+	text-indent:-9999px;
+	background:url(../Images/arrows.gif) no-repeat;
+	height:20px;
+	width:25px;
+	padding:0px;
+	margin:0px;
+	background-color:#fff;
+}
+#left {
+	margin-top:12px;
+	margin-right: 2px;
+	background-position: 7px 2px;
+}
+#up {
+	margin-right:0px;
+	background-position: 5px -115px;
+}
+#down {
+	margin-right:0px;
+	background-position: 5px -75px;
+}
+#right {
+	margin-top:12px;
+	background-position: 9px -38px;
+	margin-left: 3px;
+}
+.basic4{
+	width: auto;
+	min-width: 240px;
+}
+.basic6, .basicMem6, .scientific, .nograph {
+	width: auto;
+	min-width: 282px;
+}
+.win.chrome .basic6, .win.chrome .basicMem6,
+.platform_android .basic6, .platform_android .basicMem6,
+.android .basic6, .android .basicMem6,
+.safari5 .basic6, .safari5 .basicMem6
+{
+	width: 282px;
+}
+/*fixes issue with Windows*/
+/* now it is causing issue FB#97854.  Adam is disabling this style*/
+/*
+.win .scientific {
+	min-width: 325px;
+}*/
+
+/*.basic4 #num0, .basic6 #num0, .scientific #num0, .nograph */#num0 {
+	width:61px;
+}
+.basic4 .misc, .basic6 .misc, .basicMem6 .misc, .scientific .misc, .nograph .misc {
+	display: none;
+}
+.basic6 .basicFunctions, .basicMem6 .basicFunctions {
+	width: 75px;
+}
+.basic4 .memory, .basic6 .memory, .basicMem6 .memory {
+	padding-bottom: 5px;
+} 
+.basic4 .memory a, .basic6 .memory a, .basicMem6 .memory a {
+	margin-bottom: 5px;
+}
+
+
+
+/*graphing - no class applied*/
+.graphing #sign {
+	display: block;
+}
+#togglegraph {
+	background: url(../Images/mediumGrey.png) repeat;/*path will need to update*/
+}
+.nograph .calcGraph {
+	display:none;
+}
+.nograph .numericDisplay #textinput, .nograph #equals {
+	display:block;
+}
+#and, #or, #not, #comma,#inv/*, #ANS*/, #remainder, .numericDisplay  #equals, #sign, .regressionContainer, .matricesContainer {
+	display: none;
+}
+.matrices #sign {
+	display: block;
+}
+
+/*basic4 */
+.basic4 .advancedFunctions, .basic4 #togglegraph, .basic4 .modes, .basic4 .logicFunctions, .basic4 .calcGraph, .basic4 #sign, .basic4 #comma, .basic4 #sqrt, .basic4 #remainder, .basic4 .memLogic, .basic4 #sqrt, .basic4 .regressionContainer, .basic4 .matricesContainer, .basic4 #regressions, .basic4 #matrices, .graphing div.memory, .matrices #divide, .matrices #sqrt, .matrices #equals {
+	display: none;
+}
+.basic4 .numericDisplay #textinput, .basic4 #equals /*.basic4 #sign, .basic4 #ANS */ {
+	display:block;
+}
+
+/* basic6*/
+.basic6 .advancedFunctions, .basic6 #togglegraph, .basic6 .modes, .basic6 .logicFunctions, .basic6 .calcGraph, .basic6 #comma, .basic6 .regressionContainer,  .basic6 .matricesContainer, .basic6 #regressions, .basic6 #matrices, .basic6 #memLogicStandard,
+.basicMem6 .advancedFunctions, .basicMem6 #togglegraph, .basicMem6 .modes, .basicMem6 .logicFunctions, .basicMem6 .calcGraph, .basicMem6 #comma, .basicMem6 .regressionContainer,  .basicMem6 .matricesContainer, .basicMem6 #regressions, .basicMem6 #matrices, .graphing #det, .scientific #det, .graphing #t, .scientific #t {
+	display:none;
+}
+.basic6 #remainder, .basic6 .numericDisplay #textinput, .basic6 #equals, .basic6 #sign, .basic6 #memLogic,
+.basicMem6 #remainder, .basicMem6 .numericDisplay #textinput, .basicMem6 #equals, .basicMem6 #sign/*, .basic6 #ANS*/ {
+	display:block;
+}
+/* basicMem6*/
+#memLogicStandard {
+	display: none;
+}
+.basicMem6 #memLogicStandard {
+	display: block;
+}
+.basicMem6 #memLogic {
+	display: none;
+}
+#memLogicStandard .memory{
+	max-width: 52px;
+}
+#memLogicStandard input#memorystatusStandard{
+	max-width: 23px;
+}
+
+/* scientific */
+.scientific .regressionContainer,  .scientific .matricesContainer, .scientific .calcGraph, .scientific #togglegraph {
+	display: none;
+}
+.scientific .numericDisplay #textinput, .scientific #equals/*, .scientific #ANS*/ {
+	display:block;
+}
+.scientific #sign {
+	display: block;
+}
+
+.modes {
+	display:block;
+	line-height:20px;
+	font-size:.9em;
+	float: left;
+	width: 126px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	border: solid 1px #ededed;
+	margin-left: 3px;
+}
+.clear {
+	display: block;
+	clear: both;
+}
+.options {
+	float: right;
+	padding-right: 12px;
+	line-height: 30px;
+	display: none; /* disabled for now*/
+}
+
+
+.hidden {
+	height: 1px;
+	overflow: hidden;
+	width: 1px;
+}
+#canvasHolder, #resetgraph, #previous5, #next5, #calczoomin, #calczoomout {
+	font-size: .9em;
+}
+canvas#canvas {
+    position: relative;
+}
+.platform_android canvas#canvas,
+.android canvas#canvas {
+    position: inherit;
+}
+#resetgraph, #previous5, #next5, #calczoomin, #calczoomout {
+	background: #fff url(../Images/arrows.gif) no-repeat 3px -382px;
+	padding-left: 18px;
+}
+#resetgraph:hover, #previous5:hover, #next5:hover, #calczoomin:hover, #calczoomout:hover {
+	background-color: #FC6;
+}
+#resetgraph:focus, #previous5:focus, #next5:focus, #calczoomin:focus, #calczoomout:focus {
+	background-color: #069;
+	color: #fff;
+}
+
+#previous5 {
+	background-position: 3px -273px;
+}
+#next5 {
+	background-position: 3px -328px;
+}
+#calczoomin {
+	background-position: 3px -163px;
+	padding-left: 22px;
+}
+#calczoomout {
+	background-position: 3px -219px;
+	padding-left: 22px;
+}
+#datatableHolder input, #datatableHolder label {
+	margin-top: 3px;
+	float: left;
+}
+#datatableHolder label {
+	line-height: 23px;
+	margin-right: 3px;
+}
+#applytb {
+	margin-right: 5px;
+}
+.tableholder {
+	display: block;
+	clear: both;
+	overflow: auto;
+	max-height: 200px;
+}
+#datatable {
+	border: solid 1px #999;
+	margin: 5px;
+	/*background-color: #fdfdfd;*/
+	background: url(../Images/white.png) repeat;
+}
+#datatable th {
+	border: solid 1px #000;
+}
+#datatable td, #datatable th {
+	padding: 3px;
+	border: 1px solid #999;
+}
+.graphmodes {
+	display: block;
+	border-bottom: solid 1px #ccc;
+	padding-bottom: 3px;
+	margin-bottom: 5px;
+}
+.graphmodes a {
+	/*float: right;*/
+}
+/* #22863 */
+#graphmodes a.active {
+	background-color: #069 !important;
+	color:#fff;
+}
+#equations input {
+	width: 205px;
+	margin-bottom: 5px;
+}
+#equations select {
+	font-size: 1em;
+	margin-bottom: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	width: 4em;
+	min-height: 1.5em;
+}
+.mac.gecko #equations select {
+	font-size: 1em;
+	margin-bottom: 0px;
+}
+.mac.gecko #equations input{
+	margin-bottom: 0px;
+	margin-top: 5px;
+}
+.mac.gecko #resetgraph 
+{
+	margin-bottom: 0px;
+}
+.mac.gecko #equations input {
+	width: 210px;
+}
+#graphwindow input {
+	width: 3em;
+	margin-bottom: 3px;
+	margin-left: 5px;
+	float: left;
+	margin-right: 111px; /*ADDING 11-21 to fix alignment issues on the Graphing Window*/
+}
+
+#graphwindow label {
+	display:block;
+	float:left;
+	line-height:23px;
+	text-align:right;
+	width:8em;
+}
+#graphwindow label.disabled, #graphwindow input.disabled {
+	font-style: italic;
+	color: #999;
+	border-color: #666;
+}
+
+#variable {
+	/*font-style: italic;*/
+}
+/*hides the C and ANS in graphin mode*/
+.graphing a#C, .graphing #ANS{
+	display: none;
+}
+/* @group Color Accommodations */
+
+body.TDS_CCYellow .calculatorWidget a, body.TDS_CCYellow #resetgraph, body.TDS_CCYellow #previous5, body.TDS_CCYellow #next5, body.TDS_CCYellow #calczoomin, body.TDS_CCYellow #calczoomout, body.TDS_CCYellow #canvas, body.TDS_CCYellow input, body.TDS_CCYellow select, body.TDS_CCYellow input#ANS, body.TDS_CCYellow input#RCL, body.TDS_CCYellow .matrixHolder, body.TDS_CCYellow .matricesContainer .tab.active a.switchTab {
+	background-color: #ffffce;
+}
+body.TDS_CCYellow2 .calculatorWidget a, body.TDS_CCYellow2 #resetgraph, body.TDS_CCYellow2 #previous5, body.TDS_CCYellow2 #next5, body.TDS_CCYellow2 #calczoomin, body.TDS_CCYellow2 #calczoomout, body.TDS_CCYellow2 #canvas, body.TDS_CCYellow2 input, body.TDS_CCYellow2 select, body.TDS_CCYellow2 input#ANS, body.TDS_CCYellow2 input#RCL, body.TDS_CCYellow2 .matrixHolder, body.TDS_CCYellow2 .matricesContainer .tab.active a.switchTab {
+	background-color: #fcfce2;
+}
+body.TDS_CCBlue .calculatorWidget a, body.TDS_CCBlue #resetgraph, body.TDS_CCBlue #previous5, body.TDS_CCBlue #next5, body.TDS_CCBlue #calczoomin, body.TDS_CCBlue #calczoomout, body.TDS_CCBlue #canvas, body.TDS_CCBlue input, body.TDS_CCBlue select, body.TDS_CCBlue input#ANS, body.TDS_CCBlue input#RCL, body.TDS_CCBlue .matrixHolder, body.TDS_CCBlue .matricesContainer .tab.active a.switchTab {
+	background-color: #99ffff;
+}
+body.TDS_CCBlue2 .calculatorWidget a, body.TDS_CCBlue2 #resetgraph, body.TDS_CCBlue2 #previous5, body.TDS_CCBlue2 #next5, body.TDS_CCBlue2 #calczoomin, body.TDS_CCBlue2 #calczoomout, body.TDS_CCBlue2 #canvas, body.TDS_CCBlue2 input, body.TDS_CCBlue2 select, body.TDS_CCBlue2 input#ANS, body.TDS_CCBlue2 input#RCL, body.TDS_CCBlue2 .matrixHolder, body.TDS_CCBlue2 .matricesContainer .tab.active a.switchTab {
+	background-color: #cfffff;
+}
+body.TDS_CCMagenta .calculatorWidget a, body.TDS_CCMagenta #resetgraph, body.TDS_CCMagenta #previous5, body.TDS_CCMagenta #next5, body.TDS_CCMagenta #calczoomin, body.TDS_CCMagenta #calczoomout, body.TDS_CCMagenta #canvas, body.TDS_CCMagenta input, body.TDS_CCMagenta select, body.TDS_CCMagenta input#ANS, body.TDS_CCMagenta input#RCL, body.TDS_CCMagenta .matrixHolder, body.TDS_CCMagenta .matricesContainer .tab.active a.switchTab {
+	background-color: #ffd0ff;
+}
+body.TDS_CCMagenta2 .calculatorWidget a, body.TDS_CCMagenta2 #resetgraph, body.TDS_CCMagenta2 #previous5, body.TDS_CCMagenta2 #next5, body.TDS_CCMagenta2 #calczoomin, body.TDS_CCMagenta2 #calczoomout, body.TDS_CCMagenta2 #canvas, body.TDS_CCMagenta2 input, body.TDS_CCMagenta2 select, body.TDS_CCMagenta2 input#ANS, body.TDS_CCMagenta2 input#RCL, body.TDS_CCMagenta2 .matrixHolder, body.TDS_CCMagenta2 .matricesContainer .tab.active a.switchTab {
+	background-color: #fde3fd;
+}
+body.TDS_CCGray .calculatorWidget a, body.TDS_CCGray #resetgraph, body.TDS_CCGray #previous5, body.TDS_CCGray #next5, body.TDS_CCGray #calczoomin, body.TDS_CCGray #calczoomout, body.TDS_CCGray #canvas, body.TDS_CCGray input, body.TDS_CCGray select, body.TDS_CCGray input#ANS, body.TDS_CCGray input#RCL, body.TDS_CCGray .matrixHolder, body.TDS_CCGray .matricesContainer .tab.active a.switchTab {
+	background-color: #cecfce;
+}
+body.TDS_CCGray2 .calculatorWidget a, body.TDS_CCGray2 #resetgraph, body.TDS_CCGray2 #previous5, body.TDS_CCGray2 #next5, body.TDS_CCGray2 #calczoomin, body.TDS_CCGray2 #calczoomout, body.TDS_CCGray2 #canvas, body.TDS_CCGray2 input, body.TDS_CCGray2 select, body.TDS_CCGray2 input#ANS, body.TDS_CCGray2 input#RCL, body.TDS_CCGray2 .matrixHolder, body.TDS_CCGray2 .matricesContainer .tab.active a.switchTab {
+	background-color: #e5e5e5;
+}
+body.TDS_CCGreen .calculatorWidget a, body.TDS_CCGreen #resetgraph, body.TDS_CCGreen #previous5, body.TDS_CCGreen #next5, body.TDS_CCGreen #calczoomin, body.TDS_CCGreen #calczoomout, body.TDS_CCGreen #canvas, body.TDS_CCGreen input, body.TDS_CCGreen select, body.TDS_CCGreen input#ANS, body.TDS_CCGreen input#RCL, body.TDS_CCGreen .matrixHolder, body.TDS_CCGreen .matricesContainer .tab.active a.switchTab {
+	background-color: #cff799;
+}
+body.TDS_CCGreen2 .calculatorWidget a, body.TDS_CCGreen2 #resetgraph, body.TDS_CCGreen2 #previous5, body.TDS_CCGreen2 #next5, body.TDS_CCGreen2 #calczoomin, body.TDS_CCGreen2 #calczoomout, body.TDS_CCGreen2 #canvas, body.TDS_CCGreen2 input, body.TDS_CCGreen2 select, body.TDS_CCGreen2 input#ANS, body.TDS_CCGreen2 input#RCL, body.TDS_CCGreen2 .matrixHolder, body.TDS_CCGreen2 .matricesContainer .tab.active a.switchTab {
+	background-color: #e0f6c1;
+}
+
+body.TDS_CCYellow .matricesContainer .tab a, body.TDS_CCYellow2  .matricesContainer .tab a, body.TDS_CCBlue .matricesContainer .tab a, body.TDS_CCBlue2  .matricesContainer .tab a, body.TDS_CCMagenta .matricesContainer .tab a, body.TDS_CCMagenta2  .matricesContainer .tab a, body.TDS_CCGray  .matricesContainer .tab a, body.TDS_CCGray2 .matricesContainer .tab a, body.TDS_CCGreen .matricesContainer .tab a ,body.TDS_CCGreen2 .matricesContainer .tab a{
+	background: none;
+}
+
+.TDS_CCInvert .calculatorWidget, .TDS_CCInvert .calculatorWidget a, .TDS_CCInvert .calculatorWidget input[type="button"], .TDS_CCInvert #resetgraph, .TDS_CCInvert #previous5, .TDS_CCInvert #next5, .TDS_CCInvert #calczoomin, .TDS_CCInvert #calczoomout, .TDS_CCInvert #equations select, .TDS_CCInvert .memory input, .TDS_CCInvert .numberCells select{
+	background-color: #000;
+	color: #fff;
+}
+.TDS_CCInvert .calculatorWidget input, .TDS_CCInvert #equations input, .TDS_CCInvert #graphwindow input, .TDS_CCInvert #datatableHolder input, .TDS_CCInvert #datatableHolder label,
+.TDS_CCWhiteN .calculatorWidget input, .TDS_CCWhiteN #equations input, .TDS_CCWhiteN #graphwindow input, .TDS_CCWhiteN#datatableHolder input, .TDS_CCWhiteN #datatableHolder label{
+	color: #fff;
+}
+.TDS_CCWhiteN .calculatorWidget, .TDS_CCWhiteN .calculatorWidget a, .TDS_CCWhiteN .calculatorWidget input[type="button"], .TDS_CCWhiteN #resetgraph, .TDS_CCWhiteN #previous5, .TDS_CCWhiteN #next5, .TDS_CCWhiteN #calczoomin, .TDS_CCWhiteN#calczoomout, .TDS_CCWhiteN #equations select, .TDS_CCWhiteN .memory input, .TDS_CCWhiteN.numberCells select{
+	background-color: transparent;
+	color: #fff;
+}
+
+.TDS_CCInvert .matrixHolder, .TDS_CCInvert .matricesContainer .tab.active a.switchTab {
+	border-color: #fff;
+	background-color: #000;
+}
+.TDS_CCInvert #canvas{ background-color: #fff; }
+.TDS_CCInvert input.disabled[type="button"]{
+	color: #333;
+	border-color: #333;
+}
+.TDS_CCInvert .calculatorWidget a:hover, .TDS_CCInvert .calculatorWidget input[type="button"]:hover{
+	background-color: #e7761f !important;
+}
+.TDS_CCInvert #minus, .TDS_CCInvert #resetgraph, .TDS_CCInvert #previous5, .TDS_CCInvert #next5, .TDS_CCInvert #calczoomin, .TDS_CCInvert #calczoomout, .TDS_CCInvert .graphControls a,
+.TDS_CCWhiteN #minus, .TDS_CCWhiteN #resetgraph, .TDS_CCWhiteN #previous5, .TDS_CCWhiteN #next5, .TDS_CCWhiteN #calczoomin, .TDS_CCWhiteN #calczoomout, .TDS_CCWhiteN .graphControls a{
+	background-image: url("../Images/arrows_white.gif");
+	}
+.TDS_CCInvert .matricesContainer .tab{
+	border-right: #fff;
+}
+.TDS_CCInvert .matricesContainer .tab a{
+	color: #999;	
+}
+.TDS_CCInvert .matricesContainer .tab.active{	
+	border-color: #fff;
+	border-right-color: #000;
+}
+.TDS_CCInvert .matricesContainer .tab.active a{
+	background-color: #000;
+	color: #fff;
+}
+.TDS_CCInvert .matrixTable{
+	border-color: #000;
+}
+.TDS_CCInvert .matrices .basicFunctions{ border-bottom-color: #000; }
+.TDS_CCInvert #ResultmatrixTable td input{ color: #000;}
+.TDS_CCInvert #canvas{ color:#fff;}
+
+
+
+.TDS_CCYellowB .calculatorWidget, .TDS_CCYellowB  .calculatorWidget a, .TDS_CCYellowB  .calculatorWidget input[type="button"], .TDS_CCYellowB #resetgraph, .TDS_CCYellowB #previous5, .TDS_CCYellowB  #next5, .TDS_CCYellowB  #calczoomin, .TDS_CCYellowB  #calczoomout, .TDS_CCYellowB #equations select, .TDS_CCYellowB .memory input, .TDS_CCYellowB .numberCells select{
+	background-color: #003399;
+	color: #FFCC00;
+}
+.TDS_CCYellowB .calculatorWidget input, .TDS_CCYellowB  #equations input, .TDS_CCYellowB #graphwindow input, .TDS_CCYellowB #datatableHolder input, .TDS_CCYellowB #datatableHolder label{
+	color: #FFCC00;
+}
+.TDS_CCYellowB #canvas,.TDS_CCYellowB .matrixHolder, .TDS_CCYellowB.matricesContainer .tab.active a.switchTab {
+	border-color: #FFCC00;
+	background-color: #003399;
+}
+.TDS_CCYellowB input.disabled[type="button"]{
+	color: #3e61a6;
+	border-color: #3e61a6;
+}
+.TDS_CCYellowB .calculatorWidget a:hover, .TDS_CCYellowB .calculatorWidget input[type="button"]:hover{
+	background-color: #000 !important;
+}
+.TDS_CCYellowB #minus, .TDS_CCYellowB #resetgraph, .TDS_CCYellowB #previous5, .TDS_CCYellowB #next5, .TDS_CCYellowB #calczoomin, .TDS_CCYellowB #calczoomout, .TDS_CCYellowB .graphControls a{
+	background-image: url("../Images/arrows_yellow.gif");
+	}
+.TDS_CCYellowB .matricesContainer .tab{
+	border-right: #FFCC00;
+}
+.TDS_CCYellowB .matricesContainer .tab a{
+	color: #999;	
+}
+.TDS_CCYellowB .matricesContainer .tab.active{	
+	border-color: #FFCC00;
+	border-right-color: #003399;
+}
+.TDS_CCYellowB .matricesContainer .tab.active a.switchTab{
+	background-color: #003399;
+	color: #FFCC00;
+}
+.TDS_CCYellowB .matrixTable{
+	border-color: #003399;
+}
+.TDS_CCYellowB .matrices .basicFunctions{ border-bottom-color: #003399; }
+.TDS_CCYellowB #ResultmatrixTable td input{ color: #003399; background-color: #FFCC00 !important;}
+.TDS_CCYellowB #canvas{ color: #FFCC00;}
+
+
+
+/* @end */
+/*.TDS_PS_L1 .calculatorWidget {
+	width: 650px;
+}*/
+.TDS_PS_L1 .basic6, .TDS_PS_L1 .basicMem6, .TDS_PS_L1 .scientific, .TDS_PS_L1 .nograph {
+	width:auto;
+	min-width: 340px;
+}
+.TDS_PS_L1 .basic4{
+	width: auto;
+	min-width: 275px;
+}
+.TDS_PS_L1.win.chrome .basic6 {
+	width: 286px;
+}
+/*.TDS_PS_L1 input#ANS{
+	padding-right: 30px;
+}
+.TDS_PS_L2 input#ANS{
+	padding-right: 35px;
+}*/
+
+/*.TDS_PS_L1 .line, .TDS_PS_L2 .line { 
+	width: 10em !important;
+}*/
+.TDS_PS_L1 .calculatorWidget a, .TDS_PS_L1 .calculatorWidget input, .TDS_PS_L1 .calculatorWidget input.disabled{
+	min-width:34px;
+	font-size: 1.4em;
+}
+.TDS_PS_L1 .advancedFunctions {
+	width:95px;
+}
+.TDS_PS_L1 .advancedFunctions a{
+	width: 36px;
+}
+.TDS_PS_L1 .matrices .advancedFunctions{ width: 141px;}
+.TDS_PS_L1 .memLogic{ width: 65px;}
+.TDS_PS_L1 .numbersWrap{ width: 158px; }
+.TDS_PS_L1 .basicFunctions{ width: 53px;}
+.TDS_PS_L1 .basic6 .basicFunctions, .TDS_PS_L1 .basicMem6 .basicFunctions{ width: 90px;}
+.TDS_PS_L1 .graphmodes {
+	font-size: .9em;
+}
+.TDS_PS_L1 #variable {
+	font-size: 1.1em;
+}
+.TDS_PS_L1 .graphControls a {
+	min-width: 20px;
+}
+.TDS_PS_L1 .calcGraph {
+	width:300px;
+}
+.TDS_PS_L1 .regresionModes{
+	width: 100px;
+}
+.TDS_PS_L1 .scientific{
+	width: 500px !important;
+}
+.TDS_PS_L2 .scientific, .TDS_PS_L3 .scientific, .TDS_PS_L4 .scientific{
+	width: 555px !important;
+}
+.platform_linux.TDS_PS_L2 .scientific, .platform_linux.TDS_PS_L3 .scientific, .platform_linux.TDS_PS_L4 .scientific{
+	width: 565px !important;
+}
+#initX {
+	width: 170px;
+}
+.TDS_PS_L1 #equations, .TDS_PS_L1 #equations input, .TDS_PS_L1 #graphwindow, .TDS_PS_L1 #graphwindow input, .TDS_PS_L1 #datatableHolder, .TDS_PS_L1 #datatableHolder input {
+	font-size: 1.4em;
+}
+.platform_ios.TDS_PS_L1 #equations,
+.platform_ios.TDS_PS_L1 #equations input,
+.platform_ios.TDS_PS_L1 #graphwindow,
+.platform_ios.TDS_PS_L1 #graphwindow input, 
+.platform_ios.TDS_PS_L1 #datatableHolder,
+.platform_ios.TDS_PS_L1 #datatableHolder input {
+	font-size: 1.2em;
+}
+.TDS_PS_L1 #datatableHolder a {
+	font-size: .9em;
+}
+
+.TDS_PS_L1 .mGroup {
+    left: -71px;
+    width: 53px;
+}
+.TDS_PS_L2 .mGroup, .TDS_PS_L3 .mGroup, .TDS_PS_L4 .mGroup {
+    left: -73px;
+    width: 55px; 
+}
+.TDS_PS_L1 .matrixHolder {
+    margin-left: 38px;
+}
+.TDS_PS_L1 .matricesContainer .tab{
+    width: 30px;   
+}
+.TDS_PS_L2 .matrixHolder, .TDS_PS_L3 .matrixHolder, .TDS_PS_L4 .matrixHolder {
+    margin-left: 43px;
+}
+.TDS_PS_L2 .matricesContainer .tab, .TDS_PS_L3 .matricesContainer .tab, .TDS_PS_L4 .matricesContainer .tab   {
+    width: 35px;   
+}
+
+
+.TDS_PS_L2 #equations, .TDS_PS_L2 #equations input, .TDS_PS_L2 #graphwindow, .TDS_PS_L2 #graphwindow input, .TDS_PS_L2 #datatableHolder, .TDS_PS_L2 #datatableHolder input, 
+.TDS_PS_L3 #equations, .TDS_PS_L3 #equations input, .TDS_PS_L3 #graphwindow, .TDS_PS_L3 #graphwindow input, .TDS_PS_L3 #datatableHolder, .TDS_PS_L3 #datatableHolder input, 
+.TDS_PS_L4 #equations, .TDS_PS_L4 #equations input, .TDS_PS_L4 #graphwindow, .TDS_PS_L4 #graphwindow input, .TDS_PS_L4 #datatableHolder, .TDS_PS_L4 #datatableHolder input {
+	font-size: 1.4em;
+}
+.platform_ios.TDS_PS_L2 #equations, .platform_ios.TDS_PS_L2 #equations input, .platform_ios.TDS_PS_L2 #graphwindow,
+.platform_ios.TDS_PS_L2 #graphwindow input, .platform_ios.TDS_PS_L2 #datatableHolder,
+.platform_ios.TDS_PS_L2 #datatableHolder input,
+ 
+.platform_ios.TDS_PS_L3 #equations, .platform_ios.TDS_PS_L3 #equations input, .platform_ios.TDS_PS_L3 #graphwindow,
+.platform_ios.TDS_PS_L3 #graphwindow input, .platform_ios.TDS_PS_L3 #datatableHolder, 
+.platform_ios.TDS_PS_L3 #datatableHolder input, 
+
+.platform_ios.TDS_PS_L4 #equations, .platform_ios.TDS_PS_L4 #equations input, .platform_ios.TDS_PS_L4 #graphwindow,
+.platform_ios.TDS_PS_L4 #graphwindow input, .platform_ios.TDS_PS_L4 #datatableHolder, 
+.platform_ios.TDS_PS_L4 #datatableHolder input {
+	font-size: 1.3em;
+}
+.TDS_PS_L2 #datatableHolder a, .TDS_PS_L3 #datatableHolder a, .TDS_PS_L4 #datatableHolder a {
+	font-size: 1.1em;
+}
+.TDS_PS_L1 .graphing.calculatorWidget{
+	width: 780px
+}
+.TDS_PS_L2 .graphing.calculatorWidget, .TDS_PS_L3 .graphing.calculatorWidget, .TDS_PS_L4 .graphing.calculatorWidget{
+	width: 802px;
+} 
+.TDS_PS_L2 .basic4, .TDS_PS_L2 .basic6, .TDS_PS_L2 .basicMem6, .TDS_PS_L2 .scientific, .TDS_PS_L2 .nograph, 
+.TDS_PS_L3 .basic4, .TDS_PS_L3 .basic6, .TDS_PS_L3 .basicMem6, .TDS_PS_L3 .scientific, .TDS_PS_L3 .nograph, 
+.TDS_PS_L4 .basic4, .TDS_PS_L4 .basic6, .TDS_PS_L4 .basicMem6, .TDS_PS_L4 .scientific, .TDS_PS_L4 .nograph {
+	width:auto;
+	min-width: 365px;
+}
+.TDS_PS_L2 .calculatorWidget a, .TDS_PS_L2 .calculatorWidget input, 
+.TDS_PS_L3 .calculatorWidget a, .TDS_PS_L3 .calculatorWidget input, 
+.TDS_PS_L4 .calculatorWidget a, .TDS_PS_L4 .calculatorWidget input {
+	min-width:38px;
+	font-size: 1.6em;
+}
+.TDS_PS_L2 .numbersWrap, .TDS_PS_L3 .numbersWrap, .TDS_PS_L4 .numbersWrap {
+    width: 170px;
+}
+.TDS_PS_L2 .numberPad, .TDS_PS_L3 .numberPad, .TDS_PS_L4 .numberPad/*, .basic4 .basicFunctions, .basic6 .basicFunctions*/ {
+	width:150px;
+}
+.TDS_PS_L2  #num0, .TDS_PS_L3  #num0, .TDS_PS_L4  #num0 {
+	width: 67px;
+}
+.TDS_PS_L2 .basic6 .basicFunctions, .TDS_PS_L3 .basic6 .basicFunctions, .TDS_PS_L4 .basic6 .basicFunctions, 
+.TDS_PS_L2 .basicMem6 .basicFunctions, .TDS_PS_L3 .basicMem6 .basicFunctions, .TDS_PS_L4 .basicMem6 .basicFunctions{
+	width:100px;
+}
+.TDS_PS_L2 .basicFunctions, .TDS_PS_L3 .basicFunctions, .TDS_PS_L4 .basicFunctions {
+    width: 55px;   
+}
+.TDS_PS_L2 .memLogic, .TDS_PS_L3 .memLogic, .TDS_PS_L4 .memLogic {
+    width: 67px;
+}
+.TDS_PS_L2 .advancedFunctions, .TDS_PS_L3 .advancedFunctions, .TDS_PS_L4 .advancedFunctions {
+	width: 104px;
+}
+.TDS_PS_L2 .advancedFunctions a, .TDS_PS_L3 .advancedFunctions a, .TDS_PS_L4 .advancedFunctions a {
+	width: 40px;
+}
+.TDS_PS_L2 .matrices .advancedFunctions, .TDS_PS_L3 .matrices .advancedFunctions, .TDS_PS_L4 .matrices .advancedFunctions{
+	width: 154px;
+}
+.TDS_PS_L2 .graphmodes, .TDS_PS_L3 .graphmodes, .TDS_PS_L4 .graphmodes {
+	font-size: .8em;
+}
+.TDS_PS_L2 #variable, .TDS_PS_L3 #variable, .TDS_PS_L4 #variable {
+	font-size: 1.1em;
+}
+.TDS_PS_L2 .graphControls a, .TDS_PS_L3 .graphControls a, .TDS_PS_L4 .graphControls a {
+	min-width: 20px;
+}
+.TDS_PS_L1 .calcGraph, .TDS_PS_L2 .calcGraph, .TDS_PS_L3 .calcGraph, .TDS_PS_L4 .calcGraph {
+	width:310px;
+}
+
+.TDS_PS_L2 .regresionModes, .TDS_PS_L3 .regresionModes, .TDS_PS_L4 .regresionModes {
+	width: 120px;
+}
+#minus {
+	text-indent: -9999px;
+	background-image: url(../Images/arrows.gif);
+	background-position: 50% -436px;
+	background-repeat: no-repeat;
+}
+.platform_linux #sqrt, .platform_unix #sqrt {
+	font-family:monospace;
+}
+.error {
+	-moz-border-radius:10px 10px 10px 10px;
+	background-color:#FFFFFF;
+	border:3px solid #ccc;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2em;
+	width: 90%;
+}
+.error h2 {
+	background-color:#F5F7F7;
+	background-image:none;
+	border-bottom:1px solid #CCCCCC;
+	color:#666666;
+	font-size:1.5em;
+	line-height:1.5em;
+	padding:0 10px;
+}
+.error p {
+	font-size:1em;
+	padding:1em;
+}
+
+/* @group regressions */
+.TDS_PS_L1 .regressions {
+	width: 690px;
+}
+.TDS_PS_L2 .regressions, .TDS_PS_L3 .regressions, .TDS_PS_L4 .regressions {
+	width: 725px;
+}
+.regressions .regressionContainer, .regressions #sign {
+	display: block;
+}
+.regressions #regressions, .regresionModes .active {
+	background: url(../Images/mediumGrey.png) repeat;/*path will need to update*/
+}
+.regressions #togglegraph {
+	background: none;
+}
+.regressions #sqrt, .regressions .memLogic, .regressions .advancedFunctions, .regressions .modes, .regressions .graphControls, .regressions .calcGraph, .regressions .matricesContainer, .regressions #divide, .regressions #remainder, .regressions #multiply, .regressions #minus, .regressions #plus, .regressions #equals, .regressions #C, .regressions #ANS {
+	display: none;
+}
+/* #22637 - 
+		division, multiply, addition, subtraction, equals buttons hidden
+		until it is an explicit customer request.
+.regressions #sqrt, .regressions .memLogic, .regressions .advancedFunctions, .regressions .modes, .regressions .graphControls, .regressions .calcGraph, .regressions .matricesContainer, .regressions #remainder, .regressions #C, .regressions #ANS {
+	display: none;
+}*/
+
+.regresionModes {
+	float: left;
+	width: 80px;
+}
+.regresionModes a {
+	float: none;
+	text-align: right;
+}
+.yNumb {
+	margin-left: 10px;
+	margin-top: 0px;
+	width: 315px;
+	height: 300px;
+	overflow: auto;
+}
+.yNumb td {
+	border: solid 1px #ccc;
+}
+.yNumb th {
+	border: 1px solid #c3c4c4;
+	font-weight: bold;
+	background: url(../Images/lightGrey.png) repeat;/*path will need to update*/
+	line-height: 1.5em;
+	text-align: left;
+	padding-left: .3em;
+	padding-right: .3em;
+}
+.yNumb input {
+	border: solid 1px transparent;
+	width: 6em;
+}
+
+/* @end */
+
+/* @group Matrices */
+.calculatorWidget.matrices {
+	padding-bottom: 20px;
+}
+.matrices .matricesContainer, .matrices #inv{
+	display: block;
+}
+
+.matrices .matricesContainer, .matrices #det{
+	display: block;
+}
+.matrices #advancedFunctions #det{
+	clear: left;
+}
+
+.matrices .matricesContainer, .matrices #t{
+	display: block;
+}
+.matrices .memLogic, .matrices .modes, .matrices .graphControls, .matrices .calcGraph, .matrices .regressionContainer, .matrices #C, .matrices #ANS {
+	display: none;
+}
+.matrices .advnacedPad {
+	display: block;
+	float: left;
+}
+.matrices .numbersWrap {
+	float: none;
+}
+.matrices .advancedFunctions {
+	float: none;
+	width: 116px;
+}
+.matrices .advancedFunctions a {
+	display: none;
+}
+.matrices .advancedFunctions #leftbracket, .matrices .advancedFunctions #rightbracket {
+	display: block;
+}
+.matricesContainer {
+	position: relative;
+	width: 418px;
+    min-height: 314px;
+}
+.matrices #matrices {
+	background: url(../Images/mediumGrey.png) repeat;/*path will need to update*/
+}
+.matrices #togglegraph {
+	background: none;
+}
+.matrixHolder {
+	min-height: 225px;
+	border: solid 1px #000;
+	margin-left: 33px;
+	padding-left: 3px;
+	float: left;
+	max-width: 380px;
+	background: #fff; /*In response to Bug38363#*/
+}
+
+.matrixBack {
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 3px;
+	/*background: url(matrix.png) no-repeat 0px 50%; path will need to update*/
+	/*-moz-background-size:100% 100%;
+	background-size:100% 100%;
+	min-height: 30px;*/
+	border: solid 5px #666;
+}
+.matrixTable {
+	overflow: auto;
+	/*width: 290px;*/
+	margin: -5px;
+	border: solid 5px #fff;
+}
+.matrixTable input {
+	border: solid 1px #ccc;
+	width: 5em;
+	margin-left: .2em;
+	margin-bottom: .2em;
+	font-family: "Lucida Console", "Lucida Grande", Lucida, Verdana, sans-serif;
+}
+.browser_firefox.browserVer_2 .matrixBack .matrixTable table td, .browser_airsecurebrowser.browserVer_3_6.platform_mac .matrixBack .matrixTable table td{
+	max-width: 70px;
+}
+.browser_firefox.browserVer_2 .matrixTable td input{
+	max-width: 68px;
+}
+.browser_chrome .matrixTable td,
+.browser_safari .matrixTable td{
+	vertical-align: middle;
+}
+.numberCells {
+	padding-left: 60px;
+	height: 2.5em;
+}
+.numberCells label {
+	margin-left: 1em;
+}
+.numberCells a {
+	float: right;
+	margin-top: -5px;
+}
+.browser_firefox.browserVer_2 .numberCells label, .browser_firefox.browserVer_2 .numberCells select, .browser_airsecurebrowser.browserVer_3_6.platform_mac .numberCells label, browser_airsecurebrowser.browserVer_3_6.platform_mac .numberCells select{
+	float: left;
+}
+.matricesContainer .tabs{
+	/*width: 27px;
+	position: absolute;
+	z-index: 3;
+	height: 225px;
+	top: 4em;
+	left: 48px;*/
+	height: 225px;
+    left: 9px;
+    position: absolute;
+    top: 4em;
+    width: 27px;
+    z-index: 3;
+}
+.TDS_PS_L1 .matricesContainer .tabs{
+	width: 34px;
+}
+.TDS_PS_L2 .matricesContainer .tabs, .TDS_PS_L3 .matricesContainer .tabs, .TDS_PS_L4 .matricesContainer .tabs{
+	width: 39px;
+}
+
+.matricesContainer .tab {
+	display: block;
+	height: 25px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 0px;
+	-moz-border-radius-bottomright: 0px;
+	-moz-border-radius-bottomleft: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 3px;
+	border: solid 1px #ccc;
+	border-right: solid 1px #000;
+	margin: 3px;
+	width: 25px;
+	background-image: url(../Images/lightGrey.png); /*path will need to update*/
+}
+.matricesContainer .tab.active {
+	border: 1px solid #000;
+	border-right: solid 1px #fff;
+	background-image: none;
+}
+.matricesContainer .tab a {
+	margin: 0px;
+	padding: 0px;
+	height: 25px;
+	width: 25px;
+	text-align: center;
+} 
+.matricesContainer .tab.active a.switchTab {
+	/* Updating in response to Bug#38363 */
+	background-color:#ffffff;
+	/*background-image: url(lightGrey.png); path will need to update*/
+}
+/*a.singleMatrix {
+	font-size: .7em;
+	min-width: 15px;
+	height: 15px;
+	line-height: 15px;
+	margin: 0px;
+	margin-top: 4px;
+}*/
+a.switchTab {
+	margin: 0px;
+	border: none;
+	/*background-image: url(mediumGrey.png); path will need to update*/
+	background-color: inherit;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
+	font-style: italic;
+	/*min-width: 10px;
+	width: 10px;*/
+	line-height: 25px;
+	height: 25px;
+	margin-right: 5px;
+}
+.mGroup {
+	/*display: block;
+	float: left;
+	width: 33px;
+	border-right: solid 1px #ccc;
+	padding-right: 5px;
+	padding-bottom: 50px;*/
+	border: 1px solid #EDEDED;
+	border-top: none;
+    display: block;
+    float: left;
+    left: -58px;
+    padding: 5px;
+    position: absolute;
+    top: 173px;
+    width: 40px;
+}
+
+
+
+/* @end */
+a.disabled, input[type="button"].disabled {
+	border-color: #dddfdf;
+	color: #999;
+	-moz-box-shadow: .1em .1em 3px #dddfdf;
+	-webkit-box-shadow: .1em .1em 3px #dddfdf;
+	box-shadow: .1em .1em 3px #dddfdf;
+}
+input[type="button"].disabled {
+
+	background-image: url(../Images/mediumGrey.png);
+}
+
+
+.TDS_CCGreen .calculatorWidget a:focus, .TDS_CCGreen.calculatorWidget a:active, .TDS_CCGreen a.focused, .TDS_CCGreen .calculatorWidget input[type="button"]:focus, .TDS_CCGreen .calculatorWidget input[type="button"]:active, .TDS_CCGreen input[type="button"].focused, 
+.TDS_CCGreen #resetgraph:focus, .TDS_CCGreen #previous5:focus, .TDS_CCGreen #next5:focus, .TDS_CCGreen #calczoomin:focus, .TDS_CCGreen #calczoomout:focus,  
+
+.TDS_CCGreen2 .calculatorWidget a:focus, .TDS_CCGreen2.calculatorWidget a:active, .TDS_CCGreen2 a.focused, .TDS_CCGreen2 .calculatorWidget input[type="button"]:focus, .TDS_CCGreen2 .calculatorWidget input[type="button"]:active, .TDS_CCGreen2 input[type="button"].focused, 
+.TDS_CCGreen2 #resetgraph:focus, .TDS_CCGreen2 #previous5:focus, .TDS_CCGreen2 #next5:focus, .TDS_CCGreen2 #calczoomin:focus, .TDS_CCGreen2 #calczoomout:focus, 
+
+.TDS_CCYellow .calculatorWidget a:focus, .TDS_CCYellow.calculatorWidget a:active, .TDS_CCYellow a.focused, .TDS_CCYellow .calculatorWidget input[type="button"]:focus, .TDS_CCYellow .calculatorWidget input[type="button"]:active, .TDS_CCYellow input[type="button"].focused, 
+.TDS_CCYellow #resetgraph:focus, .TDS_CCYellow #previous5:focus, .TDS_CCYellow #next5:focus, .TDS_CCYellow #calczoomin:focus, .TDS_CCYellow #calczoomout:focus, 
+
+.TDS_CCYellow2 .calculatorWidget a:focus, .TDS_CCYellow2.calculatorWidget a:active, .TDS_CCYellow2 a.focused, .TDS_CCYellow2 .calculatorWidget input[type="button"]:focus, .TDS_CCYellow2 .calculatorWidget input[type="button"]:active, .TDS_CCYellow2 input[type="button"].focused, 
+.TDS_CCYellow2 #resetgraph:focus, .TDS_CCYellow2 #previous5:focus, .TDS_CCYellow2 #next5:focus, .TDS_CCYellow2 #calczoomin:focus, .TDS_CCYellow2 #calczoomout:focus, 
+
+.TDS_CCBlue .calculatorWidget a:focus, .TDS_CCBlue.calculatorWidget a:active, .TDS_CCBlue a.focused, .TDS_CCBlue .calculatorWidget input[type="button"]:focus, .TDS_CCBlue .calculatorWidget input[type="button"]:active, .TDS_CCBlue input[type="button"].focused, 
+.TDS_CCBlue #resetgraph:focus, .TDS_CCBlue #previous5:focus, .TDS_CCBlue #next5:focus, .TDS_CCBlue #calczoomin:focus, .TDS_CCBlue #calczoomout:focus, 
+
+.TDS_CCBlue2 .calculatorWidget a:focus, .TDS_CCBlue2.calculatorWidget a:active, .TDS_CCBlue2 a.focused, .TDS_CCBlue2 .calculatorWidget input[type="button"]:focus, .TDS_CCBlue2 .calculatorWidget input[type="button"]:active, .TDS_CCBlue2 input[type="button"].focused, 
+.TDS_CCBlue2 #resetgraph:focus, .TDS_CCBlue2 #previous5:focus, .TDS_CCBlue2 #next5:focus, .TDS_CCBlue2 #calczoomin:focus, .TDS_CCBlue2 #calczoomout:focus, 
+
+.TDS_CCMagenta .calculatorWidget a:focus, .TDS_CCMagenta.calculatorWidget a:active, .TDS_CCMagenta a.focused, .TDS_CCMagenta2 .calculatorWidget input[type="button"]:focus, .TDS_CCMagenta .calculatorWidget input[type="button"]:active, .TDS_CCMagenta input[type="button"].focused, 
+.TDS_CCMagenta #resetgraph:focus, .TDS_CCMagenta #previous5:focus, .TDS_CCMagenta #next5:focus, .TDS_CCMagenta #calczoomin:focus, .TDS_CCMagenta #calczoomout:focus, 
+
+.TDS_CCMagenta2 .calculatorWidget a:focus, .TDS_CCMagenta2.calculatorWidget a:active, .TDS_CCMagenta2 a.focused, .TDS_CCMagenta2 .calculatorWidget input[type="button"]:focus, .TDS_CCMagenta2 .calculatorWidget input[type="button"]:active, .TDS_CCMagenta2 input[type="button"].focused, 
+.TDS_CCMagenta2 #resetgraph:focus, .TDS_CCMagenta2 #previous5:focus, .TDS_CCMagenta2 #next5:focus, .TDS_CCMagenta2 #calczoomin:focus, .TDS_CCMagenta2 #calczoomout:focus,
+
+.TDS_CCGray .calculatorWidget a:focus, .TDS_CCGray.calculatorWidget a:active, .TDS_CCGray a.focused, .TDS_CCGray .calculatorWidget input[type="button"]:focus, .TDS_CCGray .calculatorWidget input[type="button"]:active, .TDS_CCGray input[type="button"].focused, 
+.TDS_CCGray #resetgraph:focus, .TDS_CCGray #previous5:focus, .TDS_CCGray #next5:focus, .TDS_CCGray #calczoomin:focus, .TDS_CCGray #calczoomout:focus,
+
+.TDS_CCGray2 .calculatorWidget a:focus, .TDS_CCGray2.calculatorWidget a:active, .TDS_CCGray2 a.focused, .TDS_CCGray2 .calculatorWidget input[type="button"]:focus, .TDS_CCGray2 .calculatorWidget input[type="button"]:active, .TDS_CCGray2 input[type="button"].focused, 
+.TDS_CCGray2 #resetgraph:focus, .TDS_CCGray2 #previous5:focus, .TDS_CCGray2 #next5:focus, .TDS_CCGray2 #calczoomin:focus, .TDS_CCGray2 #calczoomout:focus {
+	background-color: #069 !important;
+	color:#fff;
+}
+
+/*New Trade toggle CSS*/
+#traceToggle{
+	/*display: none;*/
+    float: right;
+    position: absolute;
+    right: 10px;
+    top: 50px;
+}
+#traceToggle input, #tradeToggle span{
+	padding-right: 1em;
+}
+#scrollHolder, #traceHolder {
+     display: inline;
+}
+
+#scrollHolder .focus, #traceToggle .focus {
+    border-style:dotted;
+    border-width:1px; 
+}
+
+
+/* end */
+
+
+/*Input display error on iOS fix*/
+
+.mobile input[type="radio"]{
+	margin: 0;
+	padding: 0;
+	background: #555;
+	color: black;
+	border: 1px solid black;
+	width: 16px;
+	height: 16px;
+}
+.mobile input[type="radio"][selected],.mobile input[type="radio"][checked] {
+	
+	margin: 0;
+	padding: 0;
+	width: 16px;
+	height: 16px;
+}
+
+/* end */
+
+/* Bugs 152758 & 152768 */
+.touch.platform_android #modes input[type="radio"],
+.mobile.platform_android #modes input[type="radio"]{
+	margin: 0.2em;
+}
+.platform_android.browser_airsecurebrowser input[type="radio"]{
+	min-width: 0 !important;
+}
+
+/* end */
+
+/* FIX for 65854 */
+.mobile .matrixBack .matrixTable td{
+	vertical-align: middle;
+}
+/* end */
+
+/* FIX for 65830*/
+
+.mobile a#sqrt span{
+	font-size: 1.0em;
+}
+.mobile a#sqrt span span {
+	font-size: 1.2em;
+	padding: 0;
+	margin: 0;
+}
+
+/* Disabled SquareRoot Background glitch ... please fix this in the future*/
+.calculatorWidget a#sqrt{
+	background-image: url(../images/sqroot.png) !important;
+	background-repeat: no-repeat;
+	background-position: 0px -5px;
+	display: block;
+	min-width: 0px;
+	width: 0px;
+	height: 0px;
+	padding: 25px 31px 0 0;
+	overflow: hidden;
+}
+.TDS_CCInvert .calculatorWidget a#sqrt,
+.TDS_CCWhiteN .calculatorWidget a#sqrt{
+	background-position: 0px -40px;
+}
+.TDS_CCYellowB .calculatorWidget a#sqrt{
+	background-position: 0px -75px;
+}
+
+.TDS_PS_L1 .calculatorWidget a#sqrt{
+	padding: 25px 40px 0 0;
+	background-position: 5px -5px;
+}
+.TDS_PS_L1.TDS_CCInvert .calculatorWidget a#sqrt,
+.TDS_PS_L1.TDS_CCWhiteN .calculatorWidget a#sqrt{
+	padding: 25px 40px 0 0;
+	background-position: 5px -40px;
+}
+.TDS_PS_L1.TDS_CCYellowB .calculatorWidget a#sqrt{
+	padding: 25px 40px 0 0;
+	background-position: 5px -75px;
+}
+.TDS_PS_L2 .calculatorWidget a#sqrt,
+.TDS_PS_L3 .calculatorWidget a#sqrt,
+.TDS_PS_L4 .calculatorWidget a#sqrt
+{
+	padding: 25px 44px 0 0;
+	background-image: url("../images/sqroot-zoomed.png") !important;
+	background-position: 7px -5px;
+}
+.TDS_PS_L2.TDS_CCInvert .calculatorWidget a#sqrt,
+.TDS_PS_L3.TDS_CCInvert .calculatorWidget a#sqrt,
+.TDS_PS_L4.TDS_CCInvert .calculatorWidget a#sqrt,
+.TDS_PS_L2.TDS_CCWhiteN .calculatorWidget a#sqrt,
+.TDS_PS_L3.TDS_CCWhiteN .calculatorWidget a#sqrt,
+.TDS_PS_L4.TDS_CCWhiteN .calculatorWidget a#sqrt
+{
+	background-position: 7px -40px;
+}
+.TDS_PS_L2.TDS_CCYellowB .calculatorWidget a#sqrt,
+.TDS_PS_L3.TDS_CCYellowB .calculatorWidget a#sqrt,
+.TDS_PS_L4.TDS_CCYellowB .calculatorWidget a#sqrt
+{
+	background-position: 7px -75px;
+}
+
+.basic6.calculatorWidget a#sqrt,
+.basicMem6.calculatorWidget a#sqrt
+{
+	padding-top: 29px;
+}
+
+
+
+/* end */
+
+/* FIX for 65826*/
+.mobile #scrollHolder input[type="radio"], .mobile #traceHolder input[type="radio"]{
+	margin: 0 0.5em 0 0.5em;
+}
+/* end */
+
+/* FIX for 65832*/
+.mobile #calcControls input[type="button"]{
+	/*Attepting to remove iOS automatic button styling here*/
+	-webkit-appearance: none;
+}
+/* end */
+
+/* prevents duplicate android text boxes */
+.touch.platform_android .calculatorWidget input {
+	-webkit-user-modify: read-write-plaintext-only;
+}
+/* allow scrolling of display area for tablets */
+.touch .numericDisplay #textinput {
+	overflow: auto !important;
+}
+/*FIX for 70178 */
+.android input, .android textarea{
+	-webkit-user-modify: read-write-plaintext-only;
+}
+
+/* Fix 59213 -focus on panels */
+.focused{
+	border: 1px solid #006699;
+}
+#calcSwitch.focused{
+	display: inline-block;
+}
+
+
+/* putting superscript back in */
+sup{
+	vertical-align: super;
+}
+
+/*conditional hide of arcsin, arccos, and arctan*/
+#acos, #atan, #asin {
+    display: none;
+}
+.inv #acos, .inv #atan, .inv #asin {
+    display: block;
+}
+
+/* end */
+
+/* MO Emergency fixes for demo */
+.calculatorWidget.matrices{
+	display: block !important;
+}
+/* end */
