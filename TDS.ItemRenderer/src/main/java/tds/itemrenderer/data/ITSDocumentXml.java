@@ -56,10 +56,4 @@ public class ITSDocumentXml extends ITSDocument
     this._id = value;
   }
 
-
-
-//  public String toString () {
-//    return _baseUri == null ? "" : _baseUri;
-//  }
-
 }

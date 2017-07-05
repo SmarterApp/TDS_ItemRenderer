@@ -207,17 +207,6 @@ public class ITSDocument {
         this._autoEmboss = _autoEmboss;
     }
 
-    public long get_id() {
-        return _id;
-    }
-
-    public void set_id(long _id) {
-        this._id = _id;
-    }
-
-    public CaseInsensitiveMap<List<ITSAttribute>> get_attributes() {
-        return _attributes;
-    }
 
     public void addAttribute (ITSAttribute attribute) {
 
@@ -429,4 +418,14 @@ public class ITSDocument {
         this._approvedVersion = value;
     }
 
+    public int getMaxScore () {
+        String value = getAttributeValue ("itm_att_Max Item Score");
+        int maxScore;
+        try {
+            maxScore = Integer.parseInt (value);
+        } catch (NumberFormatException e) {
+            maxScore = 0;
+        }
+        return maxScore;
+    }
 }
