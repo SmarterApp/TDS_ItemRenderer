@@ -14,21 +14,21 @@ import org.jdom2.Element;
 
 import AIR.Common.xml.XmlReader;
 
-import tds.itemrenderer.data.ITSDocument2;
+import tds.itemrenderer.data.ITSDocument;
 
 public class QTIDocumentParser
 {
 
   // collection of interactions
   private final HashMap<String, QTIInteraction> _interactions = new HashMap<String, QTIInteraction> ();
-  private final ITSDocument2 _itsDoc;
+  private final ITSDocument _itsDoc;
   private final StringBuilder                   _stemBuilder  = new StringBuilder ();
 
-  public QTIDocumentParser (ITSDocument2 itsDoc) {
+  public QTIDocumentParser (ITSDocument itsDoc) {
     _itsDoc = itsDoc;
   }
 
-  public ITSDocument2 GetITSDocument () {
+  public ITSDocument GetITSDocument () {
     return _itsDoc;
   }
 

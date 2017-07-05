@@ -10,7 +10,7 @@ package tds.itemrenderer.qti.interactions;
 
 import org.jdom2.Element;
 
-import tds.itemrenderer.data.ITSDocument2;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.qti.QTIInteraction;
 
 // QTI parser for the hotspotInteraction element.
@@ -23,7 +23,7 @@ public class HotspotInteraction extends QTIInteraction
   }
 
   @Override
-  public void process (ITSDocument2 itsDoc, Element element) {
+  public void process (ITSDocument itsDoc, Element element) {
     itsDoc.setFormat ("GI");
     itsDoc.setAttributeFormat ("GI");
     itsDoc.setAttributeResponseType ("Hotspot");

@@ -9,7 +9,7 @@
 package tds.itemrenderer.processing;
 
 import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocument2;
+import tds.itemrenderer.data.ITSDocument;
 
 /**
  * @author jmambo
@@ -18,8 +18,8 @@ import tds.itemrenderer.data.ITSDocument2;
 public class ITSDocumentFixture
 {
   
-  public static ITSDocument2 getITSDocument() {
-    ITSDocument2 itsDocument = new ITSDocument2();
+  public static ITSDocument getITSDocument() {
+    ITSDocument itsDocument = new ITSDocument();
     ITSContent itsContent = new  ITSContent (); 
     String stem = "<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>";
     itsContent.setStem (stem);
