@@ -51,12 +51,7 @@ public class ITSDocument2 extends IITSDocument
   public void setItemKey (Long value) {
     setId (value);
   }
-
-  public long getStimulusKey () {
-    String value = getAttributeValue ("stm_pass_id");
-    return StringUtils.isEmpty (value) ? 0 : Long.parseLong (value);
-  }
-
+  
 
   public String getLayout () {
     if (!StringUtils.isEmpty (super.getLayout ()))

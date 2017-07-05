@@ -46,4 +46,11 @@ public class IITSDocument {
         this._id = value;
     }
 
+    public String getLayout() {
+        return _layout;
+    }
+
+    public void setLayout(String _layout) {
+        this._layout = _layout;
+    }
 }

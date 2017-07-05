@@ -41,18 +41,11 @@ public class ITSDocumentXml extends IITSDocument
     this._version = value;
   }
 
-  public boolean getValidated () {
-    return _validated;
-  }
 
   public void setValidated (boolean value) {
     this._validated = value;
   }
 
-
-  public int getApprovedVersion () {
-    return _approvedVersion;
-  }
 
   public void setApprovedVersion (int value) {
     this._approvedVersion = value;
