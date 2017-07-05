@@ -144,7 +144,8 @@ public class ConfigBuilder
       String xmlFile = file.getAbsolutePath ();
       try {
         ITSDocument itsDocument = correctBaseUri (ITSDocumentFactory.loadUri2 (xmlFile, AccLookup.getNone (), false));
-        IrisITSDocument irisDocument = new IrisITSDocument (itsDocument, xmlFile);
+        IrisITSDocument irisDocument = (IrisITSDocument) itsDocument;
+        irisDocument.setRealPath(xmlFile);
         returnList.add (irisDocument);
       } catch (Exception exp) {
         exp.printStackTrace ();

@@ -57,39 +57,6 @@ public class ITSDocumentXml extends ITSDocument
   }
 
 
-  public void addContent (ITSContent content) {
-    if (content.getLanguage () == null) {
-      throw new InvalidDataException ("Could not add the <content> element because it is missing the language attribute.");
-    }
-
-    _contents.put (content.getLanguage (), content);
-  }
-
-  public ITSContent getContent (String language) {
-    if (StringUtils.isEmpty (language))
-      return null;
-
-    _Ref<ITSContent> content = new _Ref<ITSContent> ();
-
-    // get language
-    _contents.tryGetValue (language, content);
-
-    // if language does not exist try splitting language
-    if (content.get () == null && language.indexOf ('-') != -1) {
-      String[] langTags = StringUtils.split (language, '-');
-
-      if (langTags.length > 1) {
-        _contents.tryGetValue (langTags[0], content);
-      }
-    }
-
-    return content.get ();
-  }
-
-  public void addMediaFiles (List<String> capturedResources) {
-    _mediaFiles.addAll (capturedResources);
-    // _mediaFiles.AddRange(capturedResources);
-  }
 
 //  public String toString () {
 //    return _baseUri == null ? "" : _baseUri;

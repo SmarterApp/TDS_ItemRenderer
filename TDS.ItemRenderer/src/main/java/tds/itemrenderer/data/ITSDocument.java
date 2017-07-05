@@ -38,6 +38,15 @@ public class ITSDocument {
     private boolean           _autoEmboss;
     private long                                         _id;
 
+    private String _realPath;
+
+    private double                                       _version;
+    private boolean                                      _validated;
+    private int                                          _approvedVersion;
+
+    private final List<String>                           _mediaFiles = new ArrayList<String> ();
+
+
     protected final CaseInsensitiveMap<ITSContent>         _contents   = new CaseInsensitiveMap<ITSContent> ();
     private final CaseInsensitiveMap<List<ITSAttribute>> _attributes = new CaseInsensitiveMap<List<ITSAttribute>> ();
 
@@ -182,7 +191,7 @@ public class ITSDocument {
         this._stimulusKey = _stimulusKey;
     }
 
-    public boolean isLoaded() {
+    public boolean getIsLoaded() {
         return _isLoaded;
     }
 
@@ -340,5 +349,84 @@ public class ITSDocument {
         return contents;
     }
 
+    public ITSContent getContent (String language) {
+        if (StringUtils.isEmpty (language))
+            return null;
+
+        _Ref<ITSContent> content = new _Ref<ITSContent> ();
+
+        // get language
+        _contents.tryGetValue (language, content);
+
+        // if language does not exist try splitting language
+        if (content.get () == null && language.indexOf ('-') != -1) {
+            String[] langTags = StringUtils.split (language, '-');
+
+            if (langTags.length > 1) {
+                _contents.tryGetValue (langTags[0], content);
+            }
+        }
+
+        return content.get ();
+    }
+
+    public void addContent (ITSContent content) {
+        if (content.getLanguage () == null) {
+            throw new InvalidDataException ("Could not add the <content> element because it is missing the language attribute.");
+        }
+
+        _contents.put (content.getLanguage (), content);
+    }
+
+    public void addMediaFiles (List<String> capturedResources) {
+        _mediaFiles.addAll (capturedResources);
+        // _mediaFiles.AddRange(capturedResources);
+    }
+
+    public String getGroupID () {
+        return ITSDocumentExtensions.getGroupID (this);
+    }
+
+    public String[] getBaseUriDirSegments () {
+        return ITSDocumentExtensions.getBaseUriDirSegments (this);
+    }
+
+    public String getFolderName () {
+        return ITSDocumentExtensions.getFolderName (this);
+    }
+
+    public String getParentFolderName () {
+        return ITSDocumentExtensions.getParentFolderName (this);
+    }
+
+    public String getRealPath () {
+        return _realPath;
+    }
+
+    public void setRealPath (String value) {
+        this._realPath = value;
+    }
+
+    public boolean getValidated () {
+        return _validated;
+    }
+
+    public double getVersion () {
+        return _version;
+    }
+
+    public void setVersion (double value) {
+        this._version = value;
+    }
+
+
+    public void setValidated (boolean value) {
+        this._validated = value;
+    }
+
+
+    public void setApprovedVersion (int value) {
+        this._approvedVersion = value;
+    }
 
 }

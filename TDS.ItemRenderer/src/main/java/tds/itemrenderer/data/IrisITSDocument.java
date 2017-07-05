@@ -16,17 +16,4 @@ package tds.itemrenderer.data;
 public class IrisITSDocument extends ITSDocument
 {
 
-  private String _realPath;
-
-  public IrisITSDocument (String realPath) {
-    this.setRealPath (realPath);
-  }
-
-  public String getRealPath () {
-    return _realPath;
-  }
-
-  private void setRealPath (String value) {
-    this._realPath = value;
-  }
 }

@@ -23,6 +23,7 @@ import tds.itemrenderer.configuration.RendererSettings;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSAttribute;
 import tds.itemrenderer.data.ITSContent;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSKeyboard;
 import tds.itemrenderer.data.ITSKeyboardKey;
@@ -89,7 +90,7 @@ import static org.apache.commons.io.Charsets.UTF_8;
  * @author Shiva BEHERA [sbehera@air.org]
  * 
  */
-public class ITSDocumentParser<T extends ITSDocumentXml> {
+public class ITSDocumentParser<T extends ITSDocument> {
 
   private static final Logger _logger = LoggerFactory.getLogger(ITSDocumentParser.class);
 
