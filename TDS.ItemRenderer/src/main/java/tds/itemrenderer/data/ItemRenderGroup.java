@@ -8,8 +8,6 @@
  ******************************************************************************/
 package tds.itemrenderer.data;
 
-import java.util.AbstractList;
-import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -26,7 +24,7 @@ public class ItemRenderGroup extends ArrayList<IItemRender>
   private String            _id;
   private String            _segmentID;
   private String            _language;
-  private IITSDocument      _passage;             // The passage for groups
+  private ITSDocument _passage;             // The passage for groups
   private boolean           _printed;             // Item printed automatically
                                                    // on the server?
 
@@ -60,11 +58,11 @@ public class ItemRenderGroup extends ArrayList<IItemRender>
     this._language = value;
   }
 
-  public IITSDocument getPassage () {
+  public ITSDocument getPassage () {
     return _passage;
   }
 
-  public void setPassage (IITSDocument value) {
+  public void setPassage (ITSDocument value) {
     this._passage = value;
   }
 
@@ -100,7 +98,7 @@ public class ItemRenderGroup extends ArrayList<IItemRender>
   }
 
   public void setLayout (String value) {
-    IITSDocument passage = getPassage ();
+    ITSDocument passage = getPassage ();
     if (passage != null) {
       passage.setLayout (value);
     }

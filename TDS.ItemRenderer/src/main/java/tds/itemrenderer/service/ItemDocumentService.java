@@ -16,19 +16,19 @@ package tds.itemrenderer.service;
 import java.net.URI;
 
 import tds.itemrenderer.data.AccLookup;
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 
 /**
  * Handles loading the Item Documents for display
  */
 public interface ItemDocumentService {
   /**
-   * Loads the {@link tds.itemrenderer.data.IITSDocument} representing item document
+   * Loads the {@link tds.itemrenderer.data.ITSDocument} representing item document
    *
    * @param uri            the URI to the document
    * @param accommodations the {@link tds.itemrenderer.data.AccLookup} associated with the document
    * @param resolveUrls    whether to resolve urls
-   * @return {@link tds.itemrenderer.data.IITSDocument}
+   * @return {@link tds.itemrenderer.data.ITSDocument}
    */
-  IITSDocument loadItemDocument(URI uri, AccLookup accommodations, boolean resolveUrls);
+  ITSDocument loadItemDocument(URI uri, AccLookup accommodations, boolean resolveUrls);
 }

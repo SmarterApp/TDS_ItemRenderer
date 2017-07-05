@@ -16,7 +16,7 @@ import java.util.List;
 import AIR.Common.Utilities.TDSStringUtils;
 
 import tds.itempreview.content.ITSDocumentExtensions;
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 
 /**
  * @author Shiva BEHERA [sbehera@air.org]
@@ -31,8 +31,8 @@ public class ITSGroup
 
     private String _basePath = null;
     private String _groupId = null;
-    private IITSDocument _passage = null;
-    private List<IITSDocument> _items = null;
+    private ITSDocument _passage = null;
+    private List<ITSDocument> _items = null;
     
     public String getBasePath ()
     {
@@ -51,19 +51,19 @@ public class ITSGroup
       _groupId = value;
     }
     
-    public IITSDocument getPassage()
+    public ITSDocument getPassage()
     {
       return _passage;
     }
-    public void setPassage(IITSDocument value)
+    public void setPassage(ITSDocument value)
     {
       _passage = value;
     }
 
-    public List<IITSDocument> getItems(){
+    public List<ITSDocument> getItems(){
       return _items;
     }
-    public void setItems(List<IITSDocument> value)
+    public void setItems(List<ITSDocument> value)
     {
       _items = value;
     }
@@ -96,7 +96,7 @@ public class ITSGroup
                 return "EMPTY";
             }
 
-            IITSDocument entity = (getItems() != null && getItems().size () > 0) ? getItems().get(0) : getPassage();
+            ITSDocument entity = (getItems() != null && getItems().size () > 0) ? getItems().get(0) : getPassage();
             return TDSStringUtils.format(_textFormat, groupLabel, entity.getLayout(), entity.getResponseType(), entity.getFormat());
     }
 

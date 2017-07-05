@@ -11,7 +11,7 @@ package tds.itemrenderer.processing;
 import org.junit.Before;
 import org.springframework.test.context.ContextConfiguration;
 
-import tds.itemrenderer.data.ITSDocument2;
+import tds.itemrenderer.data.ITSDocument;
 
 /**
  * @author jmambo
@@ -21,7 +21,7 @@ import tds.itemrenderer.data.ITSDocument2;
 public class ITSUrlResolverTest
 {
 
-  ITSDocument2 _itsDocument;
+  ITSDocument _itsDocument;
   
   @Before
   public void setUp() {

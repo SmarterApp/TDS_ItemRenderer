@@ -17,7 +17,6 @@ package tds.itemrenderer.webcontrols;
  */
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UINamingContainer;
@@ -31,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import tds.itemrenderer.configuration.ITSConfig;
 import tds.itemrenderer.configuration.RendererSettings;
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.IItemRender;
 import tds.itemrenderer.data.ITSContent;
 import tds.itemrenderer.data.ITSOption;
@@ -686,7 +685,7 @@ public class PageLayout extends UINamingContainer
     }
   }
 
-  protected ITSContent getContent (IITSDocument itsDoc) {
+  protected ITSContent getContent (ITSDocument itsDoc) {
     // if language is not available use english
     ITSContent content = itsDoc.getContent (this.getLanguage ()); // ??
                                                                   // itsDoc.GetContentDefault();
@@ -697,7 +696,7 @@ public class PageLayout extends UINamingContainer
     return content;
   }
 
-  protected void renderStimulus (ILayout layout, IITSDocument itsDoc) {
+  protected void renderStimulus (ILayout layout, ITSDocument itsDoc) {
     if (layout.getStimulus () == null)
       return;
 
@@ -758,7 +757,7 @@ public class PageLayout extends UINamingContainer
   }
 
   private void addPageWrapper (ILayout layout) {
-    IITSDocument rootDoc = _itemGroup.getHasPassage () ? _itemGroup.getPassage () : _itemGroup.get (0).getItem ();
+    ITSDocument rootDoc = _itemGroup.getHasPassage () ? _itemGroup.getPassage () : _itemGroup.get (0).getItem ();
 
     String layoutID = _layoutName.replace ("-", "_").replace (" ", "").toLowerCase ();
     String subject = rootDoc.getSubject ().replace (" ", "");
@@ -936,7 +935,7 @@ public class PageLayout extends UINamingContainer
   // / Get a documents response type. This will also check if document is
   // overrided.
   // / </summary>
-  private String getResponseType (IITSDocument doc) {
+  private String getResponseType (ITSDocument doc) {
     // Do we use the seperate response type or the one that is part of the
     // layout name?
     String responseType = StringUtils.isEmpty (getResponseTypeOverride ()) ? doc.getResponseType () : getResponseTypeOverride ();

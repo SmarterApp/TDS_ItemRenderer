@@ -9,13 +9,11 @@
 
 package tds.itemrenderer.data;
 
-import java.util.List;
-
 /**
  * @author mskhan
  * 
  */
-public class IrisITSDocument extends IITSDocument
+public class IrisITSDocument extends ITSDocument
 {
 
   private String _realPath;

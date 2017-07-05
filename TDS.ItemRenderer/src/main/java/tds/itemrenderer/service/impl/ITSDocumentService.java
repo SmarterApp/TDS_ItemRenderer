@@ -22,10 +22,9 @@ import tds.itemrenderer.apip.BRFProcessor;
 import tds.itemrenderer.configuration.ItemDocumentSettings;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.AccProperties;
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocument2;
 import tds.itemrenderer.processing.ITSDocumentParser;
 import tds.itemrenderer.processing.ITSHtmlSanitizeTask;
 import tds.itemrenderer.processing.ITSProcessorApipTasks;
@@ -38,10 +37,10 @@ import tds.itemrenderer.service.ItemDocumentService;
 public class ITSDocumentService implements ItemDocumentService {
   private final ItemDataService itemDataService;
   private final ItemDocumentSettings settings;
-  private final ITSDocumentParser<ITSDocument2> documentParser;
+  private final ITSDocumentParser<ITSDocument> documentParser;
 
   public ITSDocumentService(final ItemDataService itemDataService,
-                            final ITSDocumentParser<ITSDocument2> documentParser,
+                            final ITSDocumentParser<ITSDocument> documentParser,
                             final ItemDocumentSettings settings) {
     this.itemDataService = itemDataService;
     this.settings = settings;
@@ -49,10 +48,10 @@ public class ITSDocumentService implements ItemDocumentService {
   }
 
   @Override
-  public IITSDocument loadItemDocument(URI uri, AccLookup accommodations, boolean resolveUrls) {
+  public ITSDocument loadItemDocument(URI uri, AccLookup accommodations, boolean resolveUrls) {
 
     // parse xml
-    ITSDocument2 itsDocument = documentParser.load(uri, ITSDocument2.class, itemDataService);
+    ITSDocument itsDocument = documentParser.load(uri, ITSDocument.class, itemDataService);
 
     // check if valid xml
     if (!itsDocument.getValidated()) {
@@ -65,7 +64,7 @@ public class ITSDocumentService implements ItemDocumentService {
     return itsDocument;
   }
 
-  private void executeProcessing(ITSDocument2 itsDocument, AccLookup accommodations, boolean resolveUrls) {
+  private void executeProcessing(ITSDocument itsDocument, AccLookup accommodations, boolean resolveUrls) {
     // check if there are accommodations
     if (accommodations == null || accommodations == AccLookup.getNone())
       return;

@@ -12,7 +12,7 @@ import tds.itemrenderer.data.ITSTypes.ITSEntityType;
 
 public class ItsItemIdUtil
 {
-  public static String getItsDocumentId (IITSDocument document) {
+  public static String getItsDocumentId (ITSDocument document) {
     return getItsDocumentId (document.getBankKey (), document.getItemKey (), document.getType ());
   }
 

@@ -34,7 +34,7 @@ import AIR.Common.collections.IGrouping;
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.ITSDocumentFactory;
 import tds.itemrenderer.data.AccLookup;
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.IrisITSDocument;
 import tds.itemrenderer.data.ItsItemIdUtil;
 import tds.itemrenderer.data.ITSTypes.ITSEntityType;
@@ -124,7 +124,7 @@ public class ConfigBuilder
     throw new ContentRequestException (String.format ("No content found by id %s", id));
   }
 
-  public IITSDocument getRenderableDocument (String id) throws ContentRequestException {
+  public ITSDocument getRenderableDocument (String id) throws ContentRequestException {
     IrisITSDocument documentRepresentation = getDocumentRepresentation (id);
     // In the below code there is no way to set accommodations.
     // We need to provide a way as this is common code also used by ItemPreview.
@@ -143,7 +143,7 @@ public class ConfigBuilder
     for (File file : xmlFiles) {
       String xmlFile = file.getAbsolutePath ();
       try {
-        IITSDocument itsDocument = correctBaseUri (ITSDocumentFactory.loadUri2 (xmlFile, AccLookup.getNone (), false));
+        ITSDocument itsDocument = correctBaseUri (ITSDocumentFactory.loadUri2 (xmlFile, AccLookup.getNone (), false));
         IrisITSDocument irisDocument = new IrisITSDocument (itsDocument, xmlFile);
         returnList.add (irisDocument);
       } catch (Exception exp) {
@@ -159,7 +159,7 @@ public class ConfigBuilder
 
       @Override
       public Object transform (Object itsDocument) {
-        return ((IITSDocument) itsDocument).getFolderName ();
+        return ((ITSDocument) itsDocument).getFolderName ();
       }
     };
 
@@ -195,7 +195,7 @@ public class ConfigBuilder
     Map<String, ITSGroup> groupLookup = new HashMap<String, ITSGroup> ();
 
     // create groups out of the passages
-    for (IITSDocument itsPassage : itsPassages) {
+    for (ITSDocument itsPassage : itsPassages) {
       String groupID = itsPassage.getGroupID ();
       if (groupLookup.containsKey (groupID))
         continue;
@@ -205,7 +205,7 @@ public class ConfigBuilder
       groupLookup.put (groupID, itsGroup);
     }
 
-    for (IITSDocument item : itsItems) {
+    for (ITSDocument item : itsItems) {
       String itemGroupID = item.getGroupID ();
 
       // check if passage
@@ -224,7 +224,7 @@ public class ConfigBuilder
       }
 
       if (group.getItems () == null)
-        group.setItems (new ArrayList<IITSDocument> ());
+        group.setItems (new ArrayList<ITSDocument> ());
       group.getItems ().add (item);
     }
 
@@ -281,7 +281,7 @@ public class ConfigBuilder
         if (itsGroup.getItems () != null && itsGroup.getItems ().size () > 0) {
           configPage.setItems (new ArrayList<Item> ());
 
-          for (IITSDocument itsItem : itsGroup.getItems ()) {
+          for (ITSDocument itsItem : itsGroup.getItems ()) {
             Item configItem = new Item ();
             setDocumentInfo (configItem, itsItem);
             configPage.getItems ().add (configItem);
@@ -304,7 +304,7 @@ public class ConfigBuilder
   // / <summary>
   // / Add ITS document info to the config content object.
   // / </summary>
-  private void setDocumentInfo (Content configContent, IITSDocument itsDocument) {
+  private void setDocumentInfo (Content configContent, ITSDocument itsDocument) {
     configContent.setFile (itsDocument.getBaseUri ());
 
     if (configContent instanceof Item) {
@@ -320,7 +320,7 @@ public class ConfigBuilder
   // it drops the protocol. So what we will do is if the uri parameter starts
   // with the uri for current doc base then we will convert into a relative
   // path.
-  private IITSDocument correctBaseUri (IITSDocument itsDocument) {
+  private ITSDocument correctBaseUri (ITSDocument itsDocument) {
     String itsDocumentBaseUri = itsDocument.getBaseUri ();
     int indexOf = itsDocumentBaseUri.indexOf (_docBaseUri.getRawPath ());
     if (indexOf == 0) {

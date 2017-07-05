@@ -19,7 +19,7 @@ import AIR.Common.Utilities.TDSStringUtils;
  */
 public class ItemRender extends IItemRender
 {
-  public ItemRender (IITSDocument item, int position, String label) {
+  public ItemRender (ITSDocument item, int position, String label) {
     setItem (item);
     setLabel (label);
     setPosition (position);
@@ -31,7 +31,7 @@ public class ItemRender extends IItemRender
     }
   }
 
-  public ItemRender (IITSDocument item, int position) {
+  public ItemRender (ITSDocument item, int position) {
     this (item, position, "" + position);
   }
 

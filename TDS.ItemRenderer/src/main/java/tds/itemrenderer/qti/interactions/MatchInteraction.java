@@ -10,7 +10,7 @@ package tds.itemrenderer.qti.interactions;
 
 import org.jdom2.Element;
 
-import tds.itemrenderer.data.ITSDocument2;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.qti.QTIInteraction;
 
 // / QTI parser for the matchInteraction element.
@@ -26,7 +26,7 @@ public class MatchInteraction extends QTIInteraction
   }
 
   @Override
-  public void process (ITSDocument2 itsDoc, Element element) {
+  public void process (ITSDocument itsDoc, Element element) {
     // set format and response type
     itsDoc.setFormat ("MI");
     itsDoc.setAttributeFormat ("MI");

@@ -13,21 +13,18 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import tds.itemrenderer.data.ITSTypes.ITSEntityType;
 import AIR.Common.Helpers.CaseInsensitiveMap;
 import AIR.Common.Helpers._Ref;
 
 // Represents the raw ITS XML data.
 
-public class ITSDocumentXml extends IITSDocument
+public class ITSDocumentXml extends ITSDocument
 {
   private double                                       _version;
   private boolean                                      _validated;
   private int                                          _approvedVersion;
   private long                                         _id;
 
-  private final CaseInsensitiveMap<List<ITSAttribute>> _attributes = new CaseInsensitiveMap<List<ITSAttribute>> ();
-  private final CaseInsensitiveMap<ITSContent>         _contents   = new CaseInsensitiveMap<ITSContent> ();
   private final List<String>                           _mediaFiles = new ArrayList<String> ();
 
   public ITSDocumentXml () {
@@ -60,53 +57,12 @@ public class ITSDocumentXml extends IITSDocument
   }
 
 
-  public void addAttribute (ITSAttribute attribute) {
-
-    List<ITSAttribute> attribList = null;
-    _Ref<List<ITSAttribute>> attribListRef = new _Ref<List<ITSAttribute>> ();
-
-    boolean attribExist = _attributes.tryGetValue (attribute.getId (), attribListRef);
-
-    if (!attribExist) {
-      attribList = new ArrayList<ITSAttribute> ();
-      _attributes.put (attribute.getId (), attribList);
-    } else
-      attribList = attribListRef.get ();
-
-    attribList.add (attribute);
-
-  }
-
-  public boolean hasAttribute (String attid) {
-    return _attributes.containsKey (attid);
-  }
-
-  public ITSAttribute createAttribute (String id, String value) {
-    ITSAttribute itsAttrib = new ITSAttribute (id, value);
-    addAttribute (itsAttrib);
-    return itsAttrib;
-  }
-
   public void addContent (ITSContent content) {
     if (content.getLanguage () == null) {
       throw new InvalidDataException ("Could not add the <content> element because it is missing the language attribute.");
     }
 
     _contents.put (content.getLanguage (), content);
-  }
-
-  /*
-   * The XML content nodes. These come internally from a dictionary so the order
-   * of the content nodes is not guaranteed to be the same as the original XML.
-   */
-  public List<ITSContent> getContents () {
-    List<ITSContent> contents = new ArrayList<ITSContent> ();
-
-    for (ITSContent content : _contents.values ()) {
-      contents.add (content);
-    }
-
-    return contents;
   }
 
   public ITSContent getContent (String language) {
@@ -139,21 +95,4 @@ public class ITSDocumentXml extends IITSDocument
 //    return _baseUri == null ? "" : _baseUri;
 //  }
 
-  private List<ITSAttribute> getAttributes (String attid) {
-
-    _Ref<List<ITSAttribute>> attribList = new _Ref<List<ITSAttribute>> ();
-
-    boolean attribExist = _attributes.tryGetValue (attid, attribList);
-
-    if (!attribExist || attribList.get () == null || attribList.get ().size () == 0) {
-      return null;
-    }
-
-    return attribList.get ();
-  }
-
-  private ITSAttribute getAttribute (String attid) {
-    List<ITSAttribute> attribList = getAttributes (attid);
-    return (attribList == null) ? null : attribList.get (0);
-  }
 }
