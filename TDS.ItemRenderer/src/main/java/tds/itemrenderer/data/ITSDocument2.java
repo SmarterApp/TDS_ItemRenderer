@@ -22,34 +22,42 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 // Represents ITS XML data and well known attributes.
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
-public class ITSDocument extends ITSDocumentXml
+public class ITSDocument2 extends IITSDocument
 {
-  @Override
+  public ITSAttribute setAttributeValue (String id, String value) {
+    ITSAttribute attrib;
+
+    if (hasAttribute (id)) {
+      attrib = getAttribute (id);
+      attrib.setValue (value);
+    } else {
+      attrib = createAttribute (id, value);
+    }
+
+    return attrib;
+  }
+
+  public String getAttributeValue (String attid) {
+    ITSAttribute attribute = getAttribute (attid);
+    return (attribute == null) ? "" : attribute.getValue ();
+  }
+
+
+
   public long getItemKey () {
     return getId ();
   }
 
-  @Override
   public void setItemKey (Long value) {
     setId (value);
   }
 
-  public void setAttributeStimulusKey (long value) {
-    setAttributeValue ("stm_pass_id", "" + value);
-    setStimulusKey (value);
-  }
-
-  @Override
   public long getStimulusKey () {
     String value = getAttributeValue ("stm_pass_id");
     return StringUtils.isEmpty (value) ? 0 : Long.parseLong (value);
   }
 
-  public void setAttributeLayout (String value) {
-    setAttributeValue ("itm_att_Page Layout", value);
-  }
 
-  @Override
   public String getLayout () {
     if (!StringUtils.isEmpty (super.getLayout ()))
       return super.getLayout ();
@@ -68,74 +76,25 @@ public class ITSDocument extends ITSDocumentXml
     setAttributeValue ("itm_att_Response Type", value);
   }
 
-  @Override
   public String getResponseType () {
     return getAttributeValue ("itm_att_Response Type");
   }
 
-  public void setAttributeSubject (String value) {
-    setAttributeValue ("itm_item_subject", value);
-  }
 
-  @Override
   public String getSubject () {
     return getAttributeValue ("itm_item_subject");
   }
 
-  public void setAttributeGrade (String value) {
-    setAttributeValue ("itm_att_Grade", value);
-  }
 
-  @Override
   public String getGrade () {
     return getAttributeValue ("itm_att_Grade");
   }
 
-  public void setAttributeAnswerKey (String value) {
-    setAttributeValue ("itm_att_Answer Key", value);
-  }
 
-  @Override
-  public String getAnswerKey () {
-    return getAttributeValue ("itm_att_Answer Key");
-  }
-
-  public void setAttributeCredit (String value) {
-    setAttributeValue ("stm_att_Credit Line", value);
-  }
-
-  @Override
-  public String getCredit () {
-    return getAttributeValue ("stm_att_Credit Line");
-  }
-
-  public void setAttributeCopyright (String value) {
-    setAttributeValue ("itm_att_Copyright text", value);
-  }
-
-  @Override
   public String getCopyright () {
     return getAttributeValue ("itm_att_Copyright text");
   }
 
-  public boolean getAutoEmboss () {
-    String attid = (getStimulusKey () > 0) ? "stm_att_Rendering Guide" : "itm_att_Rendering Guide";
-    String renderingGuide = getAttributeValue (attid);
-    return (renderingGuide != null && StringUtils.equalsIgnoreCase (renderingGuide, "AutoEmboss"));
-  }
-
-  public int getMaxScore () {
-    String value = getAttributeValue ("itm_att_Max Item Score");
-    int maxScore;
-    try {
-      maxScore = Integer.parseInt (value);
-    } catch (NumberFormatException e) {
-      maxScore = 0;
-    }
-    return maxScore;
-  }
-  
-  @Override
   public String getFormat ()
   {
     return getAttributeValue ("itm_att_Item Format");

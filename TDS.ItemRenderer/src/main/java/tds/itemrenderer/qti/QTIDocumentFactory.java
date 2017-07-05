@@ -8,7 +8,7 @@
  ******************************************************************************/
 package tds.itemrenderer.qti;
 
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSDocument2;
 import tds.itemrenderer.qti.interactions.*;
 
 // A factory class for creating the document parser.
@@ -16,7 +16,7 @@ public class QTIDocumentFactory
 {
   // Returns a QTI document parser with all the available element parsers
   // added.
-  public static QTIDocumentParser Create (ITSDocument itsDoc) {
+  public static QTIDocumentParser Create (ITSDocument2 itsDoc) {
     QTIDocumentParser qtiParser = new QTIDocumentParser (itsDoc);
     qtiParser.addInteraction (new ChoiceInteraction ());
     qtiParser.addInteraction (new MatchInteraction ());

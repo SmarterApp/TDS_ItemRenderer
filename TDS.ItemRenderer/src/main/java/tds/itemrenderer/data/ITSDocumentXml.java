@@ -31,15 +31,6 @@ public class ITSDocumentXml extends IITSDocument
   private final List<String>                           _mediaFiles = new ArrayList<String> ();
 
   public ITSDocumentXml () {
-    super.setResources (new ArrayList<ITSResource> ());
-  }
-
-  public void setBaseUri (String value) {
-    super.setBaseUri (value);
-  }
-
-  public void setIsLoaded (boolean value) {
-    super.setIsLoaded (value);
   }
 
   public double getVersion () {
@@ -58,9 +49,6 @@ public class ITSDocumentXml extends IITSDocument
     this._validated = value;
   }
 
-  public void setType (ITSEntityType value) {
-    super.setType (value);
-  }
 
   public int getApprovedVersion () {
     return _approvedVersion;
@@ -78,37 +66,6 @@ public class ITSDocumentXml extends IITSDocument
     this._id = value;
   }
 
-  public void setBankKey (long value) {
-    super.setBankKey (value);
-  }
-
-  public void setFormat (String value) {
-    super.setFormat (value);
-  }
-
-  public void setSoundCue (ITSSoundCue value) {
-    super.setSoundCue (value);
-  }
-
-  public void setTutorial (ITSTutorial value) {
-    super.setTutorial (value);
-  }
-
-  public void setResources (List<ITSResource> value) {
-    super.setResources (value);
-  }
-
-  public void setRendererSpec (String value) {
-    super.setRendererSpec (value);
-  }
-
-  public void setMachineRubric (ITSMachineRubric value) {
-    super.setMachineRubric (value);
-  }
-
-  public void setGridAnswerSpace (String value) {
-    super.setGridAnswerSpace (value);
-  }
 
   public void addAttribute (ITSAttribute attribute) {
 
@@ -127,11 +84,6 @@ public class ITSDocumentXml extends IITSDocument
 
   }
 
-  public String getAttributeValue (String attid) {
-    ITSAttribute attribute = getAttribute (attid);
-    return (attribute == null) ? "" : attribute.getValue ();
-  }
-
   public boolean hasAttribute (String attid) {
     return _attributes.containsKey (attid);
   }
@@ -140,19 +92,6 @@ public class ITSDocumentXml extends IITSDocument
     ITSAttribute itsAttrib = new ITSAttribute (id, value);
     addAttribute (itsAttrib);
     return itsAttrib;
-  }
-
-  public ITSAttribute setAttributeValue (String id, String value) {
-    ITSAttribute attrib;
-
-    if (hasAttribute (id)) {
-      attrib = getAttribute (id);
-      attrib.setValue (value);
-    } else {
-      attrib = createAttribute (id, value);
-    }
-
-    return attrib;
   }
 
   public void addContent (ITSContent content) {
@@ -198,28 +137,14 @@ public class ITSDocumentXml extends IITSDocument
     return content.get ();
   }
 
-  public ITSContent getContentDefault () {
-    return getContent ("ENU");
-  }
-
-  public boolean hasContent (String language) {
-    // return language != null && _contents.ContainsKey(language); {this was
-    // commented out in C# file}
-    return (getContent (language) != null);
-  }
-
-  public List<String> getMediaFiles () {
-    return _mediaFiles;
-  }
-
   public void addMediaFiles (List<String> capturedResources) {
     _mediaFiles.addAll (capturedResources);
     // _mediaFiles.AddRange(capturedResources);
   }
 
-  public String toString () {
-    return _baseUri == null ? "" : _baseUri;
-  }
+//  public String toString () {
+//    return _baseUri == null ? "" : _baseUri;
+//  }
 
   private List<ITSAttribute> getAttributes (String attid) {
 

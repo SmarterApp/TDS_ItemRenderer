@@ -10,7 +10,7 @@ package tds.itemrenderer.qti;
 
 import org.jdom2.Element;
 
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSDocument2;
 
 public abstract class QTIInteraction
 {
@@ -45,6 +45,6 @@ public abstract class QTIInteraction
    * @param element
    *          The interaction element
    */
-  public abstract void process (ITSDocument itsDoc, Element element);
+  public abstract void process (ITSDocument2 itsDoc, Element element);
 
 }

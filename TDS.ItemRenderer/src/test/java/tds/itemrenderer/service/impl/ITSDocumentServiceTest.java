@@ -29,7 +29,7 @@ import java.net.URISyntaxException;
 import tds.itemrenderer.configuration.ItemDocumentSettings;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.IITSDocument;
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSDocument2;
 import tds.itemrenderer.processing.ITSDocumentParser;
 import tds.itemrenderer.processing.ItemDataService;
 
@@ -44,7 +44,7 @@ public class ITSDocumentServiceTest {
   @Mock
   private ItemDataService mockReader;
 
-  private ITSDocumentParser<ITSDocument> documentParser;
+  private ITSDocumentParser<ITSDocument2> documentParser;
   private String itemData;
   private ITSDocumentService service;
 

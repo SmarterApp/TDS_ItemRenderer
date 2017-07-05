@@ -8,36 +8,27 @@
  ******************************************************************************/
 package tds.itemrenderer.qti;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.jdom2.Attribute;
-import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.Namespace;
 
-import AIR.Common.xml.XmlHelper;
 import AIR.Common.xml.XmlReader;
-import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocument;
-import tds.itemrenderer.data.ITSQTI;
-import tds.itemrenderer.data.ITSTypes.ITSEntityType;
+
+import tds.itemrenderer.data.ITSDocument2;
 
 public class QTIDocumentParser
 {
 
   // collection of interactions
   private final HashMap<String, QTIInteraction> _interactions = new HashMap<String, QTIInteraction> ();
-  private final ITSDocument                     _itsDoc;
+  private final ITSDocument2 _itsDoc;
   private final StringBuilder                   _stemBuilder  = new StringBuilder ();
 
-  public QTIDocumentParser (ITSDocument itsDoc) {
+  public QTIDocumentParser (ITSDocument2 itsDoc) {
     _itsDoc = itsDoc;
   }
 
-  public ITSDocument GetITSDocument () {
+  public ITSDocument2 GetITSDocument () {
     return _itsDoc;
   }
 

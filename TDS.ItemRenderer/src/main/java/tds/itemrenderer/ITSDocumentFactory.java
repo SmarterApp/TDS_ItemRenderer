@@ -22,7 +22,7 @@ import tds.itemrenderer.data.AccProperties;
 import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSDocument2;
 import tds.itemrenderer.processing.ITSDocumentHelper;
 import tds.itemrenderer.processing.ITSDocumentParser;
 import tds.itemrenderer.processing.ITSHtmlSanitizeTask;
@@ -94,7 +94,7 @@ public class ITSDocumentFactory
    * @param accommodations
    * @param resolveUrls
    */
-  public static void executeProcessing (ITSDocument itsDocument, AccLookup accommodations, boolean resolveUrls)  {
+  public static void executeProcessing (ITSDocument2 itsDocument, AccLookup accommodations, boolean resolveUrls)  {
     // check if there are accommodations
     if (accommodations == null || accommodations == AccLookup.getNone ())
       return;
@@ -166,11 +166,11 @@ public class ITSDocumentFactory
    */
   public static IITSDocument load (String filePath, AccLookup accommodations, boolean resolveUrls) {
     // create parser
-    ITSDocumentParser<ITSDocument> itsParser = new ITSDocumentParser<ITSDocument> ();
+    ITSDocumentParser<ITSDocument2> itsParser = new ITSDocumentParser<ITSDocument2> ();
 
     // parse xml
     filePath = ITSDocumentHelper.getReplacementPath (filePath);
-    ITSDocument itsDocument = itsParser.load (filePath, ITSDocument.class);
+    ITSDocument2 itsDocument = itsParser.load (filePath, ITSDocument2.class);
 
     // check if valid xml
     if (!itsDocument.getValidated ()) {
@@ -194,10 +194,10 @@ public class ITSDocumentFactory
    */
   public static IITSDocument load(URI uri, AccLookup accommodations, ItemDataService reader, boolean resolveUrls) {
     // create parser
-    ITSDocumentParser<ITSDocument> itsParser = new ITSDocumentParser<ITSDocument>();
+    ITSDocumentParser<ITSDocument2> itsParser = new ITSDocumentParser<ITSDocument2>();
 
     // parse xml
-    ITSDocument itsDocument = itsParser.load(uri, ITSDocument.class, reader);
+    ITSDocument2 itsDocument = itsParser.load(uri, ITSDocument2.class, reader);
 
     // check if valid xml
     if (!itsDocument.getValidated()) {
@@ -230,8 +230,8 @@ public class ITSDocumentFactory
     URI uri = ITSDocumentHelper.createUri (filePath);
 
     // create parser and load xml
-    ITSDocumentParser<ITSDocument> itsParser = new ITSDocumentParser<ITSDocument> ();
-    ITSDocument itsDocument = itsParser.loadUri (uri, ITSDocument.class);
+    ITSDocumentParser<ITSDocument2> itsParser = new ITSDocumentParser<ITSDocument2> ();
+    ITSDocument2 itsDocument = itsParser.loadUri (uri, ITSDocument2.class);
 
     if (itsDocument.getValidated ()) {
       // run any processing
@@ -255,12 +255,12 @@ public class ITSDocumentFactory
     // get uri
     URI uri = ITSDocumentHelper.createUri (filePath);
 
-    ITSDocument itsDocument = new ITSDocument ();
+    ITSDocument2 itsDocument = new ITSDocument2();
     itsDocument.setBaseUri (ITSDocumentHelper.getUriOriginalString (uri));
     String fileType = ITSDocumentHelper.getRootElementName (uri);
 
     if (fileType.equals ("itemrelease")) {
-      ITSDocumentParser<ITSDocument> itsParser = new ITSDocumentParser<ITSDocument> ();
+      ITSDocumentParser<ITSDocument2> itsParser = new ITSDocumentParser<ITSDocument2> ();
       itsParser.loadFromItemRelease (itsDocument);
     }
 

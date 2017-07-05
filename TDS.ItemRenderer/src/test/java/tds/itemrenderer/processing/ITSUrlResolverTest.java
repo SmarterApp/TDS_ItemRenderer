@@ -9,10 +9,9 @@
 package tds.itemrenderer.processing;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSDocument2;
 
 /**
  * @author jmambo
@@ -22,7 +21,7 @@ import tds.itemrenderer.data.ITSDocument;
 public class ITSUrlResolverTest
 {
 
-  ITSDocument _itsDocument;
+  ITSDocument2 _itsDocument;
   
   @Before
   public void setUp() {
