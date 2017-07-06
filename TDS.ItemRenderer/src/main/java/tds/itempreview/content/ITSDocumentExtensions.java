@@ -29,12 +29,6 @@ public class ITSDocumentExtensions
     return TDSStringUtils.format ("{0}-{1}-{2}", prefix, document.getBankKey (), document.getItemKey ());
   }
 
-  public static String getGroupID (ITSDocument document) {
-    boolean hasPassage = (document.getStimulusKey () > 0);
-    String prefix = (hasPassage ? "G-" : "I-");
-    long itemKey = (hasPassage ? document.getStimulusKey () : document.getItemKey ());
-    return TDSStringUtils.format ("{0}-{1}-{2}", prefix, document.getBankKey(), itemKey);
-  }
 
   public static String[] getBaseUriDirSegments (ITSDocument document) {
     String baseUri = document.getBaseUri();
