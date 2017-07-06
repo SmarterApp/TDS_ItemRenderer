@@ -5,6 +5,7 @@ import AIR.Common.Helpers._Ref;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import tds.itempreview.content.ITSDocumentExtensions;
@@ -47,8 +48,8 @@ public class ITSDocument {
     private List<String>                           _mediaFiles = new ArrayList<String> ();
 
 
-    private CaseInsensitiveMap<ITSContent>         _contents   = new CaseInsensitiveMap<ITSContent> ();
-    private CaseInsensitiveMap<List<ITSAttribute>> _attributes = new CaseInsensitiveMap<List<ITSAttribute>> ();
+    private HashMap<String, ITSContent>         _contents   = new HashMap<> ();
+    private HashMap<String, List<ITSAttribute>> _attributes = new HashMap<> ();
 
     public String getItemGroupID() {
         return ITSDocumentExtensions.getID (this);
@@ -208,6 +209,7 @@ public class ITSDocument {
 
         List<ITSAttribute> attribList = null;
         _Ref<List<ITSAttribute>> attribListRef = new _Ref<List<ITSAttribute>> ();
+//        _attributes.getOrDefault(attribute.getId(), new ArrayList<ITSAttribute>());
 
         boolean attribExist = _attributes.tryGetValue (attribute.getId (), attribListRef);
 
