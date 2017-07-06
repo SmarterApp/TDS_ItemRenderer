@@ -10,8 +10,8 @@ import java.util.List;
 import tds.itempreview.content.ITSDocumentExtensions;
 
 public class ITSDocument {
-    protected String          _baseUri;        // The original file path of where
-    // the XML data came from.
+    // The original file path of where the XML data came from.
+    private String            _baseUri;
     private String            _rendererSpec;
     private String            _layout;
     private String            _format;
@@ -21,22 +21,22 @@ public class ITSDocument {
     private String            _answerKey;
     private String            _credit;
     private String            _copyright;
-    private String            _gridAnswerSpace; // This is the new top level grid
-    // answer space. This replaces the
-    // content element level answer
-    // space.
-    private ITSTypes.ITSEntityType _type;           // What type of entity this is.
-    // This can be item or passage.
+    // This is the new top level grid answer space. This replaces the content element level answer space.
+    private String            _gridAnswerSpace;
+    // What type of entity this is.  This can be item or passage.
+    private ITSTypes.ITSEntityType _type;
     private ITSSoundCue       _soundCue;
     private ITSTutorial       _tutorial;
-    private List<ITSResource> _resources;
+    private List<ITSResource> _resources = new ArrayList<ITSResource>();
     private ITSMachineRubric  _machineRubric;
     private long              _bankKey;
     private long              _itemKey;
     private long              _stimulusKey;
-    private boolean           _isLoaded;       // Is the XML loaded and parsed.
+
+    // Is the XML loaded and parsed.
+    private boolean           _isLoaded;
     private boolean           _autoEmboss;
-    private long                                         _id;
+    private long              _id;
 
     private String _realPath;
 
@@ -44,13 +44,13 @@ public class ITSDocument {
     private boolean                                      _validated;
     private int                                          _approvedVersion;
 
-    private final List<String>                           _mediaFiles = new ArrayList<String> ();
+    private List<String>                           _mediaFiles = new ArrayList<String> ();
 
 
-    protected final CaseInsensitiveMap<ITSContent>         _contents   = new CaseInsensitiveMap<ITSContent> ();
-    private final CaseInsensitiveMap<List<ITSAttribute>> _attributes = new CaseInsensitiveMap<List<ITSAttribute>> ();
+    private CaseInsensitiveMap<ITSContent>         _contents   = new CaseInsensitiveMap<ITSContent> ();
+    private CaseInsensitiveMap<List<ITSAttribute>> _attributes = new CaseInsensitiveMap<List<ITSAttribute>> ();
 
-    public String getID () {
+    public String getItemGroupID() {
         return ITSDocumentExtensions.getID (this);
     }
 
@@ -60,10 +60,6 @@ public class ITSDocument {
 
     public void setId (long value) {
         this._id = value;
-    }
-
-    public String getLayout() {
-        return _layout;
     }
 
     public void setLayout(String _layout) {
@@ -271,20 +267,14 @@ public class ITSDocument {
         return (attribute == null) ? "" : attribute.getValue ();
     }
 
-
-
     public long getItemKey () {
         return getId ();
     }
 
-    public void setItemKey (Long value) {
-        setId (value);
-    }
 
-
-    public String getLayout2 () {
-        if (!StringUtils.isEmpty (getLayout ()))
-            return getLayout ();
+    public String getLayout () {
+        if (!StringUtils.isEmpty (_layout))
+            return _layout;
         // If there is no response type then it is the older item format
         if (StringUtils.isEmpty (getResponseType ())) {
             return getAttributeValue ("itm_att_Item Layout");
@@ -427,5 +417,21 @@ public class ITSDocument {
             maxScore = 0;
         }
         return maxScore;
+    }
+
+    public List<String> getMediaFiles () {
+        return _mediaFiles;
+    }
+
+    public void setMediaFiles(List<String> _mediaFiles) {
+        this._mediaFiles = _mediaFiles;
+    }
+
+    public void setContents(CaseInsensitiveMap<ITSContent> _contents) {
+        this._contents = _contents;
+    }
+
+    public void setAttributes(CaseInsensitiveMap<List<ITSAttribute>> _attributes) {
+        this._attributes = _attributes;
     }
 }

@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import tds.itemrenderer.data.ITSContent;
 import tds.itemrenderer.data.ITSDocument;
-import tds.itemrenderer.data.ITSDocumentXml;
+
 import tds.itemrenderer.data.ITSOption;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;

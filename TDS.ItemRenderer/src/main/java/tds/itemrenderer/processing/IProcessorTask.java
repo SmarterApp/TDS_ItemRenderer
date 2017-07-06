@@ -9,7 +9,7 @@
 package tds.itemrenderer.processing;
 
 import tds.itemrenderer.data.ITSDocument;
-import tds.itemrenderer.data.ITSDocumentXml;
+
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 

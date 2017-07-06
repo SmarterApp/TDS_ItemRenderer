@@ -11,7 +11,7 @@ package tds.itemrenderer.processing;
 import java.lang.reflect.InvocationTargetException;
 
 import tds.itemrenderer.data.ITSDocument;
-import tds.itemrenderer.data.ITSDocumentXml;
+
 
 /**
  * Creates ITSDocumentXML instance
