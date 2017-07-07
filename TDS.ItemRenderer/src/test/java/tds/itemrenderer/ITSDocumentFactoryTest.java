@@ -49,8 +49,8 @@ public class ITSDocumentFactoryTest extends AbstractTest {
   public void testLoadUri2() {
     final URL url = getClass().getResource("/items/item-187-1126.xml");
     final ITSDocument itsDocument = ITSDocumentFactory.loadUri2(url.getFile(), null, false);
-    assertEquals("I-187-1126", itsDocument.getItemGroupID());
-    assertEquals("MC", itsDocument.getFormat());
+    assertEquals("I-187-1126", itsDocument.getID());
+    assertEquals("MC", itsDocument.getAttributeFormat());
     assertEquals("8", itsDocument.getLayout());
     assertEquals("<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>", itsDocument.getContent("ENU").getStem());
   }
@@ -64,8 +64,8 @@ public class ITSDocumentFactoryTest extends AbstractTest {
       iitsDocument = ITSDocumentFactory.load(uri, null, itemReader, false);
     }
 
-    assertEquals("I-187-1126", iitsDocument.getItemGroupID());
-    assertEquals("MC", iitsDocument.getFormat());
+    assertEquals("I-187-1126", iitsDocument.getID());
+    assertEquals("MC", iitsDocument.getAttributeFormat());
     assertEquals("8", iitsDocument.getLayout());
     assertEquals("<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>", iitsDocument.getContent("ENU").getStem());
   }
@@ -87,7 +87,7 @@ public class ITSDocumentFactoryTest extends AbstractTest {
     final ITSDocument actual = OBJECT_MAPPER.readValue(json, ITSDocument.class);
 
 
-    assertEquals(expected.getItemGroupID(), actual.getItemGroupID());
+    assertEquals(expected.getID(), actual.getID());
     assertEquals(expected.getFormat(), actual.getFormat());
     assertEquals(expected.getLayout(), actual.getLayout());
     assertEquals(expected.getContent("ENU").getStem(), actual.getContent("ENU").getStem());
@@ -96,11 +96,11 @@ public class ITSDocumentFactoryTest extends AbstractTest {
   @Test
   public void documentShouldRoundTripSerialize() throws Exception {
     final URL url = getClass().getResource("/items/item-187-1126.xml");
-    final ITSDocument actual = ITSDocumentFactory.loadUri2(url.getFile(), null, false);
-    final String json = OBJECT_MAPPER.writeValueAsString(actual);
-    final ITSDocument expected = OBJECT_MAPPER.readValue(json, ITSDocument.class);
+    final ITSDocument expected = ITSDocumentFactory.loadUri2(url.getFile(), null, false);
+    final String json = OBJECT_MAPPER.writeValueAsString(expected);
+    final ITSDocument actual = OBJECT_MAPPER.readValue(json, ITSDocument.class);
 
-    assertEquals(expected.getItemGroupID(), actual.getItemGroupID());
+    assertEquals(expected.getID(), actual.getID());
     assertEquals(expected.getFormat(), actual.getFormat());
     assertEquals(expected.getLayout(), actual.getLayout());
     assertEquals(expected.getContent("ENU").getStem(), actual.getContent("ENU").getStem());

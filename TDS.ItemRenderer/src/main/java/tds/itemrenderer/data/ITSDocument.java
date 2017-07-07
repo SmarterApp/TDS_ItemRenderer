@@ -1,439 +1,393 @@
 package tds.itemrenderer.data;
 
-import AIR.Common.Helpers.CaseInsensitiveMap;
-import AIR.Common.Helpers._Ref;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import tds.itempreview.content.ITSDocumentExtensions;
+import java.util.Optional;
 
 public class ITSDocument {
+    private static final String ITM_ATT_ITEM_LAYOUT = "itm_att_Item Layout";
+    private static final String ITM_ATT_PAGE_LAYOUT = "itm_att_Page Layout";
+    private static final String STM_PASS_ID = "stm_pass_id";
+    private static final String ITM_ATT_ITEM_FORMAT = "itm_att_Item Format";
+    private static final String ITM_ATT_RESPONSE_TYPE = "itm_att_Response Type";
+    private static final String ITM_ATT_RESPONSE_TYPE1 = "itm_att_Response Type";
+    private static final String ITM_ITEM_SUBJECT = "itm_item_subject";
+    private static final String ITM_ATT_GRADE = "itm_att_Grade";
+    private static final String ITM_ATT_ANSWER_KEY = "itm_att_Answer Key";
+    private static final String STM_ATT_CREDIT_LINE = "stm_att_Credit Line";
+    private static final String ITM_ATT_COPYRIGHT_TEXT = "itm_att_Copyright text";
+    private static final String STM_ATT_RENDERING_GUIDE = "stm_att_Rendering Guide";
+    private static final String ITM_ATT_RENDERING_GUIDE = "itm_att_Rendering Guide";
+    private static final String ITM_ATT_MAX_ITEM_SCORE = "itm_att_Max Item Score";
+    private static final String AUTO_EMBOSS = "AutoEmboss";
     // The original file path of where the XML data came from.
-    private String            _baseUri;
-    private String            _rendererSpec;
-    private String            _layout;
-    private String            _format;
-    private String            _responseType;
-    private String            _subject;
-    private String            _grade;
-    private String            _answerKey;
-    private String            _credit;
-    private String            _copyright;
+    private String baseUri;
+    private String rendererSpec;
+    private String layout;
+    private String format;
     // This is the new top level grid answer space. This replaces the content element level answer space.
-    private String            _gridAnswerSpace;
+    private String gridAnswerSpace;
     // What type of entity this is.  This can be item or passage.
-    private ITSTypes.ITSEntityType _type;
-    private ITSSoundCue       _soundCue;
-    private ITSTutorial       _tutorial;
-    private List<ITSResource> _resources = new ArrayList<ITSResource>();
-    private ITSMachineRubric  _machineRubric;
-    private long              _bankKey;
-    private long              _itemKey;
-    private long              _stimulusKey;
-
+    private ITSTypes.ITSEntityType type;
+    private ITSSoundCue soundCue;
+    private ITSTutorial tutorial;
+    private List<ITSResource> resources = new ArrayList<ITSResource>();
+    private ITSMachineRubric machineRubric;
+    private long bankKey;
     // Is the XML loaded and parsed.
-    private boolean           _isLoaded;
-    private boolean           _autoEmboss;
-    private long              _id;
+    private boolean isLoaded;
 
-    private String _realPath;
+    private double version;
+    private boolean validated;
+    private int approvedVersion;
+    private long id;
 
-    private double                                       _version;
-    private boolean                                      _validated;
-    private int                                          _approvedVersion;
+    private HashMap<String, List<ITSAttribute>> attributes = new HashMap<>();
+    private HashMap<String, ITSContent> contents = new HashMap<>();
+    private List<String> mediaFiles = new ArrayList<>();
 
-    private List<String>                           _mediaFiles = new ArrayList<String> ();
-
-
-    private HashMap<String, ITSContent>         _contents   = new HashMap<> ();
-    private HashMap<String, List<ITSAttribute>> _attributes = new HashMap<> ();
-
-    public String getItemGroupID() {
-        return ITSDocumentExtensions.getID (this);
-    }
-
-    public long getId () {
-        return _id;
-    }
-
-    public void setId (long value) {
-        this._id = value;
-    }
-
-    public void setLayout(String _layout) {
-        this._layout = _layout;
-    }
+    private String realPath;
 
     public String getBaseUri() {
-        return _baseUri;
+        return baseUri;
     }
 
-    public void setBaseUri(String _baseUri) {
-        this._baseUri = _baseUri;
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
     }
 
     public String getRendererSpec() {
-        return _rendererSpec;
+        return rendererSpec;
     }
 
-    public void setRendererSpec(String _rendererSpec) {
-        this._rendererSpec = _rendererSpec;
+    public void setRendererSpec(String rendererSpec) {
+        this.rendererSpec = rendererSpec;
     }
 
-    public void setFormat(String _format) {
-        this._format = _format;
+    public String getFormat() {
+        return format;
     }
 
-    public void setResponseType(String _responseType) {
-        this._responseType = _responseType;
+    public void setFormat(String format) {
+        this.format = format;
     }
 
-    public void setSubject(String _subject) {
-        this._subject = _subject;
+    public String getLayout() {
+        if (!StringUtils.isEmpty(layout))
+            return layout;
+        // If there is no response type then it is the older item format
+        if (StringUtils.isEmpty(getResponseType())) {
+            return getAttributeValue(ITM_ATT_ITEM_LAYOUT);
+        }
+        return getAttributeValue(ITM_ATT_PAGE_LAYOUT);
     }
 
-
-    public void setGrade(String _grade) {
-        this._grade = _grade;
-    }
-
-    public String getAnswerKey() {
-        return _answerKey;
-    }
-
-    public void setAnswerKey(String _answerKey) {
-        this._answerKey = _answerKey;
-    }
-
-    public String getCredit() {
-        return _credit;
-    }
-
-    public void setCredit(String _credit) {
-        this._credit = _credit;
-    }
-
-    public void setCopyright(String _copyright) {
-        this._copyright = _copyright;
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 
     public String getGridAnswerSpace() {
-        return _gridAnswerSpace;
+        return gridAnswerSpace;
     }
 
-    public void setGridAnswerSpace(String _gridAnswerSpace) {
-        this._gridAnswerSpace = _gridAnswerSpace;
+    public void setGridAnswerSpace(String gridAnswerSpace) {
+        this.gridAnswerSpace = gridAnswerSpace;
     }
 
     public ITSTypes.ITSEntityType getType() {
-        return _type;
+        return type;
     }
 
-    public void setType(ITSTypes.ITSEntityType _type) {
-        this._type = _type;
+    public void setType(ITSTypes.ITSEntityType type) {
+        this.type = type;
     }
 
     public ITSSoundCue getSoundCue() {
-        return _soundCue;
+        return soundCue;
     }
 
-    public void setSoundCue(ITSSoundCue _soundCue) {
-        this._soundCue = _soundCue;
+    public void setSoundCue(ITSSoundCue soundCue) {
+        this.soundCue = soundCue;
     }
 
     public ITSTutorial getTutorial() {
-        return _tutorial;
+        return tutorial;
     }
 
-    public void setTutorial(ITSTutorial _tutorial) {
-        this._tutorial = _tutorial;
+    public void setTutorial(ITSTutorial tutorial) {
+        this.tutorial = tutorial;
     }
 
     public List<ITSResource> getResources() {
-        return _resources;
+        return resources;
     }
 
-    public void setResources(List<ITSResource> _resources) {
-        this._resources = _resources;
+    public void setResources(List<ITSResource> resources) {
+        this.resources = resources;
     }
 
     public ITSMachineRubric getMachineRubric() {
-        return _machineRubric;
+        return machineRubric;
     }
 
-    public void setMachineRubric(ITSMachineRubric _machineRubric) {
-        this._machineRubric = _machineRubric;
+    public void setMachineRubric(ITSMachineRubric machineRubric) {
+        this.machineRubric = machineRubric;
     }
 
     public long getBankKey() {
-        return _bankKey;
+        return bankKey;
     }
 
-    public void setBankKey(long _bankKey) {
-        this._bankKey = _bankKey;
-    }
-
-    public void setItemKey(long _itemKey) {
-        this._itemKey = _itemKey;
-    }
-
-    public long getStimulusKey() {
-        return _stimulusKey;
-    }
-
-    public void setStimulusKey(long _stimulusKey) {
-        this._stimulusKey = _stimulusKey;
+    public void setBankKey(long bankKey) {
+        this.bankKey = bankKey;
     }
 
     public boolean getIsLoaded() {
-        return _isLoaded;
+        return isLoaded;
     }
 
-    public void setIsLoaded(boolean _isLoaded) {
-        this._isLoaded = _isLoaded;
+    public void setIsLoaded(boolean isLoaded) {
+        this.isLoaded = isLoaded;
     }
 
-    public boolean isAutoEmboss() {
-        return _autoEmboss;
+    public double getVersion() {
+        return version;
     }
 
-    public void setAutoEmboss(boolean _autoEmboss) {
-        this._autoEmboss = _autoEmboss;
+    public void setVersion(double version) {
+        this.version = version;
     }
 
-
-    public void addAttribute (ITSAttribute attribute) {
-
-        List<ITSAttribute> attribList = null;
-        _Ref<List<ITSAttribute>> attribListRef = new _Ref<List<ITSAttribute>> ();
-//        _attributes.getOrDefault(attribute.getId(), new ArrayList<ITSAttribute>());
-
-        boolean attribExist = _attributes.tryGetValue (attribute.getId (), attribListRef);
-
-        if (!attribExist) {
-            attribList = new ArrayList<ITSAttribute>();
-            _attributes.put (attribute.getId (), attribList);
-        } else
-            attribList = attribListRef.get ();
-
-        attribList.add (attribute);
-
+    public boolean getValidated() {
+        return validated;
     }
 
-    public boolean hasAttribute (String attid) {
-        return _attributes.containsKey (attid);
+    public void setValidated(boolean validated) {
+        this.validated = validated;
     }
 
-    public ITSAttribute createAttribute (String id, String value) {
-        ITSAttribute itsAttrib = new ITSAttribute (id, value);
-        addAttribute (itsAttrib);
-        return itsAttrib;
+    public int getApprovedVersion() {
+        return approvedVersion;
     }
 
-    private List<ITSAttribute> getAttributes (String attid) {
-
-        _Ref<List<ITSAttribute>> attribList = new _Ref<List<ITSAttribute>> ();
-
-        boolean attribExist = _attributes.tryGetValue (attid, attribList);
-
-        if (!attribExist || attribList.get () == null || attribList.get ().size () == 0) {
-            return null;
-        }
-
-        return attribList.get ();
+    public void setApprovedVersion (int approvedVersion) {
+        this.approvedVersion = approvedVersion;
     }
 
-    protected ITSAttribute getAttribute (String attid) {
-        List<ITSAttribute> attribList = getAttributes (attid);
-        return (attribList == null) ? null : attribList.get (0);
+    public long getId() {
+        return id;
     }
 
-    public ITSAttribute setAttributeValue (String id, String value) {
-        ITSAttribute attrib;
-
-        if (hasAttribute (id)) {
-            attrib = getAttribute (id);
-            attrib.setValue (value);
-        } else {
-            attrib = createAttribute (id, value);
-        }
-
-        return attrib;
+    public void setId(long value) {
+        this.id = value;
     }
 
-    public String getAttributeValue (String attid) {
-        ITSAttribute attribute = getAttribute (attid);
-        return (attribute == null) ? "" : attribute.getValue ();
+    public HashMap<String, List<ITSAttribute>> getAttributes() {
+        return attributes;
     }
 
-    public long getItemKey () {
-        return getId ();
+    public void setAttributes(HashMap<String, List<ITSAttribute>> attributes) {
+        this.attributes = attributes;
     }
 
-
-    public String getLayout () {
-        if (!StringUtils.isEmpty (_layout))
-            return _layout;
-        // If there is no response type then it is the older item format
-        if (StringUtils.isEmpty (getResponseType ())) {
-            return getAttributeValue ("itm_att_Item Layout");
-        }
-        return getAttributeValue ("itm_att_Page Layout");
-    }
-
-    public void setAttributeFormat (String value) {
-        setAttributeValue ("itm_att_Item Format", value);
-    }
-
-    public void setAttributeResponseType (String value) {
-        setAttributeValue ("itm_att_Response Type", value);
-    }
-
-    public String getResponseType () {
-        return getAttributeValue ("itm_att_Response Type");
-    }
-
-
-    public String getSubject () {
-        return getAttributeValue ("itm_item_subject");
-    }
-
-
-    public String getGrade () {
-        return getAttributeValue ("itm_att_Grade");
-    }
-
-
-    public String getCopyright () {
-        return getAttributeValue ("itm_att_Copyright text");
-    }
-
-    public String getFormat ()
-    {
-        return getAttributeValue ("itm_att_Item Format");
-    }
-
-    /*
- * The XML content nodes. These come internally from a dictionary so the order
- * of the content nodes is not guaranteed to be the same as the original XML.
- */
-    public List<ITSContent> getContents () {
-        List<ITSContent> contents = new ArrayList<ITSContent> ();
-
-        for (ITSContent content : _contents.values ()) {
-            contents.add (content);
-        }
-
+    public HashMap<String, ITSContent> getContents() {
         return contents;
     }
 
-    public ITSContent getContent (String language) {
-        if (StringUtils.isEmpty (language))
+    public void setContents(HashMap<String, ITSContent> contents) {
+        this.contents = contents;
+    }
+
+    public List<String> getMediaFiles() {
+        return mediaFiles;
+    }
+
+    public void setMediaFiles(List<String> mediaFiles) {
+        this.mediaFiles = mediaFiles;
+    }
+
+    public void addAttribute(ITSAttribute attribute) {
+        final List<ITSAttribute> attribList = new ArrayList<>();
+        attribList.add(attribute);
+
+        attributes.merge(attribute.getId().toLowerCase(), attribList, (a, b) -> {
+            a.addAll(b);
+            return a;
+        });
+    }
+
+    private String getAttributeValue(String attid) {
+        final List<ITSAttribute> attribList = attributes.getOrDefault(attid.toLowerCase(), new ArrayList<>());
+        return (attribList.size() > 0) ? attribList.get(0).getValue() : "";
+    }
+
+    private Optional<ITSAttribute> getAttribute(String id) {
+        final List<ITSAttribute> attribList = attributes.getOrDefault(id.toLowerCase(), new ArrayList<>());
+        return (attribList.size() > 0) ? Optional.of(attribList.get(0)) : Optional.empty();
+    }
+
+    private void setAttributeValue(String id, String value) {
+        final Optional<ITSAttribute> attrib = getAttribute(id);
+        if (attrib.isPresent()) {
+            attrib.get().setValue(value);
+        } else {
+            addAttribute(new ITSAttribute(id, value));
+        }
+    }
+
+    public ITSContent getContent(String language) {
+        if (StringUtils.isEmpty(language))
             return null;
 
-        _Ref<ITSContent> content = new _Ref<ITSContent> ();
-
         // get language
-        _contents.tryGetValue (language, content);
+        Optional<ITSContent> content = Optional.ofNullable(contents.get(language));
 
         // if language does not exist try splitting language
-        if (content.get () == null && language.indexOf ('-') != -1) {
-            String[] langTags = StringUtils.split (language, '-');
+        if (content == null && language.indexOf('-') != -1) {
+            final String[] langTags = StringUtils.split(language, '-');
 
             if (langTags.length > 1) {
-                _contents.tryGetValue (langTags[0], content);
+                content = Optional.ofNullable(contents.get(langTags[0]));
             }
         }
 
-        return content.get ();
+        return content.orElse(null);
     }
 
-    public void addContent (ITSContent content) {
-        if (content.getLanguage () == null) {
-            throw new InvalidDataException ("Could not add the <content> element because it is missing the language attribute.");
+    public void addContent(ITSContent content) {
+        if (content.getLanguage() == null) {
+            throw new InvalidDataException("Could not add the <content> element because it is missing the language attribute.");
         }
 
-        _contents.put (content.getLanguage (), content);
+        contents.put(content.getLanguage(), content);
     }
 
-    public void addMediaFiles (List<String> capturedResources) {
-        _mediaFiles.addAll (capturedResources);
-        // _mediaFiles.AddRange(capturedResources);
+    public ITSContent getContentDefault() {
+        return getContent ("ENU");
     }
 
-    public String getGroupID () {
-        return ITSDocumentExtensions.getGroupID (this);
+    public long getItemKey() {
+        return getId();
     }
 
-    public String[] getBaseUriDirSegments () {
-        return ITSDocumentExtensions.getBaseUriDirSegments (this);
+    public long getStimulusKey () {
+        String value = getAttributeValue (STM_PASS_ID);
+        return StringUtils.isEmpty (value) ? 0 : Long.parseLong (value);
     }
 
-    public String getFolderName () {
-        return ITSDocumentExtensions.getFolderName (this);
+    public String getAttributeFormat() {
+        return getAttributeValue(ITM_ATT_ITEM_FORMAT);
     }
 
-    public String getParentFolderName () {
-        return ITSDocumentExtensions.getParentFolderName (this);
+    public void setAttributeResponseType(String value) {
+        setAttributeValue(ITM_ATT_RESPONSE_TYPE, value);
     }
 
-    public String getRealPath () {
-        return _realPath;
+    public String getResponseType() {
+        return getAttributeValue(ITM_ATT_RESPONSE_TYPE1);
     }
 
-    public void setRealPath (String value) {
-        this._realPath = value;
+    public String getSubject() {
+        return getAttributeValue(ITM_ITEM_SUBJECT);
     }
 
-    public boolean getValidated () {
-        return _validated;
+    public String getGrade() {
+        return getAttributeValue(ITM_ATT_GRADE);
     }
 
-    public double getVersion () {
-        return _version;
+    public String getAnswerKey() {
+        return getAttributeValue (ITM_ATT_ANSWER_KEY);
     }
 
-    public void setVersion (double value) {
-        this._version = value;
+    public String getCredit() {
+        return getAttributeValue(STM_ATT_CREDIT_LINE);
     }
 
-
-    public void setValidated (boolean value) {
-        this._validated = value;
+    public String getCopyright() {
+        return getAttributeValue(ITM_ATT_COPYRIGHT_TEXT);
     }
 
-
-    public void setApprovedVersion (int value) {
-        this._approvedVersion = value;
+    public boolean getAutoEmboss () {
+        final String attid = (getStimulusKey () > 0) ? STM_ATT_RENDERING_GUIDE : ITM_ATT_RENDERING_GUIDE;
+        final String renderingGuide = getAttributeValue(attid);
+        return (renderingGuide != null && StringUtils.equalsIgnoreCase(renderingGuide, AUTO_EMBOSS));
     }
 
-    public int getMaxScore () {
-        String value = getAttributeValue ("itm_att_Max Item Score");
+    public int getMaxScore() {
+        final String value = getAttributeValue(ITM_ATT_MAX_ITEM_SCORE);
         int maxScore;
         try {
-            maxScore = Integer.parseInt (value);
+            maxScore = Integer.parseInt(value);
         } catch (NumberFormatException e) {
             maxScore = 0;
         }
         return maxScore;
     }
 
-    public List<String> getMediaFiles () {
-        return _mediaFiles;
+    /*
+     * The XML content nodes. These come internally from a dictionary so the order
+     * of the content nodes is not guaranteed to be the same as the original XML.
+    */
+    @JsonIgnore
+    public List<ITSContent> getContentsValues() {
+        return new ArrayList<>(contents.values());
     }
 
-    public void setMediaFiles(List<String> _mediaFiles) {
-        this._mediaFiles = _mediaFiles;
+    public void addMediaFiles(List<String> capturedResources) {
+        mediaFiles.addAll(capturedResources);
     }
 
-    public void setContents(CaseInsensitiveMap<ITSContent> _contents) {
-        this._contents = _contents;
+    private String getDirectoryName(String path) {
+        if (org.apache.commons.lang3.StringUtils.endsWith(path, "/") || org.apache.commons.lang3.StringUtils.endsWith(path, "\\"))
+            return path.substring(0, path.length() - 1);
+        return new File(path).getParent();
     }
 
-    public void setAttributes(CaseInsensitiveMap<List<ITSAttribute>> _attributes) {
-        this._attributes = _attributes;
+    private String[] getBaseUriDirSegments() {
+        final String baseDirectory = getDirectoryName(getBaseUri());
+
+        final String delim = "/\\";
+        return StringUtils.split(baseDirectory, delim);
+    }
+
+    public String getFolderName() {
+        final String[] segments = getBaseUriDirSegments();
+        final String segment = segments[segments.length - 1];
+        return segment;
+    }
+
+    public String getGroupID() {
+        final boolean hasPassage = (getStimulusKey() > 0);
+        final String prefix = (hasPassage ? "G-" : "I-");
+        final long itemKey = (hasPassage ? getStimulusKey() : getItemKey());
+        return String.format("%s-%d-%d", prefix, getBankKey(), itemKey);
+    }
+
+    public String getID() {
+        final String prefix = (getType() == ITSTypes.ITSEntityType.Passage) ? "G" : "I";
+        return String.format("%s-%d-%d", prefix, getBankKey(), getItemKey());
+    }
+
+    public String getParentFolderName() {
+        final String[] segments = getBaseUriDirSegments();
+        final String segment = segments[segments.length - 2];
+        return segment;
+    }
+
+    public String getRealPath() {
+        return realPath;
+    }
+
+    public void setRealPath(String value) {
+        this.realPath = value;
+    }
+
+    public String toString () {
+        return baseUri == null ? "" : baseUri;
     }
 }

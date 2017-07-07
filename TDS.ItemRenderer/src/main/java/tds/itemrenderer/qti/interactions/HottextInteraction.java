@@ -24,7 +24,6 @@ public class HottextInteraction extends QTIInteraction
   @Override
   public void process (ITSDocument itsDoc, Element element) {
     itsDoc.setFormat ("HT");
-    itsDoc.setAttributeFormat ("HT");
     itsDoc.setAttributeResponseType ("Hottext");
   }
 }

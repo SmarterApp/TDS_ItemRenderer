@@ -69,7 +69,7 @@ public class ITSProcessorTasks extends TaskExecutor<String>
 		// get contents
 		if (StringUtils.isEmpty(language))
 		{
-			List<ITSContent> contents = doc.getContents();
+			List<ITSContent> contents = doc.getContentsValues();
 
 			for (ITSContent content : contents)
 			{
