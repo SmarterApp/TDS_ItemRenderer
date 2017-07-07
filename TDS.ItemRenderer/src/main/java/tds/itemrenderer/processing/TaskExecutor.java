@@ -11,8 +11,7 @@ package tds.itemrenderer.processing;
 import java.util.ArrayList;
 import java.util.List;
 
-import tds.itemrenderer.data.ITSDocument;
-
+import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 
@@ -52,7 +51,7 @@ public class TaskExecutor<T>
    * @param data
    * @return
    */
-  protected T executeTasks(ITSDocument itsDocument, ITSContentType contentType, ITSContextType contextType, String language, T data)  {
+  protected T executeTasks(ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, T data)  {
       if (data == null) {
         return null;
       }

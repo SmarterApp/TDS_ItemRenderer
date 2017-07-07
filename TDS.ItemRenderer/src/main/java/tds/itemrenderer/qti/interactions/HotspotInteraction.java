@@ -25,6 +25,7 @@ public class HotspotInteraction extends QTIInteraction
   @Override
   public void process (ITSDocument itsDoc, Element element) {
     itsDoc.setFormat ("GI");
+    itsDoc.setAttributeFormat ("GI");
     itsDoc.setAttributeResponseType ("Hotspot");
   }
 }

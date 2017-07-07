@@ -13,14 +13,17 @@ import org.apache.commons.lang.StringUtils;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Utilities.TDSStringUtils;
 import AIR.Common.Web.EncryptionHelper;
-
+import AIR.Common.Web.Session.Server;
+import tds.blackbox.ContentRequestAccommodation;
+import tds.blackbox.ContentRequestItem;
 import tds.itemrenderer.ITSDocumentFactory;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.AccProperties;
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.IItemRender;
 import tds.itemrenderer.data.ItemRender;
 import tds.itemrenderer.data.ItemRenderGroup;
+import tds.itemrenderer.webcontrols.PageLayout;
 
 public class ContentRequestParser
 {
@@ -70,7 +73,7 @@ public class ContentRequestParser
     if (contentRequest.getPassage () != null && !StringUtils.isEmpty (contentRequest.getPassage ().getFile ()))
     {
       // load file
-      ITSDocument passageDoc = ITSDocumentFactory.loadUri2 (contentRequest.getPassage ().getFile (), accommodations, true);
+      IITSDocument passageDoc = ITSDocumentFactory.loadUri2 (contentRequest.getPassage ().getFile (), accommodations, true);
       itemRenderGroup.setPassage (passageDoc);
     }
 
@@ -84,7 +87,7 @@ public class ContentRequestParser
           continue;
         
         // load file
-        ITSDocument itemDoc = ITSDocumentFactory.loadUri2 (item.getFile (), accommodations, true);
+        IITSDocument itemDoc = ITSDocumentFactory.loadUri2 (item.getFile (), accommodations, true);
 
         // skip item if the languages content does not exist
         if (itemDoc.getContent (language) == null)

@@ -10,8 +10,7 @@ package tds.itemrenderer.processing;
 
 import org.w3c.dom.Document;
 
-import tds.itemrenderer.data.ITSDocument;
-
+import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 
@@ -28,7 +27,7 @@ public class ITSProcessorApipTasks extends TaskExecutor<Document> implements IPr
   }
 
   @Override
-  public String process (ITSDocument itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
+  public String process (ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
     Document document = null;
     if ((contentType.getValue () & ITSContentType.Html.getValue ()) == ITSContentType.Html.getValue ()) {
       document = XmlUtils.createFragmentDocument (xml);

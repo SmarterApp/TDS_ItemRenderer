@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
 import tds.itemrenderer.configuration.RendererSettings;
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.IItemRender;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSContent;
@@ -24,6 +24,7 @@ import tds.itemrenderer.data.ITSOption;
 import tds.itemrenderer.data.ITSResource;
 import tds.itemrenderer.data.ItemRenderGroup;
 import tds.itemrenderer.processing.ITSDocumentHelper;
+import tds.itemrenderer.processing.ITSUrlResolver2;
 import tds.itemrenderer.webcontrols.PageLayout;
 import AIR.Common.Helpers._Ref;
 import AIR.Common.Utilities.Path;
@@ -124,7 +125,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
   private boolean writeSoundCue()
   {
       for (IItemRender itemRender : _itemRenderGroup)  {
-          ITSDocument item = itemRender.getItem ();
+          IITSDocument item = itemRender.getItem ();
 
           if (item.getSoundCue() != null)
           {
@@ -230,7 +231,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       endElement(); // </item>
   }
 
-  private void writeMachineRubric(ITSDocument doc)
+  private void writeMachineRubric(IITSDocument doc)
   {
       ITSMachineRubric machineRubric = parseMachineRubric(doc, _language);
       
@@ -243,7 +244,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       }
   }
 
-  public static ITSMachineRubric parseMachineRubric(ITSDocument itsDocument, String language)
+  public static ITSMachineRubric parseMachineRubric(IITSDocument itsDocument, String language)
   {
       // check if answer key is the rubric
       if ((itsDocument.getFormat().equalsIgnoreCase("MC") || itsDocument.getFormat().equalsIgnoreCase("MS") || itsDocument.getFormat().equalsIgnoreCase("ASI")) && itsDocument.getAnswerKey() != null)
@@ -269,7 +270,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       return null;
   }
 
-  private boolean writeTutorial(ITSDocument doc)
+  private boolean writeTutorial(IITSDocument doc)
   {
       if (doc.getTutorial() == null) {
         return false;
@@ -283,7 +284,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       return true;
   }
 
-  private void writeAttachments(ITSDocument doc)
+  private void writeAttachments(IITSDocument doc)
   {
       ITSContent content = doc.getContent(_language);
       if ((content.getAttachments() != null) && (content.getAttachments().size() > 0))
@@ -303,7 +304,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       }
   }
 
-  private boolean writeResources(ITSDocument document)
+  private boolean writeResources(IITSDocument document)
   {
       // resource list
       if (document.getResources() == null || document.getResources().size() == 0)  {
@@ -326,14 +327,14 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
       return true;
   }
 
-  private boolean writeRendererSpec(ITSDocument doc)
+  private boolean writeRendererSpec(IITSDocument doc)
   {
       if (StringUtils.isEmpty(doc.getRendererSpec())) return false;
       writeCData("rendererSpec", doc.getRendererSpec());
       return true;
   }
 
-  private boolean writeItemContent(ITSDocument doc)
+  private boolean writeItemContent(IITSDocument doc)
   {
       // get content for the language
       ITSContent content = doc.getContent(_language); // ?? itemRender.Item.GetContentDefault();
@@ -408,7 +409,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
    * 
    * @param doc
    */
-  private void writeMediaResources(ITSDocument doc)
+  private void writeMediaResources(IITSDocument doc) 
   {
       // check if there are any media files to send down
       List<String> mediaFiles = doc.getMediaFiles();
@@ -479,7 +480,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
   /**
   * Write out generic elements.
   */
-  private void writeElements(ITSDocument doc)  {
+  private void writeElements(IITSDocument doc)  {
       ITSContent content = doc.getContent(_language);
       if (content == null || 
           content.getGenericElements() == null || 

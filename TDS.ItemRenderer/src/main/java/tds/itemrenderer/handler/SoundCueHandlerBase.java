@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 
 import tds.itemrenderer.ITSDocumentFactory;
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSContent;
 import tds.itemrenderer.processing.ITSDocumentHelper;
 import AIR.Common.Utilities.Path;
@@ -76,7 +76,7 @@ public abstract class SoundCueHandlerBase extends FileHttpHandler
       String xmlDir = Path.getDirectoryName(xmlFile);
 
       // load content for item (NOTE: do not resolve url's)
-      ITSDocument itsDocument = ITSDocumentFactory.load(xmlFile, language, false);
+      IITSDocument itsDocument = ITSDocumentFactory.load(xmlFile, language, false);
       ITSContent itsContent = itsDocument.getContent(language);
       String stem = itsContent.getStem ();
 
