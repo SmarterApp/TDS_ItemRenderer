@@ -9,9 +9,12 @@
 package tds.itemrenderer.qti.interactions;
 
 
+import org.jdom2.Attribute;
 import org.jdom2.Element;
 
 import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSOption;
+import tds.itemrenderer.qti.QTIHelper;
 import tds.itemrenderer.qti.QTIInteraction;
 
 // / QTI parser for the choiceInteraction element.

@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
 import AIR.test.framework.AbstractTest;
 import tds.itemrenderer.ITSDocumentFactory;
 import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 import tds.itemrenderer.processing.XmlUtils;
@@ -36,7 +36,7 @@ public class APIPXmlProcessorTest extends AbstractTest
 
   APIPRuleGroup _apipRuleGroup;
   ITSContent _content;
-  ITSDocument _itsDocument;
+  ITSDocumentXml _itsDocument;
 
   
   @Test
@@ -51,7 +51,7 @@ public class APIPXmlProcessorTest extends AbstractTest
         break;
       }
     }
-     _itsDocument  = ITSDocumentFactory.loadUri2 (itemFile, null, false);
+     _itsDocument  = (ITSDocumentXml) ITSDocumentFactory.loadUri2 (itemFile, null, false);
     String language = "ENU";
    _content = _itsDocument.getContent(language); 
    
@@ -128,7 +128,7 @@ public class APIPXmlProcessorTest extends AbstractTest
       }
     }
     URL url = getClass ().getResource (itemFile);
-    _itsDocument  = (ITSDocument) ITSDocumentFactory.loadUri2 (url.getFile (), null, false);
+    _itsDocument  = (ITSDocumentXml) ITSDocumentFactory.loadUri2 (url.getFile (), null, false);
     String language = "ENU";
    _content = _itsDocument.getContent(language); 
   }

@@ -9,6 +9,7 @@
 package tds.itemrenderer.processing;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
 import tds.itemrenderer.data.ITSDocument;
@@ -30,7 +31,7 @@ public class ITSUrlResolverTest
   
   //@Test
   public void testResolveResourceUrls() {
-        String content = new ITSUrlResolver2("file://item/test.xml").resolveResourceUrls(_itsDocument.getContentsValues().get (0).getStem ());
+        String content = new ITSUrlResolver2("file://item/test.xml").resolveResourceUrls(_itsDocument.getContents ().get (0).getStem ());
        //TODO
  }
   

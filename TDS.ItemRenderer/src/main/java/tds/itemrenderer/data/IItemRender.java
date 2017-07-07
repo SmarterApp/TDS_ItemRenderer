@@ -21,7 +21,7 @@ public abstract class IItemRender
                                              // page
   private boolean           _isLast;        // Is this the last item on the
                                              // page
-  private ITSDocument _item;          // Item's content
+  private IITSDocument      _item;          // Item's content
   private String            _label;         // Label for the question
   private int               _position;      // Position within test
   private int               _positionOnPage; // What is the item's order on the
@@ -78,11 +78,11 @@ public abstract class IItemRender
     _isLast = value;
   }
 
-  public ITSDocument getItem () {
+  public IITSDocument getItem () {
     return _item;
   }
 
-  public void setItem (ITSDocument value) {
+  public void setItem (IITSDocument value) {
     _item = value;
   }
 

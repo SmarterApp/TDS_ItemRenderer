@@ -11,9 +11,11 @@ package tds.itemrenderer.webcontrols;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UINamingContainer;
 
+import org.apache.commons.collections.functors.InstanceofPredicate;
+
 import AIR.Common.Utilities.TDSStringUtils;
 
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.IItemRender;
 import tds.itemrenderer.data.ITSContent;
 import tds.itemrenderer.data.ItemRenderGroup;
@@ -21,7 +23,7 @@ import tds.itemrenderer.data.ItemRenderGroup;
 public class RendererBase extends UINamingContainer
 {
   private IItemRender     _data;
-  private ITSDocument _document;
+  private IITSDocument    _document;
   private ItemRenderGroup _group;
   private String          _templateStimulus;
   private String          _templateStem;
@@ -42,11 +44,11 @@ public class RendererBase extends UINamingContainer
   // / <summary>
   // / Current ITS document
   // / </summary>
-  public ITSDocument getDocument () {
+  public IITSDocument getDocument () {
     return _document;
   }
 
-  public void setDocument (ITSDocument value) {
+  public void setDocument (IITSDocument value) {
     _document = value;
   }
 
@@ -139,7 +141,7 @@ public class RendererBase extends UINamingContainer
   // / <summary>
   // / Get ITS documents current language content
   // / </summary>
-  protected ITSContent getContent (ITSDocument itsDoc) {
+  protected ITSContent getContent (IITSDocument itsDoc) {
     if (itsDoc == null)
       return null;
     return itsDoc.getContent (getLanguage ()); // ?? itsDoc.GetContentDefault();

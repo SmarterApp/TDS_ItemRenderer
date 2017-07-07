@@ -8,7 +8,7 @@
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 
@@ -45,7 +45,7 @@ public class ITSUrlTask implements IProcessorTask<String>
    * @param data
    * @return
   */
-  public String process(ITSDocument itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
+  public String process(ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
       if(urlResolver == null) {
         urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri());
       }

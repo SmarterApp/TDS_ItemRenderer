@@ -8,12 +8,14 @@
  ******************************************************************************/
 package tds.itemrenderer.webcontrols.rendererservlet.testcontent;
 
+import java.util.List;
 import java.util.ArrayList;
 
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSAttribute;
 import tds.itemrenderer.data.ITSContent;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.ITSOption;
 import tds.itemrenderer.data.ITSOptionList;
 import tds.itemrenderer.data.ITSResource;
@@ -35,8 +37,8 @@ public class DummyItsContentGenerator
     return group;
   }
   
-  private static ITSDocument createDummyItsPassage () {
-    ITSDocument doc = new ITSDocument();
+  private static IITSDocument createDummyItsPassage () {
+    ITSDocument doc = new ITSDocument ();
     doc.setApprovedVersion (66);
     doc.setBankKey (176);
     doc.setBaseUri ("C:\\WorkSpace\\TDSCore\\AppsCurrent\\ItemPreview\\TDS.ItemPreview.Web\\Content\\SBAC_Stim\\Passage_4007_v5.xml");
@@ -88,8 +90,8 @@ public class DummyItsContentGenerator
     return content;
   }
   
-  private static ITSDocument createDummyItsDocument3 () {
-    ITSDocument doc = new ITSDocument();
+  private static IITSDocument createDummyItsDocument3 () {
+    ITSDocument doc = new ITSDocument ();
     doc.setApprovedVersion (66);
     doc.setBankKey (176);
     doc.setBaseUri ("C:\\WorkSpace\\TDSCore\\AppsCurrent\\ItemPreview\\TDS.ItemPreview.Web\\Content\\SBAC_Stim\\Item_55601_v2.xml");
@@ -177,8 +179,8 @@ public class DummyItsContentGenerator
     return render;
   }
 
-  private static ITSDocument createDummyItsDocument2 () {
-    ITSDocument doc = new ITSDocument();
+  private static IITSDocument createDummyItsDocument2 () {
+    ITSDocument doc = new ITSDocument ();
     doc.setApprovedVersion (66);
     doc.setBankKey (176);
     doc.setBaseUri ("C:\\WorkSpace\\TDSCore\\AppsCurrent\\ItemPreview\\TDS.ItemPreview.Web\\Content\\SBAC_Stim\\Item_55556_v2.xml");
@@ -267,8 +269,8 @@ public class DummyItsContentGenerator
     return render;
   }
 
-  private static ITSDocument createDummyItsDocument1 () {
-    ITSDocument doc = new ITSDocument();
+  private static IITSDocument createDummyItsDocument1 () {
+    ITSDocument doc = new ITSDocument ();
     doc.setApprovedVersion (66);
     doc.setBankKey (176);
     doc.setBaseUri ("C:\\WorkSpace\\TDSCore\\AppsCurrent\\ItemPreview\\TDS.ItemPreview.Web\\Content\\SBAC_Stim\\Item_55553_v3.xml");
@@ -370,9 +372,9 @@ public class DummyItsContentGenerator
     return render;
   }
  
-  private static ITSDocument createDummyItsDocument()
+  private static IITSDocument createDummyItsDocument()
   {
-    ITSDocument doc = new ITSDocument();
+    ITSDocument doc = new ITSDocument ();
     doc.setApprovedVersion (66);
     doc.setBankKey (74);
     doc.setBaseUri ("ftp://airwspro%5Csbehera:Thummit1234!@38.118.83.22/tds2_airws_org/sandlot/TDSCore_2012-2013/Bank-74/Items/Item-74-97/item-74-97.xml");

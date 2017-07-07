@@ -24,6 +24,7 @@ public class TextEntryInteraction extends QTIInteraction
   @Override
   public void process (ITSDocument itsDoc, Element textEntryEl) {
     itsDoc.setFormat ("ET");
+    itsDoc.setAttributeFormat ("ET");
     itsDoc.setAttributeResponseType ("EditTask");
   }
 

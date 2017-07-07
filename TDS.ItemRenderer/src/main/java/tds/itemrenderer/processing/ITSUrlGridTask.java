@@ -17,8 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 import AIR.Common.Utilities.Path;
@@ -50,7 +49,7 @@ public class ITSUrlGridTask extends TaskExecutor<String>
    * @param xml
    * @return
    */
-  public String process (ITSDocument itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
+  public String process (ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
     NodeList imageElements = getImageElements (xml);
 
     if (imageElements != null) {
