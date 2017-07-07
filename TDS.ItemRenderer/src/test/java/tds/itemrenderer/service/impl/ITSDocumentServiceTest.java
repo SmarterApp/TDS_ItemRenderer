@@ -64,7 +64,7 @@ public class ITSDocumentServiceTest {
 
     ITSDocument iitsDocument = service.loadItemDocument(new URI("test"), new AccLookup(), true);
 
-    assertEquals("I-187-1126", iitsDocument.getItemGroupID());
+    assertEquals("I-187-1126", iitsDocument.getID());
     assertEquals("MC", iitsDocument.getAttributeFormat());
     assertEquals("8", iitsDocument.getLayout());
     assertEquals("<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>", iitsDocument.getContent("ENU").getStem());
