@@ -19,7 +19,7 @@ public class ITSDocumentFixture
 {
   
   public static ITSDocument getITSDocument() {
-    ITSDocument itsDocument = new ITSDocument ();
+    ITSDocument itsDocument = new ITSDocument();
     ITSContent itsContent = new  ITSContent (); 
     String stem = "<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>";
     itsContent.setStem (stem);

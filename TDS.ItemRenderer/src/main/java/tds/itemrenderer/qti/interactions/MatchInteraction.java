@@ -29,7 +29,6 @@ public class MatchInteraction extends QTIInteraction
   public void process (ITSDocument itsDoc, Element element) {
     // set format and response type
     itsDoc.setFormat ("MI");
-    itsDoc.setAttributeFormat ("MI");
     itsDoc.setAttributeResponseType ("MatchItem");
 
   }

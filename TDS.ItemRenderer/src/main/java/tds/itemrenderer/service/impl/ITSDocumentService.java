@@ -22,10 +22,9 @@ import tds.itemrenderer.apip.BRFProcessor;
 import tds.itemrenderer.configuration.ItemDocumentSettings;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.AccProperties;
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.processing.ITSDocumentParser;
 import tds.itemrenderer.processing.ITSHtmlSanitizeTask;
 import tds.itemrenderer.processing.ITSProcessorApipTasks;
@@ -49,7 +48,7 @@ public class ITSDocumentService implements ItemDocumentService {
   }
 
   @Override
-  public IITSDocument loadItemDocument(URI uri, AccLookup accommodations, boolean resolveUrls) {
+  public ITSDocument loadItemDocument(URI uri, AccLookup accommodations, boolean resolveUrls) {
 
     // parse xml
     ITSDocument itsDocument = documentParser.load(uri, ITSDocument.class, itemDataService);

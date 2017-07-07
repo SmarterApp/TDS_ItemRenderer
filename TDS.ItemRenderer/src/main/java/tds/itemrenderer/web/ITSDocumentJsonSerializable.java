@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import AIR.Common.Utilities.TDSStringUtils;
 
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.IItemRender;
 import tds.itemrenderer.data.ITSContent;
 import tds.itemrenderer.data.ITSOption;
@@ -35,7 +35,7 @@ public class ITSDocumentJsonSerializable
     }
   }
 
-  protected ITSContent getContent (IITSDocument itsDoc) {
+  protected ITSContent getContent (ITSDocument itsDoc) {
     return itsDoc.getContent (_layoutLanguage); // ??
                                                 // itsDoc.GetContentDefault();
   }
@@ -58,7 +58,7 @@ public class ITSDocumentJsonSerializable
 
     // check for sound cue (we just check the first item in the group)
     for (int i = 0; i < _itemGroup.size (); i++) {
-      IITSDocument item = _itemGroup.get (i).getItem ();
+      ITSDocument item = _itemGroup.get (i).getItem ();
 
       if (item.getSoundCue () != null) {
         json.append ("soundCue: { ");

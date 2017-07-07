@@ -19,10 +19,9 @@ import tds.itemrenderer.apip.APIPXmlProcessor;
 import tds.itemrenderer.apip.BRFProcessor;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.AccProperties;
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.processing.ITSDocumentHelper;
 import tds.itemrenderer.processing.ITSDocumentParser;
 import tds.itemrenderer.processing.ITSHtmlSanitizeTask;
@@ -164,7 +163,7 @@ public class ITSDocumentFactory
    * @param resolveUrls
    * @return ITSDocument
    */
-  public static IITSDocument load (String filePath, AccLookup accommodations, boolean resolveUrls) {
+  public static ITSDocument load (String filePath, AccLookup accommodations, boolean resolveUrls) {
     // create parser
     ITSDocumentParser<ITSDocument> itsParser = new ITSDocumentParser<ITSDocument> ();
 
@@ -190,9 +189,9 @@ public class ITSDocumentFactory
    * @param accommodations {@link tds.itemrenderer.data.AccLookup} to use for processing
    * @param reader         {@link ItemDataService} to read the data
    * @param resolveUrls    {@code true} to resolve urls when processing
-   * @return {@link tds.itemrenderer.data.IITSDocument} populated and processed
+   * @return {@link tds.itemrenderer.data.ITSDocument} populated and processed
    */
-  public static IITSDocument load(URI uri, AccLookup accommodations, ItemDataService reader, boolean resolveUrls) {
+  public static ITSDocument load(URI uri, AccLookup accommodations, ItemDataService reader, boolean resolveUrls) {
     // create parser
     ITSDocumentParser<ITSDocument> itsParser = new ITSDocumentParser<ITSDocument>();
 
@@ -210,7 +209,7 @@ public class ITSDocumentFactory
     return itsDocument;
   }
 
-  public static IITSDocument load (String filePath, String language, boolean resolveUrls) {
+  public static ITSDocument load (String filePath, String language, boolean resolveUrls) {
     AccLookup accommodations = new AccLookup ();
     accommodations.add ("Language", language);
 
@@ -225,7 +224,7 @@ public class ITSDocumentFactory
    * @param resolveUrls
    * @return ITSDocument
    */
-  public static IITSDocument loadUri (String filePath, AccLookup accommodations, boolean resolveUrls) {
+  public static ITSDocument loadUri (String filePath, AccLookup accommodations, boolean resolveUrls) {
     // get uri
     URI uri = ITSDocumentHelper.createUri (filePath);
 
@@ -251,11 +250,11 @@ public class ITSDocumentFactory
    * @param resolveUrls
    * @return
    */
-  public static IITSDocument loadUri2 (String filePath, AccLookup accommodations, boolean isResolveUrls)  {
+  public static ITSDocument loadUri2 (String filePath, AccLookup accommodations, boolean isResolveUrls)  {
     // get uri
     URI uri = ITSDocumentHelper.createUri (filePath);
 
-    ITSDocument itsDocument = new ITSDocument ();
+    ITSDocument itsDocument = new ITSDocument();
     itsDocument.setBaseUri (ITSDocumentHelper.getUriOriginalString (uri));
     String fileType = ITSDocumentHelper.getRootElementName (uri);
 

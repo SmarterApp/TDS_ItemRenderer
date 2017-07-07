@@ -8,10 +8,10 @@
  ******************************************************************************/
 package tds.blackbox.abstractions.repository;
 
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 
 public interface IContentBuilder
 {
-  public IITSDocument getITSDocument(String id);
+  public ITSDocument getITSDocument(String id);
   public void init() throws ContentException;
 }

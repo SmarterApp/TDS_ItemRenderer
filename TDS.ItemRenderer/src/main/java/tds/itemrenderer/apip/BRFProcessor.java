@@ -32,7 +32,8 @@ import tds.itemrenderer.apip.brftransformationrules.KeepChildrenValues;
 import tds.itemrenderer.apip.brftransformationrules.TransformationRules;
 import tds.itemrenderer.apip.brftransformationrules.TransformationRules.Tag;
 import tds.itemrenderer.apip.brftransformationrules.TransformationRules.Tag.Transformations.Transform;
-import tds.itemrenderer.data.ITSDocumentXml;
+
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 import tds.itemrenderer.data.ITSTypes.ITSEntityType;
@@ -122,7 +123,7 @@ public class BRFProcessor implements IProcessorTask<Document>
     return ITSContentType.Html.getValue ();
   }
 
-  public Document process (ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, Document xml) {
+  public Document process (ITSDocument itsDocument, ITSContentType contentType, ITSContextType contextType, String language, Document xml) {
     try {
       if (itsDocument.getType () == ITSEntityType.Passage) {
         contextType = ITSContextType.Passage;

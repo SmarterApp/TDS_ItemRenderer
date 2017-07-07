@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 
 import AIR.Common.Utilities.Path;
 import AIR.Common.Utilities.TDSStringUtils;
-import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.ITSTypes.ITSEntityType;
 
 /**
@@ -24,19 +24,13 @@ import tds.itemrenderer.data.ITSTypes.ITSEntityType;
  */
 public class ITSDocumentExtensions
 {
-  public static String getID (IITSDocument document) {
+  public static String getID (ITSDocument document) {
     String prefix = (document.getType () == ITSEntityType.Passage) ? "G" : "I";
     return TDSStringUtils.format ("{0}-{1}-{2}", prefix, document.getBankKey (), document.getItemKey ());
   }
 
-  public static String getGroupID (IITSDocument document) {
-    boolean hasPassage = (document.getStimulusKey () > 0);
-    String prefix = (hasPassage ? "G-" : "I-");
-    long itemKey = (hasPassage ? document.getStimulusKey () : document.getItemKey ());
-    return TDSStringUtils.format ("{0}-{1}-{2}", prefix, document.getBankKey(), itemKey);
-  }
 
-  public static String[] getBaseUriDirSegments (IITSDocument document) {
+  public static String[] getBaseUriDirSegments (ITSDocument document) {
     String baseUri = document.getBaseUri();
     String baseDirectory = Path.getDirectoryName (baseUri);
 
@@ -44,13 +38,13 @@ public class ITSDocumentExtensions
     return StringUtils.split (baseDirectory, delim);
   }
 
-  public static String getFolderName (IITSDocument itsDocument) {
+  public static String getFolderName (ITSDocument itsDocument) {
     String[] segments = getBaseUriDirSegments (itsDocument);
     String segment = segments[segments.length - 1];
     return segment;
   }
 
-  public static String getParentFolderName (IITSDocument itsDocument) {
+  public static String getParentFolderName (ITSDocument itsDocument) {
     String[] segments = getBaseUriDirSegments (itsDocument);
     String segment = segments[segments.length - 2];
     return segment;

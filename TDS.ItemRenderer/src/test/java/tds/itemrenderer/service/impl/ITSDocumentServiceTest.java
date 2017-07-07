@@ -28,7 +28,6 @@ import java.net.URISyntaxException;
 
 import tds.itemrenderer.configuration.ItemDocumentSettings;
 import tds.itemrenderer.data.AccLookup;
-import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.processing.ITSDocumentParser;
 import tds.itemrenderer.processing.ItemDataService;
@@ -63,10 +62,10 @@ public class ITSDocumentServiceTest {
   public void shouldParseDocument() throws IOException, URISyntaxException {
     when(mockReader.readData(isA(URI.class))).thenReturn(itemData);
 
-    IITSDocument iitsDocument = service.loadItemDocument(new URI("test"), new AccLookup(), true);
+    ITSDocument iitsDocument = service.loadItemDocument(new URI("test"), new AccLookup(), true);
 
     assertEquals("I-187-1126", iitsDocument.getID());
-    assertEquals("MC", iitsDocument.getFormat());
+    assertEquals("MC", iitsDocument.getAttributeFormat());
     assertEquals("8", iitsDocument.getLayout());
     assertEquals("<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>", iitsDocument.getContent("ENU").getStem());
   }
