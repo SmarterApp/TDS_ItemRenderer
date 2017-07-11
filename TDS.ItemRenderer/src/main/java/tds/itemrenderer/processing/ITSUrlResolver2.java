@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import TDS.Shared.Security.IEncryption;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,11 @@ public class ITSUrlResolver2 extends ITSUrlResolver
    */
   public ITSUrlResolver2(String filePath)  {
     super(filePath);
+  }
+
+
+  public ITSUrlResolver2 (final String filePath, final String studentUrl, final boolean encryptionEnabled, final IEncryption encryption) {
+    super(filePath, studentUrl, encryptionEnabled, encryption);
   }
 
   /**
