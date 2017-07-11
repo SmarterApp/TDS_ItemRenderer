@@ -42,8 +42,9 @@ Utilities used for content manager or widgets.
 
             var elementXY = YUD.getXY(element);
 
-            clickXY[0] = clickXY[0] + elementXY[0];
-            clickXY[1] = clickXY[1] + elementXY[1];
+            //Commenting out becasue this breaks the tools menu location.
+            //clickXY[0] = clickXY[0] + elementXY[0];
+            //clickXY[1] = clickXY[1] + elementXY[1];
         }
 
         return clickXY;
