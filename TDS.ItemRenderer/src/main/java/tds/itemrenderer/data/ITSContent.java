@@ -33,7 +33,7 @@ public class ITSContent
   private APIPXml             _apip;
   private List<ITSAttachment> _attachments;
   private ITSQTI              _qti;
-  private final List<Element>        _genericElements = new ArrayList<>();
+  private List<Element>        _genericElements = new ArrayList<>();
 
   private static final String ACC_TYPE_BRAILLE_TRANSCRIPT = "Braille Transcript";
   private static final String ACC_CODE_BRAILLE_TRANSCRIPT = "TDS_BrailleTrans1";
@@ -217,6 +217,10 @@ public class ITSContent
 
   public List<Element> getGenericElements () {
     return _genericElements;
+  }
+
+  public void setGenericElements (List<Element> _genericElements) {
+    this._genericElements = _genericElements;
   }
 
   private ITSAttachment findBrailleAttachment(List<String> brailleSubTypeCodes, boolean isFindTranscript) {
