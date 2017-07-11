@@ -81,7 +81,8 @@ public class ConfigBuilder
 
   public ConfigBuilder (String contentPath) throws URISyntaxException {
     _contentPath = contentPath;
-    _docBaseUri = new URI ("file:///" + StringUtils.replace (Server.getDocBasePath (), "\\", "/"));
+    String basePath = StringUtils.replace (Server.getDocBasePath (), "\\", "/");
+    _docBaseUri = new URI ("file:///" + StringUtils.replace (basePath, " ", "%20"));
   }
 
   public Config create () {
@@ -136,6 +137,11 @@ public class ConfigBuilder
     // In the below code there is no way to set accommodations.
     // We need to provide a way as this is common code also used by ItemPreview.
     return correctBaseUri (ITSDocumentFactory.load (documentRepresentation.getRealPath (), "ENU", true));
+  }
+
+  public IITSDocument getRenderableDocument (String id, AccLookup accLookup) throws ContentRequestException {
+    IrisITSDocument documentRepresentation = getDocumentRepresentation (id);
+    return correctBaseUri (ITSDocumentFactory.load (documentRepresentation.getRealPath (), accLookup, true));
   }
 
   // / <summary>
