@@ -11,6 +11,8 @@ package tds.itemrenderer.processing;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.UrlHelper;
+import TDS.Shared.Security.IEncryption;
+import TDS.Shared.Web.Encryption;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
@@ -26,21 +28,34 @@ import tds.itemrenderer.configuration.RendererSettings;
  */
 public class ITSUrlResolver
 {
-
   protected final String     _filePath;
   protected final String     _baseUrl;
   private final List<String> _parsedFiles = new ArrayList<String> ();
   private final boolean encryptionEnabled;
+  private final IEncryption encryption;
 
   public ITSUrlResolver (final String filePath)
   {
-    this(filePath, RendererSettings.getIsEncryptionEnabled ());
+    this(filePath, false);
   }
 
   public ITSUrlResolver (final String filePath, final boolean encryptionEnabled) {
     _filePath = filePath;
     this.encryptionEnabled = encryptionEnabled;
-    _baseUrl = getUrl ();
+    _baseUrl = getUrl();
+    encryption = null;
+  }
+
+  public ITSUrlResolver (final String filePath, final String studentUrl, final boolean encryptionEnabled, final IEncryption encryption) {
+    _filePath = filePath;
+    this.encryptionEnabled = encryptionEnabled;
+    this.encryption = encryption;
+    _baseUrl = getUrl(studentUrl);
+  }
+
+  private String getUrl(final String studentUrl) {
+    String url = getUrl();
+    return url.replace("null", studentUrl);
   }
 
   /**
@@ -120,7 +135,7 @@ public class ITSUrlResolver
     // encrypt the basePath
     if (encryptionEnabled)
     {
-      basePath = EncryptionHelper.EncryptToBase64 (basePath);
+      basePath = EncryptionHelper.EncryptToBase64 (basePath, encryption);
     }
     else
     {

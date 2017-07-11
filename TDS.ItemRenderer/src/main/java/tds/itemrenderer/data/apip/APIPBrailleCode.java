@@ -14,6 +14,9 @@ public class APIPBrailleCode
 
   public String _code = null;
 
+  private APIPBrailleCode() {
+  }
+
   public APIPBrailleCode (String type, String code) {
     setType (type);
     setCode (code);

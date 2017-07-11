@@ -11,24 +11,17 @@
  * for the Smarter Balanced Assessment Consortium (http://smarterbalanced.org)
  **************************************************************************************************/
 
-package tds.itemrenderer.processing;
+package tds.itemrenderer.repository;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
+import TDS.Shared.Exceptions.ReturnStatusException;
+
+import tds.itemrenderer.data.AccLookup;
+import tds.itemrenderer.data.ITSDocument;
 
 /**
- * Handles reading the item XML
+ * Repository to interact with content data
  */
-public interface ItemDataService {
-  /**
-   * Returns an item data XML string.
-   *
-   * @param uri uri to the xml
-   * @return {@link java.io.InputStream}
-   * @throws IOException if there is any issue accessing the data
-   */
-  String readData(final URI uri) throws IOException;
-
-  InputStream readResourceData(final URI uri) throws IOException;
+public interface ContentRepository {
+    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations) throws ReturnStatusException;
+    byte[] findResource(final String itemPath);
 }
