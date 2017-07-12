@@ -53,11 +53,6 @@ public class ITSUrlResolver
     _baseUrl = getUrl(studentUrl);
   }
 
-  private String getUrl(final String studentUrl) {
-    String url = getUrl();
-    return url.replace("null", studentUrl);
-  }
-
   /**
    * Add parsed media file
    * 
@@ -89,7 +84,6 @@ public class ITSUrlResolver
    */
   private String getBaseUrl ()
   {
-
     // ITSConfig.ResourcePath: e.x., Resources?path={0}&amp;file=
     // TDS_Preview/Resources?path={0}&file=
     String urlPath = UrlHelper.resolveUrl (ITSConfig.getResourcePath ());
@@ -101,6 +95,16 @@ public class ITSUrlResolver
       urlPath = urlPath.toLowerCase ();
     }
     return urlPath;
+  }
+
+  /**
+   * Get the base URL path that is used to make HTTP request
+   *
+   * @param studentUrl the url of the student application
+   * @return base URL
+   */
+  private String getBaseUrl(final String studentUrl) {
+    return ITSConfig.getResourcePath().replace("~", studentUrl);
   }
 
   /**
@@ -147,6 +151,42 @@ public class ITSUrlResolver
     return basePath;
   }
 
+  private String getUrl(final String studentUrl) {
+    if (studentUrl == null) {
+      // e.x., /TDS_Preview/Image.axd?path={0}&file=
+      String baseUrl = getBaseUrl ();
+
+      // NOTE: The url can be NULL if we are not running this renderer in the
+      // context of a web page
+      if (StringUtils.isEmpty (baseUrl))
+        return null;
+
+      // e.x.,
+      // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
+      String basePath = getBasePath ();
+
+      // e.x.,
+      // /TDS_Preview/Image.axd?path=QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0&file=
+      return MessageFormat.format (baseUrl, basePath);
+    } else {
+      String baseUrl = getBaseUrl (studentUrl);
+
+      // NOTE: The url can be NULL if we are not running this renderer in the
+      // context of a web page
+      if (StringUtils.isEmpty (baseUrl)) {
+        return null;
+      }
+
+      // e.x.,
+      // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
+      String basePath = getBasePath ();
+
+      // e.x.,
+      // /TDS_Preview/Image.axd?path=QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0&file=
+      return MessageFormat.format (baseUrl, basePath);
+    }
+  }
+
   /**
    * Gets the fully formatted URL ready to assign a file to the end of it.
    * 
@@ -160,21 +200,7 @@ public class ITSUrlResolver
       return _filePath.replace (urlFile, "");
     }
 
-    // e.x., /TDS_Preview/Image.axd?path={0}&file=
-    String baseUrl = getBaseUrl ();
-
-    // NOTE: The url can be NULL if we are not running this renderer in the
-    // context of a web page
-    if (StringUtils.isEmpty (baseUrl))
-      return null;
-
-    // e.x.,
-    // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
-    String basePath = getBasePath ();
-
-    // e.x.,
-    // /TDS_Preview/Image.axd?path=QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0&file=
-    return MessageFormat.format (baseUrl, basePath);
+    return getUrl(null);
   }
 
   /**
