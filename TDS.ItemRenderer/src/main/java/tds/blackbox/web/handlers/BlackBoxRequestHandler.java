@@ -10,24 +10,28 @@ package tds.blackbox.web.handlers;
 
 import AIR.Common.Json.JsonHelper;
 import AIR.Common.Web.Session.HttpContext;
+import TDS.Shared.Exceptions.ReturnStatusException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import tds.blackbox.ContentRequest;
-import tds.blackbox.ContentRequestException;
-import tds.blackbox.ContentRequestParser;
-import tds.itemrenderer.data.AccLookup;
-import tds.itemrenderer.data.ItemRenderGroup;
-import tds.itemrenderer.webcontrols.rendererservlet.ContentRenderingException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import tds.blackbox.ContentRequest;
+import tds.blackbox.ContentRequestException;
+import tds.blackbox.ContentRequestParser;
+import tds.blackbox.abstractions.repository.ContentRepository;
+import tds.itemrenderer.data.AccLookup;
+import tds.itemrenderer.data.ItemRenderGroup;
+import tds.itemrenderer.webcontrols.rendererservlet.ContentRenderingException;
 
 @Scope ("prototype")
 @Controller
@@ -35,17 +39,21 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
 {
   private static final Logger _logger = LoggerFactory.getLogger (BlackBoxRequestHandler.class);
 
+  @Autowired
+  private ContentRepository contentRepository;
+
+
   // Controller starts here
   @RequestMapping (value = "ContentRequest.axd/load", produces = "application/xml")
   @ResponseBody
-  public void loadContentRequest2 (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException {
+  public void loadContentRequest2 (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException, ReturnStatusException  {
     loadContentRequest (request, response);
   }
 
   // Controller starts here
   @RequestMapping (value = "Blackbox.axd/loadContentRequest", produces = "application/xml")
   @ResponseBody
-  public void loadContentRequest (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException {
+  public void loadContentRequest (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException, ReturnStatusException {
     ContentRequest contentRequest = getContentRequest (request);
     // check if valid request
     if (contentRequest == null)
@@ -66,7 +74,7 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
     }
     AccLookup accLookup = ContentRequestParser.createAccommodations (contentRequest);
 
-    ItemRenderGroup itemRenderGroup = ContentRequestParser.createPageLayout (contentRequest);
+    ItemRenderGroup itemRenderGroup = ContentRequestParser.createPageLayout(contentRepository, contentRequest);
 
     // Shiva: This is where our implementation differs from .NET.
     // In .NET the IRIS method of populating PageLayout is different than the
