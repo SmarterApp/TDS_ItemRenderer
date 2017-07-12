@@ -28,9 +28,9 @@ import java.io.InputStreamReader;
 import tds.blackbox.ContentRequest;
 import tds.blackbox.ContentRequestException;
 import tds.blackbox.ContentRequestParser;
-import tds.blackbox.abstractions.repository.ContentRepository;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ItemRenderGroup;
+import tds.itemrenderer.repository.ContentRepository;
 import tds.itemrenderer.webcontrols.rendererservlet.ContentRenderingException;
 
 @Scope ("prototype")

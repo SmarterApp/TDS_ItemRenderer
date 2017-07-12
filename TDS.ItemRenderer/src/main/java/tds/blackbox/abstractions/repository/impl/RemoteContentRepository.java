@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,9 +30,9 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import tds.blackbox.abstractions.repository.ContentRepository;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.repository.ContentRepository;
 
 @Repository
 public class RemoteContentRepository implements ContentRepository {

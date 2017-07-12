@@ -11,7 +11,7 @@
  * for the Smarter Balanced Assessment Consortium (http://smarterbalanced.org)
  **************************************************************************************************/
 
-package tds.blackbox.abstractions.repository;
+package tds.itemrenderer.repository;
 
 import TDS.Shared.Exceptions.ReturnStatusException;
 
