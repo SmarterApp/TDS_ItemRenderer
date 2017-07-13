@@ -8,6 +8,8 @@
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
+import TDS.Shared.Security.IEncryption;
+
 import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
@@ -19,7 +21,16 @@ import tds.itemrenderer.data.ITSTypes.ITSContextType;
 public class ITSUrlTask implements IProcessorTask<String>
 {
   private ITSUrlResolver urlResolver;
+  private IEncryption encryption;
+  private boolean encryptionEnabled;
+  private String studentUrl;
 
+  public ITSUrlTask(final boolean encryptionEnabled, final String studentUrl, final IEncryption encryption) {
+      this.encryptionEnabled = encryptionEnabled;
+      this.studentUrl = studentUrl;
+      this.encryption = encryption;
+  }
+  
   public ITSUrlTask(final ITSUrlResolver itsUrlResolver) {
     this.urlResolver = itsUrlResolver;
   }
@@ -47,7 +58,7 @@ public class ITSUrlTask implements IProcessorTask<String>
   */
   public String process(ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
       if(urlResolver == null) {
-        urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri());
+        urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri(), studentUrl, encryptionEnabled, encryption);
       }
  
       // check if content is HTML and not the grid context

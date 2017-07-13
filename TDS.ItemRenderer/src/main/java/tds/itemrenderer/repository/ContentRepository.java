@@ -23,4 +23,5 @@ import tds.itemrenderer.data.ITSDocument;
  */
 public interface ContentRepository {
     ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations) throws ReturnStatusException;
+    byte[] findResource(final String itemPath);
 }

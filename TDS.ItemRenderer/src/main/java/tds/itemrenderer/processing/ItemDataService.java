@@ -14,6 +14,7 @@
 package tds.itemrenderer.processing;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 /**
@@ -27,5 +28,7 @@ public interface ItemDataService {
    * @return {@link java.io.InputStream}
    * @throws IOException if there is any issue accessing the data
    */
-  String readData(URI uri) throws IOException;
+  String readData(final URI uri) throws IOException;
+
+  InputStream readResourceData(final URI uri) throws IOException;
 }

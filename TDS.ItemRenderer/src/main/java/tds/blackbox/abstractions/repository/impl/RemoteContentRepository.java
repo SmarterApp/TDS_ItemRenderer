@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -68,5 +66,10 @@ public class RemoteContentRepository implements ContentRepository {
         }
 
         return responseEntity.getBody();
+    }
+
+    @Override
+    public byte[] findResource(String itemPath) {
+        return new byte[0];
     }
 }
