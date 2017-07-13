@@ -14,13 +14,13 @@ import AIR.Common.Web.EncryptionHelper;
 import TDS.Shared.Exceptions.ReturnStatusException;
 import org.apache.commons.lang.StringUtils;
 
-import tds.blackbox.abstractions.repository.ContentRepository;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.AccProperties;
 import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.IItemRender;
 import tds.itemrenderer.data.ItemRender;
 import tds.itemrenderer.data.ItemRenderGroup;
+import tds.itemrenderer.repository.ContentRepository;
 
 public class ContentRequestParser
 {

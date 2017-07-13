@@ -28,9 +28,9 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import tds.blackbox.abstractions.repository.ContentRepository;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.repository.ContentRepository;
 
 @Repository
 public class RemoteContentRepository implements ContentRepository {
@@ -66,5 +66,10 @@ public class RemoteContentRepository implements ContentRepository {
         }
 
         return responseEntity.getBody();
+    }
+
+    @Override
+    public byte[] findResource(String itemPath) {
+        return new byte[0];
     }
 }
