@@ -76,7 +76,6 @@ public class RemoteContentRepository implements ContentRepository {
         return responseEntity.getBody();
     }
 
-
     @Override
     public byte[] findResource(String resourcePath) throws IOException {
         HttpEntity<?> requestHttpEntity = new HttpEntity<>(new HttpHeaders());

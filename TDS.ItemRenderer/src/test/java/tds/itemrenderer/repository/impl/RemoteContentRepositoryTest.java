@@ -20,15 +20,20 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.net.URI;
 
+import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
 
@@ -50,7 +55,7 @@ public class RemoteContentRepositoryTest {
     }
 
     @Test
-    public void shouldFindItemDocument() throws ReturnStatusException {
+    public void shouldFindItemDocument() {
         final String itemPath = "/path/to/item";
         final AccLookup accLookup = new AccLookup();
         final ITSDocument itsDocument = new ITSDocument();
@@ -64,8 +69,8 @@ public class RemoteContentRepositoryTest {
         verify(mockRestTemplate).exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class));
     }
 
-    @Test(expected = ReturnStatusException.class)
-    public void shouldThrowForRestClientException() throws ReturnStatusException {
+    @Test(expected = ContentRequestException.class)
+    public void shouldThrowForContentRequestException() {
         final String itemPath = "/path/to/item";
         final AccLookup accLookup = new AccLookup();
         final ITSDocument itsDocument = new ITSDocument();
@@ -74,5 +79,29 @@ public class RemoteContentRepositoryTest {
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
             .thenThrow(new RestClientException("Exception"));
         remoteContentRepository.findItemDocument(itemPath, accLookup, "");
+    }
+
+    @Test
+    public void shouldFindResource() throws IOException {
+        final String resourcePath = "/path/to/resource";
+        final String data = "myData";
+        final Resource resource = new ByteArrayResource(data.getBytes());
+
+        ResponseEntity<Resource> responseEntity = new ResponseEntity<>(resource, HttpStatus.OK);
+        when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
+            .thenReturn(responseEntity);
+        final byte[] retData = remoteContentRepository.findResource(resourcePath);
+        assertEquals(new String(retData), data);
+        verify(mockRestTemplate).exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class));
+    }
+
+    @Test(expected = IOException.class)
+    public void shouldThrowIOExceptionFor404() throws IOException {
+        final String resourcePath = "/path/to/resource";
+        final String data = "myData";
+
+        when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
+            .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+        remoteContentRepository.findResource(resourcePath);
     }
 }
