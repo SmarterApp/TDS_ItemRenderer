@@ -15,6 +15,8 @@ package tds.itemrenderer.repository;
 
 import TDS.Shared.Exceptions.ReturnStatusException;
 
+import java.io.IOException;
+
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
 
@@ -25,13 +27,19 @@ public interface ContentRepository {
     /**
      * Fetches the {@link tds.itemrenderer.data.ITSDocument} item document
      *
-     * @param itemPath
-     * @param accommodations
-     * @return
+     * @param itemPath The path to the item
+     * @param accommodations The accommodations collection
+     * @return The {@link tds.itemrenderer.data.ITSDocument} item xml
      * @throws ReturnStatusException
      */
     ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations) throws ReturnStatusException;
 
-
-    byte[] findResource(final String itemPath);
+    /**
+     * Fetches the resource at the specified resource path
+     *
+     * @param resourcePath The path to the resource
+     * @return The resource data
+     * @throws IOException
+     */
+    byte[] findResource(final String resourcePath) throws IOException;
 }

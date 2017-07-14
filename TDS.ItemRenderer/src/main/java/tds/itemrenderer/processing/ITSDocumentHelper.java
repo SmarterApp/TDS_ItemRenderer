@@ -194,12 +194,16 @@ public class ITSDocumentHelper
     String dirName = Paths.get (path.get ()).getParent ().toString ();
     String fileName = Paths.get (path.get ()).getFileName ().toString ();
     File fileDir = new File (dirName);
-    for (String fileInDir : fileDir.list ()) {
-      if (fileInDir.equalsIgnoreCase (fileName)) {
-        path.set (path.get ().replace (fileName, fileInDir));
-        return true;
+
+    if (fileDir.list() != null && fileDir.list().length > 0) {
+      for (String fileInDir : fileDir.list ()) {
+        if (fileInDir.equalsIgnoreCase (fileName)) {
+          path.set (path.get ().replace (fileName, fileInDir));
+          return true;
+        }
       }
     }
+
     return false;
   }
 
