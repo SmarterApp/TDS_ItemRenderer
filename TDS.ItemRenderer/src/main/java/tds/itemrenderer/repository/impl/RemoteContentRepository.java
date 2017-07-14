@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -71,7 +73,23 @@ public class RemoteContentRepository implements ContentRepository {
 
 
     @Override
-    public byte[] findResource(String itemPath) {
-        return new byte[0];
+    public byte[] findResource(String resourcePath) {
+        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Accept", MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        HttpEntity<?> requestHttpEntity = new HttpEntity<>(headers);
+        ResponseEntity<Resource> responseEntity;
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(String.format("%s/resource", contentUrl))
+            .queryParam("resourcePath", resourcePath);
+
+        responseEntity = restTemplate.exchange(
+            builder.build().toUri(),
+            HttpMethod.GET,
+            requestHttpEntity,
+            new ParameterizedTypeReference<Resource>() {
+            });
+
+        return ((ByteArrayResource)responseEntity.getBody()).getByteArray();
+
     }
 }
