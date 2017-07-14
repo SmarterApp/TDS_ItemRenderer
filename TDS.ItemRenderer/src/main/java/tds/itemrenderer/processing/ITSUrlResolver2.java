@@ -54,8 +54,8 @@ public class ITSUrlResolver2 extends ITSUrlResolver
   }
 
 
-  public ITSUrlResolver2 (final String filePath, final String studentUrl, final boolean encryptionEnabled, final IEncryption encryption) {
-    super(filePath, studentUrl, encryptionEnabled, encryption);
+  public ITSUrlResolver2 (final String filePath, final boolean encryptionEnabled, final String contextPath, final IEncryption encryption) {
+    super(filePath, encryptionEnabled, contextPath, encryption);
   }
 
   /**

@@ -32,7 +32,7 @@ public interface ContentRepository {
      * @return The {@link tds.itemrenderer.data.ITSDocument} item xml
      * @throws ReturnStatusException
      */
-    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations) throws ReturnStatusException;
+    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ReturnStatusException;
 
     /**
      * Fetches the resource at the specified resource path

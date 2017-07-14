@@ -23,12 +23,12 @@ public class ITSUrlTask implements IProcessorTask<String>
   private ITSUrlResolver urlResolver;
   private IEncryption encryption;
   private boolean encryptionEnabled;
-  private String studentUrl;
+  private String contextPath;
 
-  public ITSUrlTask(final boolean encryptionEnabled, final String studentUrl, final IEncryption encryption) {
+  public ITSUrlTask(final boolean encryptionEnabled, final String contextPath, final IEncryption encryption) {
       this.encryptionEnabled = encryptionEnabled;
-      this.studentUrl = studentUrl;
       this.encryption = encryption;
+      this.contextPath = contextPath;
   }
   
   public ITSUrlTask(final ITSUrlResolver itsUrlResolver) {
@@ -58,7 +58,7 @@ public class ITSUrlTask implements IProcessorTask<String>
   */
   public String process(ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
       if(urlResolver == null) {
-        urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri(), studentUrl, encryptionEnabled, encryption);
+        urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri(), encryptionEnabled, contextPath, encryption);
       }
  
       // check if content is HTML and not the grid context
