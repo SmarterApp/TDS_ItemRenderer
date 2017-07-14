@@ -23,12 +23,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.IOException;
 
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
@@ -73,23 +77,28 @@ public class RemoteContentRepository implements ContentRepository {
 
 
     @Override
-    public byte[] findResource(String resourcePath) {
-        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Accept", MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        HttpEntity<?> requestHttpEntity = new HttpEntity<>(headers);
+    public byte[] findResource(String resourcePath) throws IOException {
+        HttpEntity<?> requestHttpEntity = new HttpEntity<>(new HttpHeaders());
         ResponseEntity<Resource> responseEntity;
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(String.format("%s/resource", contentUrl))
             .queryParam("resourcePath", resourcePath);
 
-        responseEntity = restTemplate.exchange(
-            builder.build().toUri(),
-            HttpMethod.GET,
-            requestHttpEntity,
-            new ParameterizedTypeReference<Resource>() {
-            });
+        try {
+            responseEntity = restTemplate.exchange(
+                builder.build().toUri(),
+                HttpMethod.GET,
+                requestHttpEntity,
+                new ParameterizedTypeReference<Resource>() {
+                });
 
-        return ((ByteArrayResource)responseEntity.getBody()).getByteArray();
+            return ((ByteArrayResource) responseEntity.getBody()).getByteArray();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                throw new IOException(e);
+            }
 
+            throw e;
+        }
     }
 }
