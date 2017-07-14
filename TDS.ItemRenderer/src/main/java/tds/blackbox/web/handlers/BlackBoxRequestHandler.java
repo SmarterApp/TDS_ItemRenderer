@@ -46,14 +46,14 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
   // Controller starts here
   @RequestMapping (value = "ContentRequest.axd/load", produces = "application/xml")
   @ResponseBody
-  public void loadContentRequest2 (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException, ReturnStatusException  {
+  public void loadContentRequest2 (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException  {
     loadContentRequest (request, response);
   }
 
   // Controller starts here
   @RequestMapping (value = "Blackbox.axd/loadContentRequest", produces = "application/xml")
   @ResponseBody
-  public void loadContentRequest (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException, ReturnStatusException {
+  public void loadContentRequest (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException {
     ContentRequest contentRequest = getContentRequest (request);
     // check if valid request
     if (contentRequest == null)

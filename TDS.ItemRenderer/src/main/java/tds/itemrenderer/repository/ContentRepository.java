@@ -17,6 +17,7 @@ import TDS.Shared.Exceptions.ReturnStatusException;
 
 import java.io.IOException;
 
+import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
 
@@ -32,7 +33,7 @@ public interface ContentRepository {
      * @return The {@link tds.itemrenderer.data.ITSDocument} item xml
      * @throws ReturnStatusException
      */
-    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ReturnStatusException;
+    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ContentRequestException;
 
     /**
      * Fetches the resource at the specified resource path

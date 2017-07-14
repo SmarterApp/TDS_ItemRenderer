@@ -52,7 +52,7 @@ public class ContentRequestParser
     return accommodations;
   }
 
-  public static ItemRenderGroup createPageLayout (ContentRepository contentRepository, ContentRequest contentRequest) throws ContentRequestException, ReturnStatusException
+  public static ItemRenderGroup createPageLayout (ContentRepository contentRepository, ContentRequest contentRequest) throws ContentRequestException
   {
     if (contentRequest.getPassage () == null && (contentRequest.getItems () == null || contentRequest.getItems ().size () == 0))
     {

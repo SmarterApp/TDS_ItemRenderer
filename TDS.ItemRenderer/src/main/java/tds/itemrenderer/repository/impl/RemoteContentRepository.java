@@ -34,6 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
+import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.repository.ContentRepository;
@@ -51,7 +52,7 @@ public class RemoteContentRepository implements ContentRepository {
     }
 
     @Override
-    public ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ReturnStatusException {
+    public ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ContentRequestException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<?> requestHttpEntity = new HttpEntity<>(accommodations, headers);
@@ -69,7 +70,7 @@ public class RemoteContentRepository implements ContentRepository {
                 new ParameterizedTypeReference<ITSDocument>() {
                 });
         } catch (RestClientException rce) {
-            throw new ReturnStatusException(rce);
+            throw new ContentRequestException(rce);
         }
 
         return responseEntity.getBody();
