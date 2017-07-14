@@ -12,7 +12,6 @@ import AIR.Common.Utilities.Path;
 import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.UrlHelper;
 import TDS.Shared.Security.IEncryption;
-import TDS.Shared.Web.Encryption;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
@@ -36,7 +35,7 @@ public class ITSUrlResolver
 
   public ITSUrlResolver (final String filePath)
   {
-    this(filePath, false);
+    this(filePath, RendererSettings.getIsEncryptionEnabled ());
   }
 
   public ITSUrlResolver (final String filePath, final boolean encryptionEnabled) {
@@ -139,7 +138,9 @@ public class ITSUrlResolver
     // encrypt the basePath
     if (encryptionEnabled)
     {
-      basePath = EncryptionHelper.EncryptToBase64 (basePath, encryption);
+      basePath = encryption == null
+          ? EncryptionHelper.EncryptToBase64 (basePath)
+          : EncryptionHelper.EncryptToBase64 (basePath, encryption);
     }
     else
     {

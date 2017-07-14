@@ -30,5 +30,12 @@ public interface ItemDataService {
    */
   String readData(final URI uri) throws IOException;
 
+  /**
+   * Returns an input stream of data for a TDS resource
+   *
+   * @param uri uri of the resource
+   * @return The resource data as an input stream
+   * @throws IOException if there is any issue accessing the data
+   */
   InputStream readResourceData(final URI uri) throws IOException;
 }

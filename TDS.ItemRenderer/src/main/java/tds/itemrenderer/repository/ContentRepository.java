@@ -22,6 +22,16 @@ import tds.itemrenderer.data.ITSDocument;
  * Repository to interact with content data
  */
 public interface ContentRepository {
+    /**
+     * Fetches the {@link tds.itemrenderer.data.ITSDocument} item document
+     *
+     * @param itemPath
+     * @param accommodations
+     * @return
+     * @throws ReturnStatusException
+     */
     ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations) throws ReturnStatusException;
+
+
     byte[] findResource(final String itemPath);
 }
