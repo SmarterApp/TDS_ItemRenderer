@@ -30,7 +30,7 @@ public interface ContentRepository {
      * @return
      * @throws ReturnStatusException
      */
-    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations) throws ReturnStatusException;
+    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ReturnStatusException;
 
 
     byte[] findResource(final String itemPath);

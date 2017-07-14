@@ -11,6 +11,7 @@ package tds.blackbox;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Utilities.TDSStringUtils;
 import AIR.Common.Web.EncryptionHelper;
+import AIR.Common.Web.Session.Server;
 import TDS.Shared.Exceptions.ReturnStatusException;
 import org.apache.commons.lang.StringUtils;
 
@@ -71,7 +72,7 @@ public class ContentRequestParser
     {
       // load file
 
-      IITSDocument passageDoc = contentRepository.findItemDocument(contentRequest.getPassage().getFile (), accommodations);
+      IITSDocument passageDoc = contentRepository.findItemDocument(contentRequest.getPassage().getFile (), accommodations, Server.getContextPath());
       itemRenderGroup.setPassage (passageDoc);
     }
 
@@ -85,7 +86,7 @@ public class ContentRequestParser
           continue;
         
         // load file
-        IITSDocument itemDoc = contentRepository.findItemDocument(item.getFile(), accommodations);
+        IITSDocument itemDoc = contentRepository.findItemDocument(item.getFile(), accommodations, Server.getContextPath());
 
         // skip item if the languages content does not exist
         if (itemDoc.getContent (language) == null)

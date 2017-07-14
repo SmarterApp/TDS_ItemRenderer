@@ -25,55 +25,65 @@ import tds.itemrenderer.configuration.RendererSettings;
  * @author jmambo
  * 
  */
-public class ITSUrlResolver
-{
-  protected final String     _filePath;
-  protected final String     _baseUrl;
-  private final List<String> _parsedFiles = new ArrayList<String> ();
+public class ITSUrlResolver {
+  protected final String _filePath;
+  protected final String _baseUrl;
+  private final List<String> _parsedFiles = new ArrayList<String>();
   private final boolean encryptionEnabled;
   private final IEncryption encryption;
 
-  public ITSUrlResolver (final String filePath)
-  {
-    this(filePath, RendererSettings.getIsEncryptionEnabled ());
+  public ITSUrlResolver(final String filePath) {
+    this(filePath, RendererSettings.getIsEncryptionEnabled());
   }
 
-  public ITSUrlResolver (final String filePath, final boolean encryptionEnabled) {
+  public ITSUrlResolver(final String filePath, final boolean encryptionEnabled) {
     _filePath = filePath;
     this.encryptionEnabled = encryptionEnabled;
-    _baseUrl = getUrl();
+    _baseUrl = getUrl(getBaseUrl());
     encryption = null;
   }
 
-  public ITSUrlResolver (final String filePath, final String studentUrl, final boolean encryptionEnabled, final IEncryption encryption) {
+  public ITSUrlResolver(final String filePath, final boolean encryptionEnabled, final String contextPath, final IEncryption encryption) {
     _filePath = filePath;
     this.encryptionEnabled = encryptionEnabled;
     this.encryption = encryption;
-    _baseUrl = getUrl(studentUrl);
+    _baseUrl = getUrl(getBaseUrl(contextPath));
   }
 
   /**
    * Add parsed media file
-   * 
+   *
    * @param fileName
    */
-  protected void addParsedMediaFile (String fileName) {
-    String basePath = _filePath.replace (Path.getFileName (_filePath), "");
-    String filePath = Path.combine (basePath, fileName);
+  protected void addParsedMediaFile(String fileName) {
+    String basePath = _filePath.replace(Path.getFileName(_filePath), "");
+    String filePath = Path.combine(basePath, fileName);
 
-    if (!_parsedFiles.contains (fileName))
-    {
-      _parsedFiles.add (filePath);
+    if (!_parsedFiles.contains(fileName)) {
+      _parsedFiles.add(filePath);
     }
   }
 
   /**
    * Gets parsed media files
-   * 
+   *
    * @return parsed files
    */
-  public List<String> getParsedMediaFiles () {
+  public List<String> getParsedMediaFiles() {
     return _parsedFiles;
+  }
+
+  private String getBaseUrl() {
+    // ITSConfig.ResourcePath: e.x., Resources?path={0}&amp;file=
+    // TDS_Preview/Resources?path={0}&file=
+    String urlPath = UrlHelper.resolveUrl(ITSConfig.getResourcePath());
+
+    // check if should lower case path
+    if(ITSConfig.getResourceFix()) {
+      // this was some ITS request from a while ago
+      urlPath = urlPath.toLowerCase();
+    }
+    return urlPath;
   }
 
   /**
@@ -81,11 +91,11 @@ public class ITSUrlResolver
    * 
    * @return base URL
    */
-  private String getBaseUrl ()
+  private String getBaseUrl(String contextPath)
   {
     // ITSConfig.ResourcePath: e.x., Resources?path={0}&amp;file=
     // TDS_Preview/Resources?path={0}&file=
-    String urlPath = UrlHelper.resolveUrl (ITSConfig.getResourcePath ());
+    String urlPath = resolveUrl (contextPath, ITSConfig.getResourcePath ());
 
     // check if should lower case path
     if (ITSConfig.getResourceFix ())
@@ -96,14 +106,17 @@ public class ITSUrlResolver
     return urlPath;
   }
 
-  /**
-   * Get the base URL path that is used to make HTTP request
-   *
-   * @param studentUrl the url of the student application
-   * @return base URL
-   */
-  private String getBaseUrl(final String studentUrl) {
-    return ITSConfig.getResourcePath().replace("~", studentUrl);
+  private static String resolveUrl(String contextPath, String relativePath) {
+    if (org.apache.commons.lang.StringUtils.isEmpty (relativePath))
+      relativePath = "";
+    // Shiva/Sajib: Do not do .toLowerCase()
+    if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "http"))
+      return relativePath;
+    if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "~/")) {
+      return contextPath + relativePath.substring (1);
+    } else if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "/"))
+      return contextPath + relativePath;
+    return contextPath + "/" + relativePath;
   }
 
   /**
@@ -152,48 +165,12 @@ public class ITSUrlResolver
     return basePath;
   }
 
-  private String getUrl(final String studentUrl) {
-    if (studentUrl == null) {
-      // e.x., /TDS_Preview/Image.axd?path={0}&file=
-      String baseUrl = getBaseUrl ();
-
-      // NOTE: The url can be NULL if we are not running this renderer in the
-      // context of a web page
-      if (StringUtils.isEmpty (baseUrl))
-        return null;
-
-      // e.x.,
-      // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
-      String basePath = getBasePath ();
-
-      // e.x.,
-      // /TDS_Preview/Image.axd?path=QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0&file=
-      return MessageFormat.format (baseUrl, basePath);
-    } else {
-      String baseUrl = getBaseUrl (studentUrl);
-
-      // NOTE: The url can be NULL if we are not running this renderer in the
-      // context of a web page
-      if (StringUtils.isEmpty (baseUrl)) {
-        return null;
-      }
-
-      // e.x.,
-      // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
-      String basePath = getBasePath ();
-
-      // e.x.,
-      // /TDS_Preview/Image.axd?path=QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0&file=
-      return MessageFormat.format (baseUrl, basePath);
-    }
-  }
-
   /**
    * Gets the fully formatted URL ready to assign a file to the end of it.
    * 
    * @return URL
    */
-  protected String getUrl () {
+  protected String getUrl (String baseUrl) {
     // if this is a url then return the base
     if (UrlHelper.IsHttpProtocol (_filePath))
     {
@@ -201,7 +178,20 @@ public class ITSUrlResolver
       return _filePath.replace (urlFile, "");
     }
 
-    return getUrl(null);
+
+    // NOTE: The url can be NULL if we are not running this renderer in the
+    // context of a web page
+    if (StringUtils.isEmpty (baseUrl)) {
+      return null;
+    }
+
+    // e.x.,
+    // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
+    String basePath = getBasePath ();
+
+    // e.x.,
+    // /TDS_Preview/Image.axd?path=QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0&file=
+    return MessageFormat.format (baseUrl, basePath);
   }
 
   /**

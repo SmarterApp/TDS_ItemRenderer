@@ -59,7 +59,7 @@ public class RemoteContentRepositoryTest {
         ResponseEntity<ITSDocument> responseEntity = new ResponseEntity<>(itsDocument, HttpStatus.OK);
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
             .thenReturn(responseEntity);
-        final ITSDocument retItsDocument = remoteContentRepository.findItemDocument(itemPath, accLookup);
+        final ITSDocument retItsDocument = remoteContentRepository.findItemDocument(itemPath, accLookup, "");
         assertEquals((int)retItsDocument.getVersion(), 2000);
         verify(mockRestTemplate).exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class));
     }
@@ -73,6 +73,6 @@ public class RemoteContentRepositoryTest {
 
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
             .thenThrow(new RestClientException("Exception"));
-        remoteContentRepository.findItemDocument(itemPath, accLookup);
+        remoteContentRepository.findItemDocument(itemPath, accLookup, "");
     }
 }

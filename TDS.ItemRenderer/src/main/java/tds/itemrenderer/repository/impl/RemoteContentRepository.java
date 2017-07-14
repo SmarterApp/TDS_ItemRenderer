@@ -45,14 +45,15 @@ public class RemoteContentRepository implements ContentRepository {
     }
 
     @Override
-    public ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations) throws ReturnStatusException {
+    public ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ReturnStatusException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<?> requestHttpEntity = new HttpEntity<>(accommodations, headers);
         ResponseEntity<ITSDocument> responseEntity;
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(String.format("%s/item", contentUrl))
-            .queryParam("itemPath", itemPath);
+            .queryParam("itemPath", itemPath)
+            .queryParam("contextPath", contextPath);
 
         try {
             responseEntity = restTemplate.exchange(
