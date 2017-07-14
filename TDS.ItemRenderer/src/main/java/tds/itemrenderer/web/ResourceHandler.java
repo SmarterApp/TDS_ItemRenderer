@@ -7,30 +7,6 @@
  ******************************************************************************/
 package tds.itemrenderer.web;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import AIR.Common.Web.FileFtpHandler;
-import AIR.Common.Web.StaticFileHandler2;
-import AIR.Common.Web.StaticFileHandler3;
-import AIR.Common.Web.UrlHelper;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-
-import tds.itemrenderer.configuration.RendererSettings;
-import tds.itemrenderer.repository.ContentRepository;
-
 import AIR.Common.Configuration.ConfigurationSection;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Utilities.SpringApplicationContext;
@@ -39,7 +15,23 @@ import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.FileHttpHandler;
 import AIR.Common.Web.Session.CaseInsensitiveFileNameFilter;
 import TDS.Shared.Exceptions.TDSHttpException;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import tds.itemrenderer.configuration.RendererSettings;
+import tds.itemrenderer.repository.ContentRepository;
 
 /**
  * @author mpatel
@@ -54,14 +46,6 @@ public class ResourceHandler extends FileHttpHandler
 
   @Autowired
   private static ConfigurationSection _appSettings;
-
-  @Autowired
-  private ContentRepository contentRepository;
-
-  @Override
-  public void init() throws ServletException {
-    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext (this);
-  }
 
   static {
     // set valid extensions (anything else will be rejected)
@@ -111,25 +95,6 @@ public class ResourceHandler extends FileHttpHandler
     // this._supportRanges = RendererSettings.getSupportHttpRanges ().getValue
     // ();
     this._supportRanges = _appSettings.getBoolean ("tds.itemRenderer.supportHttpRanges");
-  }
-
-  @Override
-  public void staticFileHandler(HttpServletRequest request, HttpServletResponse response) throws TDSHttpException, IOException
-  {
-    String physicalPath = overrideExecuteUrlPath(request);
-    if (_supportRanges) {
-      byte[] bytes = contentRepository.findResource(physicalPath);
-
-      // In order to display SVG files in an <img> tag, the browser needs to know the content type, where this isn't needed for other types
-      if (physicalPath != null && physicalPath.toLowerCase().endsWith(".svg")) {
-        response.setHeader("Content-Type", "image/svg+xml");
-      }
-
-      response.getOutputStream().write(bytes);
-    } else {
-      StaticFileHandler2.ProcessRequestInternal(request, response, physicalPath);
-    }
-
   }
 
   // / <summary>
