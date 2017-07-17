@@ -14,6 +14,9 @@ public class APIPBrailleCode
 
   public String _code = null;
 
+  /**
+   * Private default constructor for frameworks/serialization
+   */
   private APIPBrailleCode() {
   }
 

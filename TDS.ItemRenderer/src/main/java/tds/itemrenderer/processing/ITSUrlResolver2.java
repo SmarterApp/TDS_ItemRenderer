@@ -53,7 +53,14 @@ public class ITSUrlResolver2 extends ITSUrlResolver
     super(filePath);
   }
 
-
+    /**
+     * Constructs an {@link tds.itemrenderer.processing.ITSUrlResolver2} object
+     *
+     * @param filePath The filepath to resolve
+     * @param encryptionEnabled flag indicating whether encryption is enabled
+     * @param contextPath The path of the host calling the endpoint requiring url resolution
+     * @param encryption (optional) encryption algorithm implementation
+     */
   public ITSUrlResolver2 (final String filePath, final boolean encryptionEnabled, final String contextPath, final IEncryption encryption) {
     super(filePath, encryptionEnabled, contextPath, encryption);
   }

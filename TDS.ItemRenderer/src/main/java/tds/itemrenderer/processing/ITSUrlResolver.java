@@ -43,6 +43,14 @@ public class ITSUrlResolver {
     encryption = null;
   }
 
+  /**
+   * Constructs an {@link tds.itemrenderer.processing.ITSUrlResolver} object
+   *
+   * @param filePath The filepath to resolve
+   * @param encryptionEnabled flag indicating whether encryption is enabled
+   * @param contextPath The path of the host calling the endpoint requiring url resolution
+   * @param encryption (optional) encryption algorithm implementation
+   */
   public ITSUrlResolver(final String filePath, final boolean encryptionEnabled, final String contextPath, final IEncryption encryption) {
     _filePath = filePath;
     this.encryptionEnabled = encryptionEnabled;
@@ -110,12 +118,14 @@ public class ITSUrlResolver {
     if (org.apache.commons.lang.StringUtils.isEmpty (relativePath))
       relativePath = "";
     // Shiva/Sajib: Do not do .toLowerCase()
-    if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "http"))
+    if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "http")) {
       return relativePath;
-    if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "~/")) {
+    } else if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "~/")) {
       return contextPath + relativePath.substring (1);
-    } else if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "/"))
+    } else if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "/")) {
       return contextPath + relativePath;
+    }
+
     return contextPath + "/" + relativePath;
   }
 
@@ -242,12 +252,14 @@ public class ITSUrlResolver {
    */
   public String resolveUrl (String filePath) {
     // make sure there is a file name there
-    if (StringUtils.isEmpty (filePath))
+    if (StringUtils.isEmpty (filePath)) {
       return filePath;
+    }
 
     // Make sure we know the path of the file
-    if (StringUtils.isEmpty (_baseUrl))
+    if (StringUtils.isEmpty (_baseUrl)) {
       return filePath;
+    }
 
     // fix image path
     String fixedPath = _baseUrl + Path.getFileName (filePath);
@@ -266,13 +278,15 @@ public class ITSUrlResolver {
    */
   public String resolveGridXmlUrls (String content, String language) {
     // make sure there is HTML
-    if (StringUtils.isEmpty (content))
+    if (StringUtils.isEmpty (content)) {
       return content;
+    }
 
     // check for page object, without this there is no URL to resolve since we
     // aren't in the context of a website.
-    if (StringUtils.isEmpty (_baseUrl))
+    if (StringUtils.isEmpty (_baseUrl)) {
       return content;
+    }
 
     // make copy of url for modification
     String url = _baseUrl;
@@ -304,13 +318,15 @@ public class ITSUrlResolver {
    */
   public String resolveSpecXmlUrls (String content, String language) {
     // make sure there is HTML
-    if (StringUtils.isEmpty (content))
+    if (StringUtils.isEmpty (content)) {
       return content;
+    }
 
     // check for page object, without this there is no URL to resolve since we
     // aren't in the context of a website.
-    if (StringUtils.isEmpty (_baseUrl))
+    if (StringUtils.isEmpty (_baseUrl)) {
       return content;
+    }
 
     // make copy of url for modification
     String url = _baseUrl;
