@@ -8,22 +8,19 @@
  ******************************************************************************/
 package tds.blackbox;
 
-import org.apache.commons.lang.StringUtils;
-
 import AIR.Common.Utilities.Path;
 import AIR.Common.Utilities.TDSStringUtils;
 import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.Session.Server;
-import tds.blackbox.ContentRequestAccommodation;
-import tds.blackbox.ContentRequestItem;
-import tds.itemrenderer.ITSDocumentFactory;
+import org.apache.commons.lang.StringUtils;
+
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.AccProperties;
 import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.IItemRender;
 import tds.itemrenderer.data.ItemRender;
 import tds.itemrenderer.data.ItemRenderGroup;
-import tds.itemrenderer.webcontrols.PageLayout;
+import tds.itemrenderer.repository.ContentRepository;
 
 public class ContentRequestParser
 {
@@ -54,7 +51,7 @@ public class ContentRequestParser
     return accommodations;
   }
 
-  public static ItemRenderGroup createPageLayout (ContentRequest contentRequest) throws ContentRequestException
+  public static ItemRenderGroup createPageLayout (ContentRepository contentRepository, ContentRequest contentRequest) throws ContentRequestException
   {
     if (contentRequest.getPassage () == null && (contentRequest.getItems () == null || contentRequest.getItems ().size () == 0))
     {
@@ -73,7 +70,8 @@ public class ContentRequestParser
     if (contentRequest.getPassage () != null && !StringUtils.isEmpty (contentRequest.getPassage ().getFile ()))
     {
       // load file
-      IITSDocument passageDoc = ITSDocumentFactory.loadUri2 (contentRequest.getPassage ().getFile (), accommodations, true);
+
+      IITSDocument passageDoc = contentRepository.findItemDocument(contentRequest.getPassage().getFile (), accommodations, Server.getContextPath());
       itemRenderGroup.setPassage (passageDoc);
     }
 
@@ -87,7 +85,7 @@ public class ContentRequestParser
           continue;
         
         // load file
-        IITSDocument itemDoc = ITSDocumentFactory.loadUri2 (item.getFile (), accommodations, true);
+        IITSDocument itemDoc = contentRepository.findItemDocument(item.getFile(), accommodations, Server.getContextPath());
 
         // skip item if the languages content does not exist
         if (itemDoc.getContent (language) == null)
