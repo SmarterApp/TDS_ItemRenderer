@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
@@ -77,7 +79,7 @@ public class RemoteContentRepository implements ContentRepository {
     }
 
     @Override
-    public byte[] findResource(String resourcePath) throws IOException {
+    public InputStream findResource(String resourcePath) throws IOException {
         HttpEntity<?> requestHttpEntity = new HttpEntity<>(new HttpHeaders());
         ResponseEntity<Resource> responseEntity;
 
@@ -92,7 +94,7 @@ public class RemoteContentRepository implements ContentRepository {
                 new ParameterizedTypeReference<Resource>() {
                 });
 
-            return ((ByteArrayResource) responseEntity.getBody()).getByteArray();
+            return responseEntity.getBody().getInputStream();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                 throw new IOException(e);

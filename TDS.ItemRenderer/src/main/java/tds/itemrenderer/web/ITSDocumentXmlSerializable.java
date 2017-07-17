@@ -10,6 +10,7 @@ package tds.itemrenderer.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -424,7 +425,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable {
           endElement();
         } else {
           try {
-            byte[] mathMlData = contentRepository.findResource(mathMLFilePath);
+            InputStream inputStream = contentRepository.findResource(mathMLFilePath);
             foundMedia = true;
 
             startElement("resource");
@@ -433,7 +434,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable {
 
             // write out image xml
             writeCDataStart();
-            writeStream(new ByteArrayInputStream(mathMlData));
+            writeStream(inputStream);
             writeCDataEnd();
 
             // WriteCData(File.ReadAllText(xmlPath));

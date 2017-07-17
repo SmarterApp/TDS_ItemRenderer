@@ -14,6 +14,7 @@
 package tds.itemrenderer.repository.impl;
 
 import TDS.Shared.Exceptions.ReturnStatusException;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 import tds.blackbox.ContentRequestException;
@@ -90,15 +92,14 @@ public class RemoteContentRepositoryTest {
         ResponseEntity<Resource> responseEntity = new ResponseEntity<>(resource, HttpStatus.OK);
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
             .thenReturn(responseEntity);
-        final byte[] retData = remoteContentRepository.findResource(resourcePath);
-        assertEquals(new String(retData), data);
+        final InputStream retData = remoteContentRepository.findResource(resourcePath);
+        assertEquals(IOUtils.toString(retData), data);
         verify(mockRestTemplate).exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class));
     }
 
     @Test(expected = IOException.class)
     public void shouldThrowIOExceptionFor404() throws IOException {
         final String resourcePath = "/path/to/resource";
-        final String data = "myData";
 
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
             .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));

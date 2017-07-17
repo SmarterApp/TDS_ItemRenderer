@@ -16,6 +16,7 @@ package tds.itemrenderer.repository;
 import TDS.Shared.Exceptions.ReturnStatusException;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
@@ -39,8 +40,8 @@ public interface ContentRepository {
      * Fetches the resource at the specified resource path
      *
      * @param resourcePath The path to the resource
-     * @return The resource data
+     * @return The resource data input stream
      * @throws IOException
      */
-    byte[] findResource(final String resourcePath) throws IOException;
+    InputStream findResource(final String resourcePath) throws IOException;
 }
