@@ -10,7 +10,6 @@ package tds.blackbox.web.handlers;
 
 import AIR.Common.Json.JsonHelper;
 import AIR.Common.Web.Session.HttpContext;
-import TDS.Shared.Exceptions.ReturnStatusException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +38,12 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
 {
   private static final Logger _logger = LoggerFactory.getLogger (BlackBoxRequestHandler.class);
 
-  @Autowired
   private ContentRepository contentRepository;
 
+  @Autowired
+  public BlackBoxRequestHandler(ContentRepository contentRepository) {
+    this.contentRepository = contentRepository;
+  }
 
   // Controller starts here
   @RequestMapping (value = "ContentRequest.axd/load", produces = "application/xml")
@@ -74,6 +76,7 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
     }
     AccLookup accLookup = ContentRequestParser.createAccommodations (contentRequest);
 
+
     ItemRenderGroup itemRenderGroup = ContentRequestParser.createPageLayout(contentRepository, contentRequest);
 
     // Shiva: This is where our implementation differs from .NET.
@@ -82,10 +85,10 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
     // In our case we intend to keep one single point of entry. Only IRiS allows
     // overriding of layout.
     // we will implement it by overriding the layout in the first item.
-    if (!StringUtils.isEmpty (contentRequest.getLayoutName ()))
-      itemRenderGroup.setLayout (contentRequest.getLayoutName ());
-    
-    renderGroup (itemRenderGroup, accLookup, response);
+    if (!StringUtils.isEmpty(contentRequest.getLayoutName()))
+      itemRenderGroup.setLayout(contentRequest.getLayoutName());
+
+    renderGroup(itemRenderGroup, accLookup, response);
   }
 
   /*

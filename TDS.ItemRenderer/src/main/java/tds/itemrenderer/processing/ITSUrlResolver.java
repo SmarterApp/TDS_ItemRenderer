@@ -14,6 +14,8 @@ import AIR.Common.Web.UrlHelper;
 import TDS.Shared.Security.IEncryption;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,19 +116,27 @@ public class ITSUrlResolver {
     return urlPath;
   }
 
-  private static String resolveUrl(String contextPath, String relativePath) {
-    if (org.apache.commons.lang.StringUtils.isEmpty (relativePath))
-      relativePath = "";
-    // Shiva/Sajib: Do not do .toLowerCase()
-    if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "http")) {
-      return relativePath;
-    } else if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "~/")) {
-      return contextPath + relativePath.substring (1);
-    } else if (org.apache.commons.lang.StringUtils.startsWith (relativePath, "/")) {
-      return contextPath + relativePath;
-    }
+  /**
+   * If the path is an absolute url, returns the path.
+   * Otherwise, create a relative path given this webapp's context.
+   * @see javax.servlet.ServletContext#getContextPath
+   *
+   * note: sanitizing path which may contain a leading tilda
+  */
+  private static String resolveUrl(final String contextPath, final String path) {
+    try {
+      final URI uri = new URI(path);
+      if (uri.isAbsolute()) {
+        return path;
+      }
+    } catch (URISyntaxException e) {}
 
-    return contextPath + "/" + relativePath;
+    if (StringUtils.isBlank(path)) {
+      return String.format("%s/", contextPath);
+    } else {
+      final String relativePath = StringUtils.replaceEach(path, new String[]{"~/", "/"}, new String[]{""});
+      return String.format("%s/%s", contextPath, relativePath);
+    }
   }
 
   /**
