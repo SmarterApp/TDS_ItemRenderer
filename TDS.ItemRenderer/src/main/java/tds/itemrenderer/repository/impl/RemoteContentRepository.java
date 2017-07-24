@@ -13,13 +13,11 @@
 
 package tds.itemrenderer.repository.impl;
 
-import TDS.Shared.Exceptions.ReturnStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -42,6 +40,7 @@ import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.repository.ContentRepository;
 
 @Repository
+@Primary
 public class RemoteContentRepository implements ContentRepository {
     private final RestTemplate restTemplate;
     private final String contentUrl;
@@ -96,7 +95,7 @@ public class RemoteContentRepository implements ContentRepository {
 
             return responseEntity.getBody().getInputStream();
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND) || e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
                 throw new IOException(e);
             }
 
