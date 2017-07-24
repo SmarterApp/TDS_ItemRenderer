@@ -38,4 +38,13 @@ public interface ItemDataService {
    * @throws IOException if there is any issue accessing the data
    */
   InputStream readResourceData(final URI uri) throws IOException;
+
+/**
+ * Returns the existence of item data
+ *
+ * @param uri uri to the xml
+ * @return {@link java.io.InputStream}
+ * @throws IOException if there is any issue accessing the data
+ */
+  boolean dataExists(final URI uri) throws IOException;
 }

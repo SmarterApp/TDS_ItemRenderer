@@ -21,16 +21,7 @@ import tds.itemrenderer.data.ITSTypes.ITSContextType;
 public class ITSUrlTask implements IProcessorTask<String>
 {
   private ITSUrlResolver urlResolver;
-  private IEncryption encryption;
-  private boolean encryptionEnabled;
-  private String contextPath;
 
-  public ITSUrlTask(final boolean encryptionEnabled, final String contextPath, final IEncryption encryption) {
-      this.encryptionEnabled = encryptionEnabled;
-      this.encryption = encryption;
-      this.contextPath = contextPath;
-  }
-  
   public ITSUrlTask(final ITSUrlResolver itsUrlResolver) {
     this.urlResolver = itsUrlResolver;
   }
@@ -58,7 +49,7 @@ public class ITSUrlTask implements IProcessorTask<String>
   */
   public String process(ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
       if(urlResolver == null) {
-        urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri(), encryptionEnabled, contextPath, encryption);
+        urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri());
       }
  
       // check if content is HTML and not the grid context
@@ -82,5 +73,4 @@ public class ITSUrlTask implements IProcessorTask<String>
       
       return xml;
   }
-  
 }

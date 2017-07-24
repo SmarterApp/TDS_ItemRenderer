@@ -123,6 +123,7 @@ public class ITSUrlResolver2 extends ITSUrlResolver
       // HACK: replace ogg with m4a on some platforms
       if ("a".equalsIgnoreCase(tagName) && "ogg".equalsIgnoreCase(Path.getExtension(fileName)))
       {
+          // uses user-agent detection
           fileName = audioSwapHack(fileName);
       }
 
@@ -140,30 +141,31 @@ public class ITSUrlResolver2 extends ITSUrlResolver
 
   /**
    *  Try and replace an .ogg file with .mp4;
-   *  
+   *
+   *  note:
+   *  BrowserParser calls HttpContext.getCurrentContext().getUserAgent().
+   *  ITSUrlResolver2 may not be running in a webapp with a user agent.
    * @param fileName
    * @return sound.m4a if file is found, otherwise the original sound.ogg name.
    */
-  private String audioSwapHack(String fileName)  {
+  protected String audioSwapHack(String fileName)  {
       BrowserParser browser = new BrowserParser();
 
       // check if the browser does not support ogg
       if (!browser.isSupportsOggAudio())
       {
-    	  String audioFile = Path.getFileNameWithoutExtension(fileName) + ".m4a";
+          String audioFile = Path.getFileNameWithoutExtension(fileName) + ".m4a";
           String audioFilePath = resolveFilePath(audioFile);
           _Ref<String> audioFilePathRef = new _Ref<String> (audioFilePath);
 
           if (ITSDocumentHelper.exists(audioFilePathRef))
           {
-        	  audioFilePath = audioFilePathRef.get();
-        	  audioFile = Paths.get(audioFilePath).getFileName().toString();
+              audioFilePath = audioFilePathRef.get();
+              audioFile = Paths.get(audioFilePath).getFileName().toString();
               return audioFile;
           }
       }
- 
+
       return fileName;
   }
-  
-
 }

@@ -134,7 +134,9 @@ public class ITSUrlResolver {
     if (StringUtils.isBlank(path)) {
       return String.format("%s/", contextPath);
     } else {
-      final String relativePath = StringUtils.replaceEach(path, new String[]{"~/", "/"}, new String[]{""});
+      String relativePath = StringUtils.removeStart(path, "~/");
+      relativePath = StringUtils.removeStart(relativePath, "/");
+
       return String.format("%s/%s", contextPath, relativePath);
     }
   }

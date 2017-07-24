@@ -13,7 +13,6 @@
 
 package tds.itemrenderer.repository.impl;
 
-import TDS.Shared.Exceptions.ReturnStatusException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,11 +37,12 @@ import java.net.URI;
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.xml.wordlist.Itemrelease;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RemoteContentRepositoryTest {
@@ -66,9 +66,26 @@ public class RemoteContentRepositoryTest {
         ResponseEntity<ITSDocument> responseEntity = new ResponseEntity<>(itsDocument, HttpStatus.OK);
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
             .thenReturn(responseEntity);
-        final ITSDocument retItsDocument = remoteContentRepository.findItemDocument(itemPath, accLookup, "");
+        final ITSDocument retItsDocument = remoteContentRepository.findItemDocument(itemPath, accLookup, "", false);
         assertEquals((int)retItsDocument.getVersion(), 2000);
         verify(mockRestTemplate).exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class));
+    }
+
+    @Test
+    public void shouldFindWordList() {
+        final String wordListEndpoint = "{contentUrl}/wordlist?itemPath={itemPath}";
+        final String contentUrl = "contentUrl";
+        final String itemPath = "path";
+
+        final String itemVersion = "200";
+        final Itemrelease expectedWordList = new Itemrelease();
+        expectedWordList.setVersion(itemVersion);
+
+        when(mockRestTemplate.getForObject(isA(String.class), isA(Class.class), isA(String.class), isA(String.class), isA(String.class), isA(Boolean.class)))
+            .thenReturn(expectedWordList);
+        final Itemrelease actualWordList = remoteContentRepository.findWordListItem(itemPath, "", false);
+        assertEquals(actualWordList.getVersion(), itemVersion);
+        verify(mockRestTemplate).getForObject(isA(String.class), isA(Class.class), isA(String.class), isA(String.class), isA(String.class), isA(Boolean.class));
     }
 
     @Test(expected = ContentRequestException.class)
@@ -80,7 +97,7 @@ public class RemoteContentRepositoryTest {
 
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
             .thenThrow(new RestClientException("Exception"));
-        remoteContentRepository.findItemDocument(itemPath, accLookup, "");
+        remoteContentRepository.findItemDocument(itemPath, accLookup, "", false);
     }
 
     @Test

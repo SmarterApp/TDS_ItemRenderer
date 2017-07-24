@@ -21,6 +21,7 @@ import java.io.InputStream;
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.xml.wordlist.Itemrelease;
 
 /**
  * Repository to interact with content data
@@ -29,12 +30,14 @@ public interface ContentRepository {
     /**
      * Fetches the {@link tds.itemrenderer.data.ITSDocument} item document
      *
-     * @param itemPath The path to the item
-     * @param accommodations The accommodations collection
+     * @param itemPath        The path to the item
+     * @param accommodations  The accommodations collection
+     * @param contextPath     The context path of the web application that will serve the resources linked to by the its document
+     * @param oggAudioSupport Does browser support exists for the ogg-vorbis audio format
      * @return The {@link tds.itemrenderer.data.ITSDocument} item xml
-     * @throws ReturnStatusException
+     * @throws ContentRequestException
      */
-    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ContentRequestException;
+    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath, final boolean oggAudioSupport) throws ContentRequestException;
 
     /**
      * Fetches the resource at the specified resource path
@@ -44,4 +47,15 @@ public interface ContentRepository {
      * @throws IOException
      */
     InputStream findResource(final String resourcePath) throws IOException;
+
+    /**
+     * Fetches the {@link tds.itemrenderer.data.xml.wordlist.Itemrelease} word list item
+     *
+     * @param itemPath        Path to the item
+     * @param contextPath     Context path of the web application that will serve the resources linked to by the its document
+     * @param oggAudioSupport Does browser support exists for the ogg-vorbis audio format
+     * @return The {@link tds.itemrenderer.data.xml.wordlist.Itemrelease} item xml
+     * @throws ContentRequestException
+     */
+    Itemrelease findWordListItem(final String itemPath, final String contextPath, final boolean oggAudioSupport) throws ContentRequestException;
 }

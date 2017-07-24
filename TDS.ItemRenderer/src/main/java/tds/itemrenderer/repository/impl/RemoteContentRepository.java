@@ -37,6 +37,7 @@ import java.io.InputStream;
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.xml.wordlist.Itemrelease;
 import tds.itemrenderer.repository.ContentRepository;
 
 @Repository
@@ -53,7 +54,7 @@ public class RemoteContentRepository implements ContentRepository {
     }
 
     @Override
-    public ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath) throws ContentRequestException {
+    public ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath, final boolean oggAudioSupport) throws ContentRequestException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<?> requestHttpEntity = new HttpEntity<>(accommodations, headers);
@@ -61,7 +62,8 @@ public class RemoteContentRepository implements ContentRepository {
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(String.format("%s/item", contentUrl))
             .queryParam("itemPath", itemPath)
-            .queryParam("contextPath", contextPath);
+            .queryParam("contextPath", contextPath)
+            .queryParam("oggAudioSupport", oggAudioSupport);
 
         try {
             responseEntity = restTemplate.exchange(
@@ -100,6 +102,16 @@ public class RemoteContentRepository implements ContentRepository {
             }
 
             throw e;
+        }
+    }
+
+    @Override
+    public Itemrelease findWordListItem(final String itemPath, final String contextPath, final boolean oggAudioSupport) throws ContentRequestException {
+        try {
+            return restTemplate.getForObject("{contentUrl}/wordlist?itemPath={itemPath}&contextPath={contextPath}&oggAudioSupport={oggAudioSupport}",
+                Itemrelease.class, contentUrl, itemPath, contextPath, oggAudioSupport);
+        } catch (RestClientException rce) {
+            throw new ContentRequestException(rce);
         }
     }
 }

@@ -10,8 +10,10 @@ package tds.blackbox;
 
 import AIR.Common.Utilities.Path;
 import AIR.Common.Utilities.TDSStringUtils;
+import AIR.Common.Web.BrowserParser;
 import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.Session.Server;
+import net.sf.uadetector.internal.data.domain.Browser;
 import org.apache.commons.lang.StringUtils;
 
 import tds.itemrenderer.data.AccLookup;
@@ -66,12 +68,13 @@ public class ContentRequestParser
     String pageID = contentRequest.getId () != null ? contentRequest.getId () : getPageID (contentRequest);
     ItemRenderGroup itemRenderGroup = new ItemRenderGroup (pageID, "default", language);
 
+    final String contextPath = Server.getContextPath();
+    final boolean supportsOggAudio = new BrowserParser().isSupportsOggAudio();
     // load passage
     if (contentRequest.getPassage () != null && !StringUtils.isEmpty (contentRequest.getPassage ().getFile ()))
     {
       // load file
-
-      IITSDocument passageDoc = contentRepository.findItemDocument(contentRequest.getPassage().getFile (), accommodations, Server.getContextPath());
+      IITSDocument passageDoc = contentRepository.findItemDocument(contentRequest.getPassage().getFile (), accommodations, contextPath, supportsOggAudio);
       itemRenderGroup.setPassage (passageDoc);
     }
 
@@ -85,7 +88,7 @@ public class ContentRequestParser
           continue;
         
         // load file
-        IITSDocument itemDoc = contentRepository.findItemDocument(item.getFile(), accommodations, Server.getContextPath());
+        IITSDocument itemDoc = contentRepository.findItemDocument(item.getFile(), accommodations, contextPath, supportsOggAudio);
 
         // skip item if the languages content does not exist
         if (itemDoc.getContent (language) == null)
