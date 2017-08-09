@@ -176,6 +176,9 @@ Util.XhrManager = (function () {
         var xhrObj = this.getResponse();
         if (xhrObj && xhrObj.getResponseHeader) {
             contentType = xhrObj.getResponseHeader['Content-Type'];
+            if (!contentType) {
+                contentType = xhrObj.getResponseHeader['content-type'];
+            }
         }
         return (YAHOO.lang.isString(contentType)) ? contentType : '';
     };
