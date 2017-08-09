@@ -4,7 +4,7 @@
   <artifactId>item-renderer-master</artifactId>
   <packaging>pom</packaging>
   <name>item-renderer-master</name>
-  <version>3.1.5-SNAPSHOT</version>
+  <version>3.1.5.RELEASE</version>
 
   <parent>
     <groupId>org.opentestsystem.shared</groupId>
@@ -36,7 +36,7 @@
     <connection>scm:git:https://github.com/SmarterApp/TDS_ItemRenderer.git</connection>
     <developerConnection>scm:git:git://github.com/SmarterApp/TDS_ItemRenderer.git</developerConnection>
     <url>https://github.com/SmarterApp/TDS_ItemRenderer</url>
-    <tag>HEAD</tag>
+    <tag>3.1.5.RELEASE</tag>
   </scm>
 
   <distributionManagement>
