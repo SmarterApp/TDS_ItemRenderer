@@ -71,7 +71,7 @@ public abstract class WordListHandlerBase
 
   private static final JAXBContext _jaxbContext  = getJaxbContext ();
 
-  private Itemrelease              _itemRelease;
+  protected Itemrelease              _itemRelease;
 
   /**
    * Gets JAXB context
@@ -221,7 +221,7 @@ public abstract class WordListHandlerBase
    * @param itemIndex
    * @return
    */
-  protected Map<String, String> parseXml (String filePath) {
+  protected Map<String, String> parseXml (String filePath) throws ReturnStatusException {
     Map<String, String> htmlTabs = new HashMap<> ();
     FileFtpHandler fileFtpHandler = SpringApplicationContext.getBean ("fileFtpHandler", FileFtpHandler.class);
 

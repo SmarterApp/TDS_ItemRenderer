@@ -264,13 +264,14 @@
         }
 
         // if this page is in a frame we need to adjust menu position to compensate
+        /* Commenting out because it breaks the menu location on modern browsers.
         if (entity) {
             var frameEl = entity.getPage().getFrameElement();
             if (frameEl) {
                 var frameXY = YUD.getXY(frameEl);
                 menuXY = [menuXY[0] + frameXY[0], menuXY[1] + frameXY[1]];
             }
-        }
+        }*/
 
         // if no menu items were passed in then fire event to collect them from the widgets
         if (menuItems.length == 0) {

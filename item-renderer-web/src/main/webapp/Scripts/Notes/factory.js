@@ -147,7 +147,7 @@ TDS.Notes.Factory.prototype.getContainer = function(id, type) { //Move into the 
     var c = document.getElementById(cId);
     if (!c) {
         c = document.createElement('div');
-        c.className = 'notes_dialog_container';
+        c.className = 'notes_dialog_container bd';
         c.id = cId;
         dom.appendChild(c);
     }

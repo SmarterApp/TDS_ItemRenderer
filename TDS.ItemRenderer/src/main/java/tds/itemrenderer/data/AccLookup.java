@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import tds.itemrenderer.data.AccProperties;
 import AIR.Common.Utilities.TDSStringUtils;
 import AIR.Common.collections.MultiValueDictionary;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /*
  * Class Notes Changed C# IEnumberable to Iterable
@@ -262,5 +263,14 @@ public class AccLookup
   @JsonIgnore
   public AccProperties getProperties () {
     return new AccProperties (this);
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(13, 41)
+      .appendSuper(this.getTypes().hashCode())
+      .append(this.getPosition())
+      .append(this.getId())
+      .toHashCode();
   }
 }
