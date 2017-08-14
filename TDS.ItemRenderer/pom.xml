@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.opentestsystem.delivery</groupId>
 		<artifactId>item-renderer-master</artifactId>
-		<version>3.1.7-SNAPSHOT</version>
+		<version>4.0.1-SNAPSHOT</version>
 	</parent>
 
 	<name>tds-itemRenderer</name>
@@ -43,12 +43,6 @@
 			<version>6.0.37</version>
 		</dependency>
 
-		<!-- This is used in a non test class (RendererServlet) so it needs to remain compile scope  -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
-		</dependency>
-
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -63,7 +57,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<scope>test</scope>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
