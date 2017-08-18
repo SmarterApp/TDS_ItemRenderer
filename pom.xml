@@ -4,12 +4,12 @@
   <artifactId>item-renderer-master</artifactId>
   <packaging>pom</packaging>
   <name>item-renderer-master</name>
-  <version>4.0.1-SNAPSHOT</version>
+  <version>4.0.2-SNAPSHOT</version>
 
   <parent>
     <groupId>org.opentestsystem.shared</groupId>
     <artifactId>shared-master</artifactId>
-    <version>4.0.0.RELEASE</version>
+    <version>4.0.1.RELEASE</version>
   </parent>
 
   <modules>
