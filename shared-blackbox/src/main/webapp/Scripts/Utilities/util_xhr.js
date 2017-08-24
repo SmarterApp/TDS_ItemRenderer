@@ -176,6 +176,9 @@ Util.XhrManager = (function () {
         var xhrObj = this.getResponse();
         if (xhrObj && xhrObj.getResponseHeader) {
             contentType = xhrObj.getResponseHeader['Content-Type'];
+            if (!contentType) {
+                contentType = xhrObj.getResponseHeader['content-type'];
+            }
         }
         return (YAHOO.lang.isString(contentType)) ? contentType : '';
     };
@@ -243,7 +246,7 @@ Util.XhrManager = (function () {
         // optional default scope
         this._scope = opt_scope;
 
-        // EVENTS: 
+        // EVENTS:
         // * onRequest - xhr requested
         // * onSent - xhr was sent out
         // * onComplete - xhr completed (success or failure)
@@ -301,7 +304,7 @@ Util.XhrManager = (function () {
             throw Error('XhrManager ID in use');
         }
 
-        // reset request 
+        // reset request
         request.resetAttemptCount();
         request.setCompleted(false);
         request.setAborted(false);
