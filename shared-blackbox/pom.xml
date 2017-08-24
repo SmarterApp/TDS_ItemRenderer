@@ -4,6 +4,7 @@
 	<artifactId>shared-blackbox</artifactId>
 	<packaging>war</packaging>
 	<name>shared-blackbox</name>
+	<version>1.0.2</version>
 
 	<parent>
 		<groupId>org.opentestsystem.shared</groupId>
