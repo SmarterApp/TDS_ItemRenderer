@@ -9,16 +9,16 @@
 
 	<groupId>org.opentestsystem.delivery</groupId>
 	<artifactId>item-renderer</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
-	
+
 	<scm>
         <connection>scm:hg:https://bitbucket.org/sbacoss/itemrenderer_release</connection>
         <developerConnection>scm:hg:https://bitbucket.org/sbacoss/itemrenderer_release</developerConnection>
         <url>https://bitbucket.org/sbacoss/itemrenderer_release</url>
     </scm>
 
-	
+
 	<properties>
 		<resource-bundler.version>0.0.1</resource-bundler.version>
 	</properties>
@@ -80,6 +80,6 @@
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 	</dependencies>
 </project>
