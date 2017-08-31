@@ -8,13 +8,13 @@
  ******************************************************************************/
 package tds.itemrenderer.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import tds.itemrenderer.data.apip.APIPXml;
 
@@ -225,7 +225,6 @@ public class ITSContent
 
   private ITSAttachment findBrailleAttachment(List<String> brailleSubTypeCodes, boolean isFindTranscript) {
     ITSAttachment brailleAttachment = null;
-
     // need to check these in order in case the content has both Math specific and No Math Code Needed versions
     for (String subTypeCode : brailleSubTypeCodes) {
       final String subTypeCodeFinal = subTypeCode + ( isFindTranscript ? "_transcript" : "" );
