@@ -13,14 +13,12 @@
 
 package tds.itemrenderer.repository;
 
-import TDS.Shared.Exceptions.ReturnStatusException;
-
 import java.io.IOException;
 import java.io.InputStream;
 
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.xml.wordlist.Itemrelease;
 
 /**
@@ -28,16 +26,16 @@ import tds.itemrenderer.data.xml.wordlist.Itemrelease;
  */
 public interface ContentRepository {
     /**
-     * Fetches the {@link tds.itemrenderer.data.ITSDocument} item document
+     * Fetches the {@link tds.itemrenderer.data.IITSDocument} item document
      *
      * @param itemPath        The path to the item
      * @param accommodations  The accommodations collection
      * @param contextPath     The context path of the web application that will serve the resources linked to by the its document
      * @param oggAudioSupport Does browser support exists for the ogg-vorbis audio format
-     * @return The {@link tds.itemrenderer.data.ITSDocument} item xml
+     * @return The {@link tds.itemrenderer.data.IITSDocument} item xml
      * @throws ContentRequestException
      */
-    ITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath, final boolean oggAudioSupport) throws ContentRequestException;
+    IITSDocument findItemDocument(final String itemPath, final AccLookup accommodations, final String contextPath, final boolean oggAudioSupport) throws ContentRequestException;
 
     /**
      * Fetches the resource at the specified resource path

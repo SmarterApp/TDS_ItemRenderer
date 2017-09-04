@@ -8,9 +8,7 @@
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
-import TDS.Shared.Security.IEncryption;
-
-import tds.itemrenderer.data.ITSDocumentXml;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 
@@ -47,7 +45,7 @@ public class ITSUrlTask implements IProcessorTask<String>
    * @param data
    * @return
   */
-  public String process(ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
+  public String process(IITSDocument itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String xml) {
       if(urlResolver == null) {
         urlResolver = new ITSUrlResolver2(itsDocument.getBaseUri());
       }

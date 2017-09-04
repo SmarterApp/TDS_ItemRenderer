@@ -36,6 +36,7 @@ import java.io.InputStream;
 
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.xml.wordlist.Itemrelease;
 import tds.itemrenderer.repository.ContentRepository;

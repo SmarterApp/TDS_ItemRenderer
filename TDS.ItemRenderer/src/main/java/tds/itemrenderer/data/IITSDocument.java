@@ -1,226 +1,142 @@
-/*******************************************************************************
- * Educational Online Test Delivery System Copyright (c) 2014 American
- * Institutes for Research
- * 
- * Distributed under the AIR Open Source License, Version 1.0 See accompanying
- * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
- * American_Institutes_for_Research_Open_Source_Software_License.pdf
- ******************************************************************************/
 package tds.itemrenderer.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import tds.itempreview.content.ITSDocumentExtensions;
-import tds.itemrenderer.data.ITSTypes.ITSEntityType;
+public interface IITSDocument {
+    String getBaseUri();
 
-/**
- * @author This is the minimal interface required for page rendering and
- *         external use. This interface is not used for adding or modifying
- *         data. Note: made methods abstract as well.
- */
-public abstract class IITSDocument
-{
+    void setBaseUri(String baseUri);
 
-  protected String          _baseUri;        // The original file path of where
-                                              // the XML data came from.
-  private String            _rendererSpec;
-  private String            _layout;
-  private String            _format;
-  private String            _responseType;
-  private String            _subject;
-  private String            _grade;
-  private String            _answerKey;
-  private String            _credit;
-  private String            _copyright;
-  private String            _gridAnswerSpace; // This is the new top level grid
-                                              // answer space. This replaces the
-                                              // content element level answer
-                                              // space.
-  private ITSEntityType     _type;           // What type of entity this is.
-                                              // This can be item or passage.
-  private ITSSoundCue       _soundCue;
-  private ITSTutorial       _tutorial;
-  private List<ITSResource> _resources;
-  private ITSMachineRubric  _machineRubric;
-  private long              _bankKey;
-  private long              _itemKey;
-  private long              _stimulusKey;
-  private boolean           _isLoaded;       // Is the XML loaded and parsed.
-  private boolean           _autoEmboss;
+    String getRendererSpec();
 
-  public String getBaseUri () {
-    return _baseUri;
-  }
+    void setRendererSpec(String rendererSpec);
 
-  public void setBaseUri (String value) {
-    _baseUri = value;
-  }
+    String getFormat();
 
-  public boolean getIsLoaded () {
-    return _isLoaded;
-  }
+    void setFormat(String format);
 
-  protected void setIsLoaded (boolean value) {
-    _isLoaded = value;
-  }
+    String getLayout();
 
-  public ITSEntityType getType () {
-    return _type;
-  }
+    void setLayout(String layout);
 
-  protected void setType (ITSEntityType value) {
-    _type = value;
-  }
+    String getGridAnswerSpace();
 
-  public long getBankKey () {
-    return _bankKey;
-  }
+    void setGridAnswerSpace(String gridAnswerSpace);
 
-  public void setBankKey (long value) {
-    _bankKey = value;
-  }
+    ITSTypes.ITSEntityType getType();
 
-  public void setItemKey (Long value) {
-    _itemKey = value;
-  }
+    void setType(ITSTypes.ITSEntityType type);
 
-  public long getItemKey () {
-    return _itemKey;
-  }
+    ITSSoundCue getSoundCue();
 
-  public long getStimulusKey () {
-    return _stimulusKey;
-  }
+    void setSoundCue(ITSSoundCue soundCue);
 
-  public void setStimulusKey (long value) {
-    _stimulusKey = value;
-  }
+    ITSTutorial getTutorial();
 
-  public void setLayout (String value) {
-    _layout = value;
-  }
+    void setTutorial(ITSTutorial tutorial);
 
-  public String getLayout () {
-    return _layout;
-  }
+    List<ITSResource> getResources();
 
-  public String getFormat () {
-    return _format;
-  }
+    void setResources(List<ITSResource> resources);
 
-  protected void setFormat (String value) {
-    _format = value;
-  }
+    ITSMachineRubric getMachineRubric();
 
-  public String getResponseType () {
-    return _responseType;
-  }
+    void setMachineRubric(ITSMachineRubric machineRubric);
 
-  public String getSubject () {
-    return _subject;
-  }
+    long getBankKey();
 
-  public String getGrade () {
-    return _grade;
-  }
+    void setBankKey(long bankKey);
 
-  public String getAnswerKey () {
-    return _answerKey;
-  }
+    boolean getIsLoaded();
 
-  public String getCredit () {
-    return _credit;
-  }
+    void setIsLoaded(boolean isLoaded);
 
-  public String getCopyright () {
-    return _copyright;
-  }
+    double getVersion();
 
-  public boolean isAutoEmboss () {
-    return _autoEmboss;
-  }
+    void setVersion(double version);
 
-  public ITSSoundCue getSoundCue () {
-    return _soundCue;
-  }
+    boolean getValidated();
 
-  protected void setSoundCue (ITSSoundCue value) {
-    _soundCue = value;
-  }
+    void setValidated(boolean validated);
 
-  public ITSTutorial getTutorial () {
-    return _tutorial;
-  }
+    int getApprovedVersion();
 
-  protected void setTutorial (ITSTutorial value) {
-    _tutorial = value;
-  }
+    void setApprovedVersion(int approvedVersion);
 
-  public List<ITSResource> getResources () {
-    return _resources;
-  }
+    long getId();
 
-  protected void setResources (List<ITSResource> value) {
-    _resources = value;
-  }
+    void setId(long value);
 
-  public String getRendererSpec () {
-    return _rendererSpec;
-  }
+    Map<String, List<ITSAttribute>> getAttributes();
 
-  protected void setRendererSpec (String value) {
-    _rendererSpec = value;
-  }
+    void setAttributes(HashMap<String, List<ITSAttribute>> attributes);
 
-  public ITSMachineRubric getMachineRubric () {
-    return _machineRubric;
-  }
+    Map<String, ITSContent> getContents();
 
-  protected void setMachineRubric (ITSMachineRubric value) {
-    _machineRubric = value;
-  }
+    void setContents(HashMap<String, ITSContent> contents);
 
-  public String getGridAnswerSpace () {
-    return _gridAnswerSpace;
-  }
+    List<String> getMediaFiles();
 
-  protected void setGridAnswerSpace (String value) {
-    _gridAnswerSpace = value;
-  }
+    void setMediaFiles(List<String> mediaFiles);
 
-  // Gets the content for a specific language.
-  public abstract ITSContent getContent (String language);
+    void addAttribute(ITSAttribute attribute);
 
-  // Gets the content for the default language ("ENU").
-  public abstract ITSContent getContentDefault ();
+    String getAttributeValue(String attid);
 
-  public abstract List<String> getMediaFiles ();
+    ITSContent getContent(String language);
 
-  public String getID () {
-    return ITSDocumentExtensions.getID (this);
-  }
+    void addContent(ITSContent content);
 
-  public String getGroupID () {
-    return ITSDocumentExtensions.getGroupID (this);
-  }
+    ITSContent getContentDefault();
 
-  public String[] getBaseUriDirSegments () {
-    return ITSDocumentExtensions.getBaseUriDirSegments (this);
-  }
+    long getItemKey();
 
-  public String getFolderName () {
-    return ITSDocumentExtensions.getFolderName (this);
-  }
+    long getStimulusKey();
 
-  public String getParentFolderName () {
-    return ITSDocumentExtensions.getParentFolderName (this);
-  }
+    String getAttributeFormat();
 
-  /**
-   * @return
-   */
-  public int getMaxScore () {
-    return 0;
-  }
+    void setAttributeResponseType(String value);
 
+    String getResponseType();
+
+    String getSubject();
+
+    String getGrade();
+
+    String getAnswerKey();
+
+    String getCredit();
+
+    String getCopyright();
+
+    boolean isAutoEmboss();
+
+    int getMaxScore();
+
+    /*
+         * The XML content nodes. These come internally from a dictionary so the order
+         * of the content nodes is not guaranteed to be the same as the original XML.
+        */
+    @JsonIgnore
+    List<ITSContent> getContentsValues();
+
+    void addMediaFiles(List<String> capturedResources);
+
+    String[] getBaseUriDirSegments();
+
+    String getFolderName();
+
+    String getGroupID();
+
+    String getIDString();
+
+    String getParentFolderName();
+
+    String getRealPath();
+
+    void setRealPath(String value);
 }
