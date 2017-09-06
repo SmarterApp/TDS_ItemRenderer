@@ -261,18 +261,18 @@ public class ITSDocument implements IITSDocument {
             return null;
 
         // get language
-        Optional<ITSContent> content = Optional.ofNullable(contents.get(language));
+        Optional<ITSContent> maybeContent = Optional.ofNullable(contents.get(language));
 
         // if language does not exist try splitting language
-        if (content == null && language.indexOf('-') != -1) {
+        if (!maybeContent.isPresent() && language.indexOf('-') != -1) {
             final String[] langTags = StringUtils.split(language, '-');
 
             if (langTags.length > 1) {
-                content = Optional.ofNullable(contents.get(langTags[0]));
+                maybeContent = Optional.ofNullable(contents.get(langTags[0]));
             }
         }
 
-        return content.orElse(null);
+        return maybeContent.orElse(null);
     }
 
     public void addContent(ITSContent content) {
