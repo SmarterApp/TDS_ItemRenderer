@@ -8,14 +8,18 @@
  ******************************************************************************/
 package tds.itemrenderer.web;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
+import AIR.Common.Helpers._Ref;
+import AIR.Common.Utilities.Path;
+import AIR.Common.Web.EncryptionHelper;
+import AIR.Common.Web.MimeMapping;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 import tds.itemrenderer.configuration.RendererSettings;
 import tds.itemrenderer.data.IITSDocument;
@@ -30,10 +34,6 @@ import tds.itemrenderer.data.ItemRenderGroup;
 import tds.itemrenderer.processing.ITSDocumentHelper;
 import tds.itemrenderer.repository.ContentRepository;
 import tds.itemrenderer.webcontrols.PageLayout;
-import AIR.Common.Helpers._Ref;
-import AIR.Common.Utilities.Path;
-import AIR.Common.Web.EncryptionHelper;
-import AIR.Common.Web.MimeMapping;
 
 /**
  * @author jmambo
@@ -457,26 +457,31 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
 
                   endElement();
               } else {
-              try {
-                  InputStream inputStream = contentRepository.findResource(mathMLFilePath);
-                  foundMedia = true;
+                  try {
+                      //There is the potential junk file paths are passed into this flow.  Explanation in the catch block.
+                      InputStream inputStream = contentRepository.findResource(mathMLFilePath);
+                      foundMedia = true;
 
-                  startElement("resource");
-                  writeAttribute("type", "application/mathml+xml");
-                  writeAttribute("file", fileName);
+                      startElement("resource");
+                      writeAttribute("type", "application/mathml+xml");
+                      writeAttribute("file", fileName);
 
-                  // write out image xml
-                  writeCDataStart();
-                  writeStream(inputStream);
-                  writeCDataEnd();
+                      // write out image xml
+                      writeCDataStart();
+                      writeStream(inputStream);
+                      writeCDataEnd();
 
-                  // WriteCData(File.ReadAllText(xmlPath));
+                      // WriteCData(File.ReadAllText(xmlPath));
 
-                  endElement();
-              } catch (IOException e) {
-                  // Resource was not found
-                  log.debug("Could not locate MathML Media file at path: {}", mathMLFilePath);
-              }
+                      endElement();
+                  } catch (IOException e) {
+                      /*
+                       Resource was not found.  This is ignored because the code path around this will send any
+                       path through this flow with the expectation that some will not be math files.  For example,
+                       we have seen image paths passed through this flow that have invalid extensions (123png.xml).
+                      */
+                      log.debug("Could not locate MathML Media file at path: {}", mathMLFilePath);
+                  }
           }
       }
 
