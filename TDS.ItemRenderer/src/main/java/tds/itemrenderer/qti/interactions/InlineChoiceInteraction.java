@@ -10,7 +10,7 @@ package tds.itemrenderer.qti.interactions;
 
 import org.jdom2.Element;
 
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.qti.QTIInteraction;
 
 // QTI parser for the inlineChoiceInteraction element.
@@ -22,9 +22,8 @@ public class InlineChoiceInteraction extends QTIInteraction
   }
 
   @Override
-  public void process (ITSDocument itsDoc, Element element) {
+  public void process (IITSDocument itsDoc, Element element) {
     itsDoc.setFormat ("ET");
-    itsDoc.setAttributeFormat ("ET");
     itsDoc.setAttributeResponseType ("EditTaskChoice");
   }
 

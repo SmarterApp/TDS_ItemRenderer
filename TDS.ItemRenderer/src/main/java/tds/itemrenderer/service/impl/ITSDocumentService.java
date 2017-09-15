@@ -52,7 +52,7 @@ public class ITSDocumentService implements ItemDocumentService {
   public IITSDocument loadItemDocument(URI uri, AccLookup accommodations, boolean resolveUrls) {
 
     // parse xml
-    ITSDocument itsDocument = documentParser.load(uri, ITSDocument.class, itemDataService);
+    IITSDocument itsDocument = documentParser.load(uri, ITSDocument.class, itemDataService);
 
     // check if valid xml
     if (!itsDocument.getValidated()) {
@@ -65,7 +65,7 @@ public class ITSDocumentService implements ItemDocumentService {
     return itsDocument;
   }
 
-  private void executeProcessing(ITSDocument itsDocument, AccLookup accommodations, boolean resolveUrls) {
+  private void executeProcessing(IITSDocument itsDocument, AccLookup accommodations, boolean resolveUrls) {
     // check if there are accommodations
     if (accommodations == null || accommodations == AccLookup.getNone())
       return;

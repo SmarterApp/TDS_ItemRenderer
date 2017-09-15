@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import TDS.Shared.Security.IEncryption;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,18 @@ public class ITSUrlResolver2 extends ITSUrlResolver
    */
   public ITSUrlResolver2(String filePath)  {
     super(filePath);
+  }
+
+    /**
+     * Constructs an {@link tds.itemrenderer.processing.ITSUrlResolver2} object
+     *
+     * @param filePath The filepath to resolve
+     * @param encryptionEnabled flag indicating whether encryption is enabled
+     * @param contextPath The path of the host calling the endpoint requiring url resolution
+     * @param encryption (optional) encryption algorithm implementation
+     */
+  public ITSUrlResolver2 (final String filePath, final boolean encryptionEnabled, final String contextPath, final IEncryption encryption) {
+    super(filePath, encryptionEnabled, contextPath, encryption);
   }
 
   /**
@@ -110,6 +123,7 @@ public class ITSUrlResolver2 extends ITSUrlResolver
       // HACK: replace ogg with m4a on some platforms
       if ("a".equalsIgnoreCase(tagName) && "ogg".equalsIgnoreCase(Path.getExtension(fileName)))
       {
+          // uses user-agent detection
           fileName = audioSwapHack(fileName);
       }
 
@@ -127,30 +141,31 @@ public class ITSUrlResolver2 extends ITSUrlResolver
 
   /**
    *  Try and replace an .ogg file with .mp4;
-   *  
+   *
+   *  note:
+   *  BrowserParser calls HttpContext.getCurrentContext().getUserAgent().
+   *  ITSUrlResolver2 may not be running in a webapp with a user agent.
    * @param fileName
    * @return sound.m4a if file is found, otherwise the original sound.ogg name.
    */
-  private String audioSwapHack(String fileName)  {
+  protected String audioSwapHack(String fileName)  {
       BrowserParser browser = new BrowserParser();
 
       // check if the browser does not support ogg
       if (!browser.isSupportsOggAudio())
       {
-    	  String audioFile = Path.getFileNameWithoutExtension(fileName) + ".m4a";
+          String audioFile = Path.getFileNameWithoutExtension(fileName) + ".m4a";
           String audioFilePath = resolveFilePath(audioFile);
           _Ref<String> audioFilePathRef = new _Ref<String> (audioFilePath);
 
           if (ITSDocumentHelper.exists(audioFilePathRef))
           {
-        	  audioFilePath = audioFilePathRef.get();
-        	  audioFile = Paths.get(audioFilePath).getFileName().toString();
+              audioFilePath = audioFilePathRef.get();
+              audioFile = Paths.get(audioFilePath).getFileName().toString();
               return audioFile;
           }
       }
- 
+
       return fileName;
   }
-  
-
 }

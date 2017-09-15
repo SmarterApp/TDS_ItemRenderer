@@ -13,7 +13,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocumentXml;
+import tds.itemrenderer.data.IITSDocument;
+
 import tds.itemrenderer.data.ITSOption;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
@@ -41,7 +42,7 @@ public class ITSProcessorTasks extends TaskExecutor<String>
 	 *  
 	 * @param doc ITSDocumentXml instance
 	 */
-	public void process(ITSDocumentXml doc)
+	public void process(IITSDocument doc)
 	{
 		process(doc, _defaultLanguage);
 	}
@@ -52,7 +53,7 @@ public class ITSProcessorTasks extends TaskExecutor<String>
 	 * @param doc  ITSDocumentXml
 	 * @param language
 	 */
-	private void process(ITSDocumentXml doc, String language)
+	private void process(IITSDocument doc, String language)
 	{
 		// process renderer spec
 		if (!StringUtils.isEmpty(doc.getRendererSpec ())) {
@@ -68,7 +69,7 @@ public class ITSProcessorTasks extends TaskExecutor<String>
 		// get contents
 		if (StringUtils.isEmpty(language))
 		{
-			List<ITSContent> contents = doc.getContents();
+			List<ITSContent> contents = doc.getContentsValues();
 
 			for (ITSContent content : contents)
 			{
@@ -92,7 +93,7 @@ public class ITSProcessorTasks extends TaskExecutor<String>
 	 * @param doc
 	 * @param content
 	 */
-	private void processContent(ITSDocumentXml doc, ITSContent content)
+	private void processContent(IITSDocument doc, ITSContent content)
 	{
 		// Grid
 		if (!StringUtils.isEmpty(content.getGridAnswerSpace())) {

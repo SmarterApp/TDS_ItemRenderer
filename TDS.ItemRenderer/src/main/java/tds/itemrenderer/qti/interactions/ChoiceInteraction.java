@@ -9,12 +9,9 @@
 package tds.itemrenderer.qti.interactions;
 
 
-import org.jdom2.Attribute;
 import org.jdom2.Element;
 
-import tds.itemrenderer.data.ITSDocument;
-import tds.itemrenderer.data.ITSOption;
-import tds.itemrenderer.qti.QTIHelper;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.qti.QTIInteraction;
 
 // / QTI parser for the choiceInteraction element.
@@ -30,7 +27,7 @@ public class ChoiceInteraction extends QTIInteraction
   }
 
   @Override
-  public void process (ITSDocument itsDoc, Element element) {
+  public void process (IITSDocument itsDoc, Element element) {
     
   }
 

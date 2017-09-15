@@ -15,7 +15,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import tds.itemrenderer.data.ITSDocumentXml;
+
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 import tds.itemrenderer.data.apip.APIPAccessElement;
@@ -41,7 +42,7 @@ public class APIPXmlProcessor implements IProcessorTask<Document>
     return ITSContentType.Html.getValue ();
   }
 
-  public Document process (ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, Document contextXml) {
+  public Document process (IITSDocument itsDocument, ITSContentType contentType, ITSContextType contextType, String language, Document contextXml) {
     // get APIP xml
     APIPXml apipXml = itsDocument.getContent (language).getApip ();
     if (apipXml == null || apipXml.getAccessElements () == null) {
