@@ -502,7 +502,6 @@ WordListPanel.initializeResizing = function() {
         };
 
         if (WordListPanel.illustrationRatio > 1) {
-            resizeConfig.minHeight = WordListPanel.minImageSize + WordListPanel.getPanelExtraHeight();
             resizeConfig.minWidth = Math.max(WordListPanel.minImageSize + WordListPanel.getPanelExtraWidth(), WordListPanel.absoluteMinPanelWidth);
         }
         else {
@@ -510,9 +509,7 @@ WordListPanel.initializeResizing = function() {
             resizeConfig.minWidth = WordListPanel.absoluteMinPanelWidth;
         }
 
-        if (WordListPanel.resizer == null){
-            WordListPanel.resizer = new YAHOO.util.Resize(WordListPanel.panel.id, resizeConfig);
-        }
+        WordListPanel.resizer = new YAHOO.util.Resize(WordListPanel.panel.id, resizeConfig);
 
         WordListPanel.resizer.on('resize', function(args) {
             WordListPanel.resizeHelper(args.width, args.height, this, true);
@@ -537,7 +534,6 @@ WordListPanel.initializeResizing = function() {
         }, WordListPanel.panel, true);
     } else if (WordListPanel.resizer != null) {
         WordListPanel.resizer.destroy();
-        WordListPanel.resizer = null;
     }
 
 
@@ -625,7 +621,7 @@ WordListPanel.RenderHtmlTabs = function (messages) {
         // since there is more than 1, let's see if there is an Illustration type to move first
         var firstItem = 0;
         for (var j=1; j < messages.Entries.length; j++) {
-            if (entries[j].wlType == 'glossary') {
+            if (entries[j].wlType == 'illustration') {
                 firstItem = j;
                 break;
             }
@@ -762,14 +758,6 @@ WordListPanel.IsVisible = function() {
     }
 
     return false;
-};
-
-// Removes all items from the content word cache so the same item can be reloaded with a different glossary
-//
-WordListPanel.clearCache = function() {
-    WordListPanel.contentWordCache = {};
-    WordListPanel.headerWordCache = {};
-    WordListPanel.message = {};
 };
 
 // content manager events
