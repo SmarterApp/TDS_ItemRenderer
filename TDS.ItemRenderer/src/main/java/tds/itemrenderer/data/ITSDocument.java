@@ -31,7 +31,6 @@ public class ITSDocument implements IITSDocument {
     private static final String STM_PASS_ID = "stm_pass_id";
     private static final String ITM_ATT_ITEM_FORMAT = "itm_att_Item Format";
     private static final String ITM_ATT_RESPONSE_TYPE = "itm_att_Response Type";
-    private static final String ITM_ATT_RESPONSE_TYPE1 = "itm_att_Response Type";
     private static final String ITM_ITEM_SUBJECT = "itm_item_subject";
     private static final String ITM_ATT_GRADE = "itm_att_Grade";
     private static final String ITM_ATT_ANSWER_KEY = "itm_att_Answer Key";
@@ -44,8 +43,8 @@ public class ITSDocument implements IITSDocument {
     // The original file path of where the XML data came from.
     private String baseUri;
     private String rendererSpec;
+    protected String format;
     private String layout;
-    private String format;
     // This is the new top level grid answer space. This replaces the content element level answer space.
     private String gridAnswerSpace;
     // What type of entity this is.  This can be item or passage.
@@ -86,7 +85,7 @@ public class ITSDocument implements IITSDocument {
     }
 
     public String getFormat() {
-        return format;
+        return getAttributeValue(ITM_ATT_ITEM_FORMAT);
     }
 
     public void setFormat(String format) {
@@ -195,6 +194,11 @@ public class ITSDocument implements IITSDocument {
         this.approvedVersion = approvedVersion;
     }
 
+    /**
+     * Unique item number for the Passage Item
+     *
+     * @return
+     */
     public long getId() {
         return id;
     }
@@ -296,16 +300,12 @@ public class ITSDocument implements IITSDocument {
         return StringUtils.isEmpty (value) ? 0 : Long.parseLong (value);
     }
 
-    public String getAttributeFormat() {
-        return getAttributeValue(ITM_ATT_ITEM_FORMAT);
-    }
-
     public void setAttributeResponseType(String value) {
         setAttributeValue(ITM_ATT_RESPONSE_TYPE, value);
     }
 
     public String getResponseType() {
-        return getAttributeValue(ITM_ATT_RESPONSE_TYPE1);
+        return getAttributeValue(ITM_ATT_RESPONSE_TYPE);
     }
 
     public String getSubject() {
@@ -384,7 +384,7 @@ public class ITSDocument implements IITSDocument {
         return String.format("%s-%d-%d", prefix, getBankKey(), itemKey);
     }
 
-    public String getIDString() {
+    public String getID() {
         final String prefix = (getType() == ITSTypes.ITSEntityType.Passage) ? "G" : "I";
         return String.format("%s-%d-%d", prefix, getBankKey(), getItemKey());
     }

@@ -16,9 +16,6 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
-import tds.itemrenderer.data.IITSDocument;
-import tds.itemrenderer.data.ITSDocument;
-import tds.itemrenderer.processing.ItemDataService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +24,10 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import tds.itemrenderer.data.IITSDocument;
+import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.processing.ItemDataService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -50,8 +51,8 @@ public class ITSDocumentFactoryTest extends AbstractTest {
   public void testLoadUri2() {
     final URL url = getClass().getResource("/items/item-187-1126.xml");
     final IITSDocument itsDocument = ITSDocumentFactory.loadUri2(url.getFile(), null, false);
-    assertEquals("I-187-1126", itsDocument.getIDString());
-    assertEquals("MC", itsDocument.getAttributeFormat());
+    assertEquals("I-187-1126", itsDocument.getID());
+    assertEquals("MC", itsDocument.getFormat());
     assertEquals("8", itsDocument.getLayout());
     assertEquals("<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>", itsDocument.getContent("ENU").getStem());
   }
@@ -65,8 +66,8 @@ public class ITSDocumentFactoryTest extends AbstractTest {
       iitsDocument = ITSDocumentFactory.load(uri, null, itemReader, false);
     }
 
-    assertEquals("I-187-1126", iitsDocument.getIDString());
-    assertEquals("MC", iitsDocument.getAttributeFormat());
+    assertEquals("I-187-1126", iitsDocument.getID());
+    assertEquals("MC", iitsDocument.getFormat());
     assertEquals("8", iitsDocument.getLayout());
     assertEquals("<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>", iitsDocument.getContent("ENU").getStem());
   }
@@ -88,7 +89,7 @@ public class ITSDocumentFactoryTest extends AbstractTest {
     final IITSDocument actual = OBJECT_MAPPER.readValue(json, ITSDocument.class);
 
 
-    assertEquals(expected.getIDString(), actual.getIDString());
+    assertEquals(expected.getID(), actual.getID());
     assertEquals(expected.getFormat(), actual.getFormat());
     assertEquals(expected.getLayout(), actual.getLayout());
     assertEquals(expected.getContent("ENU").getStem(), actual.getContent("ENU").getStem());
@@ -101,7 +102,7 @@ public class ITSDocumentFactoryTest extends AbstractTest {
     final String json = OBJECT_MAPPER.writeValueAsString(expected);
     final IITSDocument actual = OBJECT_MAPPER.readValue(json, ITSDocument.class);
 
-    assertEquals(expected.getIDString(), actual.getIDString());
+    assertEquals(expected.getID(), actual.getID());
     assertEquals(expected.getFormat(), actual.getFormat());
     assertEquals(expected.getLayout(), actual.getLayout());
     assertEquals(expected.getContent("ENU").getStem(), actual.getContent("ENU").getStem());

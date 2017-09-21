@@ -170,7 +170,7 @@ public class ITSDocumentFactory
 
     // parse xml
     filePath = ITSDocumentHelper.getReplacementPath (filePath);
-    IITSDocument itsDocument = itsParser.load (filePath, IITSDocument.class);
+    IITSDocument itsDocument = itsParser.load (filePath, ITSDocument.class);
 
     // check if valid xml
     if (!itsDocument.getValidated ()) {
@@ -231,7 +231,7 @@ public class ITSDocumentFactory
 
     // create parser and load xml
     ITSDocumentParser<IITSDocument> itsParser = new ITSDocumentParser<IITSDocument> ();
-    IITSDocument itsDocument = itsParser.loadUri (uri, IITSDocument.class);
+    IITSDocument itsDocument = itsParser.loadUri (uri, ITSDocument.class);
 
     if (itsDocument.getValidated ()) {
       // run any processing
@@ -248,7 +248,7 @@ public class ITSDocumentFactory
    * 
    * @param filePath
    * @param accommodations
-   * @param resolveUrls
+   * @param isResolveUrls
    * @return
    */
   public static IITSDocument loadUri2 (String filePath, AccLookup accommodations, boolean isResolveUrls)  {

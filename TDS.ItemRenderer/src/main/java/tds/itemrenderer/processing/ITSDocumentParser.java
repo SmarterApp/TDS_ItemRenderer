@@ -130,7 +130,7 @@ public class ITSDocumentParser<T extends IITSDocument> {
    * @param itsDocumentXmlType
    * @return ITS Document
    */
-  public T load(String filePath, Class<T> itsDocumentXmlType) {
+  public T load(String filePath, Class<? extends T> itsDocumentXmlType) {
     final T document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
     document.setBaseUri(filePath);
     return loadDocument(document);
@@ -144,7 +144,7 @@ public class ITSDocumentParser<T extends IITSDocument> {
    * @param itemDataService     {@link ItemDataService} used to read data
    * @return T the loaded item
    */
-  public T load(final URI uri, final Class<T> itsDocumentXmlType, final ItemDataService itemDataService) {
+  public T load(final URI uri, final Class<? extends T> itsDocumentXmlType, final ItemDataService itemDataService) {
     final T document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
     document.setBaseUri(uri.toString());
     final Itemrelease itemrelease = parseDocument(document, uri, itemDataService);
@@ -160,7 +160,7 @@ public class ITSDocumentParser<T extends IITSDocument> {
    * @param itsDocumentXmlType
    * @return ITS Document
    */
-  public T loadUri(final URI uri, final Class<T> itsDocumentXmlType) {
+  public T loadUri(final URI uri, final Class<? extends T> itsDocumentXmlType) {
     if (RendererSettings.getDenyExternalContent() && uri.getScheme() != "file") {
       throw new UnauthorizedAccessException("Cannot load external content.");
     }

@@ -11,26 +11,34 @@
  */
 package tds.itempreview;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-
+import AIR.Common.Helpers.CaseInsensitiveMap;
+import AIR.Common.Utilities.Path;
+import AIR.Common.Web.Session.Server;
+import AIR.Common.collections.IGrouping;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import AIR.Common.Helpers.CaseInsensitiveMap;
-import AIR.Common.Utilities.Path;
-import AIR.Common.Web.Session.Server;
-import AIR.Common.collections.IGrouping;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.ITSDocumentFactory;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.IITSDocument;
-import tds.itemrenderer.data.ItsItemIdUtil;
 import tds.itemrenderer.data.ITSTypes.ITSEntityType;
+import tds.itemrenderer.data.IrisITSDocument;
+import tds.itemrenderer.data.ItsItemIdUtil;
 
 /**
  * @author Shiva BEHERA [sbehera@air.org]
@@ -45,7 +53,7 @@ public class ConfigBuilder {
     private final String _contentPath;
     private String _filterFormat;
     private String _filterResponseType;
-    private Map<String, IITSDocument> _documentLookup;
+    private Map<String, IrisITSDocument> _documentLookup;
     private Exception _error = null;
 
     public String getFilterFormat() {
@@ -76,8 +84,8 @@ public class ConfigBuilder {
 
     //add the file that was created to the collection
     public Config addFile(String filePath) {
-        Collection<IITSDocument> itsDocuments = _documentLookup.values();
-        Collection<IITSDocument> newDocs = this.getITSDocuments(filePath);
+        Collection<IrisITSDocument> itsDocuments = _documentLookup.values();
+        Collection<IrisITSDocument> newDocs = this.getITSDocuments(filePath);
         newDocs.addAll(itsDocuments);
         return reloadContent(newDocs);
     }
@@ -107,11 +115,11 @@ public class ConfigBuilder {
 
     //remove a file from the directory by removing it from the collection
     public Config removeFile(String fileName) throws Exception{
-        Collection<IITSDocument> itsDocuments = _documentLookup.values();
+        Collection<IrisITSDocument> itsDocuments = _documentLookup.values();
         String key = getRemoveKey(fileName);
-        IITSDocument documentRemove = _documentLookup.get(key);
+        IrisITSDocument documentRemove = _documentLookup.get(key);
 
-        Collection<IITSDocument> newDocs = new ArrayList<>();
+        Collection<IrisITSDocument> newDocs = new ArrayList<>();
         newDocs.addAll(itsDocuments);
         newDocs.remove(documentRemove);
 
@@ -120,11 +128,11 @@ public class ConfigBuilder {
     }
 
     private Config reloadContent() {
-        Collection<IITSDocument> itsDocuments = this.getITSDocuments(this._contentPath);
+        Collection<IrisITSDocument> itsDocuments = this.getITSDocuments(this._contentPath);
         return reloadContent(itsDocuments);
     }
 
-    private Config reloadContent(Collection<IITSDocument> itsDocuments) {
+    private Config reloadContent(Collection<IrisITSDocument> itsDocuments) {
         try {
             if (itsDocuments != null) {
                 itsDocuments = Collections.unmodifiableCollection(itsDocuments);
@@ -145,16 +153,16 @@ public class ConfigBuilder {
 
     }
 
-    private List<ITSGroups> ItsGroupsList(Collection<IITSDocument> itsDocuments){
+    private List<ITSGroups> ItsGroupsList(Collection<IrisITSDocument> itsDocuments){
         if(itsDocuments != null) {
             itsDocuments = Collections.unmodifiableCollection(itsDocuments);
         }
-        Collection<IGrouping<String, IITSDocument>> groupDocumentsByFolders = this.groupDocumentsByParentFolder(itsDocuments);
+        Collection<IGrouping<String, IrisITSDocument>> groupDocumentsByFolders = this.groupDocumentsByParentFolder(itsDocuments);
         List<ITSGroups> itsGroupsList = new ArrayList();
         Iterator i$ = groupDocumentsByFolders.iterator();
 
         while(i$.hasNext()) {
-            IGrouping<String, IITSDocument> groupedDocuments = (IGrouping)i$.next();
+            IGrouping<String, IrisITSDocument> groupedDocuments = (IGrouping)i$.next();
             ITSGroups itsGroups = this.createITSGroups(groupedDocuments);
             itsGroupsList.add(itsGroups);
         }
@@ -162,17 +170,17 @@ public class ConfigBuilder {
         return itsGroupsList;
     }
 
-    private Map<String, IITSDocument> IrisItsDocumentmap(Collection<IITSDocument> itsDocuments)
+    private Map<String, IrisITSDocument> IrisItsDocumentmap(Collection<IrisITSDocument> itsDocuments)
     {
         if(itsDocuments != null) {
             itsDocuments = Collections.unmodifiableCollection(itsDocuments);
         }
 
-        Map<String, IITSDocument> documentsMap = new CaseInsensitiveMap();
+        Map<String, IrisITSDocument> documentsMap = new CaseInsensitiveMap();
         Iterator i$ = itsDocuments.iterator();
 
         while(i$.hasNext()) {
-            IITSDocument itsDocument = (IITSDocument)i$.next();
+            IrisITSDocument itsDocument = (IrisITSDocument)i$.next();
             documentsMap.put(ItsItemIdUtil.getItsDocumentId(itsDocument), itsDocument);
         }
 
@@ -180,7 +188,7 @@ public class ConfigBuilder {
     }
 
 
-    public IITSDocument getDocumentRepresentation(String id) throws ContentRequestException {
+    public IrisITSDocument getDocumentRepresentation(String id) throws ContentRequestException {
         if (_error != null) {
             throw new ContentRequestException("Content not loaded properly.", _error);
         }
@@ -191,29 +199,32 @@ public class ConfigBuilder {
     }
 
   public IITSDocument getRenderableDocument (String id) throws ContentRequestException {
-    IITSDocument documentRepresentation = getDocumentRepresentation (id);
+        IrisITSDocument documentRepresentation = getDocumentRepresentation(id);
     // In the below code there is no way to set accommodations.
     // We need to provide a way as this is common code also used by ItemPreview.
     return correctBaseUri (ITSDocumentFactory.load (documentRepresentation.getRealPath (), "ENU", true));
   }
 
-
+    public IITSDocument getRenderableDocument(String id, AccLookup accLookup) throws ContentRequestException {
+        IrisITSDocument documentRepresentation = getDocumentRepresentation(id);
+        return correctBaseUri(ITSDocumentFactory.load(documentRepresentation.getRealPath(), accLookup, true));
+    }
 
   // / <summary>
   // / Takes an array of xml files and parses into passage/item documents.
   // / </summary>
-  private Collection<IITSDocument> getITSDocuments (final String contentPath) {
+  private Collection<IrisITSDocument> getITSDocuments (final String contentPath) {
     // get all xml files in the content path
     final Collection<File> xmlFiles = Path.getFilesMatchingExtensions (contentPath, new String[] { "xml" });
 
-        Collection<IITSDocument> returnList = new ArrayList<>();
+        Collection<IrisITSDocument> returnList = new ArrayList<>();
 
     for (File file : xmlFiles) {
       final String xmlFile = file.getAbsolutePath ();
       try {
         final IITSDocument itsDocument = correctBaseUri (ITSDocumentFactory.loadUri2 (xmlFile, AccLookup.getNone (), false));
-        itsDocument.setRealPath( xmlFile);
-        returnList.add (itsDocument);
+          IrisITSDocument irisDocument = new IrisITSDocument(itsDocument, xmlFile);
+        returnList.add (irisDocument);
       } catch (Exception exp) {
         _logger.error("Exception while adding itsdocument to collection.",exp);
       }
@@ -221,7 +232,7 @@ public class ConfigBuilder {
     return returnList;
   }
 
-    private Collection<IGrouping<String, IITSDocument>> groupDocumentsByParentFolder(Collection<IITSDocument> itsDocuments) {
+    private Collection<IGrouping<String, IrisITSDocument>> groupDocumentsByParentFolder(Collection<IrisITSDocument> itsDocuments) {
         Transformer groupTransformer = new Transformer() {
 
             @Override
@@ -230,11 +241,11 @@ public class ConfigBuilder {
             }
         };
 
-        List<IGrouping<String, IITSDocument>> returnList = IGrouping.<String, IITSDocument>createGroups(itsDocuments, groupTransformer);
+        List<IGrouping<String, IrisITSDocument>> returnList = IGrouping.<String, IrisITSDocument>createGroups(itsDocuments, groupTransformer);
 
-        Collections.sort(returnList, new Comparator<IGrouping<String, IITSDocument>>() {
+        Collections.sort(returnList, new Comparator<IGrouping<String, IrisITSDocument>>() {
             @Override
-            public int compare(IGrouping<String, IITSDocument> o1, IGrouping<String, IITSDocument> o2) {
+            public int compare(IGrouping<String, IrisITSDocument> o1, IGrouping<String, IrisITSDocument> o2) {
                 return o1.getKey().compareTo(o2.getKey());
             }
         });
@@ -242,14 +253,14 @@ public class ConfigBuilder {
         return returnList;
     }
 
-    private ITSGroups createITSGroups(Collection<IITSDocument> itsDocuments) {
+    private ITSGroups createITSGroups(Collection<IrisITSDocument> itsDocuments) {
         boolean ignorePassages = ItemPreviewSettings.getIgnorePassages().getValue();
 
-        List<IITSDocument> itsPassages = new ArrayList<IITSDocument>();
-        List<IITSDocument> itsItems = new ArrayList<IITSDocument>();
+        List<IrisITSDocument> itsPassages = new ArrayList<IrisITSDocument>();
+        List<IrisITSDocument> itsItems = new ArrayList<IrisITSDocument>();
 
         // split up passages and items
-        for (IITSDocument itsDocument : itsDocuments) {
+        for (IrisITSDocument itsDocument : itsDocuments) {
             if (itsDocument.getType() == ITSEntityType.Passage) {
                 if (ignorePassages)
                     itsPassages.add(itsDocument);
@@ -277,7 +288,7 @@ public class ConfigBuilder {
       // check if passage
       if (ignorePassages && item.getStimulusKey () > 0) {
         // use item id instead of group
-        itemGroupID = item.getIDString ();
+        itemGroupID = item.getID ();
       }
 
             ITSGroup group = null;
