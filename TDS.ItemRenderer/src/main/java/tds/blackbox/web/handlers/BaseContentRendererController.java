@@ -9,9 +9,13 @@
 package tds.blackbox.web.handlers;
 
 import AIR.Common.Web.ContentType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.AccProperties;
 import tds.itemrenderer.data.ItemRenderGroup;
+import tds.itemrenderer.repository.ContentRepository;
 import tds.itemrenderer.web.ITSDocumentXmlSerializable;
 import tds.itemrenderer.web.XmlWriter;
 import tds.itemrenderer.webcontrols.ErrorCategories;
@@ -22,8 +26,12 @@ import tds.itemrenderer.webcontrols.rendererservlet.RendererServlet;
 
 import javax.servlet.http.HttpServletResponse;
 
+@Controller
 public class BaseContentRendererController extends TDSHandler
 {
+  @Autowired
+  private ContentRepository contentRepository;
+
   private UniqueIdType _pageSettingsUniqieIdType = UniqueIdType.GroupId;
 
   protected void setPageSettingsUniqieIdType (UniqueIdType value) {
@@ -57,7 +65,7 @@ public class BaseContentRendererController extends TDSHandler
       RendererServlet.getRenderedOutput (pageLayout);
       // write the rendered string to the socket.
 
-      ITSDocumentXmlSerializable contentSerializer = new ITSDocumentXmlSerializable(pageLayout);
+      ITSDocumentXmlSerializable contentSerializer = new ITSDocumentXmlSerializable(pageLayout, contentRepository);
       // TODO Shiva/Chad:
       // contentSerializer._includeFilePaths = false;
       // contentSerializer._includeRubric = true;

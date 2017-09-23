@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.opentestsystem.delivery</groupId>
 		<artifactId>item-renderer-master</artifactId>
-		<version>3.2.1.RELEASE</version>
+		<version>4.0.2.RELEASE</version>
 	</parent>
 
 	<name>tds-itemRenderer</name>
@@ -42,11 +42,10 @@
 			<artifactId>el-api</artifactId>
 			<version>6.0.37</version>
 		</dependency>
-
-		<!-- This is used in a non test class (RendererServlet) so it needs to remain compile scope  -->
+		<!-- Existing non-test code uses Spring test classes which is why scope is default -->
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
+			<artifactId>spring-test</artifactId>
 		</dependency>
 
 		<!-- Test -->
@@ -61,10 +60,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+    	<groupId>org.mockito</groupId>
+    	<artifactId>mockito-all</artifactId>
+    	<version>1.9.5</version>
+    <scope>test</scope>
+</dependency>
+
 	</dependencies>
 
 	<profiles>

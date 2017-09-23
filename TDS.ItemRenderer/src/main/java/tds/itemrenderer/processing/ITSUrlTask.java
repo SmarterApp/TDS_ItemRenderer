@@ -8,6 +8,8 @@
  ******************************************************************************/
 package tds.itemrenderer.processing;
 
+import TDS.Shared.Security.IEncryption;
+
 import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
@@ -71,5 +73,4 @@ public class ITSUrlTask implements IProcessorTask<String>
       
       return xml;
   }
-  
 }

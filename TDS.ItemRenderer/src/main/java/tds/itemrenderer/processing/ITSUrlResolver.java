@@ -11,8 +11,11 @@ package tds.itemrenderer.processing;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.UrlHelper;
+import TDS.Shared.Security.IEncryption;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,47 +27,73 @@ import tds.itemrenderer.configuration.RendererSettings;
  * @author jmambo
  * 
  */
-public class ITSUrlResolver
-{
-
-  protected final String     _filePath;
-  protected final String     _baseUrl;
-  private final List<String> _parsedFiles = new ArrayList<String> ();
+public class ITSUrlResolver {
+  protected final String _filePath;
+  protected final String _baseUrl;
+  private final List<String> _parsedFiles = new ArrayList<String>();
   private final boolean encryptionEnabled;
+  private final IEncryption encryption;
 
-  public ITSUrlResolver (final String filePath)
-  {
-    this(filePath, RendererSettings.getIsEncryptionEnabled ());
+  public ITSUrlResolver(final String filePath) {
+    this(filePath, RendererSettings.getIsEncryptionEnabled());
   }
 
-  public ITSUrlResolver (final String filePath, final boolean encryptionEnabled) {
+  public ITSUrlResolver(final String filePath, final boolean encryptionEnabled) {
     _filePath = filePath;
     this.encryptionEnabled = encryptionEnabled;
-    _baseUrl = getUrl ();
+    _baseUrl = getUrl(getBaseUrl());
+    encryption = null;
+  }
+
+  /**
+   * Constructs an {@link tds.itemrenderer.processing.ITSUrlResolver} object
+   *
+   * @param filePath The filepath to resolve
+   * @param encryptionEnabled flag indicating whether encryption is enabled
+   * @param contextPath The path of the host calling the endpoint requiring url resolution
+   * @param encryption (optional) encryption algorithm implementation
+   */
+  public ITSUrlResolver(final String filePath, final boolean encryptionEnabled, final String contextPath, final IEncryption encryption) {
+    _filePath = filePath;
+    this.encryptionEnabled = encryptionEnabled;
+    this.encryption = encryption;
+    _baseUrl = getUrl(getBaseUrl(contextPath));
   }
 
   /**
    * Add parsed media file
-   * 
+   *
    * @param fileName
    */
-  protected void addParsedMediaFile (String fileName) {
-    String basePath = _filePath.replace (Path.getFileName (_filePath), "");
-    String filePath = Path.combine (basePath, fileName);
+  protected void addParsedMediaFile(String fileName) {
+    String basePath = _filePath.replace(Path.getFileName(_filePath), "");
+    String filePath = Path.combine(basePath, fileName);
 
-    if (!_parsedFiles.contains (fileName))
-    {
-      _parsedFiles.add (filePath);
+    if (!_parsedFiles.contains(fileName)) {
+      _parsedFiles.add(filePath);
     }
   }
 
   /**
    * Gets parsed media files
-   * 
+   *
    * @return parsed files
    */
-  public List<String> getParsedMediaFiles () {
+  public List<String> getParsedMediaFiles() {
     return _parsedFiles;
+  }
+
+  private String getBaseUrl() {
+    // ITSConfig.ResourcePath: e.x., Resources?path={0}&amp;file=
+    // TDS_Preview/Resources?path={0}&file=
+    String urlPath = UrlHelper.resolveUrl(ITSConfig.getResourcePath());
+
+    // check if should lower case path
+    if(ITSConfig.getResourceFix()) {
+      // this was some ITS request from a while ago
+      urlPath = urlPath.toLowerCase();
+    }
+    return urlPath;
   }
 
   /**
@@ -72,12 +101,11 @@ public class ITSUrlResolver
    * 
    * @return base URL
    */
-  private String getBaseUrl ()
+  private String getBaseUrl(String contextPath)
   {
-
     // ITSConfig.ResourcePath: e.x., Resources?path={0}&amp;file=
     // TDS_Preview/Resources?path={0}&file=
-    String urlPath = UrlHelper.resolveUrl (ITSConfig.getResourcePath ());
+    String urlPath = resolveUrl (contextPath, ITSConfig.getResourcePath ());
 
     // check if should lower case path
     if (ITSConfig.getResourceFix ())
@@ -86,6 +114,31 @@ public class ITSUrlResolver
       urlPath = urlPath.toLowerCase ();
     }
     return urlPath;
+  }
+
+  /**
+   * If the path is an absolute url, returns the path.
+   * Otherwise, create a relative path given this webapp's context.
+   * @see javax.servlet.ServletContext#getContextPath
+   *
+   * note: sanitizing path which may contain a leading tilda
+  */
+  private static String resolveUrl(final String contextPath, final String path) {
+    try {
+      final URI uri = new URI(path);
+      if (uri.isAbsolute()) {
+        return path;
+      }
+    } catch (URISyntaxException e) {}
+
+    if (StringUtils.isBlank(path)) {
+      return String.format("%s/", contextPath);
+    } else {
+      String relativePath = StringUtils.removeStart(path, "~/");
+      relativePath = StringUtils.removeStart(relativePath, "/");
+
+      return String.format("%s/%s", contextPath, relativePath);
+    }
   }
 
   /**
@@ -120,7 +173,9 @@ public class ITSUrlResolver
     // encrypt the basePath
     if (encryptionEnabled)
     {
-      basePath = EncryptionHelper.EncryptToBase64 (basePath);
+      basePath = encryption == null
+          ? EncryptionHelper.EncryptToBase64 (basePath)
+          : EncryptionHelper.EncryptToBase64 (basePath, encryption);
     }
     else
     {
@@ -137,7 +192,7 @@ public class ITSUrlResolver
    * 
    * @return URL
    */
-  protected String getUrl () {
+  protected String getUrl (String baseUrl) {
     // if this is a url then return the base
     if (UrlHelper.IsHttpProtocol (_filePath))
     {
@@ -145,13 +200,12 @@ public class ITSUrlResolver
       return _filePath.replace (urlFile, "");
     }
 
-    // e.x., /TDS_Preview/Image.axd?path={0}&file=
-    String baseUrl = getBaseUrl ();
 
     // NOTE: The url can be NULL if we are not running this renderer in the
     // context of a web page
-    if (StringUtils.isEmpty (baseUrl))
+    if (StringUtils.isEmpty (baseUrl)) {
       return null;
+    }
 
     // e.x.,
     // QzpcVERTX0NvbnRlbnRcb2Frc1xCYW5rLTEzMVxJdGVtc1xJdGVtLTEzMS0xMDAxNzRc0
@@ -210,12 +264,14 @@ public class ITSUrlResolver
    */
   public String resolveUrl (String filePath) {
     // make sure there is a file name there
-    if (StringUtils.isEmpty (filePath))
+    if (StringUtils.isEmpty (filePath)) {
       return filePath;
+    }
 
     // Make sure we know the path of the file
-    if (StringUtils.isEmpty (_baseUrl))
+    if (StringUtils.isEmpty (_baseUrl)) {
       return filePath;
+    }
 
     // fix image path
     String fixedPath = _baseUrl + Path.getFileName (filePath);
@@ -234,13 +290,15 @@ public class ITSUrlResolver
    */
   public String resolveGridXmlUrls (String content, String language) {
     // make sure there is HTML
-    if (StringUtils.isEmpty (content))
+    if (StringUtils.isEmpty (content)) {
       return content;
+    }
 
     // check for page object, without this there is no URL to resolve since we
     // aren't in the context of a website.
-    if (StringUtils.isEmpty (_baseUrl))
+    if (StringUtils.isEmpty (_baseUrl)) {
       return content;
+    }
 
     // make copy of url for modification
     String url = _baseUrl;
@@ -272,13 +330,15 @@ public class ITSUrlResolver
    */
   public String resolveSpecXmlUrls (String content, String language) {
     // make sure there is HTML
-    if (StringUtils.isEmpty (content))
+    if (StringUtils.isEmpty (content)) {
       return content;
+    }
 
     // check for page object, without this there is no URL to resolve since we
     // aren't in the context of a website.
-    if (StringUtils.isEmpty (_baseUrl))
+    if (StringUtils.isEmpty (_baseUrl)) {
       return content;
+    }
 
     // make copy of url for modification
     String url = _baseUrl;
