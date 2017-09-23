@@ -42,6 +42,11 @@
 			<artifactId>el-api</artifactId>
 			<version>6.0.37</version>
 		</dependency>
+		<!-- Existing non-test code uses Spring test classes which is why scope is default -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
 
 		<!-- Test -->
 		<dependency>
