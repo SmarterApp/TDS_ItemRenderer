@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.opentestsystem.delivery</groupId>
 		<artifactId>item-renderer-master</artifactId>
-		<version>4.0.2</version>
+		<version>4.0.2-SNAPSHOT</version>
 	</parent>
 
 	<name>tds-itemRenderer</name>
@@ -42,6 +42,11 @@
 			<artifactId>el-api</artifactId>
 			<version>6.0.37</version>
 		</dependency>
+		<!-- Existing non-test code uses Spring test classes which is why scope is default -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
 
 		<!-- Test -->
 		<dependency>
@@ -55,10 +60,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<scope>compile</scope>
-		</dependency>
+    	<groupId>org.mockito</groupId>
+    	<artifactId>mockito-all</artifactId>
+    	<version>1.9.5</version>
+    <scope>test</scope>
+</dependency>
+
 	</dependencies>
 
 	<profiles>
