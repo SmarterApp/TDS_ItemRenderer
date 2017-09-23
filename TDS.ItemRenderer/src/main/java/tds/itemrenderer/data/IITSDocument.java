@@ -1,226 +1,325 @@
-/*******************************************************************************
- * Educational Online Test Delivery System Copyright (c) 2014 American
- * Institutes for Research
- * 
- * Distributed under the AIR Open Source License, Version 1.0 See accompanying
- * file AIR-License-1_0.txt or at http://www.smarterapp.org/documents/
- * American_Institutes_for_Research_Open_Source_Software_License.pdf
- ******************************************************************************/
 package tds.itemrenderer.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import tds.itempreview.content.ITSDocumentExtensions;
-import tds.itemrenderer.data.ITSTypes.ITSEntityType;
+public interface IITSDocument {
+    /**
+     * Location of the assessment item
+     *
+     * @return location of assessment item
+     */
+    String getBaseUri();
 
-/**
- * @author This is the minimal interface required for page rendering and
- *         external use. This interface is not used for adding or modifying
- *         data. Note: made methods abstract as well.
- */
-public abstract class IITSDocument
-{
+    void setBaseUri(String baseUri);
 
-  protected String          _baseUri;        // The original file path of where
-                                              // the XML data came from.
-  private String            _rendererSpec;
-  private String            _layout;
-  private String            _format;
-  private String            _responseType;
-  private String            _subject;
-  private String            _grade;
-  private String            _answerKey;
-  private String            _credit;
-  private String            _copyright;
-  private String            _gridAnswerSpace; // This is the new top level grid
-                                              // answer space. This replaces the
-                                              // content element level answer
-                                              // space.
-  private ITSEntityType     _type;           // What type of entity this is.
-                                              // This can be item or passage.
-  private ITSSoundCue       _soundCue;
-  private ITSTutorial       _tutorial;
-  private List<ITSResource> _resources;
-  private ITSMachineRubric  _machineRubric;
-  private long              _bankKey;
-  private long              _itemKey;
-  private long              _stimulusKey;
-  private boolean           _isLoaded;       // Is the XML loaded and parsed.
-  private boolean           _autoEmboss;
+    /**
+     * Rendering specification used to render the item on the test client device
+     * RendererSpec is present only if the format attribute value is eq (equation item)
+     *
+     * @return file name for the rendering specification
+     */
+    String getRendererSpec();
 
-  public String getBaseUri () {
-    return _baseUri;
-  }
+    void setRendererSpec(String rendererSpec);
 
-  public void setBaseUri (String value) {
-    _baseUri = value;
-  }
+    /**
+     * Type of the item.
+     *
+     * The list of item types:
+     *
+     * Value    - Description  <br/>
+     * EBSR     - Evidence-Based Selected Response item.  <br/>
+     * eq       - Equation item  <br/>
+     * er       - Extended Response item  <br/>
+     * gi       - Grid item  <br/>
+     * htq      - Hot Text itemice item  <br/>
+     * mc       - Multiple Cho  <br/>
+     * mi       - Match Interaction item  <br/>
+     * ms       - Multi-Select item  <br/>
+     * nl       - Natural Language item  <br/>
+     * pass     - Passage item  <br/>
+     * sa       - Short Answer item  <br/>
+     * SIM      - Simulation item  <br/>
+     * ti       - Table Interaction item  <br/>
+     * tut      - Tutorial item  <br/>
+     * wer      - Writing Extended Response item  <br/>
+     * wordList - Wordlist resource  <br/>
+     *
+     *  All types of items except Wordlist items indicate the item type
+     *  with the format attribute. WordList is included in the vocabulary
+     *  but is not used as a value of format.
+     *  It is included to permit the type attribute TO BE DEPRECATED and
+     *  replaced by the format attribute.
+     *
+     * @return Type of the item
+     */
+    String getFormat();
 
-  public boolean getIsLoaded () {
-    return _isLoaded;
-  }
+    void setFormat(String format);
 
-  protected void setIsLoaded (boolean value) {
-    _isLoaded = value;
-  }
+    /**
+     * The layout file used to render the item.
+     *
+     * @return layout file
+     */
+    String getLayout();
 
-  public ITSEntityType getType () {
-    return _type;
-  }
+    void setLayout(String layout);
 
-  protected void setType (ITSEntityType value) {
-    _type = value;
-  }
+    /**
+     * The container for the Grid Item Rendering Specification XML document elements.
+     *
+     * gridaswerspace element is present only if the format attribute is "gi"
+     *
+     * @return gridaswerspace element
+     */
+    String getGridAnswerSpace();
 
-  public long getBankKey () {
-    return _bankKey;
-  }
+    void setGridAnswerSpace(String gridAnswerSpace);
 
-  public void setBankKey (long value) {
-    _bankKey = value;
-  }
+    /**
+     * The type (passage or item) of this item.
+     *
+     * @return
+     */
+    ITSTypes.ITSEntityType getType();
 
-  public void setItemKey (Long value) {
-    _itemKey = value;
-  }
+    void setType(ITSTypes.ITSEntityType type);
 
-  public long getItemKey () {
-    return _itemKey;
-  }
+    /**
+     * Sound cue resource
+     *
+     * @return
+     */
+    ITSSoundCue getSoundCue();
 
-  public long getStimulusKey () {
-    return _stimulusKey;
-  }
+    void setSoundCue(ITSSoundCue soundCue);
 
-  public void setStimulusKey (long value) {
-    _stimulusKey = value;
-  }
 
-  public void setLayout (String value) {
-    _layout = value;
-  }
+    /**
+     * Tutorial resource
+     *
+     * @return
+     */
+    ITSTutorial getTutorial();
 
-  public String getLayout () {
-    return _layout;
-  }
+    void setTutorial(ITSTutorial tutorial);
 
-  public String getFormat () {
-    return _format;
-  }
+    /**
+     * Additional resources for an item.
+     * The resource is described in an XML document specific to the type of resource.
+     *
+     * @return
+     */
+    List<ITSResource> getResources();
 
-  protected void setFormat (String value) {
-    _format = value;
-  }
+    void setResources(List<ITSResource> resources);
 
-  public String getResponseType () {
-    return _responseType;
-  }
+    /**
+     * An assessment item may include a machine rubric used to control how the item is automatically graded.
+     * Machine rubrics are present only for assessment items that are automatically graded.
+     * The machine rubric is stored separately from the assessment item and each of the different types of machine rubrics
+     * is defined by its own Assessment Item Machine Rubric XML document elements.
+     *
+     * @return machine rubric
+     */
+    ITSMachineRubric getMachineRubric();
 
-  public String getSubject () {
-    return _subject;
-  }
+    void setMachineRubric(ITSMachineRubric machineRubric);
 
-  public String getGrade () {
-    return _grade;
-  }
+    /**
+     * Item bank that the resource is stored in.
+     * Bankkey is a candidate to be deprecated.
+     *
+     * @return bankkey
+     */
+    long getBankKey();
 
-  public String getAnswerKey () {
-    return _answerKey;
-  }
+    void setBankKey(long bankKey);
 
-  public String getCredit () {
-    return _credit;
-  }
+    boolean getIsLoaded();
 
-  public String getCopyright () {
-    return _copyright;
-  }
+    void setIsLoaded(boolean isLoaded);
 
-  public boolean isAutoEmboss () {
-    return _autoEmboss;
-  }
+    /**
+     * Version identifier for the item as part of the release.
+     *
+     * Read from the version attribute of the item release xml document.
+     *
+     * @return version
+     */
+    double getVersion();
 
-  public ITSSoundCue getSoundCue () {
-    return _soundCue;
-  }
+    void setVersion(double version);
 
-  protected void setSoundCue (ITSSoundCue value) {
-    _soundCue = value;
-  }
+    boolean getValidated();
 
-  public ITSTutorial getTutorial () {
-    return _tutorial;
-  }
+    void setValidated(boolean validated);
 
-  protected void setTutorial (ITSTutorial value) {
-    _tutorial = value;
-  }
+    /**
+     * Version identifier for the item content.
+     *
+     * The value of the approvedVersion attribute should match
+     * the value of the version attribute of the item element.
+     *
+     * @return version
+     */
+    int getApprovedVersion();
 
-  public List<ITSResource> getResources () {
-    return _resources;
-  }
+    void setApprovedVersion(int approvedVersion);
 
-  protected void setResources (List<ITSResource> value) {
-    _resources = value;
-  }
+    /**
+     * Unique item number for the item
+     *
+     * @return
+     */
+    long getId();
 
-  public String getRendererSpec () {
-    return _rendererSpec;
-  }
+    void setId(long value);
 
-  protected void setRendererSpec (String value) {
-    _rendererSpec = value;
-  }
+    Map<String, List<ITSAttribute>> getAttributes();
 
-  public ITSMachineRubric getMachineRubric () {
-    return _machineRubric;
-  }
+    void setAttributes(HashMap<String, List<ITSAttribute>> attributes);
 
-  protected void setMachineRubric (ITSMachineRubric value) {
-    _machineRubric = value;
-  }
+    /**
+     * Content of an assessment item.
+     *
+     * @return
+     */
+    Map<String, ITSContent> getContents();
 
-  public String getGridAnswerSpace () {
-    return _gridAnswerSpace;
-  }
+    void setContents(HashMap<String, ITSContent> contents);
 
-  protected void setGridAnswerSpace (String value) {
-    _gridAnswerSpace = value;
-  }
+    List<String> getMediaFiles();
 
-  // Gets the content for a specific language.
-  public abstract ITSContent getContent (String language);
+    void setMediaFiles(List<String> mediaFiles);
 
-  // Gets the content for the default language ("ENU").
-  public abstract ITSContent getContentDefault ();
+    void addAttribute(ITSAttribute attribute);
 
-  public abstract List<String> getMediaFiles ();
+    String getAttributeValue(String attid);
 
-  public String getID () {
-    return ITSDocumentExtensions.getID (this);
-  }
+    ITSContent getContent(String language);
 
-  public String getGroupID () {
-    return ITSDocumentExtensions.getGroupID (this);
-  }
+    void addContent(ITSContent content);
 
-  public String[] getBaseUriDirSegments () {
-    return ITSDocumentExtensions.getBaseUriDirSegments (this);
-  }
+    ITSContent getContentDefault();
 
-  public String getFolderName () {
-    return ITSDocumentExtensions.getFolderName (this);
-  }
+    /**
+     * Unique item number for the item
+     *
+     * @return item key
+     */
+    long getItemKey();
 
-  public String getParentFolderName () {
-    return ITSDocumentExtensions.getParentFolderName (this);
-  }
+    /**
+     * The item number of the associated stimulus passage.
+     *
+     * Read from the stm_pass_id item attribute
+     *
+     * @return
+     */
+    long getStimulusKey();
 
-  /**
-   * @return
-   */
-  public int getMaxScore () {
-    return 0;
-  }
+    void setAttributeResponseType(String value);
 
+    /**
+     *  The rendering of the item.<br/>
+     *
+     *  Item Format to itm_att_Response Type Value Mapping <br/>
+     *  Item Format - Response Type <br/>
+     *  EBSR        - EBSR <br/>
+     *  eq          - EquationEditor <br/>
+     *  er          - PlainText <br/>
+     *  gi          - Grid <br/>
+     *  htq         - HotText <br/>
+     *  mc          - Vertical / Stacked <br/>
+     *  mi          - TableMatch / MatchItem <br/>
+     *  ms          - Vertical MS <br/>
+     *  nl          - PlainText <br/>
+     *  pass        - NA <br/>
+     *  sa          - PlainText <br/>
+     *  SIM         - NA <br/>
+     *  ti          - TableInput <br/>
+     *  tut         - NA <br/>
+     *  wer         - HTMLEditor NA <br/>
+     *  wordList    - NA <br/>
+     *  @return Rendering code
+     */
+    String getResponseType();
+
+    /**
+     * The subject of the item.
+     * "itm_item_subject" item attribute
+     *
+     * @return
+     */
+    String getSubject();
+
+    /**
+     * Grade level for the item.
+     * "itm_att_Grade" item attribute
+     *
+     * @return
+     */
+    String getGrade();
+
+    /**
+     * The item rubric
+     * "itm_att_Answer Key" item attribute
+     *
+     * @return
+     */
+    String getAnswerKey();
+
+    /**
+     * "stm_att_Credit Line" item attribute
+     * @return
+     */
+    String getCredit();
+
+    /**
+     * "itm_att_Copyright text" item attribute
+     * @return
+     */
+    String getCopyright();
+
+    /**
+     * For items, true if "itm_att_Rendering Guide" equals "AutoEmboss"
+     * For passages, true if "stm_att_Rendering Guide" equals "AutoEmboss"
+     * @return
+     */
+    boolean isAutoEmboss();
+
+    /**
+     * "itm_att_Max Item Score" item attribute
+     * @return
+     */
+    int getMaxScore();
+
+    /**
+     * The XML content nodes. These come internally from a dictionary so the order
+     * of the content nodes is not guaranteed to be the same as the original XML.
+     */
+    @JsonIgnore
+    List<ITSContent> getContentsValues();
+
+    void addMediaFiles(List<String> capturedResources);
+
+    String[] getBaseUriDirSegments();
+
+    String getFolderName();
+
+    String getGroupID();
+
+    String getID();
+
+    String getParentFolderName();
+
+    String getRealPath();
+
+    void setRealPath(String value);
 }

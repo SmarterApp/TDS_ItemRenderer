@@ -10,7 +10,8 @@ package tds.itemrenderer.processing;
 
 import java.lang.reflect.InvocationTargetException;
 
-import tds.itemrenderer.data.ITSDocumentXml;
+import tds.itemrenderer.data.IITSDocument;
+
 
 /**
  * Creates ITSDocumentXML instance
@@ -27,7 +28,7 @@ public class ITSDocumentXmlFactory
    * @param itsDocumentXmlType ITSDocumentXML class type
    * @return ITSDocumentXML instance
    */
-  public static <T extends  ITSDocumentXml> T create(Class<T> itsDocumentXmlType) {
+  public static <T extends IITSDocument> T create(Class<T> itsDocumentXmlType) {
     try {
         return itsDocumentXmlType.getDeclaredConstructor ().newInstance ();
     } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {

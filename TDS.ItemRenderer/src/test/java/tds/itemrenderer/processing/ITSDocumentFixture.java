@@ -13,6 +13,7 @@ import java.util.List;
 
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSContent;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSDocument;
 
 /**
@@ -22,8 +23,8 @@ import tds.itemrenderer.data.ITSDocument;
 public class ITSDocumentFixture
 {
   
-  public static ITSDocument getITSDocument() {
-    final ITSDocument itsDocument = new ITSDocument();
+  public static IITSDocument getITSDocument() {
+    final IITSDocument itsDocument = new ITSDocument();
     final ITSContent itsContent = new  ITSContent ();
     final String stem = "<p style=\"font-weight:normal; \">Which shows the fractions in the correct location on the number line?</p>";
     itsContent.setStem (stem);
@@ -33,8 +34,8 @@ public class ITSDocumentFixture
     return itsDocument;
   }
 
-  public static ITSDocument getITSDocumentWithLinks() {
-    final ITSDocument document = new ITSDocument();
+  public static IITSDocument getITSDocumentWithLinks() {
+    final IITSDocument document = new ITSDocument();
     document.setBaseUri("/usr/local/tomcat/resources/tds/bank/stimuli/stim-187-3716/stim-187-3716.xml");
     final ITSContent content = new ITSContent();
     final String stem = "<p style=\"font-weight:bold; \">Water in <span id=\"passage_3716_TAG_1_BEGIN\">Space</span></p><p style=\"\">&#xA0;</p><p style=\"\">Listen to the presentation. Then answer the questions.</p><p style=\"\">&#xA0;</p><p style=\"\"><a href=\"passage_3716_v7_3716_audio.ogg\" type=\"audio/ogg\" class=\"sound_explicit\" autoplay=\"False\" visible=\"True\"></a></p><p style=\"\">&#xA0;</p><p style=\"\">“Water in <span id=\"passage_3716_TAG_3_BEGIN\">Space”</span> by NASA, from <span id=\"passage_3716_TAG_2_BEGIN\">http://www.nasa.gov/mov/178680main_028_ksnn_3-5_water_cap.mov</span><span id=\"passage_3716_TAG_4_BEGIN\">.</span> In the public domain.</p>";

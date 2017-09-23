@@ -36,6 +36,7 @@ import java.net.URI;
 
 import tds.blackbox.ContentRequestException;
 import tds.itemrenderer.data.AccLookup;
+import tds.itemrenderer.data.IITSDocument;
 import tds.itemrenderer.data.ITSDocument;
 import tds.itemrenderer.data.xml.wordlist.Itemrelease;
 
@@ -60,13 +61,13 @@ public class RemoteContentRepositoryTest {
     public void shouldFindItemDocument() {
         final String itemPath = "/path/to/item";
         final AccLookup accLookup = new AccLookup();
-        final ITSDocument itsDocument = new ITSDocument();
+        final IITSDocument itsDocument = new ITSDocument();
         itsDocument.setVersion(2000);
 
-        ResponseEntity<ITSDocument> responseEntity = new ResponseEntity<>(itsDocument, HttpStatus.OK);
+        ResponseEntity<IITSDocument> responseEntity = new ResponseEntity<>(itsDocument, HttpStatus.OK);
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))
             .thenReturn(responseEntity);
-        final ITSDocument retItsDocument = remoteContentRepository.findItemDocument(itemPath, accLookup, "", false);
+        final IITSDocument retItsDocument = remoteContentRepository.findItemDocument(itemPath, accLookup, "", false);
         assertEquals((int)retItsDocument.getVersion(), 2000);
         verify(mockRestTemplate).exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class));
     }
@@ -92,7 +93,7 @@ public class RemoteContentRepositoryTest {
     public void shouldThrowForContentRequestException() {
         final String itemPath = "/path/to/item";
         final AccLookup accLookup = new AccLookup();
-        final ITSDocument itsDocument = new ITSDocument();
+        final IITSDocument itsDocument = new ITSDocument();
         itsDocument.setVersion(2000);
 
         when(mockRestTemplate.exchange(isA(URI.class), isA(HttpMethod.class), isA(HttpEntity.class), isA(ParameterizedTypeReference.class)))

@@ -8,7 +8,6 @@
  ******************************************************************************/
 package tds.itemrenderer.webcontrols.rendererservlet.testcontent;
 
-import java.util.List;
 import java.util.ArrayList;
 
 import tds.itemrenderer.data.IITSDocument;
@@ -16,7 +15,6 @@ import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSAttribute;
 import tds.itemrenderer.data.ITSContent;
 import tds.itemrenderer.data.ITSDocument;
-import tds.itemrenderer.data.ITSOption;
 import tds.itemrenderer.data.ITSOptionList;
 import tds.itemrenderer.data.ITSResource;
 import tds.itemrenderer.data.ITSTutorial;
@@ -40,7 +38,7 @@ public class DummyItsContentGeneratorLayoutMulti
   }
 
   private static IITSDocument createDummyItsPassage () {
-    ITSDocument doc = new ITSDocument ();
+    IITSDocument doc = new ITSDocument();
     doc.setApprovedVersion (66);
     doc.setBankKey (176);
     doc.setBaseUri ("C:\\WorkSpace\\TDSCore\\AppsCurrent\\ItemPreview\\TDS.ItemPreview.Web\\Content\\SBAC_Stim\\Passage_4007_v5.xml");
@@ -109,7 +107,7 @@ public class DummyItsContentGeneratorLayoutMulti
   }
 
   private static IITSDocument createDummyItsDocument3 () {
-    ITSDocument doc = new ITSDocument ();
+    IITSDocument doc = new ITSDocument();
     doc.setApprovedVersion (66);
     doc.setBankKey (176);
     doc.setBaseUri ("C:\\WorkSpace\\TDSCore\\AppsCurrent\\ItemPreview\\TDS.ItemPreview.Web\\Content\\SBAC_Stim\\Item_55601_v2.xml");
@@ -198,7 +196,7 @@ public class DummyItsContentGeneratorLayoutMulti
   }
 
   private static IITSDocument createDummyItsDocument2 () {
-    ITSDocument doc = new ITSDocument ();
+    IITSDocument doc = new ITSDocument();
     doc.setApprovedVersion (66);
     doc.setBankKey (176);
     doc.setBaseUri ("C:\\WorkSpace\\TDSCore\\AppsCurrent\\ItemPreview\\TDS.ItemPreview.Web\\Content\\SBAC_Stim\\Item_55556_v2.xml");
@@ -288,7 +286,7 @@ public class DummyItsContentGeneratorLayoutMulti
   }
 
   private static IITSDocument createDummyItsDocument1 () {
-    ITSDocument doc = new ITSDocument ();
+    IITSDocument doc = new ITSDocument();
     doc.setApprovedVersion (66);
     doc.setBankKey (176);
     doc.setBaseUri ("C:\\WorkSpace\\TDSCore\\AppsCurrent\\ItemPreview\\TDS.ItemPreview.Web\\Content\\SBAC_Stim\\Item_55553_v3.xml");
