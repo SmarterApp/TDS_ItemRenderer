@@ -13,21 +13,24 @@ import AIR.Common.Web.Session.HttpContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import tds.blackbox.ContentRequest;
-import tds.blackbox.ContentRequestException;
-import tds.blackbox.ContentRequestParser;
-import tds.itemrenderer.data.AccLookup;
-import tds.itemrenderer.data.ItemRenderGroup;
-import tds.itemrenderer.webcontrols.rendererservlet.ContentRenderingException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import tds.blackbox.ContentRequest;
+import tds.blackbox.ContentRequestException;
+import tds.blackbox.ContentRequestParser;
+import tds.itemrenderer.data.AccLookup;
+import tds.itemrenderer.data.ItemRenderGroup;
+import tds.itemrenderer.repository.ContentRepository;
+import tds.itemrenderer.webcontrols.rendererservlet.ContentRenderingException;
 
 @Scope ("prototype")
 @Controller
@@ -35,10 +38,17 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
 {
   private static final Logger _logger = LoggerFactory.getLogger (BlackBoxRequestHandler.class);
 
+  private ContentRepository contentRepository;
+
+  @Autowired
+  public BlackBoxRequestHandler(ContentRepository contentRepository) {
+    this.contentRepository = contentRepository;
+  }
+
   // Controller starts here
   @RequestMapping (value = "ContentRequest.axd/load", produces = "application/xml")
   @ResponseBody
-  public void loadContentRequest2 (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException {
+  public void loadContentRequest2 (HttpServletRequest request, HttpServletResponse response) throws ContentRequestException  {
     loadContentRequest (request, response);
   }
 
@@ -66,7 +76,8 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
     }
     AccLookup accLookup = ContentRequestParser.createAccommodations (contentRequest);
 
-    ItemRenderGroup itemRenderGroup = ContentRequestParser.createPageLayout (contentRequest);
+
+    ItemRenderGroup itemRenderGroup = ContentRequestParser.createPageLayout(contentRepository, contentRequest);
 
     // Shiva: This is where our implementation differs from .NET.
     // In .NET the IRIS method of populating PageLayout is different than the
@@ -74,10 +85,10 @@ public class BlackBoxRequestHandler extends BaseContentRendererController
     // In our case we intend to keep one single point of entry. Only IRiS allows
     // overriding of layout.
     // we will implement it by overriding the layout in the first item.
-    if (!StringUtils.isEmpty (contentRequest.getLayoutName ()))
-      itemRenderGroup.setLayout (contentRequest.getLayoutName ());
-    
-    renderGroup (itemRenderGroup, accLookup, response);
+    if (!StringUtils.isEmpty(contentRequest.getLayoutName()))
+      itemRenderGroup.setLayout(contentRequest.getLayoutName());
+
+    renderGroup(itemRenderGroup, accLookup, response);
   }
 
   /*
