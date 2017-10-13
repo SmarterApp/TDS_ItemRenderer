@@ -104,9 +104,9 @@ Sections.Login.prototype.load = function ()
     if (Util.Browser.isSecure()) {
         if (Util.Browser.isWindows()) {
             // For Windows, we attempt to lock down while launching the Secure Browser
-            Util.SecureBrowser.enableLockDown(true);
+            SecureBrowser.security.lockDown(true, function() {console.log("lockDown success")}, function() {console.log("lockDown error")});
         } else {
-            Util.SecureBrowser.enableLockDown(false);
+            SecureBrowser.security.lockDown(false, function() {console.log("lockDown success")}, function() {console.log("lockDown error")});
         }
     }
 
@@ -127,9 +127,6 @@ Sections.Login.prototype.load = function ()
 
     // Check if the routersession query param is passed to pre populate session id.
     this.checkQueryStringRouterSession();
-
-    // load currently running apps (some mobile browsers require we do this)
-    Util.SecureBrowser.loadProcessList();
 };
 
 Sections.Login.prototype.render = function() {
@@ -311,23 +308,24 @@ Sections.Login.prototype.validate = function ()
 
     //Check if the environment is secure in case we are using a secure browser
     if (Util.Browser.isSecure() && !TDS.Debug.ignoreBrowserChecks) {
-        var securityCheckResult = Util.SecureBrowser.canEnvironmentBeSecured();
-        if (securityCheckResult && !securityCheckResult.canSecure) {
-            var defaultError = 'Environment is not secure. Please notify your proctor';
-            if (securityCheckResult.messageKey) {
-                TDS.Dialog.showWarning(Messages.getAlt(securityCheckResult.messageKey, defaultError));
-            } else {
-                TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentInsecure', defaultError));
-            }
-            return;
-        }
+        Util.SecureBrowser.isEnvironmentSecure();
+
+        // if (securityCheckResult && !securityCheckResult.canSecure) {
+        //     var defaultError = 'Environment is not secure. Please notify your proctor';
+        //     if (securityCheckResult.messageKey) {
+        //         TDS.Dialog.showWarning(Messages.getAlt(securityCheckResult.messageKey, defaultError));
+        //     } else {
+        //         TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentInsecure', defaultError));
+        //     }
+        //     return;
+        // }
     }
 
     // get login fields
     var keyValues = [];;
     var sessionID;
     // Get forbidden apps
-    var forbiddenApps = Util.SecureBrowser.getForbiddenApps();
+    var forbiddenApps = []; // Util.SecureBrowser.getForbiddenApps();
 
     // If this is a login from a secure browser launch protocol redirect, then we need to get the student login data
     // from the TDS-Student-Data cookie. With the launch protocol, we will only validate session ID and student ID.

@@ -647,7 +647,7 @@ The main test shell entry code.
             return false;
         }
 
-        var forbiddenApps = Util.SecureBrowser.getForbiddenApps();
+        var forbiddenApps = []; // Util.SecureBrowser.getForbiddenApps();
 
         // if there are any forbidden apps then alert user and log them out
         if (forbiddenApps.length > 0) {
