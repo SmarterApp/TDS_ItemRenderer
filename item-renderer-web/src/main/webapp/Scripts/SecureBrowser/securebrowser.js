@@ -126,18 +126,15 @@
       return -1;
   };
 
-  Unified.prototype.isEnvironmentSecure = function() {
+  Unified.prototype.isEnvironmentSecure = function(callback) {
       try {
           if (this._hasAPI()
               && typeof SecureBrowser.security.isEnvironmentSecure === 'function') {
-              // SecureBrowser.security.isEnvironmentSecure(function(state) {console.log(state);});
-              return {secure: true, messageKey: ""};
+              SecureBrowser.security.isEnvironmentSecure(callback);
           }
       } catch (ex) {
           console.log('Exception occurred ' + ex.message);
-          return false;
       }
-      return false;
   };
 
 
