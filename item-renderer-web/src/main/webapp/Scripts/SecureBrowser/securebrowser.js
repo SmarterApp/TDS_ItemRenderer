@@ -137,7 +137,63 @@
       }
   };
 
+    // get list of blacklisted processes
+    Unified.prototype.getForbiddenApps = function() {
 
-  SB.Unified = Unified;
+        // make sure forbidden apps list exists
+        if (typeof (TDS) != 'object' ||
+            typeof (TDS.Config) != 'object' ||
+            typeof (TDS.Config.forbiddenApps) != 'object' ||
+            (TDS.Config.forbiddenApps == null)) {
+            // return currentForbiddenApps;
+            console.log('TDS.Config.forbiddenApps: ' + TDS.Config.forbiddenApps);
+        }
+
+        try {
+            if (this._hasAPI()
+                && typeof SecureBrowser.security.examineProcessList === 'function') {
+                //
+                var currentForbiddenApps = [];
+
+                // get currently running processes
+                var that = this;
+                SecureBrowser.security.examineProcessList( TDS.Config.forbiddenApps.map(app => app.name), function(results /* []<string> */) {
+                    console.log(results);
+                    that.currentForbiddenApps = results;
+                    debugger;
+                });
+
+                return currentForbiddenApps;
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+        }
+    };
+
+    <!-- remove functions -->
+    Unified.prototype.getProcessList = function () {
+        debugger;
+        console.log("getProcessList");
+        var processList = [];
+
+        return processList;
+    };
+
+    Unified.prototype.getIPAddressList = function () {
+        debugger;
+        console.log("getIPAddressList");
+        var addressList = [];
+
+        return addressList;
+    };
+
+
+    Unified.prototype.clearCache = function () {
+        debugger;
+        console.log("clearCache");
+        return false;
+    };
+
+    SB.Unified = Unified;
 
 })(TDS.SecureBrowser);

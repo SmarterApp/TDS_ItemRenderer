@@ -328,7 +328,7 @@ Sections.Login.prototype.validate = function ()
     var keyValues = [];
     var sessionID;
     // Get forbidden apps
-    var forbiddenApps = []; // Util.SecureBrowser.getForbiddenApps();
+    var forbiddenApps = Util.SecureBrowser.getForbiddenApps();
 
     // If this is a login from a secure browser launch protocol redirect, then we need to get the student login data
     // from the TDS-Student-Data cookie. With the launch protocol, we will only validate session ID and student ID.
