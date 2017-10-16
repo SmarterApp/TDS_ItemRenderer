@@ -306,23 +306,26 @@ Sections.Login.prototype.validate = function ()
     }
     Util.Storage.remove('storageTest'); // Clean Up
 
+    var that = this;
+    var securityCheckResult;
     //Check if the environment is secure in case we are using a secure browser
     if (Util.Browser.isSecure() && !TDS.Debug.ignoreBrowserChecks) {
-        Util.SecureBrowser.isEnvironmentSecure();
-
-        // if (securityCheckResult && !securityCheckResult.canSecure) {
-        //     var defaultError = 'Environment is not secure. Please notify your proctor';
-        //     if (securityCheckResult.messageKey) {
-        //         TDS.Dialog.showWarning(Messages.getAlt(securityCheckResult.messageKey, defaultError));
-        //     } else {
-        //         TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentInsecure', defaultError));
-        //     }
-        //     return;
-        // }
+        Util.SecureBrowser.isEnvironmentSecure(function(securityCheckResult) {
+            that.securityCheckResult = securityCheckResult;
+        });
     }
 
+    if (securityCheckResult && !securityCheckResult.secure) {
+        var defaultError = 'Environment is not secure. Please notify your proctor';
+        if (securityCheckResult.messageKey) {
+            TDS.Dialog.showWarning(Messages.getAlt(securityCheckResult.messageKey, defaultError));
+        } else {
+            TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentInsecure', defaultError));
+        }
+        return;
+    }
     // get login fields
-    var keyValues = [];;
+    var keyValues = [];
     var sessionID;
     // Get forbidden apps
     var forbiddenApps = []; // Util.SecureBrowser.getForbiddenApps();
@@ -337,19 +340,19 @@ Sections.Login.prototype.validate = function ()
         keyValues.push("ID:" + studentId);
     } else {
         Util.Array.each(TDS.Config.loginRequirements, function (loginReq) {
-            var input = this.getLoginInput(loginReq.id); // form control
+            var input = that.getLoginInput(loginReq.id); // form control
             var value = YAHOO.lang.trim(input.value); // trimmed form value
             var keyValue = loginReq.id + ':' + value;
             keyValues.push(keyValue);
 
-        }, this);
-        sessionID = this.getSessionID();
+        }, that);
+        sessionID = that.getSessionID();
     }
 
     var loginCallback = function(loginInfo) {
         console.log('Login Info', loginInfo);
         LoginShell.setLoginInfo(loginInfo);
-        this.request('next', loginInfo);
+        that.request('next', loginInfo);
 
         // we want to try to force full screen after student logs in and release lock when they log out, and
         // that applies to secure browsers that implement function enableLockDown (except for Windows Secure Browser)
@@ -359,7 +362,8 @@ Sections.Login.prototype.validate = function ()
     };
 
     TDS.Student.API.loginStudent(keyValues, sessionID, forbiddenApps)
-        .then(loginCallback.bind(this));
+        .then(loginCallback.bind(that));
+
 };
 
 // this is a helper function for the login form

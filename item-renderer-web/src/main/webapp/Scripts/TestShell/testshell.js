@@ -676,7 +676,15 @@ The main test shell entry code.
         if (TS.isUnloading) return false;  // TS is unloading. No need to show an alert fb# 152367
 
         // if the environment security has been breached, alert user and log them out
-        var securityCheckResult = Util.SecureBrowser.isEnvironmentSecure();
+        var that = this;
+        var securityCheckResult;
+
+        Util.SecureBrowser.isEnvironmentSecure(
+            function(securityCheckResult) {
+                that.securityCheckResult = securityCheckResult;
+            }
+        );
+
         if (securityCheckResult != null && (!securityCheckResult.secure)) {
             var errorMessageKey = (securityCheckResult.messageKey != null) ? securityCheckResult.messageKey : 'TestShell.Alert.EnvironmentInsecure';
             var error = Messages.getAlt(errorMessageKey, 'Environment is not secure. Your test will be paused.');
@@ -686,10 +694,10 @@ The main test shell entry code.
 
             return true;
         }
-
         // check 30 seconds from now again
         var timerMillis = (TS.Config.environmentCheckInterval * 1000);
         YAHOO.lang.later(timerMillis, TS, TS.checkForEnvironmentSecurity);
+
         return false;
     };
     
