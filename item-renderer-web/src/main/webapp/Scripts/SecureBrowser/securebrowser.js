@@ -139,31 +139,26 @@
 
     // get list of blacklisted processes
     Unified.prototype.getForbiddenApps = function() {
-
-        // make sure forbidden apps list exists
-        if (typeof (TDS) != 'object' ||
-            typeof (TDS.Config) != 'object' ||
-            typeof (TDS.Config.forbiddenApps) != 'object' ||
-            (TDS.Config.forbiddenApps == null)) {
-            // return currentForbiddenApps;
-            console.log('TDS.Config.forbiddenApps: ' + TDS.Config.forbiddenApps);
-        }
+        var deferred = Util.Promise.defer();
 
         try {
             if (this._hasAPI()
                 && typeof SecureBrowser.security.examineProcessList === 'function') {
-                //
-                var currentForbiddenApps = [];
-
                 // get currently running processes
-                var that = this;
                 SecureBrowser.security.examineProcessList( TDS.Config.forbiddenApps.map(app => app.name), function(results /* []<string> */) {
                     console.log(results);
-                    that.currentForbiddenApps = results;
-                    debugger;
+                    // make sure forbidden apps list exists
+                    if (typeof (TDS) != 'object' ||
+                        typeof (TDS.Config) != 'object' ||
+                        typeof (TDS.Config.forbiddenApps) != 'object' ||
+                        (TDS.Config.forbiddenApps == null)) {
+                        deferred.resolve([]);
+                    }
+                    console.log('TDS.Config.forbiddenApps: ' + TDS.Config.forbiddenApps);
+                    deferred.resolve(results);
                 });
 
-                return currentForbiddenApps;
+                return deferred.promise;
             }
         } catch (ex) {
             console.log('Exception occurred ' + ex.message);
