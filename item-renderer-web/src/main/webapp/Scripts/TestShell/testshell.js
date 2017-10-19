@@ -113,7 +113,6 @@ The main test shell entry code.
 
     // this function gets called when the test shell scripts/html/css is ready
     TS.init = function () {
-
         TS.UI.showLoading(Messages.getAlt('TestShell.Label.Initializing', 'Initializing'));
 
         // initialize xhr api
@@ -663,8 +662,7 @@ The main test shell entry code.
         Util.SecureBrowser.getForbiddenApps().then(checkForbiddenAppsCallback.bind(this));
 
         // check 30 seconds from now again
-        // var forbiddenAppsMillis = (TS.Config.forbiddenAppsInterval * 1000);
-        var forbiddenAppsMillis = 30 * 1000; // (TS.Config.environmentCheckInterval * 1000);
+        var forbiddenAppsMillis = (TS.Config.forbiddenAppsInterval * 1000);
         YAHOO.lang.later(forbiddenAppsMillis, TS, TS.checkForbiddenApps);
         return false;
     };
@@ -691,7 +689,7 @@ The main test shell entry code.
         Util.SecureBrowser.isEnvironmentSecure().then(isEnvironmentSecureCallback.bind(this));
 
         // check 30 seconds from now again
-        var timerMillis = 30 * 1000; // (TS.Config.environmentCheckInterval * 1000);
+        var timerMillis = (TS.Config.environmentCheckInterval * 1000);
         YAHOO.lang.later(timerMillis, TS, TS.checkForEnvironmentSecurity);
 
         return false;
