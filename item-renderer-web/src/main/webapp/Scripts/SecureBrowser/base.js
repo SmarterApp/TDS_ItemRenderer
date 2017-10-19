@@ -55,8 +55,6 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
         return deferred.promise;
     };
 
-    // Base.prototype.lockDown = function(enable)  {};
-
     // Clear all cached resources
     Base.prototype.clearCache = function() {
         return false;
