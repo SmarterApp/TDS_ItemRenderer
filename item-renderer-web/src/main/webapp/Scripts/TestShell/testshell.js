@@ -647,21 +647,24 @@ The main test shell entry code.
             return false;
         }
 
-        var forbiddenApps = []; // Util.SecureBrowser.getForbiddenApps();
+        var checkForbiddenAppsCallback = function(forbiddenApps) {
+            // if there are any forbidden apps then alert user and log them out
+            if (forbiddenApps.length > 0) {
+                var message = Messages.get('ForbiddenApps') + forbiddenApps[0];
 
-        // if there are any forbidden apps then alert user and log them out
-        if (forbiddenApps.length > 0) {
-            var message = Messages.get('ForbiddenApps') + forbiddenApps[0].desc;
+                TS.UI.showAlert('Error', message, function () {
+                    TS._pauseInternal(true, 'forbiddenApps', TS.Config.disableSaveWhenForbiddenApps);
+                });
 
-            TS.UI.showAlert('Error', message, function () {
-                TS._pauseInternal(true, 'forbiddenApps', TS.Config.disableSaveWhenForbiddenApps);
-            });
+                return true;
+            }
+        };
 
-            return true;
-        }
+        Util.SecureBrowser.getForbiddenApps().then(checkForbiddenAppsCallback.bind(this));
 
         // check 30 seconds from now again
-        var forbiddenAppsMillis = (TS.Config.forbiddenAppsInterval * 1000);
+        // var forbiddenAppsMillis = (TS.Config.forbiddenAppsInterval * 1000);
+        var forbiddenAppsMillis = 30 * 1000; // (TS.Config.environmentCheckInterval * 1000);
         YAHOO.lang.later(forbiddenAppsMillis, TS, TS.checkForbiddenApps);
         return false;
     };
@@ -675,27 +678,20 @@ The main test shell entry code.
 
         if (TS.isUnloading) return false;  // TS is unloading. No need to show an alert fb# 152367
 
-        // if the environment security has been breached, alert user and log them out
-        var that = this;
-        var securityCheckResult;
-
-        Util.SecureBrowser.isEnvironmentSecure(
-            function(securityCheckResult) {
-                that.securityCheckResult = securityCheckResult;
+        var isEnvironmentSecureCallback = function(securityCheckResult) {
+            if (securityCheckResult != null && (!securityCheckResult.secure)) {
+                var errorMessageKey = (securityCheckResult.messageKey != null) ? securityCheckResult.messageKey : 'TestShell.Alert.EnvironmentInsecure';
+                var error = Messages.getAlt(errorMessageKey, 'Environment is not secure. Your test will be paused.');
+                TS.UI.showAlert('Error', error, function () {
+                    TS._pauseInternal(true, 'Environment Security', TS.Config.disableSaveWhenEnvironmentCompromised);
+                });
             }
-        );
+        };
+        // if the environment security has been breached, alert user and log them out
+        Util.SecureBrowser.isEnvironmentSecure().then(isEnvironmentSecureCallback.bind(this));
 
-        if (securityCheckResult != null && (!securityCheckResult.secure)) {
-            var errorMessageKey = (securityCheckResult.messageKey != null) ? securityCheckResult.messageKey : 'TestShell.Alert.EnvironmentInsecure';
-            var error = Messages.getAlt(errorMessageKey, 'Environment is not secure. Your test will be paused.');
-            TS.UI.showAlert('Error', error, function () {
-                TS._pauseInternal(true, 'Environment Security', TS.Config.disableSaveWhenEnvironmentCompromised);
-            });
-
-            return true;
-        }
         // check 30 seconds from now again
-        var timerMillis = (TS.Config.environmentCheckInterval * 1000);
+        var timerMillis = 30 * 1000; // (TS.Config.environmentCheckInterval * 1000);
         YAHOO.lang.later(timerMillis, TS, TS.checkForEnvironmentSecurity);
 
         return false;

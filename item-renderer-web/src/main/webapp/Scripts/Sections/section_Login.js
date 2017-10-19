@@ -104,9 +104,9 @@ Sections.Login.prototype.load = function ()
     if (Util.Browser.isSecure()) {
         if (Util.Browser.isWindows()) {
             // For Windows, we attempt to lock down while launching the Secure Browser
-            SecureBrowser.security.lockDown(true, function() {console.log("lockDown success")}, function() {console.log("lockDown error")});
+            Util.SecureBrowser.lockDown(true);
         } else {
-            SecureBrowser.security.lockDown(false, function() {console.log("lockDown success")}, function() {console.log("lockDown error")});
+            Util.SecureBrowser.lockDown(false);
         }
     }
 
@@ -306,28 +306,21 @@ Sections.Login.prototype.validate = function ()
     }
     Util.Storage.remove('storageTest'); // Clean Up
 
-    var securityCheckResult;
     //Check if the environment is secure in case we are using a secure browser
-    var environmentSecureCallback = function(result) {
-        securityCheckResult = result;
-    };
-
     if (Util.Browser.isSecure() && !TDS.Debug.ignoreBrowserChecks) {
-        Util.SecureBrowser.isEnvironmentSecure(environmentSecureCallback.bind(this));
-    }
-
-    if (securityCheckResult && !securityCheckResult.secure) {
-        var defaultError = 'Environment is not secure. Please notify your proctor';
-        if (securityCheckResult.messageKey) {
-            TDS.Dialog.showWarning(Messages.getAlt(securityCheckResult.messageKey, defaultError));
-        } else {
-            TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentInsecure', defaultError));
+        var securityCheckResult = Util.SecureBrowser.canEnvironmentBeSecured();
+        if (securityCheckResult && !securityCheckResult.canSecure) {
+            var defaultError = 'Environment is not secure. Please notify your proctor';
+            if (securityCheckResult.messageKey) {
+                TDS.Dialog.showWarning(Messages.getAlt(securityCheckResult.messageKey, defaultError));
+            } else {
+                TDS.Dialog.showWarning(Messages.getAlt('LoginShell.Alert.EnvironmentInsecure', defaultError));
+            }
+            return;
         }
-        return;
     }
 
-    var loginStudentCallback = function(forbiddenApps) {
-        console.log('forbiddenApps', forbiddenApps);
+    var forbiddenAppsCallback = function(forbiddenApps) {
         // get login fields
         var keyValues = [];
         var sessionID;
@@ -336,7 +329,7 @@ Sections.Login.prototype.validate = function ()
         // from the TDS-Student-Data cookie. With the launch protocol, we will only validate session ID and student ID.
         if (localStorage.getItem('isSbLaunchProtocolRedirect')) {
             var studentId = Util.Browser.readSubCookie("TDS-Student-Data", "T_ID");
-            sessionID = Util.Browser.readSubCookie("TDS-Student-Data", "S_ID")
+            sessionID = Util.Browser.readSubCookie("TDS-Student-Data", "S_ID");
             // Set the launch protocol flag so login service knows to validate only session ID and student ID
             keyValues.push("SBLaunchProtocol:true");
             keyValues.push("ID:" + studentId);
@@ -363,14 +356,15 @@ Sections.Login.prototype.validate = function ()
             }
         };
 
-
+        // login student requires forbiddenApps to have two fields (name, desc)
+        // new secure browser forbiddenApps API returns only one field (app)
         TDS.Student.API.loginStudent(keyValues, sessionID, forbiddenApps.map(function(app) {
-           return {name: app, desc: app};
+            return {name: app, desc: app};
         })).then(loginCallback.bind(this));
     };
 
     // Get forbidden apps
-    Util.SecureBrowser.getForbiddenApps().then(loginStudentCallback.bind(this));
+    Util.SecureBrowser.getForbiddenApps().then(forbiddenAppsCallback.bind(this));
 };
 
 // this is a helper function for the login form
