@@ -617,23 +617,15 @@ WordListPanel.InitializePane = function() {
 // From parsed JSON POST response, construct the YUI Tab formats with the response.
 WordListPanel.RenderHtmlTabs = function (messages) {
     var entries = messages.Entries;
-    if (entries.length > 1) {        
-        // since there is more than 1, let's see if there is an Illustration type to move first
-        var firstItem = 0;
-        for (var j=1; j < messages.Entries.length; j++) {
-            if (entries[j].wlType == 'illustration') {
-                firstItem = j;
-                break;
-            }
-        }
-
-        entries = [];
-        entries.push(messages.Entries[firstItem]);
-        for (var j=0; j < messages.Entries.length; j++) {
-            if (j != firstItem) {
-                entries.push(messages.Entries[j]);
-            }
-        }
+     //Orders tabs in the word list panel
+     if (entries.length > 1) {
+        var tabOrder = {'illustration': 0, 'glossary': 1}
+        const tabOrderLen = tabOrder.size+ 1;        
+        entries.sort(function(a, b){
+            var aIndex = tabOrder[a.wlType] || tabOrderLen
+            var bIndex = tabOrder[b.wlType] || tabOrderLen;
+            return aIndex - bIndex;
+        });
     }
 
     var tabString = "<div id=\"" + WordListPanel.tabbedDivName + "\" class=\"yui-navset\"> \r\n";
