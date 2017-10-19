@@ -617,7 +617,7 @@ WordListPanel.InitializePane = function() {
 // From parsed JSON POST response, construct the YUI Tab formats with the response.
 WordListPanel.RenderHtmlTabs = function (messages) {
     var entries = messages.Entries;
-    if (entries.length > 1) {
+    if (entries.length > 1) {        
         // since there is more than 1, let's see if there is an Illustration type to move first
         var firstItem = 0;
         for (var j=1; j < messages.Entries.length; j++) {
@@ -768,16 +768,17 @@ WordListPanel.IsVisible = function() {
     // when zooming a page we are on update elements
     CM.onPageEvent('zoom', function (page, level) {
         console.log('zoom event level', level);
-        WordListPanel.zoomFactor = level;
+        if(WordListPanel.IsWordListEnabled()){
+            WordListPanel.zoomFactor = level;
+            for (var key in WordListPanel.panelSizes) {
+                var val = WordListPanel.panelSizes[key];
+                WordListPanel.panelSizes[key].width = val.baseWidth * level;
+                WordListPanel.panelSizes[key].height = val.baseHeight == '' ? '' : val.baseHeight * level;
+            }
 
-        for (var key in WordListPanel.panelSizes) {
-            var val = WordListPanel.panelSizes[key];
-            WordListPanel.panelSizes[key].width = val.baseWidth * level;
-            WordListPanel.panelSizes[key].height = val.baseHeight == '' ? '' : val.baseHeight * level;
+            WordListPanel.doZoomResize();
+            WordListPanel.handlePanelOutsideWindow();
         }
-
-        WordListPanel.doZoomResize();
-        WordListPanel.handlePanelOutsideWindow();
     });
 
 })(window.ContentManager);
