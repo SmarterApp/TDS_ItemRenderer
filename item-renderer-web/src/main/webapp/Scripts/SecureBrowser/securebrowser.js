@@ -12,141 +12,84 @@
  * Unified API Version for SecureBrowser
  */
 
-(function(SB) {
+(function (SB) {
 
-  function Unified() {
+    function Unified() {};
 
-  }
-  ;
+    Unified.prototype.initialize = function() {};
 
-  Unified.prototype.initialize = function() {
+    Unified.prototype.getRunTime = function () {
+        return null;
+    };
 
-  };
+    Unified.prototype._hasAPI = function () {
+        return (typeof (SecureBrowser) != 'undefined');
+    };
 
-  Unified.prototype.getRunTime = function() {
-    return null;
-  };
+    Unified.prototype.setCapability = function (property, enable) {
+        try {
+            if (this._hasAPI()
+                && typeof SecureBrowser.security.setCapability === 'function') {
 
-  Unified.prototype._hasAPI = function() {
-    return (typeof (SecureBrowser) != 'undefined');
-  };
+                function callback(jsonliteral) {
+                }
 
-  Unified.prototype.examineProcessManualTestSupported = function() {
-    try {
-      if (this._hasAPI()
-          && typeof SecureBrowser.security.examineProcessList === 'function') {
-        return true;
-      }
-    } catch (ex) {
-      alert('Exception occurred ' + ex.message);
-    }
-    return false;
-  };
-
-  Unified.prototype.examineProcessList = function(blacklistedProcessList) {
-    try {
-      if (this._hasAPI()
-          && typeof SecureBrowser.security.examineProcessList === 'function') {
-        SecureBrowser.security.examineProcessList(blacklistedProcessList,
-            this.populateRunningForbiddenApplist);
-      }
-    } catch (ex) {
-      alert('Exception occurred ' + ex.message);
-    }
-  };
-
-  Unified.prototype.populateRunningForbiddenApplist = function(
-      forbiddenArrayFromApi) {
-
-    $("#forbiddenAppListGrid").jsGrid({
-      width : "100%",
-      height : 250,
-      data : loadRunningForbiddenApps(forbiddenArrayFromApi),
-      selecting : false,
-
-      fields : [ {
-        title : 'Description',
-        name : "processdescription",
-        type : "text",
-        width : 200
-      }, {
-        title : 'Name',
-        name : "processname",
-        type : "text",
-        width : 100
-      }
-
-      ]
-    });
-  };
-
-  Unified.prototype.capabilityManualTestSupported = function() {
-    try {
-      if (this._hasAPI()
-          && typeof SecureBrowser.security.getCapability === 'function'
-          && typeof SecureBrowser.security.setCapability === 'function') {
-        return true;
-      }
-    } catch (ex) {
-      console.log('Exception occurred ' + ex.message);
-      return false;
-    }
-    return false;
-  };
-
-  Unified.prototype.setCapability = function(property, enable) {
-    try {
-      if (this._hasAPI()
-          && typeof SecureBrowser.security.setCapability === 'function') {
-
-        function callback(jsonliteral) {
+                SecureBrowser.security.setCapability(property, enable, callback,
+                    callback);
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
         }
-        SecureBrowser.security.setCapability(property, enable, callback,
-            callback);
-      }
-    } catch (ex) {
-      console.log('Exception occurred ' + ex.message);
-    }
-  };
+    };
 
-  Unified.prototype.getCapability = function(property) {
-    try {
-      if (this._hasAPI()
-          && typeof SecureBrowser.security.getCapability === 'function') {
-        return SecureBrowser.security.getCapability(property);
-      }
-    } catch (ex) {
-      console.log('Exception occurred ' + ex.message);
-      return false;
-    }
-    return false;
-  };
+    Unified.prototype.getCapability = function (property) {
+        try {
+            if (this._hasAPI()
+                && typeof SecureBrowser.security.getCapability === 'function') {
+                return SecureBrowser.security.getCapability(property);
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+            return false;
+        }
+        return false;
+    };
 
-  Unified.prototype.getVolume = function() {
-      return -1;
-  };
+    Unified.prototype.getVolume = function () {
+        return -1;
+    };
 
-  Unified.prototype.isEnvironmentSecure = function(callback) {
-      try {
-          if (this._hasAPI()
-              && typeof SecureBrowser.security.isEnvironmentSecure === 'function') {
-              SecureBrowser.security.isEnvironmentSecure(callback);
-          }
-      } catch (ex) {
-          console.log('Exception occurred ' + ex.message);
-      }
-  };
+    // Check if the environment is can be secured before testing
+    Unified.prototype.canEnvironmentBeSecured = function () {
+        return {'canSecure': true, 'messageKey': null};
+    };
+
+    Unified.prototype.isEnvironmentSecure = function () {
+        try {
+            if (this._hasAPI()
+                && typeof SecureBrowser.security.isEnvironmentSecure === 'function') {
+                var deferred = Util.Promise.defer();
+
+                SecureBrowser.security.isEnvironmentSecure(function (state) {
+                    deferred.resolve(state);
+                });
+
+                return deferred.promise;
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+        }
+    };
 
     // get list of blacklisted processes
-    Unified.prototype.getForbiddenApps = function() {
-        var deferred = Util.Promise.defer();
-
+    Unified.prototype.getForbiddenApps = function () {
         try {
             if (this._hasAPI()
                 && typeof SecureBrowser.security.examineProcessList === 'function') {
+                var deferred = Util.Promise.defer();
+
                 // get currently running processes
-                SecureBrowser.security.examineProcessList( TDS.Config.forbiddenApps.map(app => app.name), function(results /* []<string> */) {
-                    console.log(results);
+                SecureBrowser.security.examineProcessList(TDS.Config.forbiddenApps.map(app => app.name), function (results /* []<string> */) {
                     // make sure forbidden apps list exists
                     if (typeof (TDS) != 'object' ||
                         typeof (TDS.Config) != 'object' ||
@@ -154,7 +97,6 @@
                         (TDS.Config.forbiddenApps == null)) {
                         deferred.resolve([]);
                     }
-                    console.log('TDS.Config.forbiddenApps: ' + TDS.Config.forbiddenApps);
                     deferred.resolve(results);
                 });
 
@@ -165,28 +107,22 @@
         }
     };
 
-    <!-- remove functions -->
-    Unified.prototype.getProcessList = function () {
-        debugger;
-        console.log("getProcessList");
-        var processList = [];
+    Unified.prototype.lockDown = function (enable) {
+        try {
+            if (this._hasAPI()
+                && typeof SecureBrowser.security.lockDown === 'function') {
 
-        return processList;
-    };
-
-    Unified.prototype.getIPAddressList = function () {
-        debugger;
-        console.log("getIPAddressList");
-        var addressList = [];
-
-        return addressList;
-    };
-
-
-    Unified.prototype.clearCache = function () {
-        debugger;
-        console.log("clearCache");
-        return false;
+                SecureBrowser.security.lockDown(enable,
+                    function (currentLockDownState) {
+                        console.log("lockDown successful. Current lock down state: " + currentLockDownState);
+                    },
+                    function (currentLockDownState) {
+                        console.error("lockDown error. Current lock down state: " + currentLockDownState);
+                    });
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+        }
     };
 
     SB.Unified = Unified;

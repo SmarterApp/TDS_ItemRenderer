@@ -115,34 +115,33 @@ https://github.com/faisalman/ua-parser-js/
         return 0;
     };
 
-  Browser.isEdge = function() {
-    return !!navigator.userAgent.match(/Edge\/[\d.]+/);
-  };
+    Browser.isEdge = function () {
+        return !!navigator.userAgent.match(/Edge\/[\d.]+/);
+    };
 
-  // This checks to see if the browser is the secure browser version of Edge
-  // aka MS Take a Test
-  Browser.isEdgeSB = function() {
-    return Browser.isEdge() && (navigator.userAgent.indexOf(' WebView/') > -1);
-  };
+    // This checks to see if the browser is the secure browser version of Edge
+    // aka MS Take a Test
+    Browser.isEdgeSB = function () {
+        return Browser.isEdge() && (navigator.userAgent.indexOf(' WebView/') > -1);
+    };
 
-  Browser.getEdgeVersion = function() {
+    Browser.getEdgeVersion = function () {
+        var ua = navigator.userAgent;
 
-    var ua = navigator.userAgent;
+        var ma = ua.match(/Edge\/[\d.]+/);
+        if (ma && ma.length > 0) {
+            return Number.parseFloat(ma[0].substring(5));
+        }
 
-    var ma = ua.match(/Edge\/[\d.]+/);
-    if (ma && ma.length > 0) {
-      return Number.parseFloat(ma[0].substring(5));
-    }
-
-    return 0;
-  };
+        return 0;
+    };
 
     Browser.isFirefox = function () {
-    return Browser.getFirefoxVersion() > 0 && !Browser.isEdge();
+        return Browser.getFirefoxVersion() > 0 && !Browser.isEdge();
     };
 
     Browser.isIE = function () {
-    return YAHOO.env.ua.ie > 0 && !Browser.isEdge();
+        return YAHOO.env.ua.ie > 0 && !Browser.isEdge();
     };
 
     // get the IE document mode (0 means browser does not support this)
@@ -151,29 +150,29 @@ https://github.com/faisalman/ua-parser-js/
     };
 
     Browser.isChrome = function () {
-    return YAHOO.env.ua.chrome > 0 && !Browser.isEdge();
+        return YAHOO.env.ua.chrome > 0 && !Browser.isEdge();
     };
 
     Browser.isChromeOS = function () {
-    return window.navigator.userAgent.indexOf('CrOS') > -1 && !Browser.isEdge();
+        return window.navigator.userAgent.indexOf('CrOS') > -1 && !Browser.isEdge();
     };
 
     Browser.getChromeVersion = function () {
-    return Browser.isEdge() ? 0 : YAHOO.env.ua.chrome;
+        return Browser.isEdge() ? 0 : YAHOO.env.ua.chrome;
     };
 
     Browser.isMobile = function () {
         return (YAHOO.env.ua.mobile != null || YAHOO.env.ua.ios > 0 || YAHOO.env.ua.android > 0);
     };
 
-  // desktop safari
-  Browser.isSafari = function() {
-    return YAHOO.env.ua.safari > 0 && !Browser.isEdge() && !Browser.isChrome()
-        && !Browser.isMobile();
-  };
+    // desktop safari
+    Browser.isSafari = function () {
+        return YAHOO.env.ua.safari > 0 && !Browser.isEdge() && !Browser.isChrome()
+            && !Browser.isMobile();
+    };
 
     Browser.isIOS = function () {
-    return Browser.getIOSVersion() > 0 && !Browser.isEdge();
+        return Browser.getIOSVersion() > 0 && !Browser.isEdge();
     };
 
     Browser.getIOSVersion = function () {
@@ -181,20 +180,20 @@ https://github.com/faisalman/ua-parser-js/
     };
 
     Browser.isAndroid = function () {
-    return YAHOO.env.ua.android > 0 && !Browser.isEdge();
+        return YAHOO.env.ua.android > 0 && !Browser.isEdge();
     };
     
     // check if this is a certified device
     Browser.isCertified = function() {
-    var hasAPI = (typeof (window.browser) == 'object');
+        var hasAPI = (typeof (window.browser) == 'object');
 
-    // If we're Edge SB (aka MS Take a Test app) then verify that we have
-    // deferral support
-    if (hasAPI && Util.Browser.isEdge()) {
-      hasAPI = (typeof window.browser.addEventListener === 'function');
-    }
+        // If we're Edge SB (aka MS Take a Test app) then verify that we have
+        // deferral support
+        if (hasAPI && Util.Browser.isEdge()) {
+          hasAPI = (typeof window.browser.addEventListener === 'function');
+        }
 
-    return hasAPI;
+        return hasAPI;
     };
     
     // check if this browser supports touch events
@@ -212,8 +211,7 @@ https://github.com/faisalman/ua-parser-js/
     };
     
     Browser.supportsAudioOGG = function () {
-    if (Browser.isIOS() || Browser.isAndroid() || Browser.isIE()
-        || Browser.isEdge()) {
+        if (Browser.isIOS() || Browser.isAndroid() || Browser.isIE() || Browser.isEdge()) {
             return false;
         } else if (Browser.isChrome() || Browser.isFirefox()) {
             return true;
@@ -226,11 +224,10 @@ https://github.com/faisalman/ua-parser-js/
     // Summary of Browser Support for MathML: https://vismor.com/documents/site_implementation/viewing_mathematics/S1.SS2.php
     // For future: https://github.com/Modernizr/Modernizr/blob/master/feature-detects/mathml.js
     Browser.supportsMathML = function () {
-
-    // phantomjs does not support mathml
-    if (YAHOO.env.ua.phantomjs > 0) {
-      return false;
-    }
+        // phantomjs does not support mathml
+        if (YAHOO.env.ua.phantomjs > 0) {
+          return false;
+        }
 
         // if we are using ipad or android SB then disable MathML
         if (Browser.isSecure() && (YAHOO.env.ua.android || YAHOO.env.ua.ios)) {
@@ -265,19 +262,18 @@ https://github.com/faisalman/ua-parser-js/
     };
 
     Browser.isSecure = function () {
-    var clientSideCheck = (navigator.userAgent.indexOf('SecureBrowser') != -1 || navigator.userAgent
-        .indexOf('MobileSecureBrowser') != -1);
+        var clientSideCheck = (navigator.userAgent.indexOf('SecureBrowser') != -1 || navigator.userAgent
+            .indexOf('MobileSecureBrowser') != -1);
 
         var extensionCheck = window.AIRSecureBrowserExtension ? true : false;
 
-    var chromeAppCheck = $('body').hasClass("browser_airsecurebrowser")
-        || $('body').hasClass("browser_smartersecurebrowser");
+        var chromeAppCheck = $('body').hasClass("browser_airsecurebrowser")
+            || $('body').hasClass("browser_smartersecurebrowser");
 
-    return clientSideCheck || extensionCheck || chromeAppCheck
+        return clientSideCheck || extensionCheck || chromeAppCheck
     };
 
     Browser.getSecureVersion = function () {
-
         var numberfy = function (s) {
             var c = 0;
             return parseFloat(s.replace(/\./g, function () {
@@ -358,73 +354,73 @@ https://github.com/faisalman/ua-parser-js/
         }
     };
 
-  Browser.getOperatingSystem = function() {
-    var operatingSystem = "";
-    if ($('body').hasClass("browser_airsecurebrowser"))
-      operatingSystem = "CHROMEOS";
-    else if (Browser.isWindows())
-      operatingSystem = "WINDOWS";
-    else if (Browser.isLinux())
-      operatingSystem = "LINUX";
-    else if (Browser.isMac())
-      operatingSystem = "OSX";
-    else if (Browser.isIOS())
-      operatingSystem = "IOS";
-    else if (Browser.isAndroid())
-      operatingSystem = "ANDROID";
+    Browser.getOperatingSystem = function () {
+        var operatingSystem = "";
+        if ($('body').hasClass("browser_airsecurebrowser"))
+            operatingSystem = "CHROMEOS";
+        else if (Browser.isWindows())
+            operatingSystem = "WINDOWS";
+        else if (Browser.isLinux())
+            operatingSystem = "LINUX";
+        else if (Browser.isMac())
+            operatingSystem = "OSX";
+        else if (Browser.isIOS())
+            operatingSystem = "IOS";
+        else if (Browser.isAndroid())
+            operatingSystem = "ANDROID";
 
-    return operatingSystem;
-  };
+        return operatingSystem;
+    };
 
-  Browser.isWebAudioApiSupported = function() {
-    try {
-      // Fix up for prefixing
-      var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      return true;
+    Browser.isWebAudioApiSupported = function () {
+        try {
+            // Fix up for prefixing
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return true;
 
-    } catch (e) {
-      console.log('Web Audio API is not supported in this browser');
-      return false;
-    }
-  };
+        } catch (e) {
+            console.log('Web Audio API is not supported in this browser');
+            return false;
+        }
+    };
 
-  // check if browser has "SecureBrowser" as Global Object
-  Browser.isSecureBrowser = function() {
+    // check if browser has "SecureBrowser" as Global Object
+    Browser.isSecureBrowser = function () {
 
-    var hasAPI = false;
-    try {
-      hasAPI = (typeof (SecureBrowser) == 'object');
-    } catch (ex) {
-      console.log('Exception occurred ' + ex.message);
-      hasAPI = false;
-    }
-    return hasAPI;
-  };
+        var hasAPI = false;
+        try {
+            hasAPI = (typeof (SecureBrowser) == 'object');
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+            hasAPI = false;
+        }
+        return hasAPI;
+    };
 
-  // check if browser has "SecureBrowser" as Global Object
-  Browser.hasSecureBrowserTTSSupport = function() {
-    try {
-      if (Browser.isSecureBrowser && typeof SecureBrowser.tts === 'object') {
-        return true
-      }
-    } catch (ex) {
-      console.log('Exception occurred ' + ex.message);
-      return false;
-    }
-    return false;
-  };
+    // check if browser has "SecureBrowser" as Global Object
+    Browser.hasSecureBrowserTTSSupport = function () {
+        try {
+            if (Browser.isSecureBrowser && typeof SecureBrowser.tts === 'object') {
+                return true
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+            return false;
+        }
+        return false;
+    };
 
-  Browser.hasSecureBrowserRecorderSupport = function() {
-    try {
-      if (Browser.isSecureBrowser && typeof SecureBrowser.recorder === 'object') {
-        return true
-      }
-    } catch (ex) {
-      console.log('Exception occurred ' + ex.message);
-      return false;
-    }
-    return false;
-  };
+    Browser.hasSecureBrowserRecorderSupport = function () {
+        try {
+            if (Browser.isSecureBrowser && typeof SecureBrowser.recorder === 'object') {
+                return true
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+            return false;
+        }
+        return false;
+    };
 
     Util.Browser = Browser;
 
