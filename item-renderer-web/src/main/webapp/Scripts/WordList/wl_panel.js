@@ -752,6 +752,13 @@ WordListPanel.IsVisible = function() {
     return false;
 };
 
+// Removes all items from the content word cache so the same item can be reloaded with a different glossary
+WordListPanel.clearCache = function() {
+    WordListPanel.contentWordCache = {};
+    WordListPanel.headerWordCache = {};
+    WordListPanel.message = {};
+};
+
 // content manager events
 (function(CM) {
 
