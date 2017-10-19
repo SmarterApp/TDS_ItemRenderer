@@ -619,8 +619,11 @@ WordListPanel.RenderHtmlTabs = function (messages) {
     var entries = messages.Entries;
      //Orders tabs in the word list panel
      if (entries.length > 1) {
-        var tabOrder = {'illustration': 0, 'glossary': 1}
-        const tabOrderLen = tabOrder.size+ 1;        
+        var tabOrder = new Map([
+            ['illustration', '0'],
+            ['glossary', 1]
+          ]);
+        var tabOrderLen = tabOrder.size + 1;    
         entries.sort(function(a, b){
             var aIndex = tabOrder[a.wlType] || tabOrderLen
             var bIndex = tabOrder[b.wlType] || tabOrderLen;
