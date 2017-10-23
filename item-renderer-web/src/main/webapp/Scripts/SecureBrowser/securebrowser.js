@@ -22,10 +22,18 @@
         return null;
     };
 
+    // test if the browser APIs exists
     Unified.prototype._hasAPI = function () {
         return (typeof (SecureBrowser) != 'undefined');
     };
 
+    /**
+     * Set the status of a particular browser capability.
+     * This allows us to explicitly enable or disable a specific feature on the browser.
+     *
+     * @param property
+     * @param enable
+     */
     Unified.prototype.setCapability = function (property, enable) {
         try {
             if (this._hasAPI()
@@ -42,6 +50,12 @@
         }
     };
 
+    /**
+     * Retrieve the status of a particular browser capability.
+     *
+     * @param property
+     * @returns {boolean}
+     */
     Unified.prototype.getCapability = function (property) {
         try {
             if (this._hasAPI()
@@ -55,6 +69,7 @@
         return false;
     };
 
+    // Gets the current volume.
     Unified.prototype.getVolume = function () {
         return -1;
     };
@@ -64,6 +79,14 @@
         return {'canSecure': true, 'messageKey': null};
     };
 
+    /**
+     * Check if the environment is secure.
+     *
+     * The testing web application invokes this prior to allowing students to start testing and
+     * periodically when inside the test.
+     *
+     * @returns {Promise} Promise that return { 'secure' : "true/false", 'messageKey' : "some message" }
+     */
     Unified.prototype.isEnvironmentSecure = function () {
         try {
             if (this._hasAPI()
@@ -81,7 +104,12 @@
         }
     };
 
-    // get list of blacklisted processes
+
+    /**
+     * List of blacklisted processes
+     *
+     * @returns {Promise} array of blacklisted processes currently running
+     */
     Unified.prototype.getForbiddenApps = function () {
         try {
             if (this._hasAPI()
@@ -107,6 +135,19 @@
         }
     };
 
+    /**
+     * Lock down environment to begin an assessment.
+     * The testing web application invokes this call prior to allowing students to start testing.
+     * The secure browser take any actions necessary to secure the testing environment.
+     * The steps taken to secure the environment are device specific and for example,
+     * include aspects such as disabling the ability to do screen captures,
+     * disabling the ability to voice chat when in secure mode,
+     * clearing the system clipboard, entering into a kiosk mode, disabling Spaces in OS X 10.7+ etc.
+     * The testing application will enable lockdown before an assessment commences and
+     * will disable the lockdown when the student has completed the assessment and is out of the secure test.
+     * 
+     * @param enable Enables or disables the secure browser lockdown mode
+     */
     Unified.prototype.lockDown = function (enable) {
         try {
             if (this._hasAPI()
