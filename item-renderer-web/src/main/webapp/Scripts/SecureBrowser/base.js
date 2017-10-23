@@ -49,8 +49,10 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
 
     // Check if the environment is secure for testing
     Base.prototype.isEnvironmentSecure = function () {
-        var result = { 'secure': true, 'messageKey': null };
-        return result;
+        var deferred = Util.Promise.defer();
+        deferred.resolve({ 'secure': true, 'messageKey': null });
+
+        return deferred.promise;
     };
 
     // Clear all cached resources
@@ -96,6 +98,7 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
 
     // get list of blacklisted processes
     Base.prototype.getForbiddenApps = function() {
+        var deferred = Util.Promise.defer();
         var currentForbiddenApps = [];
 
         // make sure forbidden apps list exists
@@ -103,7 +106,8 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
             typeof (TDS.Config) != 'object' ||
             typeof (TDS.Config.forbiddenApps) != 'object' ||
             (TDS.Config.forbiddenApps == null)) {
-            return currentForbiddenApps;
+            deferred.resolve(currentForbiddenApps);
+            return deferred.promise();
         }
 
         // get currently running processes
@@ -144,7 +148,8 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
             });
         }
 
-        return currentForbiddenApps;
+        deferred.resolve(currentForbiddenApps);
+        return deferred.promise;
     };
 
     // call this function to fix an issue with the SB not getting proper focus and arrow keys not working

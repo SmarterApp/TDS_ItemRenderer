@@ -155,6 +155,7 @@
 	<input>SecureBrowser/amplify.js</input>
         <input>SecureBrowser/factory.js</input>
         <input>SecureBrowser/base.js</input>
+        <input>SecureBrowser/securebrowser.js</input>
         <input>SecureBrowser/firefox.js</input>
 	<input>SecureBrowser/certified.js</input>
         <input>SecureBrowser/chrome.js</input>
