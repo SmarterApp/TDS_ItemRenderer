@@ -9,7 +9,8 @@
 package tds.itemrenderer.processing;
 
 import tds.itemrenderer.data.AccProperties;
-import tds.itemrenderer.data.ITSDocumentXml;
+import tds.itemrenderer.data.IITSDocument;
+
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 import java.util.regex.Matcher;
@@ -32,7 +33,7 @@ import java.util.regex.Pattern;
       }
 
       @Override
-      public String process (ITSDocumentXml itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String html) {          
+      public String process (IITSDocument itsDocument, ITSContentType contentType, ITSContextType contextType, String language, String html) {
           if (_accProperties != null && _accProperties.isColorChoiceEnabled ()) {
             
               // issue SB-307: Remove inline style preventing reverse contrast accommodation from working

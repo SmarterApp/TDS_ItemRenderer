@@ -11,32 +11,34 @@
  */
 package tds.itempreview;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import AIR.Common.Helpers.CaseInsensitiveMap;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Web.Session.Server;
 import AIR.Common.collections.IGrouping;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import tds.blackbox.ContentRequestException;
-import tds.itempreview.content.ITSDocumentExtensions;
 import tds.itemrenderer.ITSDocumentFactory;
 import tds.itemrenderer.data.AccLookup;
 import tds.itemrenderer.data.IITSDocument;
-import tds.itemrenderer.data.ITSDocument;
+import tds.itemrenderer.data.ITSTypes.ITSEntityType;
 import tds.itemrenderer.data.IrisITSDocument;
 import tds.itemrenderer.data.ItsItemIdUtil;
-import tds.itemrenderer.data.ITSTypes.ITSEntityType;
 
 /**
  * @author Shiva BEHERA [sbehera@air.org]
@@ -196,39 +198,39 @@ public class ConfigBuilder {
         throw new ContentRequestException(String.format("No content found by id %s", id));
     }
 
-    public IITSDocument getRenderableDocument(String id) throws ContentRequestException {
+  public IITSDocument getRenderableDocument (String id) throws ContentRequestException {
         IrisITSDocument documentRepresentation = getDocumentRepresentation(id);
-        // In the below code there is no way to set accommodations.
-        // We need to provide a way as this is common code also used by ItemPreview.
-        return correctBaseUri(ITSDocumentFactory.load(documentRepresentation.getRealPath(), "ENU", true));
-    }
+    // In the below code there is no way to set accommodations.
+    // We need to provide a way as this is common code also used by ItemPreview.
+    return correctBaseUri (ITSDocumentFactory.load (documentRepresentation.getRealPath (), "ENU", true));
+  }
 
     public IITSDocument getRenderableDocument(String id, AccLookup accLookup) throws ContentRequestException {
         IrisITSDocument documentRepresentation = getDocumentRepresentation(id);
         return correctBaseUri(ITSDocumentFactory.load(documentRepresentation.getRealPath(), accLookup, true));
     }
 
-    // / <summary>
-    // / Takes an array of xml files and parses into passage/item documents.
-    // / </summary>
-    private Collection<IrisITSDocument> getITSDocuments(String contentPath) {
-        // get all xml files in the content path
-        Collection<File> xmlFiles = Path.getFilesMatchingExtensions(contentPath, new String[]{"xml"});
+  // / <summary>
+  // / Takes an array of xml files and parses into passage/item documents.
+  // / </summary>
+  private Collection<IrisITSDocument> getITSDocuments (final String contentPath) {
+    // get all xml files in the content path
+    final Collection<File> xmlFiles = Path.getFilesMatchingExtensions (contentPath, new String[] { "xml" });
 
         Collection<IrisITSDocument> returnList = new ArrayList<>();
 
-        for (File file : xmlFiles) {
-            String xmlFile = file.getAbsolutePath();
-            try {
-                IITSDocument itsDocument = correctBaseUri(ITSDocumentFactory.loadUri2(xmlFile, AccLookup.getNone(), false));
-                IrisITSDocument irisDocument = new IrisITSDocument(itsDocument, xmlFile);
-                returnList.add(irisDocument);
-            } catch (Exception exp) {
-                exp.printStackTrace();
-            }
-        }
-        return returnList;
+    for (File file : xmlFiles) {
+      final String xmlFile = file.getAbsolutePath ();
+      try {
+        final IITSDocument itsDocument = correctBaseUri (ITSDocumentFactory.loadUri2 (xmlFile, AccLookup.getNone (), false));
+          IrisITSDocument irisDocument = new IrisITSDocument(itsDocument, xmlFile);
+        returnList.add (irisDocument);
+      } catch (Exception exp) {
+        _logger.error("Exception while adding itsdocument to collection.",exp);
+      }
     }
+    return returnList;
+  }
 
     private Collection<IGrouping<String, IrisITSDocument>> groupDocumentsByParentFolder(Collection<IrisITSDocument> itsDocuments) {
         Transformer groupTransformer = new Transformer() {
@@ -283,11 +285,11 @@ public class ConfigBuilder {
         for (IITSDocument item : itsItems) {
             String itemGroupID = item.getGroupID();
 
-            // check if passage
-            if (ignorePassages && item.getStimulusKey() > 0) {
-                // use item id instead of group
-                itemGroupID = item.getID();
-            }
+      // check if passage
+      if (ignorePassages && item.getStimulusKey () > 0) {
+        // use item id instead of group
+        itemGroupID = item.getID ();
+      }
 
             ITSGroup group = null;
             if (groupLookup.containsKey(itemGroupID))

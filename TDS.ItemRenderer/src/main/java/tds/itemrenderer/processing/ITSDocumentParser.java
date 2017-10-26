@@ -12,18 +12,16 @@ import AIR.Common.Utilities.Path;
 import AIR.Common.Utilities.SpringApplicationContext;
 import AIR.Common.Web.FileFtpHandler;
 import AIR.Common.Web.FtpResourceException;
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.input.XmlStreamReader;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
+
 import tds.itemrenderer.configuration.RendererSettings;
 import tds.itemrenderer.data.ITSAttachment;
 import tds.itemrenderer.data.ITSAttribute;
 import tds.itemrenderer.data.ITSContent;
-import tds.itemrenderer.data.ITSDocumentXml;
+import tds.itemrenderer.data.IITSDocument;
+
 import tds.itemrenderer.data.ITSKeyboard;
 import tds.itemrenderer.data.ITSKeyboardKey;
 import tds.itemrenderer.data.ITSKeyboardRow;
@@ -67,13 +65,10 @@ import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -89,7 +84,7 @@ import static org.apache.commons.io.Charsets.UTF_8;
  * @author Shiva BEHERA [sbehera@air.org]
  * 
  */
-public class ITSDocumentParser<T extends ITSDocumentXml> {
+public class ITSDocumentParser<T extends IITSDocument> {
 
   private static final Logger _logger = LoggerFactory.getLogger(ITSDocumentParser.class);
 
@@ -135,7 +130,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml> {
    * @param itsDocumentXmlType
    * @return ITS Document
    */
-  public T load(String filePath, Class<T> itsDocumentXmlType) {
+  public T load(String filePath, Class<? extends T> itsDocumentXmlType) {
     final T document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
     document.setBaseUri(filePath);
     return loadDocument(document);
@@ -149,7 +144,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml> {
    * @param itemDataService     {@link ItemDataService} used to read data
    * @return T the loaded item
    */
-  public T load(final URI uri, final Class<T> itsDocumentXmlType, final ItemDataService itemDataService) {
+  public T load(final URI uri, final Class<? extends T> itsDocumentXmlType, final ItemDataService itemDataService) {
     final T document = ITSDocumentXmlFactory.create(itsDocumentXmlType);
     document.setBaseUri(uri.toString());
     final Itemrelease itemrelease = parseDocument(document, uri, itemDataService);
@@ -165,7 +160,7 @@ public class ITSDocumentParser<T extends ITSDocumentXml> {
    * @param itsDocumentXmlType
    * @return ITS Document
    */
-  public T loadUri(final URI uri, final Class<T> itsDocumentXmlType) {
+  public T loadUri(final URI uri, final Class<? extends T> itsDocumentXmlType) {
     if (RendererSettings.getDenyExternalContent() && uri.getScheme() != "file") {
       throw new UnauthorizedAccessException("Cannot load external content.");
     }
