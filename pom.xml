@@ -4,15 +4,15 @@
   <artifactId>item-renderer-master</artifactId>
   <packaging>pom</packaging>
   <name>item-renderer-master</name>
-		<version>3.3.0.RELEASE</version>
+  <version>3.3.0-SNAPSHOT</version>
 
-	<repositories>
-		<repository>
-			<id>org.opentestsystem</id>
-			<name>airdev-releases</name>
-			<url>https://airdev.artifactoryonline.com/airdev/libs-releases-local</url>
-		</repository>
-	</repositories>
+  <repositories>
+    <repository>
+      <id>org.opentestsystem</id>
+      <name>airdev-releases</name>
+      <url>https://airdev.artifactoryonline.com/airdev/libs-releases-local</url>
+    </repository>
+  </repositories>
 
   <parent>
     <groupId>org.opentestsystem.shared</groupId>
