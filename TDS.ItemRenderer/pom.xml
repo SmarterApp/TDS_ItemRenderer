@@ -42,17 +42,21 @@
 			<artifactId>el-api</artifactId>
 			<version>6.0.37</version>
 		</dependency>
-
-		<!-- This is used in a non test class (RendererServlet) so it needs to remain compile scope  -->
+		<!-- Existing non-test code uses Spring test classes which is why scope is default -->
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
+			<artifactId>spring-test</artifactId>
 		</dependency>
 
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -63,6 +67,12 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.4.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

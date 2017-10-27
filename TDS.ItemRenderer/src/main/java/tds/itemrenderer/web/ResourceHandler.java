@@ -7,19 +7,6 @@
  ******************************************************************************/
 package tds.itemrenderer.web;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-
-import tds.itemrenderer.configuration.RendererSettings;
 import AIR.Common.Configuration.ConfigurationSection;
 import AIR.Common.Utilities.Path;
 import AIR.Common.Utilities.SpringApplicationContext;
@@ -28,6 +15,18 @@ import AIR.Common.Web.EncryptionHelper;
 import AIR.Common.Web.FileHttpHandler;
 import AIR.Common.Web.Session.CaseInsensitiveFileNameFilter;
 import TDS.Shared.Exceptions.TDSHttpException;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import tds.itemrenderer.configuration.RendererSettings;
 
 /**
  * @author mpatel

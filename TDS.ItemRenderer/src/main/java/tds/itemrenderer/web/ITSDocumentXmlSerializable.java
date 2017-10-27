@@ -8,10 +8,18 @@
  ******************************************************************************/
 package tds.itemrenderer.web;
 
-import java.util.List;
-
+import AIR.Common.Helpers._Ref;
+import AIR.Common.Utilities.Path;
+import AIR.Common.Web.EncryptionHelper;
+import AIR.Common.Web.MimeMapping;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 import tds.itemrenderer.configuration.RendererSettings;
 import tds.itemrenderer.data.IITSDocument;
@@ -24,12 +32,8 @@ import tds.itemrenderer.data.ITSOption;
 import tds.itemrenderer.data.ITSResource;
 import tds.itemrenderer.data.ItemRenderGroup;
 import tds.itemrenderer.processing.ITSDocumentHelper;
-import tds.itemrenderer.processing.ITSUrlResolver2;
+import tds.itemrenderer.repository.ContentRepository;
 import tds.itemrenderer.webcontrols.PageLayout;
-import AIR.Common.Helpers._Ref;
-import AIR.Common.Utilities.Path;
-import AIR.Common.Web.EncryptionHelper;
-import AIR.Common.Web.MimeMapping;
 
 /**
  * @author jmambo
@@ -37,8 +41,10 @@ import AIR.Common.Web.MimeMapping;
  */
 public class ITSDocumentXmlSerializable extends XmlSerializable
 {
+  private static final Logger log = LoggerFactory.getLogger(ITSDocumentXmlSerializable.class);
   private final PageLayout _pageLayout;
   private final ItemRenderGroup _itemRenderGroup;
+  private final ContentRepository contentRepository;
   private final String _pageID;
   private final String _segmentID;
   private final String _layout;
@@ -53,10 +59,11 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
   // If this is true then include the MC options.
   public boolean _includeOptionValue;
   
-  public ITSDocumentXmlSerializable(PageLayout pageLayout)
+  public ITSDocumentXmlSerializable(PageLayout pageLayout, ContentRepository contentRepository)
   {
       _pageLayout = pageLayout;
       _itemRenderGroup = pageLayout.getItemRenderGroup ();
+      this.contentRepository = contentRepository;
 
       // get data
       _pageID = _itemRenderGroup.getId ();
@@ -409,7 +416,7 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
    * 
    * @param doc
    */
-  private void writeMediaResources(IITSDocument doc) 
+  private void writeMediaResources(IITSDocument doc)
   {
       // check if there are any media files to send down
       List<String> mediaFiles = doc.getMediaFiles();
@@ -449,8 +456,34 @@ public class ITSDocumentXmlSerializable extends XmlSerializable
                   // WriteCData(File.ReadAllText(xmlPath));
 
                   endElement();
-              }
+              } else {
+                  try {
+                      //There is the potential junk file paths are passed into this flow.  Explanation in the catch block.
+                      InputStream inputStream = contentRepository.findResource(mathMLFilePath);
+                      foundMedia = true;
+
+                      startElement("resource");
+                      writeAttribute("type", "application/mathml+xml");
+                      writeAttribute("file", fileName);
+
+                      // write out image xml
+                      writeCDataStart();
+                      writeStream(inputStream);
+                      writeCDataEnd();
+
+                      // WriteCData(File.ReadAllText(xmlPath));
+
+                      endElement();
+                  } catch (IOException e) {
+                      /*
+                       Resource was not found.  This is ignored because the code path around this will send any
+                       path through this flow with the expectation that some will not be math files.  For example,
+                       we have seen image paths passed through this flow that have invalid extensions (123png.xml).
+                      */
+                      log.debug("Could not locate MathML Media file at path: {}", mathMLFilePath);
+                  }
           }
+      }
 
           // check if no media has been fond yet and base64 is enabled
           if (!foundMedia && RendererSettings.getIsBase64Enabled()) {
