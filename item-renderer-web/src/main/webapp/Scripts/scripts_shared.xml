@@ -288,7 +288,7 @@
         <input>Accommodations/accs.dialog.js</input> <!-- test shell -->
     </fileSet>
 
-    <!-- TTS2 (Jon's version) -->
+    <!-- TTS2 -->
     <fileSet name="tts2">
         <input>TTS2/config.js</input>
         <input>TTS2/util.js</input>
@@ -302,7 +302,8 @@
         <input>TTS2/Services/securebrowser.js</input>
         <input>TTS2/Services/firefox.js</input>
         <input>TTS2/Services/certified.js</input>
- 	
+        <input>TTS2/Services/webspeech.js</input>
+
 	<input>TTS2/Services/chrome.js</input>
     </fileSet>
 

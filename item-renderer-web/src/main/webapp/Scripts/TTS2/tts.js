@@ -6,6 +6,8 @@
 // See accompanying file AIR-License-1_0.txt or at
 // http://www.smarterapp.org/documents/American_Institutes_for_Research_Open_Source_Software_License.pdf
 //*******************************************************************************
+TTS = window.TTS || {};
+
 TTS.Status = {
     NotSupported: 'NotSupported', //tts initialization failed.
     Uninitialized: 'Uninitialized', // tts is not initialized
@@ -172,50 +174,44 @@ TTS.Manager.init = function (forceInit) { //set forceInit to true if this is a r
         TTS.Manager.Events.onServiceLoad.unsubscribeAll();
     }
 
+  try {
+    // create the SB service and initialize it.
+    // If you are running in SB, use the SB's native TTS capabilities.
+    var service = null;
 
-    try {
-        // create the SB service and initialize it.
-        // If you are running in SB, use the SB's native TTS capabilities. Otherwise, rely on the applet based TTS
-        var service = null;
-
-        // check for certified SB and SB service exists
-        if (Util.Browser.isSecure() && Util.Browser.isCertified()) {
-            service = new TTSService_Certified();
-        } // check for native SB and SB service exists
-        else if (Util.Browser.isSecure() && Util.Browser.getSecureVersion() > 0 &&
-            YAHOO.lang.isFunction(TTSService_SB) && !Util.Browser.isMobile()) {
-            service = new TTSService_SB();
-        }// check for java service (this also requires java)
-        else if (typeof TTSService_Applet != 'undefined' && YAHOO.lang.isFunction(TTSService_Applet)) {
-            service = new TTSService_Applet();
-        } // check for mobile secure browser
-        else if (Util.Browser.isSecure() && (Util.Browser.isAndroid() || (Util.Browser.isIOS() && (Util.Browser.getSecureVersion() >= 2)))) {
-            service = new TTSService_Generic();
-        } // if we are in chrome, we might be running an extension or packaged app. Even if we are not, the load will not succeed but we can still go ahead and setup the servicce.
-        else if (Util.Browser.isSecure() && Util.Browser.isChrome()) {
-            service = new TTSService_Chrome();
-        }
-
-        // check if TTS is supported and load it
-        if (!service || !service.isSupported() || !service.load()) {
-            TTS.Manager._changeStatus(TTS.Status.NotSupported);
-            return false;
-        }
-
-        // save service reference
-        TTS.Manager._service = service;
-        TTS.Manager.log('initializing');
-        TTS.Manager._changeStatus(TTS.Status.Initializing);
-
-    } catch(ex) {
-        // init threw an exception
-        console.error("Failed to load a service.", ex);
-        TTS.Manager.log(ex);
+    // check for certified SB With Unified API
+    if (TTS.Util.supportsWebSpeech()) {
+      console.log("browser supports web speech");
+      service = new TTSService_WebSpeech();
+    } else if (Util.Browser.hasSecureBrowserTTSSupport()) {
+      console.log("browser has secure browser TTS support");
+      service = new TTSService_Unified();
+    } else {
+      console.log("No TTS provider found.");
     }
 
-    return;
-};
+    // check if TTS is supported and load it
+    if (!service || !service.isSupported()) {
+      TTS.Manager._changeStatus(TTS.Status.NotSupported);
+      TTS.Manager.Events.onInitFailure.fire();
+      return false;
+    }
 
+    // save service reference
+    TTS.Manager._service = service;
+    TTS.Manager.log('initializing');
+    TTS.Manager._changeStatus(TTS.Status.Initializing);
+
+    if (!service.load()) {
+      return false;
+    }
+
+  } catch (ex) {
+    // init threw an exception
+    console.error("Failed to load a service.", ex);
+    TTS.Manager.log(ex);
+  }
+};
 
 // internal function for service init logic
 TTS.Manager._initService = function() {
@@ -428,43 +424,48 @@ TTS.Manager.getVoice = function(){
  *  Attempt to load the user settings.  This is required because people load broken voice
  *  packs into their OS.  They show up as "voices" but playing with them fails.
  */
-TTS.Manager.loadUserSettings = function(){
-    try{
-        if (!Util || !Util.Storage) {
-            return;
-        }
-
-        //Setup the user selected volume, pitch and rate - this happens both when TTS sound check is initialized and when a test is initialized.
-        var curLang;
-        var curVoicePack = TTS.Manager.getCurrentVoicePack();
-        if (curVoicePack) {
-            curLang = curVoicePack.Language;
-        }
-
-        TTS.Manager.setVolume(TTS.Config.User.getVolume(curLang));
-        TTS.Manager.setPitch(TTS.Config.User.getPitch(curLang));
-        TTS.Manager.setRate(TTS.Config.User.getRate(curLang));
-
-        // Set the prefferred voices for each language using the value that may have been configured
-        // in the TTS configuration page
-        var langCodes = TTS.Manager.getKnownLanguageCodes();
-        for (var i = 0; i < langCodes.length; i++) {
-            var langVoicePref = TTS.Config.User.getVoice(langCodes[i]);
-            if(langVoicePref) {
-                TTS.Config.Debug && console.log("Setting a user preference for the language.", langVoicePref);
-                var voicePacks = TTS.Manager.getVoicesForLanguage(langCodes[i]);
-                for (var j = 0; j < voicePacks.length; j++) {
-                    var voicePack = voicePacks[j];
-                    if (voicePack.ServiceVoiceName == langVoicePref){
-                        TTS.Manager.setAsPreferredVoicePack(voicePack);
-                        TTS.Manager.setVoice(voicePack.ServiceVoiceName);
-                    }
-                }
-            }
-        }
-    }catch(e){
-      console.error("Failed to load user settings.", e);
+TTS.Manager.loadUserSettings = function() {
+  try {
+    if (!Util || !Util.Storage) {
+      return;
     }
+
+    // Set the preferred voices for each language using the value that may have
+    // been configured in the TTS configuration page
+    var langCodes = TTS.Manager.getKnownLanguageCodes();
+    var curVoicePack = null;
+    for (var i = 0; i < langCodes.length; i++) {
+      var langVoicePref = TTS.Config.User.getVoice(langCodes[i]);
+      if (langVoicePref) {
+        TTS.Config.Debug && console.log("Setting a user preference for the language.", langVoicePref);
+        var voicePacks = TTS.Manager.getVoicesForLanguage(langCodes[i]);
+        for (var j = 0; j < voicePacks.length; j++) {
+          var voicePack = voicePacks[j];
+          if (voicePack.ServiceVoiceName == langVoicePref) {
+            TTS.Manager.setAsPreferredVoicePack(voicePack);
+            if (!curVoicePack) {
+              curVoicePack = voicePack;
+            }
+          }
+        }
+      }
+    }
+
+    // Setup a default voice with proper volume, pitch, and rate
+    if (curVoicePack) {
+      var curLang = curVoicePack.Language;
+      var v = TTS.Manager.getVoice();
+      if (v != curVoicePack.ServiceVoiceName) {
+        TTS.Manager.setVoice(curVoicePack.ServiceVoiceName);
+      }
+      TTS.Manager.setVolume(TTS.Config.User.getVolume(curLang));
+      TTS.Manager.setPitch(TTS.Config.User.getPitch(curLang));
+      TTS.Manager.setRate(TTS.Config.User.getRate(curLang));
+    }
+
+  } catch (e) {
+    console.error("Failed to load user settings.", e);
+  }
 };
 
 TTS.Manager.setVoice = function (name) {
@@ -491,19 +492,28 @@ TTS.Manager.getVolume = function() {
 };
 
 TTS.Manager.setVolume = function(level) {
-    if (!TTS.Manager._serviceFuncExists('setVolume')) {
-        return false;
+  if (!TTS.Manager._serviceFuncExists('setVolume')) {
+    return false;
+  }
+  if (!YAHOO.util.Lang.isNumber(level)) {
+    throw new Error('Invalid volume level: value=' + level + ' type=' + typeof level);
+  }
+  try {
+    // Hack: Chromebooks have a problem where volume 0 is sounding like volume
+    // 10 and I've been told volume 0 should not
+    // make TTS inaudible.
+    // TODO: Update sliders so volume range is 1-10 and, while we're at it, rate
+    // is 1-20 (as we do this same basic hack
+    // for rate later in this file)
+    if (level < 1) {
+      level = 1;
     }
-    if (!YAHOO.util.Lang.isNumber(level)) {
-        throw new Error('Invalid volume level: value=' + level + ' type=' + typeof level);
-    }
-    try{
-        TTS.Manager._service.setVolume(level);
-        TTS.Manager.Events.onVolumeChange.fire(level);
-        TTS.Manager._lastVolume = level;
-    }catch (ex){
-        console.error("Failed to set the volume.", ex, level);
-    }
+    TTS.Manager._service.setVolume(level);
+    TTS.Manager.Events.onVolumeChange.fire(level);
+    TTS.Manager._lastVolume = level;
+  } catch (ex) {
+    console.error("Failed to set the volume.", ex, level);
+  }
 };
 
 // helper functions for increasing/descreasing volume
@@ -559,22 +569,28 @@ TTS.Manager.getRate = function() {
     return TTS.Manager._service.getRate();
 };
 
-TTS.Manager.setRate = function (level) {
-    if (!TTS.Manager._serviceFuncExists('setRate')) {
-        return false;
-    }
-    if (!YAHOO.util.Lang.isNumber(level)) {
-        throw new Error('Invalid rate level: value=' + level + ' type=' + typeof level);
-    }
+TTS.Manager.setRate = function(level) {
+  if (!TTS.Manager._serviceFuncExists('setRate')) {
+    return false;
+  }
+  if (!YAHOO.util.Lang.isNumber(level)) {
+    throw new Error('Invalid rate level: value=' + level + ' type='
+        + typeof level);
+  }
 
-    try{
-        TTS.Manager._service.setRate(level);
-        TTS.Manager.Events.onRateChange.fire(level);
-        TTS.Manager._lastRate = level;
-    } catch (ex) {
-        console.error("Failed to set the TTS Manager Rate information.", ex, level);
-        TTS.Manager.log(ex);
+  try {
+    if (level < 1) { // Don't allow a rate of 0 as that basically means don't
+      // speak and will cause the student app to go into an
+      // endless wait when speaking
+      level = 1;
     }
+    TTS.Manager._service.setRate(level);
+    TTS.Manager.Events.onRateChange.fire(level);
+    TTS.Manager._lastRate = level;
+  } catch (ex) {
+    console.error("Failed to set the TTS Manager Rate information.", ex, level);
+    TTS.Manager.log(ex);
+  }
 };
 
 TTS.Manager.isAvailable = function() {
@@ -768,16 +784,18 @@ TTS.Manager.setVoiceForLanguage = function (language) {
     // keep track of language
     TTS.Manager._lastVoiceLanguage = language;
 };
-TTS.Manager.getCurrentVoicePack = function () {
-    var voiceName = TTS.Manager.getVoice();
+TTS.Manager.getCurrentVoicePack = function() {
+  var voiceName = TTS.Manager.getVoice();
+  if (voiceName) {
     for (var i = 0; i < TTS.Manager._knownVoicePacks.length; i++) {
-        var voicePack = TTS.Manager._knownVoicePacks[i];
-        if (voiceName.toLowerCase().indexOf(voicePack.Voicename.toLowerCase()) >= 0) {
-            // found a match
-            return voicePack;
-        }
+      var voicePack = TTS.Manager._knownVoicePacks[i];
+      if (voiceName.toLowerCase().indexOf(voicePack.Voicename.toLowerCase()) >= 0) {
+        // found a match
+        return voicePack;
+      }
     }
-    return null;
+  }
+  return null;
 };
 
 // go through all voice packs and check if at least one voice is available for this language.

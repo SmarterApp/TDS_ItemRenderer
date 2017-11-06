@@ -67,7 +67,11 @@ TTS.Control = function(cfg) {
     };
     var getManager = function () {
         if (!_manager) {
-            _manager = window[_cfg.DefaultManager] || window.TTS.Manager;
+          if(typeof window[_cfg.DefaultManager] === "object") {
+            _manager = window[_cfg.DefaultManager];
+          } else {
+            _manager = window.TTS.Manager;
+          }
         }
         return _manager;
     }; //the currentDomEntity is the item or passage (set by menu.js) that is to be read, in whole or in part.
@@ -251,7 +255,7 @@ TTS.Control.prototype.eventSubscribe = function (cb) {
         this.initSuccess();
     }.bind(this, cb));
 
-    eventManager.onInitFailure.subscribe(function () {
+    eventManager.onInitFailure.subscribe(function (cb) {
         console.error("Initializing TTS: Failed.");
         if (typeof cb == 'function') cb();
     }.bind(this, cb));

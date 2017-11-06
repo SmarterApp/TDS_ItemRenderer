@@ -389,7 +389,7 @@ https://github.com/faisalman/ua-parser-js/
 
         var hasAPI = false;
         try {
-            hasAPI = (typeof (SecureBrowser) == 'object');
+            hasAPI = (typeof SecureBrowser === 'object');
         } catch (ex) {
             console.log('Exception occurred ' + ex.message);
             hasAPI = false;
@@ -400,7 +400,7 @@ https://github.com/faisalman/ua-parser-js/
     // check if browser has "SecureBrowser" as Global Object
     Browser.hasSecureBrowserTTSSupport = function () {
         try {
-            if (Browser.isSecureBrowser && typeof SecureBrowser.tts === 'object') {
+            if (Browser.isSecureBrowser() && typeof SecureBrowser.tts === 'object') {
                 return true
             }
         } catch (ex) {
@@ -412,7 +412,7 @@ https://github.com/faisalman/ua-parser-js/
 
     Browser.hasSecureBrowserRecorderSupport = function () {
         try {
-            if (Browser.isSecureBrowser && typeof SecureBrowser.recorder === 'object') {
+            if (Browser.isSecureBrowser() && typeof SecureBrowser.recorder === 'object') {
                 return true
             }
         } catch (ex) {
