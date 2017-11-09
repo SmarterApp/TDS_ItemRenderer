@@ -360,7 +360,7 @@ Sections.Login.prototype.validate = function ()
         // new secure browser forbiddenApps API returns only one field (app)
         TDS.Student.API.loginStudent(keyValues, sessionID, forbiddenApps.map(function(app) {
             return {name: app, desc: app};
-        })).then(loginCallback.bind(this));
+        }), Util.Browser.isSecureBrowser()).then(loginCallback.bind(this));
     };
 
     // Get forbidden apps
