@@ -676,12 +676,6 @@ LoginShell.saveBrowserInfo = function () {
 };
 
 LoginShell.Events.subscribe('onInit', function () {
-
-    // Windows and Linux SB have an issue where you cannot type into text areas without this hack.
-    if (Util.Browser.isSecure() && !Util.Browser.isMac()) {
-        Util.SecureBrowser.fixFocus();
-    }
-
     // set SB preferences
     if (Util.Browser.isSecure()) {
         setTimeout(LoginShell.setMozillaPreferences, 0);

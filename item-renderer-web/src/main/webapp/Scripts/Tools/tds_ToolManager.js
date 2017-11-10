@@ -277,15 +277,6 @@
             }, 0);
         });
 
-        panel.beforeHideEvent.subscribe(function () {
-            // BUG: When selecting text in dialog frame select boxes can't get focused
-            // STEPS: Open help, select text, leave text selected and close help.. no select boxes work (grades or global accs)
-            if (Util.Browser.isSecure() && !Util.Browser.isMac()) {
-                // NOTE: Don't do this on mac or it causes focus bug #30808
-                Util.SecureBrowser.fixFocus();
-            }
-        });
-
         panel.hideEvent.subscribe(function() {
             TM.Events.fire('onHide', panel);
             TDS.ARIA.showContent();
