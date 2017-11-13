@@ -69,6 +69,21 @@
         return false;
     };
 
+    Unified.prototype.enablePermissiveMode = function(enabled) {
+        try {
+            if (this._hasAPI()
+                && typeof SecureBrowser.security.setPermissiveMode === 'function') {
+
+                SecureBrowser.security.setPermissiveMode(enabled,
+                    function (permissiveMode) {
+                        console.log("Current permissive mode: " + permissiveMode);
+                    });
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+        }
+    };
+
     // Gets the current volume.
     Unified.prototype.getVolume = function () {
         return -1;
