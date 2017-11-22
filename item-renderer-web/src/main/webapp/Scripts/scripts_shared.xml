@@ -170,7 +170,6 @@
 
         <!-- validators -->
         <input>SecureBrowser/Validators/base.js</input>
-        <input>SecureBrowser/Validators/vmware.js</input>
         <input>SecureBrowser/Validators/expose.js</input>
         <input>SecureBrowser/Validators/spaces.js</input>
 
