@@ -75,10 +75,8 @@ var CFG = {
 TTS.Menu = function() {
 
     //Set  this to enable pause support, based on browser.
-    this.hasPauseSupport = !Util.Browser.isChrome() && // Pause is not working on chrome books
-        !Util.Browser.isIOS() && // Bug 120767 - Balaji recommended disabling TTS pause due to iOS bug
-        !(Util.Browser.osxVersionIsAtLeast(10, 9) && Util.Browser.getSecureVersion() < 6.5) && //OSX 10.9 requires SB6.5 or above as we fixed a bug in the SB that prevents pause from working  
-        !Util.Browser.isAndroid();  // TTS pause and resume are not supported on Android Browser
+    this.hasPauseSupport = !Util.Browser.isIOS() && // Bug 120767 - Balaji recommended disabling TTS pause due to iOS bug
+        !Util.Browser.isAndroid();                  // TTS pause and resume are not supported on Android Browser
 
     this.assembleContent = function(cfg, node) {
 
