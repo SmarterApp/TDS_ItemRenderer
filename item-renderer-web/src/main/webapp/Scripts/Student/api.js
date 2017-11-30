@@ -50,7 +50,7 @@
     };
 
     // POST: Pages/API/MasterShell.axd/loginStudent
-    API.loginStudent = function (keyValues /*string[]*/, sessionID /*string*/, forbiddenApps /*string[]*/) {
+    API.loginStudent = function (keyValues /*string[]*/, sessionID /*string*/, forbiddenApps /*string[]*/, secureBrowser /*boolean*/) {
 
         var forbiddenAppsFlat = forbiddenApps.map(function (app) {
             return app.desc;
@@ -59,7 +59,8 @@
         var data = {
             keyValues: keyValues.join(';'), // e.x., 'ID:9999999504;FirstName:FirstName504'
             sessionID: sessionID,
-            forbiddenApps: forbiddenAppsFlat // e.x., 'iexplore|skype'
+            forbiddenApps: forbiddenAppsFlat, // e.x., 'iexplore|skype'
+            secureBrowser: secureBrowser
         };
 
         return xhr.sendPromise('loginStudent', data, null, {

@@ -30,7 +30,11 @@
  */
 YUD = YAHOO.util.Dom;
 
-TTS.Util = {
+TTS.Util = (function() {
+
+  var _supportsWebSpeech, _supportsSSML;
+
+  var ttsUtil = {
 
     createDiv: function(strOrHtml) {
         var newdiv = document.createElement('div');
@@ -190,14 +194,33 @@ TTS.Util = {
 
         text = text.replace(/{silence}/g, "{silence:200}");
         
-        if (Util.Browser.isWindows()) {
-            text = text.replace(/{silence:([0-9]+)}/g, ',<silence msec="$1"/>'); // the , is to soften the breaks.
-            // In SB4.0, we need to include this pretag to force the code to understand that speech 
-            // tags are embedded. Otherwise, it reads the tags as text
+      /*
+       * Convert our <silence> tags into tags the given Speech Synthesis engine
+       * will recognize
+       */
+      if (TTS.Util.supportsSSML()) {
+        text = text.replace(/{silence:([0-9]+)}/g, ',<break time="$1ms"/>');
+        /*
+         * is to soften the breaks.
+         */
+      } else if (Util.Browser.getFirefoxVersion() >= 49) {
+        text = text.replace(/{silence:([0-9]+)}/g, " ; ");
+      } else if (Util.Browser.isWindows()) {
+        text = text.replace(/{silence:([0-9]+)}/g, ',<silence msec="$1"/>');
+
+        /*
+         * is to soften the breaks. In SB4.0, we need to include this pretag to
+         * force the code to understand that speech tags are embedded.
+         * Otherwise, it reads the tags as text
+         */
         } else if (Util.Browser.isMac()) {
             // Bug 112603 Non-blanking spaces (unicode 00A0) cause misalignment in TTS tracking in OSx 10.7 and earlier
             text = text.replace(/\u00A0/g, " ");
             text = text.replace(/{silence:([0-9]+)}/g, "[[slnc $1]]");
+      } else if (Util.Browser.isIOS()) {
+        // FB 180118: iOS was speaking the semi-colons injected below instead of
+        // resting on them
+        text = text.replace(/{silence:([0-9]+)}/g, "   ");
         } else {
             // I dont really have a solution here other than to put back our hack
             text = text.replace(/{silence:([0-9]+)}/g, " ; ");
@@ -279,20 +302,32 @@ TTS.Util = {
 
     getTTSPrefix: function () {
         var text = '';
-        if (Util.Browser.isWindows()) {
+      if (TTS.Util.supportsSSML()) {
+        return '<mark name="start"/> ';
+      } else if (Util.Browser.getFirefoxVersion() >= 49) {
+        return text;
+      } else if (Util.Browser.isWindows()) {
             return '<bookmark mark="start"/> ';
             // In SB4.0, we need to include this pretag to force the code to understand that speech 
             // tags are embedded. Otherwise, it reads the tags as text
         } else if (Util.Browser.isMac()) {
-            text = "[[sync 0x000000A1]] "; // Adding the bookmarks so that in OS X, the      last portion of a long string still gets read. Otherwise, the last word does not get read fully.
+        text = "[[sync 0x000000A1]] "; // Adding the bookmarks so that in OS X,
+        // the last portion of a long string
+        // still gets read. Otherwise, the last
+        // word does not get read fully.
         }
         return text;
     },
 
     getTTSPostscript: function() {
         var text = '';
-        if (Util.Browser.isMac()) {
-            text = " [[sync 0x000000A2]]"; // Adding the bookmarks so that in OS X, the      last portion of a long string still gets read. Otherwise, the last word does not get read fully.
+      if (Util.Browser.getFirefoxVersion() >= 49) {
+        return text;
+      } else if (Util.Browser.isMac()) {
+        text = " [[sync 0x000000A2]]"; // Adding the bookmarks so that in OS X,
+        // the last portion of a long string
+        // still gets read. Otherwise, the last
+        // word does not get read fully.
         }
         return text;
     },
@@ -303,6 +338,99 @@ TTS.Util = {
         }
         var cStyle = element.currentStyle || window.getComputedStyle(element, "");
         return cStyle.display;
+    },
+
+    addDoNotSpeak : function(node) {
+      $(node).attr('data-tts-skip', 'true');
+    },
+
+    supportsWebSpeech : function() {
+
+      if (_supportsWebSpeech === undefined) {
+
+        _supportsWebSpeech = function() {
+          // If the speechSynthesis API isn't available then there's no chance
+          // of supporting web speech here
+          if (!('speechSynthesis' in window)) {
+            return false;
+          }
+
+          // If we're not using SB then check the app setting to make sure
+          // that's okay
+          /*
+           * if (TDS.getAppSetting("tts.sbOnly", false) &&
+           * !Util.Browser.isSecure()) { return false; }
+           */
+          return true;  // Skip pedantic browser tests. If webspeech is there, try to use it.
+          // Edge 14+ both secure (Take a Test app) and non-secure qualifies
+          if (Util.Browser.isEdge() && Util.Browser.getEdgeVersion() >= 14) {
+            return true;
+          }
+
+          // Non-SB Firefox v47+ qualifies
+          if (!Util.Browser.isSecure() && Util.Browser.isFirefox()
+              && Util.Browser.getFirefoxVersion() >= 47) {
+            return true;
+          }
+
+          // Chrome on Desktop v43+ is supported (less than v43 has some
+          // tracking issues)
+          if (Util.Browser.isChrome() && !Util.Browser.isMobile()
+              && Util.Browser.getChromeVersion() >= 43) {
+            return true;
+          }
+
+          // We'll assume web speech isn't supported unless we are certain that
+          // it is
+          return false;
+        }();
+      }
+
+      return _supportsWebSpeech;
+    },
+
+    supportsSSML : function() {
+
+      if (_supportsSSML === undefined) {
+
+        _supportsSSML = function() {
+
+          // SSML is for Web Speech enabled browsers so if no Web Speech then no
+          // SSML
+          if (!TTS.Util.supportsWebSpeech()) {
+            return false;
+          }
+
+          // So we know Web Speech is supported so we can rely that we know
+          // we're in that subset of browsers...
+
+          // Edge 14+ both secure (Take a Test app) and non-secure qualifies
+          if (Util.Browser.isEdge()) {
+            return true;
+          }
+
+          // V49 of Firefox enabled Web Speech by default and dropped SSML
+          // support across all platforms
+          if (Util.Browser.getFirefoxVersion() >= 49) {
+            return false;
+          }
+
+          // Firefox on Windows qualifies
+          if (Util.Browser.isFirefox() && Util.Browser.isWindows()) {
+            return true;
+          }
+
+          // If we aren't sure the browser supports SSML then we'll assert that
+          // it doesn't
+          return false;
+        }();
+      }
+
+      return _supportsSSML;
     }
 
 };
+
+  return ttsUtil;
+
+}());

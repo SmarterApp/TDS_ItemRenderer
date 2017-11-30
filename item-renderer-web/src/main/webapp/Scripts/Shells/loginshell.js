@@ -44,11 +44,6 @@ LoginShell.init = function() {
     // perform validation check
     if (!LoginShell.validateSecureBrowser()) return;
 
-    // Try to set the appStartTime which we can use later
-    if (Util.Browser.isSecure()) {
-        Util.SecureBrowser.setAppStartTime((new Date()).toUTCString(), false);
-    }
-
     this.Events.fire('onInit');
 
     this.defaultBodyCSS = document.body.className;
@@ -470,9 +465,6 @@ LoginShell.setTestAccommodations = function (segmentsAccommodations) {
 
 LoginShell.clearBrowser = function() {
 
-    // clear clipboard
-    Util.SecureBrowser.emptyClipBoard();
-
     var querystring = Util.QueryString.parse();
     // This cookie is set by the secure browser launch protocol when a student Id is validated against a session.
     var isSbLaunchProtocolRedirect = YAHOO.util.Cookie.exists("TDS-SB-Launch-Protocol");
@@ -501,9 +493,6 @@ LoginShell.clearBrowser = function() {
         // get client cookie
         var clientKey = 'TDS-Student-Client';
         var clientValue = YAHOO.util.Cookie.get(clientKey);
-
-        // NOTE: for legacy purposes.. not sure if we need to still do this
-        Util.SecureBrowser.clearCookies();
 
         // restore client cookie
         if (clientValue) {
@@ -687,12 +676,6 @@ LoginShell.saveBrowserInfo = function () {
 };
 
 LoginShell.Events.subscribe('onInit', function () {
-
-    // Windows and Linux SB have an issue where you cannot type into text areas without this hack.
-    if (Util.Browser.isSecure() && !Util.Browser.isMac()) {
-        Util.SecureBrowser.fixFocus();
-    }
-
     // set SB preferences
     if (Util.Browser.isSecure()) {
         setTimeout(LoginShell.setMozillaPreferences, 0);

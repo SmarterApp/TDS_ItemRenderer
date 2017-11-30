@@ -104,9 +104,9 @@ Sections.Login.prototype.load = function ()
     if (Util.Browser.isSecure()) {
         if (Util.Browser.isWindows()) {
             // For Windows, we attempt to lock down while launching the Secure Browser
-            Util.SecureBrowser.enableLockDown(true);
+            Util.SecureBrowser.lockDown(true);
         } else {
-            Util.SecureBrowser.enableLockDown(false);
+            Util.SecureBrowser.lockDown(false);
         }
     }
 
@@ -127,9 +127,6 @@ Sections.Login.prototype.load = function ()
 
     // Check if the routersession query param is passed to pre populate session id.
     this.checkQueryStringRouterSession();
-
-    // load currently running apps (some mobile browsers require we do this)
-    Util.SecureBrowser.loadProcessList();
 };
 
 Sections.Login.prototype.render = function() {
@@ -323,45 +320,51 @@ Sections.Login.prototype.validate = function ()
         }
     }
 
-    // get login fields
-    var keyValues = [];;
-    var sessionID;
-    // Get forbidden apps
-    var forbiddenApps = Util.SecureBrowser.getForbiddenApps();
+    var forbiddenAppsCallback = function(forbiddenApps) {
+        // get login fields
+        var keyValues = [];
+        var sessionID;
 
-    // If this is a login from a secure browser launch protocol redirect, then we need to get the student login data
-    // from the TDS-Student-Data cookie. With the launch protocol, we will only validate session ID and student ID.
-    if (localStorage.getItem('isSbLaunchProtocolRedirect')) {
-        var studentId = Util.Browser.readSubCookie("TDS-Student-Data", "T_ID");
-        sessionID = Util.Browser.readSubCookie("TDS-Student-Data", "S_ID")
-        // Set the launch protocol flag so login service knows to validate only session ID and student ID
-        keyValues.push("SBLaunchProtocol:true");
-        keyValues.push("ID:" + studentId);
-    } else {
-        Util.Array.each(TDS.Config.loginRequirements, function (loginReq) {
-            var input = this.getLoginInput(loginReq.id); // form control
-            var value = YAHOO.lang.trim(input.value); // trimmed form value
-            var keyValue = loginReq.id + ':' + value;
-            keyValues.push(keyValue);
+        // If this is a login from a secure browser launch protocol redirect, then we need to get the student login data
+        // from the TDS-Student-Data cookie. With the launch protocol, we will only validate session ID and student ID.
+        if (localStorage.getItem('isSbLaunchProtocolRedirect')) {
+            var studentId = Util.Browser.readSubCookie("TDS-Student-Data", "T_ID");
+            sessionID = Util.Browser.readSubCookie("TDS-Student-Data", "S_ID");
+            // Set the launch protocol flag so login service knows to validate only session ID and student ID
+            keyValues.push("SBLaunchProtocol:true");
+            keyValues.push("ID:" + studentId);
+        } else {
+            Util.Array.each(TDS.Config.loginRequirements, function (loginReq) {
+                var input = this.getLoginInput(loginReq.id); // form control
+                var value = YAHOO.lang.trim(input.value); // trimmed form value
+                var keyValue = loginReq.id + ':' + value;
+                keyValues.push(keyValue);
 
-        }, this);
-        sessionID = this.getSessionID();
-    }
-
-    var loginCallback = function(loginInfo) {
-        console.log('Login Info', loginInfo);
-        LoginShell.setLoginInfo(loginInfo);
-        this.request('next', loginInfo);
-
-        // we want to try to force full screen after student logs in and release lock when they log out, and
-        // that applies to secure browsers that implement function enableLockDown (except for Windows Secure Browser)
-        if (Util.Browser.isSecure() && !Util.Browser.isWindows()) {
-            Util.SecureBrowser.enableLockDown(true);
+            }, this);
+            sessionID = this.getSessionID();
         }
+
+        var loginCallback = function(loginInfo) {
+            console.log('Login Info', loginInfo);
+            LoginShell.setLoginInfo(loginInfo);
+            this.request('next', loginInfo);
+
+            // we want to try to force full screen after student logs in and release lock when they log out, and
+            // that applies to secure browsers that implement function enableLockDown (except for Windows Secure Browser)
+            if (Util.Browser.isSecure() && !Util.Browser.isWindows()) {
+                Util.SecureBrowser.enableLockDown(true);
+            }
+        };
+
+        // login student requires forbiddenApps to have two fields (name, desc)
+        // new secure browser forbiddenApps API returns only one field (app)
+        TDS.Student.API.loginStudent(keyValues, sessionID, forbiddenApps.map(function(app) {
+            return {name: app, desc: app};
+        }), Util.Browser.isSecureBrowser()).then(loginCallback.bind(this));
     };
 
-    TDS.Student.API.loginStudent(keyValues, sessionID, forbiddenApps)
-        .then(loginCallback.bind(this));
+    // Get forbidden apps
+    Util.SecureBrowser.getForbiddenApps().then(forbiddenAppsCallback.bind(this));
 };
 
 // this is a helper function for the login form

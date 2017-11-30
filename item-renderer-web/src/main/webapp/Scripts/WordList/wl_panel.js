@@ -617,23 +617,18 @@ WordListPanel.InitializePane = function() {
 // From parsed JSON POST response, construct the YUI Tab formats with the response.
 WordListPanel.RenderHtmlTabs = function (messages) {
     var entries = messages.Entries;
-    if (entries.length > 1) {
-        // since there is more than 1, let's see if there is an Illustration type to move first
-        var firstItem = 0;
-        for (var j=1; j < messages.Entries.length; j++) {
-            if (entries[j].wlType == 'illustration') {
-                firstItem = j;
-                break;
-            }
-        }
-
-        entries = [];
-        entries.push(messages.Entries[firstItem]);
-        for (var j=0; j < messages.Entries.length; j++) {
-            if (j != firstItem) {
-                entries.push(messages.Entries[j]);
-            }
-        }
+     //Orders tabs in the word list panel
+     if (entries.length > 1) {
+        var tabOrder = new Map([
+            ['illustration', '0'],
+            ['glossary', 1]
+          ]);
+        var tabOrderLen = tabOrder.size + 1;    
+        entries.sort(function(a, b){
+            var aIndex = tabOrder[a.wlType] || tabOrderLen
+            var bIndex = tabOrder[b.wlType] || tabOrderLen;
+            return aIndex - bIndex;
+        });
     }
 
     var tabString = "<div id=\"" + WordListPanel.tabbedDivName + "\" class=\"yui-navset\"> \r\n";
@@ -760,6 +755,13 @@ WordListPanel.IsVisible = function() {
     return false;
 };
 
+// Removes all items from the content word cache so the same item can be reloaded with a different glossary
+WordListPanel.clearCache = function() {
+    WordListPanel.contentWordCache = {};
+    WordListPanel.headerWordCache = {};
+    WordListPanel.message = {};
+};
+
 // content manager events
 (function(CM) {
 
@@ -768,16 +770,17 @@ WordListPanel.IsVisible = function() {
     // when zooming a page we are on update elements
     CM.onPageEvent('zoom', function (page, level) {
         console.log('zoom event level', level);
-        WordListPanel.zoomFactor = level;
+        if(WordListPanel.IsWordListEnabled()){
+            WordListPanel.zoomFactor = level;
+            for (var key in WordListPanel.panelSizes) {
+                var val = WordListPanel.panelSizes[key];
+                WordListPanel.panelSizes[key].width = val.baseWidth * level;
+                WordListPanel.panelSizes[key].height = val.baseHeight == '' ? '' : val.baseHeight * level;
+            }
 
-        for (var key in WordListPanel.panelSizes) {
-            var val = WordListPanel.panelSizes[key];
-            WordListPanel.panelSizes[key].width = val.baseWidth * level;
-            WordListPanel.panelSizes[key].height = val.baseHeight == '' ? '' : val.baseHeight * level;
+            WordListPanel.doZoomResize();
+            WordListPanel.handlePanelOutsideWindow();
         }
-
-        WordListPanel.doZoomResize();
-        WordListPanel.handlePanelOutsideWindow();
     });
 
 })(window.ContentManager);
