@@ -52,7 +52,8 @@ TestShell.ResponseManager.Events =
     onFailure: TestShell.ResponseManager.createEvent('onFailure'),
     onSuccess: TestShell.ResponseManager.createEvent('onSuccess'),
     onGroups: TestShell.ResponseManager.createEvent('onGroups'),
-    onFinished: TestShell.ResponseManager.createEvent('onFinished')
+    onFinished: TestShell.ResponseManager.createEvent('onFinished'),
+    onAllAnswered: TestShell.ResponseManager.createEvent('onAllAnswered')
 };
 
 TestShell.ResponseManager.fireEvent = function(name, obj) {
@@ -394,6 +395,12 @@ TestShell.ResponseManager._sendSuccess = function(xhrObj)
     // update test shell properties (TODO: move this out of here)
     TestShell.testLengthMet = results.summary.testLengthMet;
 
+    // check for when all questions are answered
+    if (!TestShell.testAllAnswered && results.summary.testAllAnswered) {
+        TestShell.testAllAnswered = results.summary.testAllAnswered;
+        this.fireEvent('onAllAnswered');
+    }
+
     // check for when test is completed
     if (!TestShell.testFinished && results.summary.testFinished) {
         TestShell.testFinished = results.summary.testFinished;
@@ -464,13 +471,20 @@ TestShell.ResponseManager.Events.onSuccess.subscribe(function(response)
     TestShell.UI.updateControls();
 });
 
-// show message on notification bar when we receive response from the server we are finished with the test
+// show message on notification bar when we receive response from the server we
+// have answered all questions in the test
+TestShell.ResponseManager.Events.onAllAnswered.subscribe(function () {
+    if (TestShell.testAllAnswered) {
+        TDS.Shell.Notification.add(Messages.get('TestCompleted'));
+    }
+});
+
+// show message on notification bar when we receive response from the server we
+// are finished with the test
 TestShell.ResponseManager.Events.onFinished.subscribe(function () {
     // check if we are showing item scores
     if (TDS.showItemScores) {
         TDS.Shell.Notification.add(Messages.get('TestItemScores'));
-    } else if (TestShell.testFinished) {
-        TDS.Shell.Notification.add(Messages.get('TestCompleted'));
     }
 });
 

@@ -197,7 +197,8 @@
 
         var testSummary = {
             testLengthMet: getAttribBool(node, 'lengthMet'),
-            testFinished: getAttribBool(node, 'finished')
+            testFinished: getAttribBool(node, 'finished'),
+            testAllAnswered: getAttribBool(node, 'allAnswered')
         };
 
         return testSummary;
