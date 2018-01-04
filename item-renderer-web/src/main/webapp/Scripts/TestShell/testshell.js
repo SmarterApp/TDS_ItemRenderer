@@ -384,15 +384,10 @@ The main test shell entry code.
             return;
         }
 
-        // show warning
-        TS.UI.showWarningPrompt('Complete', {
-            yes: function () {
-                TS.Navigation.hidePage(); // try and hide the current page
-                // send complete notice to server and redirect to review screen if succeeds
-                TS.xhrManager.queueAction('complete', null, function () {
-                    TS.redirectReview();
-                });
-            }
+        TS.Navigation.hidePage(); // try and hide the current page
+        // send complete notice to server and redirect to review screen if succeeds
+        TS.xhrManager.queueAction('complete', null, function () {
+            TS.redirectReview();
         });
     };
 

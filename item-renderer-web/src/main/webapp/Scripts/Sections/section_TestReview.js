@@ -56,6 +56,15 @@ This is the code for the review screen where they can go back into the test or c
             });
         });
         if (marked) {
+            var markedCount = 0;
+            groups.forEach(function (group) {
+                group.items.forEach(function(item) {
+                    if(item.marked) {
+                        markedCount++;
+                    }
+                });
+            });
+            $('.markedWarning').text(markedCount + ' ' + $('.markedWarning').text());
             $('.markedWarning').show();
         }
     };
@@ -68,6 +77,15 @@ This is the code for the review screen where they can go back into the test or c
             });
         });
         if (unanswered) {
+            var unansweredCount = 0;
+            groups.forEach(function (group) {
+                group.items.forEach(function(item) {
+                    if(!item.answered) {
+                        unansweredCount++;
+                    }
+                });
+            });
+            $('.unansweredWarning').text(unansweredCount + ' ' + $('.unansweredWarning').text());
             $('.unansweredWarning').show();
         }
     };
