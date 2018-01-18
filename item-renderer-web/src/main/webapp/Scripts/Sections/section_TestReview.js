@@ -64,7 +64,7 @@ This is the code for the review screen where they can go back into the test or c
                     }
                 });
             });
-            $('.markedWarning').text(markedCount + ' ' + $('.markedWarning').text());
+            $('.markedWarningCount').text(markedCount);
             $('.markedWarning').show();
         }
     };
@@ -85,7 +85,7 @@ This is the code for the review screen where they can go back into the test or c
                     }
                 });
             });
-            $('.unansweredWarning').text(unansweredCount + ' ' + $('.unansweredWarning').text());
+            $('.unansweredWarningCount').text(unansweredCount);
             $('.unansweredWarning').show();
         }
     };
