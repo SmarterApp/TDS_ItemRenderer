@@ -101,7 +101,7 @@ Sections.Login.prototype.load = function ()
     // Mainly On chrome OS running our extension, we want to try to force full screen after student logs in 
     // and release this lock when they log out; also on iOS browser, we call function enableLockDown to disable
     // the check if the browser has been backgrounded
-    if (Util.Browser.isSecure()) {
+    if (Util.Browser.isSecureBrowser()) {
         if (Util.Browser.isWindows()) {
             // For Windows, we attempt to lock down while launching the Secure Browser
             Util.SecureBrowser.lockDown(true);
