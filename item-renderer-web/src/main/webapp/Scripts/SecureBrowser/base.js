@@ -107,7 +107,7 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
             typeof (TDS.Config.forbiddenApps) != 'object' ||
             (TDS.Config.forbiddenApps == null)) {
             deferred.resolve(currentForbiddenApps);
-            return deferred.promise();
+            return deferred.promise;
         }
 
         // get currently running processes
