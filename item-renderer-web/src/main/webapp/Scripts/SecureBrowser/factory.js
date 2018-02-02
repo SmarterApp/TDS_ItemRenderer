@@ -25,6 +25,10 @@ TDS.SecureBrowser = TDS.SecureBrowser || {};
             sbImpl = new TDS.SecureBrowser.Unified();
         }
 
+        if (Util.Browser.isSecure() && Util.Browser.isChrome()) {
+            sbImpl = new TDS.SecureBrowser.Chrome();
+        }
+
         // set default?
         if (sbImpl == null) {
             sbImpl = new TDS.SecureBrowser.Base();

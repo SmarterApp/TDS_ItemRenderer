@@ -52,10 +52,6 @@ The chrome browser running our security extension (mainly on chrome OS)
         window.addEventListener("message", bootstrap, true);
     };
 
-    Chrome.prototype.enableLockDown = function (lockDown) {
-        TDS.AppWindow.postMessage({ type: "CHROME COMMAND", command: "UI FULLSCREEN", params: { enable: lockDown, interval: 500 } }, "*");
-    };
-
     Chrome.prototype.close = function () {
         // post a message in case we are a packaged app and the app launcher can shut us down if it is around
         TDS.AppWindow.postMessage({ type: "CHROME COMMAND", command: "APP CLOSE", params: {} }, "*");
