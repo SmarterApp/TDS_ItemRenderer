@@ -45,7 +45,7 @@ The chrome browser running our security extension (mainly on chrome OS)
         var bootstrap = function (event) {
             if (event.data.type && event.data.type == "CHROME RESPONSE" && event.data.command == "APP WELCOME") {
                 TDS.AppWindow = event.source;
-                window.removeEventListener(bootstrap);
+                window.removeEventListener("message", bootstrap);
             }
         };
 
