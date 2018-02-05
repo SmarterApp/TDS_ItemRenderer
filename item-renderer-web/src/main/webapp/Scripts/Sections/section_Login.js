@@ -102,7 +102,7 @@ Sections.Login.prototype.load = function ()
     // and release this lock when they log out; also on iOS browser, we call function enableLockDown to disable
     // the check if the browser has been backgrounded
     if (Util.Browser.isSecureBrowser()) {
-        if (Util.Browser.isWindows()) {
+        if (Util.Browser.isWindows() || Util.Browser.isIOS()) {
             // For Windows, we attempt to lock down while launching the Secure Browser
             Util.SecureBrowser.lockDown(true);
         } else {
