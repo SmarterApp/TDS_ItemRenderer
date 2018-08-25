@@ -191,7 +191,8 @@ TTS.Manager.init = function (forceInit) { //set forceInit to true if this is a r
     }
 
     // check if TTS is supported and load it
-    if (!service || !service.isSupported()) {
+    // temporary fix for tts not working with alt image text, except for secure browser
+    if (!Util.Browser.isSecure() || !service || !service.isSupported()) {
       TTS.Manager._changeStatus(TTS.Status.NotSupported);
       TTS.Manager.Events.onInitFailure.fire();
       return false;
