@@ -111,7 +111,7 @@ public class ITSUrlResolver2 extends ITSUrlResolver
    * @param match
    * @return
    */
-  private String fileMatch(String tagName, String match)  {
+  protected String fileMatch(String tagName, String match)  {
       String fileName = match;
 
       // if already a http url then leave as is
