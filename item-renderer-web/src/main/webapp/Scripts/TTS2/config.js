@@ -59,6 +59,9 @@ TTS.Config = {
     },
     setVoice: function(val, langs){
       langs = langs || [TTS.Config.Lang.ENU.Code];
+      if(!Array.isArray(langs)) {
+        langs = [langs];
+      }
       for(var k in langs){
         var lang = langs[k];
         TTS.getInstance().setVoice(val, lang);
@@ -195,7 +198,7 @@ TTS.Config = {
     { name: "VW Julie", priority: 1, language: "ENU" },
     { name: "Julie", priority: 1, language: "ENU" },
     { name: "Kate", priority: 1, language: "ENU" },
-    { name: "Paul", priority: 1, language: "ENU" },
+    // { name: "Paul", priority: 1, language: "ENU" },  // Conflicts with Paulina
     { name: "Cepstral_Marta", priority: 1, language: "ESN" },
     { name: "Cepstral_David", priority: 1, language: "ENU" },
     { name: "Cepstral_Miguel", priority: 2, language: "ESN" },

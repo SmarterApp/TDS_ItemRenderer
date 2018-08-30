@@ -45,15 +45,11 @@ The chrome browser running our security extension (mainly on chrome OS)
         var bootstrap = function (event) {
             if (event.data.type && event.data.type == "CHROME RESPONSE" && event.data.command == "APP WELCOME") {
                 TDS.AppWindow = event.source;
-                window.removeEventListener(bootstrap);
+                window.removeEventListener("message", bootstrap);
             }
         };
 
         window.addEventListener("message", bootstrap, true);
-    };
-
-    Chrome.prototype.enableLockDown = function (lockDown) {
-        TDS.AppWindow.postMessage({ type: "CHROME COMMAND", command: "UI FULLSCREEN", params: { enable: lockDown, interval: 500 } }, "*");
     };
 
     Chrome.prototype.close = function () {

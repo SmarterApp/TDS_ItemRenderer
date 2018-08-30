@@ -37,7 +37,7 @@ TDS.XhrManager = (function(Util) {
 
     YAHOO.extend(TDSXhr, Util.XhrManager);
 
-    TDSXhr.defaultErrorMessage = 'There was a problem with your request.';
+    TDSXhr.defaultErrorMessage = Messages.get('Messages.Label.XHRDefaultError') || 'There was a problem with your request.';
     
     TDSXhr.JsonReply = {
         OK: 0,
