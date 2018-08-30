@@ -672,12 +672,16 @@ The main test shell entry code.
         if (TS.isUnloading) return false;  // TS is unloading. No need to show an alert fb# 152367
 
         var isEnvironmentSecureCallback = function(securityCheckResult) {
-            if (securityCheckResult != null && (!securityCheckResult.secure)) {
-                var errorMessageKey = (securityCheckResult.messageKey != null) ? securityCheckResult.messageKey : 'TestShell.Alert.EnvironmentInsecure';
-                var error = Messages.getAlt(errorMessageKey, 'Environment is not secure. Your test will be paused.');
-                TS.UI.showAlert('Error', error, function () {
-                    TS._pauseInternal(true, 'Environment Security', TS.Config.disableSaveWhenEnvironmentCompromised);
-                });
+            if (securityCheckResult != null) {
+                // AIR iOS Secure Browser returns { state: "true" } when in lockdown mode
+                var secure = ((securityCheckResult.secure == true) || (securityCheckResult.state == 'true'));
+                if (!secure) {
+                    var errorMessageKey = (securityCheckResult.messageKey != null) ? securityCheckResult.messageKey : 'TestShell.Alert.EnvironmentInsecure';
+                    var error = Messages.getAlt(errorMessageKey, 'Environment is not secure. Your test will be paused.');
+                    TS.UI.showAlert('Error', error, function () {
+                        TS._pauseInternal(true, 'Environment Security', TS.Config.disableSaveWhenEnvironmentCompromised);
+                    });
+                }
             }
         };
         // if the environment security has been breached, alert user and log them out

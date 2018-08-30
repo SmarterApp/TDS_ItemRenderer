@@ -129,11 +129,7 @@ TTS.Manager._addKnownLanguage = function(languageCode) {
 
 TTS.Manager.isKnownLanguage = function(languageCode) {
     languageCode = languageCode.toUpperCase();
-    if (TTS.Manager._knownLanguages[languageCode] != null) {
-        return true;
-    }
-  
-    return false;
+    return TTS.Manager._knownLanguages[languageCode] != null;
 };
 
 // call this to log important messages that we might want to see in TDS logs
@@ -671,20 +667,39 @@ TTS.Manager._initializeAvailableVoices = function () {
     if (availableVoices == null || typeof (availableVoices) == 'undefined') {
         return;
     }
+    var backupVoices = {};
+    var voicesFound = 0;
     for (var counter1 = 0; counter1 < TTS.Manager._knownVoicePacks.length; ++counter1) {
         var voicePackElement = TTS.Manager._knownVoicePacks[counter1];
         for (var counter2 = 0; counter2 < availableVoices.length; ++counter2) {
             var availableVoice = availableVoices[counter2];
             var availableVoiceLower = availableVoice.toLowerCase();
             var voicePackVoiceNameLower = voicePackElement.Voicename.toLowerCase();
-            if (availableVoiceLower.indexOf(voicePackVoiceNameLower, 0) >= 0) {
+
+            if (availableVoiceLower === voicePackVoiceNameLower) { // they tend to match exactly on Mac
+                TTS.Config.Debug && console.log("Attaching " + availableVoice + " to " + voicePackElement.Voicename);
                 voicePackElement.Available = true;
                 voicePackElement.ServiceVoiceName = availableVoice;
+                ++voicesFound;
+                break;
+            }
+            if (availableVoiceLower.indexOf(voicePackVoiceNameLower, 0) >= 0) { // they may substring match on Windows
+                TTS.Config.Debug && console.log(
+                    "Saving " + availableVoice + " to " + voicePackElement.Voicename + " as backup.");
+                backupVoices[availableVoice] = voicePackElement;
                 break;
             }
         }
     }
-
+    if (voicesFound == 0) { // usually this occurs on windows, as no exact matches tend to occur
+        for (var key in backupVoices) {
+            if (backupVoices.hasOwnProperty(key)) {
+                TTS.Config.Debug && console.log("Adding backup voice " + key + " to " + backupVoices[key].Voicename);
+                backupVoices[key].Available = true;
+                backupVoices[key].ServiceVoiceName = key;
+            }
+        }
+    }
     var defaultVoice = TTS.Manager.getVoice();
     /*
     * we will now need to loop through and adjust priorities.

@@ -181,6 +181,23 @@
         }
     };
 
+    /**
+     *  Exits the secure browser.
+     */
+    Unified.prototype.close = function (enable) {
+        try {
+            if (this._hasAPI()
+                && typeof SecureBrowser.security.close === 'function') {
+
+                // the boolean parameter determines if the browser should restart on exit or simply exit.
+                // void browser.security.close(boolean restart)
+                SecureBrowser.security.close(false);
+            }
+        } catch (ex) {
+            console.log('Exception occurred ' + ex.message);
+        }
+    };
+
     SB.Unified = Unified;
 
 })(TDS.SecureBrowser);

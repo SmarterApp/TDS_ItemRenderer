@@ -101,8 +101,8 @@ Sections.Login.prototype.load = function ()
     // Mainly On chrome OS running our extension, we want to try to force full screen after student logs in 
     // and release this lock when they log out; also on iOS browser, we call function enableLockDown to disable
     // the check if the browser has been backgrounded
-    if (Util.Browser.isSecure()) {
-        if (Util.Browser.isWindows()) {
+    if (Util.Browser.isSecureBrowser()) {
+        if (Util.Browser.isWindows() || Util.Browser.isIOS()) {
             // For Windows, we attempt to lock down while launching the Secure Browser
             Util.SecureBrowser.lockDown(true);
         } else {
@@ -360,7 +360,7 @@ Sections.Login.prototype.validate = function ()
         // new secure browser forbiddenApps API returns only one field (app)
         TDS.Student.API.loginStudent(keyValues, sessionID, forbiddenApps.map(function(app) {
             return {name: app, desc: app};
-        }), Util.Browser.isSecureBrowser()).then(loginCallback.bind(this));
+        }), Util.Browser.isSecure()).then(loginCallback.bind(this));
     };
 
     // Get forbidden apps
