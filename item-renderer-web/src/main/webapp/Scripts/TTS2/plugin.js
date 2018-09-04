@@ -12,24 +12,33 @@ CM TTS page plugin
 
 (function (CM) {
 
+  console.log("JJONES CM load fires");
     if (!CM) return;
 
     //Is there a test I can do to disable everything if the accomodation properties do now allow
     //any tts for this test?  The accommodation properties seem to be set on the page level
     TTS.MenuSystem = { //Convert a {TTS.Menu}.getMenuCfg(obj) into the TDS menu implementation.
         Last: null,    //The most recently created TTS menu info
+        Menu: null,
         addMenuSetup: function (menu, playCfg) {
+            console.log("addMenuSetup JJONES");
+            console.dir(playCfg);
             try {
                 if (!menu || !playCfg || !playCfg.ORDER) {
                     return;
                 }
                 //Debug for Console debug of the TTS menu
                 TTS.MenuSystem.Last = playCfg;
+                TTS.MenuSystem.Menu = menu;
 
                 var order = playCfg.ORDER;
                 for (var i = 0; i < order.length; ++i) {
                     var entryName = order[i];
                     var entry = playCfg[entryName];
+                    console.log("JJONES button entry:")
+                    console.dir(entry);
+
+                    console.log("entry .css is '" + entry.css + "'");
 
                     if (entry && (typeof entry.cb == 'function' || entry.allowDisabled)) {
                         menu.addMenuItem(entry.level || 'entity', {
@@ -38,10 +47,30 @@ CM TTS page plugin
                             
                             // Bug 114478 & 142318 - Disable TTS menu entries if TDS Audio is active
                             disabled: typeof entry.cb == 'function' ? TDS.Audio.isActive() : entry.allowDisabled,
-                            classname: entry.css || 'speaksection'
+			    
+                            classname: entry.css || 'speaksection',
+			    style: 'cursor:pointer'
                         });
+/*			
+                      console.log("adding button");
+
+                      if (entry.Label === "TDSTTS.Label.SpeakQuestionENU") {
+                        // potential HACK bugfix for iOS TDS-1757
+                        console.log("JJONES2 HACK button entry:");
+                        console.dir(entry);
+                        console.log("callback is ", entry.cb);
+                        func = entry.cb;
+                        entry.cb = function () {
+                          console.log("Callback called");
+                          TTS.Manager.play("Hi there", "ENU");
+                          //func();
+                        };
+                        console.log("callback is ", entry.cb);
+                      }
+*/
                     }
                 }
+
             } catch (e) {
                 console.error("Failed to create menu item.", e);
             }
@@ -66,6 +95,9 @@ CM TTS page plugin
 
     /* Item */
     function ItemPlugin_TTS(page, entity, config) {
+      console.log("JJONES ItemPlugin_TTS fires");
+      console.dir(page);
+
     }
 
     // Override the check for whether tracking is enabled or not based to look for the accommodation.
@@ -88,6 +120,8 @@ CM TTS page plugin
 
     ItemPlugin_TTS.prototype.load = function () {
 
+        console.log("JJONES prototype load fires");
+
         // check for elements that we want TTS to skip
         var page = this.page;
         var item = this.entity;
@@ -104,7 +138,30 @@ CM TTS page plugin
                 posEl.setAttribute('data-tts-skip', 'true');
             }
         }
-        
+
+        console.log("JJONES: attempting to add onclicks to hamburger menu (this actually works on mac, but sadly onclick won't fire on iOS!).");
+        // why? well, these events may require this fix to fire: https://stackoverflow.com/questions/14795944/jquery-click-events-not-working-in-ios
+        var menus = this.page.getDoc().getElementsByClassName("toolButton itemMenu");
+        for (var i = 0; i < menus.length; ++i) {
+
+          console.log("adding alert to menu " + i);
+          // Both of these approaches to add onclicks below work on OSX Safari but not iOS Safari! Why?
+          //menus[i].setAttribute("onclick","console.log('blah');");
+          menus[i].onclick = function() {
+            console.log("you clicked menu " + i);
+            TTS.Manager.play("you clicked menu number " + i, "ENU");
+            return true;
+          };
+
+          // this style modifying fix (the fix from SO URL above) doesn't work, probably because I can't figure out the proper syntax.
+          // TODO: Maybe find HTML the hamburger menu is created in and add it there so it's present at load time?
+          if (menus[i].style) {
+            menus[i].style = "cursor:pointer; " + menus[i].style;
+          } else {
+            menus[i].style = "cursor:pointer";
+          }
+        }
+
         // Create TTS.Singleton
         TTS.createSingleton();
 
@@ -150,6 +207,7 @@ CM TTS page plugin
         var ttsMenu = new TTS.Menu(languages);
         var menuCfg = ttsMenu.getMenuCfg(domToParse, selection, pageWin, item.stemTTS, page, item);
 
+        console.log("JJONES Adding menu 1");
         TTS.MenuSystem.addMenuSetup(menu, menuCfg);
         TTS.Config.Debug && console.log("TTS On Item Menushow config", menuCfg);
     }
@@ -177,7 +235,7 @@ CM TTS page plugin
     };
 
     PassagePlugin_TTS.prototype.showMenu = function (menu, evt, selection) {
-
+        console.log("JJONES showMenu fires");
         var page = this.page;
         var passage = this.entity;
 
@@ -198,6 +256,7 @@ CM TTS page plugin
         );
 
         TTS.Config.Debug && console.log("Passage menu show.", menuCfg);
+      console.log("JJONES Adding menu 2");
         TTS.MenuSystem.addMenuSetup(menu, menuCfg);
     }
 
@@ -211,6 +270,8 @@ CM TTS page plugin
     }
 
     CM.registerPagePlugin('tts-page', PagePlugin_TTS, function pageMatch(page) {
+      console.log("JJONES registerPagePlugin fires");
+      console.dir(page);
         return hasTTSEnabled(page);
     });
 
@@ -226,6 +287,7 @@ CM TTS page plugin
     }
 
     TDS.Audio.Player.onBeforePlay.subscribe(function () {
+      console.log("JJONES onBeforePlay fires");
         return ttsNotSpeaking();
     });
 

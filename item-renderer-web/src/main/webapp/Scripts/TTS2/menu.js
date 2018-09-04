@@ -290,6 +290,7 @@ TTS.Menu.prototype.getPlayFunction = function(parseNode, language) {
     if (parseNode && ctrl.isLanguageSupported(language)) {
         if (parseNode.containsSpeakableText()) {
             return function() {
+                console.log("JJONES: Parsenode is ", parseNode);
                 ctrl.playParseNode(parseNode, language);
             };
         } else {

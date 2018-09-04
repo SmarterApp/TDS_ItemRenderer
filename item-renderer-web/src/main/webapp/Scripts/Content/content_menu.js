@@ -32,19 +32,24 @@
     // @label The menu text
     // @fn The function triggered when clicking on the menu
     MenuCollection.prototype.addMenuItem = function(level, label, fn, disabled, checked, insert) {
+      console.log("JJONES IN ADD MENU ITEM");
         var menuItem;
 
         if (YAHOO.lang.isString(label)) {
             menuItem = { text: label };
         } else if (YAHOO.lang.isObject(label)) {
+            console.log("setting label");
             // label is actually a pre-ready YUI json structure in this case
             menuItem = label;
         } else {
+          console.log("retruning cuz label was weird");
             return;
         }
 
         if (YAHOO.lang.isFunction(fn)) {
+            console.log("IS IT GECKO?!?!?!?!");
             if (YAHOO.env.ua.gecko) {
+              console.log("YES IT IS GECKO?!?!?!?!");
                 // HACK: Balaji said this code is required for fixing SB TTS issues.
                 // NOTE: Don't try this on anything other than Firefox.
                 var scheduledFunc = function() {
@@ -53,6 +58,7 @@
 
                 menuItem.onclick = { fn: scheduledFunc };
             } else {
+              console.log("YES IT IS NOT GECKO?!?!?!?!");
                 menuItem.onclick = { fn: fn };
             }
         }

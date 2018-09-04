@@ -75,7 +75,7 @@ TTS.Manager ={
 	    onLog: new YAHOO.util.CustomEvent('onLog', TTS.Manager, false, YAHOO.util.CustomEvent.FLAT)
 	},
     
-    _debugging: false,
+    _debugging: true,
     _service: null, // TTS service API reference
 
     // keep previous states (so we know when something changes)
@@ -293,37 +293,48 @@ TTS.Manager.supportsRateControl = function () {
  *  Send the text string off to the service to be played.
  */
 TTS.Manager.play = function (text, language){
+  console.dir(this);
+  console.log("Playing text: ", text, language);
   language = language || 'ENU';
 
   var played = false;
   try{
     if (text == null || text.length == 0){
+      console.log("nothing to play");
       return false;
     }
 
-    if(!TTS.Manager._serviceFuncExists('play')){ 
+    if(!TTS.Manager._serviceFuncExists('play')){
+      console.log("no service to play with");
       return false;
     }
-    if(!TTS.Manager.isLanguageSupported(language)){ 
+    if(!TTS.Manager.isLanguageSupported(language)){
+      console.log("lang " + language + " not supported");
       return false;
     }
 
     //for linux we want to always call stop before playing the next one.
     //on windows it does not queue, just finishes playing the current one before moving on to the next one.
     var currentStatus = TTS.Manager.getStatus();
-    if (currentStatus == TTS.Status.Playing){ 
+    if (currentStatus == TTS.Status.Playing){
+      console.log("play11");
       return false;
     }
     if (currentStatus == TTS.Status.Unknown) {
+      console.log("play12");
         TTS.Manager.stop();
     }
 
     // set the voice pack for this language
-    TTS.Manager.setVoiceForLanguage(language);
+    console.log("play13");
+    //TTS.Manager.setVoiceForLanguage(language);
+    console.log("play14");
     played = TTS.Manager._service.play(text);
+    console.log("play15");
 
     // start up status timer if we are able to get a status other than unknown
     if (currentStatus != TTS.Status.Unknown) {
+      console.log("play16 starting timer");
         TTS.Manager._statusPollingDateActive = new Date();
         TTS.Manager._statusPollingInterval = TTS.Manager._statusPollingIntervalActive;
         TTS.Manager._updateStatus();
@@ -332,6 +343,7 @@ TTS.Manager.play = function (text, language){
       console.error("Failed to play the sound.", ex);
       TTS.Manager.log(ex);
   }
+  console.log("Play returning ", played);
   return played;
 };
 
@@ -599,6 +611,7 @@ TTS.Manager.isAvailable = function() {
 
 // get the latest TTS engine status and throw any events if it has changed
 TTS.Manager._updateStatus = function() {
+    console.log("updating status");
     // make sure any current timers are cancelled
     if (TTS.Manager._statusPollingTimer != null) {
         TTS.Manager._statusPollingTimer.cancel();
@@ -606,9 +619,11 @@ TTS.Manager._updateStatus = function() {
 
     // get the TTS current status
     var currentStatus = TTS.Manager.getStatus();
+    console.dir(currentStatus);
 
     // check if a status change occured
     if (currentStatus != TTS.Manager._lastStatus) {
+        console.log("status changed!");
         this._changeStatus(currentStatus);
     }
 
@@ -629,6 +644,7 @@ TTS.Manager._updateStatus = function() {
 
     // check status in a timer loop if interval is greater than 0
     if (this._statusPollingInterval > 0) {
+        console.log("setting polling timer");
         TTS.Manager._statusPollingTimer = YAHOO.lang.later(this._statusPollingInterval, TTS.Manager, TTS.Manager._updateStatus);
     }
 };
@@ -664,6 +680,7 @@ TTS.Manager._changeStatus = function (currentStatus) {
 TTS.Manager._initializeAvailableVoices = function () {
     var availableVoices = TTS.Manager.getVoices();
     TTS.Config.Debug && console.log("TTS.Manager Available Voices: ", availableVoices);
+    console.dir(availableVoices);
     if (availableVoices == null || typeof (availableVoices) == 'undefined') {
         return;
     }

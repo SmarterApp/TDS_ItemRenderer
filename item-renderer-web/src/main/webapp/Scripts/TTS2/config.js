@@ -16,7 +16,7 @@ TTS.Config = {
   DefaultToSelection: true,     //If the user has highlighted text, default to speaking that
   DefaultLanguage: 'ENU',       //Default language for selection parsing.
   NoInit: false,                //Should it try to initialize listeners etc instantly
-  Debug: false,                 //Allow debug messages.
+  Debug: true,                 //Allow debug messages.
   
   i18n: {
     ESN:{
@@ -198,7 +198,7 @@ TTS.Config = {
     { name: "VW Julie", priority: 1, language: "ENU" },
     { name: "Julie", priority: 1, language: "ENU" },
     { name: "Kate", priority: 1, language: "ENU" },
-    // { name: "Paul", priority: 1, language: "ENU" },  // Conflicts with Paulina
+    // { name: "Paul", priority: 1, language: "ENU" },  // Conflicts with Paulina, ESN's default.
     { name: "Cepstral_Marta", priority: 1, language: "ESN" },
     { name: "Cepstral_David", priority: 1, language: "ENU" },
     { name: "Cepstral_Miguel", priority: 2, language: "ESN" },
@@ -212,7 +212,7 @@ TTS.Config = {
     { name: "cmu_us_slt_arctic_hts", priority: 6, language: "ENU" },
     { name: "cmu_us_jmk_arctic_hts", priority: 7, language: "ENU" },
     { name: "cmu_us_bdl_arctic_hts", priority: 8, language: "ENU" },
- 
+
     //Mac voice packs
     { name: "Agnes", priority: 9, language: "ENU" },
     { name: "Alex", priority: 11, language: "ENU" },
@@ -229,7 +229,21 @@ TTS.Config = {
     { name: "Javier", priority: 9, language: "ESN" },
     { name: "Monica", priority: 9, language: "ESN" },
     { name: "Paulina", priority: 9, language: "ESN" },
- 
+
+    // Newer iOS voices (partially fixes TDS-1757)
+    { name: "Samantha", priority: 1, language: "ENU" },
+    { name: "Allison", priority: 1, language: "ENU" },
+    { name: "Ava", priority: 1, language: "ENU" },
+    { name: "Nicky", priority: 1, language: "ENU" },
+    { name: "Susan", priority: 1, language: "ENU" },
+    { name: "Tom", priority: 1, language: "ENU" },
+    // ESN (mexico spanish):
+    { name: "Angelica", priority: 1, language: "ESN" },
+    { name: "Juan", priority: 1, language: "ESN" },
+    // technically, SPA (spain spanish), but why not allow them:
+    { name: "Marisol", priority: 1, language: "ESN" },
+    { name: "Jorge", priority: 1, language: "ESN" },
+
     //Chrome OS voice packs
     { name: "US English Female TTS (by google)", priority: 9, language: "ENU" },
     { name: "Chrome OS US English Voice", priority: 9, language: "ENU" }, // version 25 and above have this
@@ -238,7 +252,8 @@ TTS.Config = {
  
     //Android voice pack
     { name: "android", priority: 9, language: "ENU" },
-    //iOS voice pack
+
+    //old iOS voice packs
     { name: "julie", priority: 9, language: "ENU" },
     { name: "violeta", priority: 9, language: "ESN" },
     { name: "en-US", priority: 9, language: "ENU" },

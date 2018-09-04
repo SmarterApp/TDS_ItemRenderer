@@ -68,8 +68,10 @@ TTS.Control = function(cfg) {
     var getManager = function () {
         if (!_manager) {
           if(typeof window[_cfg.DefaultManager] === "object") {
+              console.log("JJONES using default mgr");
             _manager = window[_cfg.DefaultManager];
           } else {
+            console.log("JJONES using window.tts.mgr");
             _manager = window.TTS.Manager;
           }
         }
@@ -111,6 +113,7 @@ TTS.Control = function(cfg) {
         if (_cfg.NoInit) return; //Listen to all the different events that prove that it is up and running
         this.eventSubscribe(cb);
 
+        console.log("calling OSHACKS");
         //Deal with all the random strange bits of suffering.
         this.OSHacks();
 
@@ -188,6 +191,7 @@ TTS.Control.prototype.getVoices = function(){ //Service call level
     * If you call this method after initialization, you MUST then call this.getManager().init()
     */
 TTS.Control.prototype.registerVoices = function (voices) {
+    console.log("JJONES: registerVoices called!");
     voices = voices || TTS.Config.getVoices();
     if (!voices || !voices.length) { return; }
 
@@ -217,10 +221,12 @@ TTS.Control.prototype.setManager = function (manager) {
 
 TTS.Control.prototype.OSHacks = function () {
     if (Util.Browser.isLinux()) {
+        console.log("JJONES oshack for linux");
         this.speak = function (text, language){
             TTS.Manager.play(text, language);
         };
     } else {
+        console.log("JJONES oshack for other, with delay");
         this.speak = function (text, language){
             setTimeout(function () {
                 TTS.Manager.play(text, language);
