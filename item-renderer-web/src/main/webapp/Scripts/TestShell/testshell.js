@@ -202,7 +202,7 @@ The main test shell entry code.
         if (Util.Browser.isIOS && TTS.Manager) {
             // Create a temporary invisible "overlay" to intercept the first click in the app
             $('body')
-                .append("<div id='overlay-tts' style='{height: 100%; width: 100%;}'></div>")
+                .append("<button id='overlay-tts' style='height: 100%; width: 100%; position: absolute; -webkit-appearance: none; z-index: 100;'></button>")
                 .on("click", function () {
                     // Trigger the play function with an empty string. This will reinitialize the browser speechSynthesis object
                     // so that speech is re-enabled
