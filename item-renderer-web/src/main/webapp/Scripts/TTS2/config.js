@@ -229,8 +229,24 @@ TTS.Config = {
     { name: "Javier", priority: 9, language: "ESN" },
     { name: "Monica", priority: 9, language: "ESN" },
     { name: "Paulina", priority: 9, language: "ESN" },
- 
-    //Chrome OS voice packs
+
+
+    // Newer iOS voices (partially fixes TDS-1757)
+    { name: "Samantha", priority: 1, language: "ENU" },
+    { name: "Allison", priority: 1, language: "ENU" },
+    { name: "Ava", priority: 1, language: "ENU" },
+    { name: "Nicky", priority: 1, language: "ENU" },
+    { name: "Susan", priority: 1, language: "ENU" },
+    { name: "Tom", priority: 1, language: "ENU" },
+    // ESN (mexico spanish):
+    { name: "Angelica", priority: 1, language: "ESN" },
+    { name: "Juan", priority: 1, language: "ESN" },
+    // technically, SPA (spain spanish), but why not allow them:
+    { name: "Marisol", priority: 1, language: "ESN" },
+    { name: "Jorge", priority: 1, language: "ESN" },
+
+
+      //Chrome OS voice packs
     { name: "US English Female TTS (by google)", priority: 9, language: "ENU" },
     { name: "Chrome OS US English Voice", priority: 9, language: "ENU" }, // version 25 and above have this
     { name: "native", priority: 9, language: "ENU" },       // version 23 has this

@@ -127,7 +127,7 @@ The main test shell entry code.
 
         // initialize the TDS object and load global configs
         TDS.init();
-        
+
         // set lang tag on <html>
         if (TDS.getLanguage() == 'ESN') {
             $('html').attr('lang', 'es'); // set <html> lang to Spanish, otherwise default to English
@@ -199,9 +199,23 @@ The main test shell entry code.
             console.warn('The SB implementation is missing call to base constructor.');
         }
 
+        if (Util.Browser.isIOS && TTS.Manager) {
+            // Create a temporary invisible "overlay" to intercept the first click in the app
+            $('body')
+                .append("<div id='overlay-tts' style='{height: 100%; width: 100%;}'></div>")
+                .on("click", function () {
+                    // Trigger the play function with an empty string. This will reinitialize the browser speechSynthesis object
+                    // so that speech is re-enabled
+                    TTS.Manager.play(" ");
+                    // Destroy this overlay
+                    $('#overlay-tts').remove();
+                    return true;
+                });
+        }
+
         // let everyone know the test shell has been initialized
         TS.Events.fire('init');
-        
+
         //SB-1364: To hide print page button
         sbacossChanges();
     };
@@ -213,35 +227,35 @@ The main test shell entry code.
             TS.save(TS.SaveRequest.Manual);
         });
 
-        TS.UI.Events.btnPause.subscribe(function() {
+        TS.UI.Events.btnPause.subscribe(function () {
             TS.pause();
         });
 
-        TS.UI.Events.btnBack.subscribe(function() {
+        TS.UI.Events.btnBack.subscribe(function () {
             TS.Navigation.back();
         });
 
-        TS.UI.Events.btnNext.subscribe(function() {
+        TS.UI.Events.btnNext.subscribe(function () {
             TS.Navigation.next();
         });
-        
+
         // SB-1504: Binding the bottom next button in testshell to next button's event handler
-        TS.UI.Events.btnNextBottom.subscribe(function() {
-        	TS.Navigation.next();
+        TS.UI.Events.btnNextBottom.subscribe(function () {
+            TS.Navigation.next();
         });
 
-        TS.UI.Events.btnEnd.subscribe(function() {
+        TS.UI.Events.btnEnd.subscribe(function () {
             TS.complete();
         });
 
-        TS.UI.Events.btnResults.subscribe(function() {
+        TS.UI.Events.btnResults.subscribe(function () {
             TS.redirectReview();
         });
 
         // when in accessibility mode use "GO" button
         if (ContentManager.isAccessibilityEnabled()) {
             $('#jumpGo').show();
-            $('#jumpGo').on('click', function() {
+            $('#jumpGo').on('click', function () {
                 TS.Navigation.change();
             });
         } else {
@@ -319,7 +333,7 @@ The main test shell entry code.
             TS.Navigation.hidePage(); // try and hide the current page
 
             // send pause notice to server and whether it fails or succeeds redirect to login
-            TS.xhrManager.queueAction('pause', { reason: reason }, function () {
+            TS.xhrManager.queueAction('pause', {reason: reason}, function () {
                 if (TDS.isProxyLogin) {
                     TS.redirectProxyLogout();
                 } else {
@@ -394,7 +408,7 @@ The main test shell entry code.
     // save the responses on the page 
     // (NOTE: if savetype is not specified then it is considered implicit)
     TS.save = function (saveRequest, items) {
-        
+
         // Bug 93008: save() was blocking page navigation in SIRVE - it shouldn't have been applied to SIRVE after all
         if (TDS.isSIRVE) {
             return;
@@ -412,7 +426,7 @@ The main test shell entry code.
             taskWorkflow.add(TS.Validation.checkRecorderQuality);
             taskWorkflow.add(TS.Validation.checkSimulatorPlaying, 'SimulatorPlayingWhileSaving');
             taskWorkflow.add(TS.Validation.checkIfPromptSelected);
-            taskWorkflow.start(function() {
+            taskWorkflow.start(function () {
                 TS._saveInternal(saveRequest, items);
             }, TS);
         } else {
@@ -435,7 +449,7 @@ The main test shell entry code.
     };
 
     TS._saveResponses = function (saveRequest, items) {
-        
+
         // get current group
         var currentPage = TS.PageManager.getCurrent();
         if (!currentPage || !currentPage.items) {
@@ -575,7 +589,7 @@ The main test shell entry code.
         var autoSaveMillis = (TS.Config.autoSaveInterval * 1000);
 
         // start a new timer
-        TS.autoSaveTimer = YAHOO.lang.later(autoSaveMillis, TS, function() {
+        TS.autoSaveTimer = YAHOO.lang.later(autoSaveMillis, TS, function () {
 
             // timer was triggered so clear it
             TS.autoSaveTimer = null;
@@ -583,13 +597,14 @@ The main test shell entry code.
             // run save
             try {
                 TS.save(TS.SaveRequest.Auto);
-            } catch (ex) { }
+            } catch (ex) {
+            }
 
             // as a backup if nobody started the timer we will
             if (!TS.autoSaveTimer) {
                 TS.autoSaveStart();
             }
-            
+
         });
     };
 
@@ -632,7 +647,7 @@ The main test shell entry code.
         if (!(TS.Config.forbiddenAppsInterval > 0)) {
             return false;
         }
-        
+
         if (TS.isUnloading)
             return false;  // TS is unloading. No need to show an alert fb# 152367 (similar)
 
@@ -641,7 +656,7 @@ The main test shell entry code.
             return false;
         }
 
-        var checkForbiddenAppsCallback = function(forbiddenApps) {
+        var checkForbiddenAppsCallback = function (forbiddenApps) {
             // if there are any forbidden apps then alert user and log them out
             if (forbiddenApps.length > 0) {
                 var message = Messages.get('ForbiddenApps') + forbiddenApps[0];
@@ -671,7 +686,7 @@ The main test shell entry code.
 
         if (TS.isUnloading) return false;  // TS is unloading. No need to show an alert fb# 152367
 
-        var isEnvironmentSecureCallback = function(securityCheckResult) {
+        var isEnvironmentSecureCallback = function (securityCheckResult) {
             if (securityCheckResult != null) {
                 // AIR iOS Secure Browser returns { state: "true" } when in lockdown mode
                 var secure = ((securityCheckResult.secure == true) || (securityCheckResult.state == 'true'));
@@ -693,7 +708,7 @@ The main test shell entry code.
 
         return false;
     };
-    
+
     window.TestShell = TS;
 
     // this function gets called when an iframe gets logged out and redirected back to the login page
