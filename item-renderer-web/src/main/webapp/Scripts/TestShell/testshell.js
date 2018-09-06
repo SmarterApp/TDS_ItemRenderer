@@ -199,7 +199,7 @@ The main test shell entry code.
             console.warn('The SB implementation is missing call to base constructor.');
         }
 
-        if (Util.Browser.isIOS && TTS.Manager) {
+        if (Util.Browser.isIOS() && TTS.Manager) {
             // Create a temporary invisible "overlay" to intercept the first click in the app
             $('body')
                 .append("<button id='overlay-tts' style='height: 100%; width: 100%; position: absolute; -webkit-appearance: none; z-index: 100;'></button>")
