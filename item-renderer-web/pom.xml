@@ -8,6 +8,6 @@
 	<parent>
 		<groupId>org.opentestsystem.delivery</groupId>
 		<artifactId>item-renderer-master</artifactId>
-		<version>5.0.18-SNAPSHOT</version>
+		<version>5.0.19-SNAPSHOT</version>
 	</parent>
 </project>
