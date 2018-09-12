@@ -332,10 +332,21 @@ TTS.Config.UI.prototype.renderVoice = function(){
     var vPack    = ctrl.getVoiceForLanguage(langCode);
     var voice = vPack ? vPack.ServiceVoiceName : null;
 
-    if (this.cfg.ShowVoicePacks) { //build a selection tool
-      this.renderVoicePacks(voices, voice, langCode);
+    // Hack for iOS only - The only compatible voicepack for iOS is "Samantha", only display the label for this pack
+    if (Util.Browser.isIOS()) {
+        for(var v in voices) {
+            if (v.Voicename === 'Samantha') {
+                vPack = voice;
+                vPack.Voicename = 'English';
+                voice = vPack ? vPack.ServiceVoiceName : null;
+            }
+        }
+
+        this.renderVoiceName(vPack, voice, langCode);
+    } else if (this.cfg.ShowVoicePacks) { //build a selection tool
+        this.renderVoicePacks(voices, voice, langCode);
     }else{  //Only set one vs
-      this.renderVoiceName(vPack, voice, langCode);
+        this.renderVoiceName(vPack, voice, langCode);
     }
 };
 
