@@ -45,13 +45,9 @@ public class RemoteResourceHandler extends ResourceHandler {
         String physicalPath = overrideExecuteUrlPath(request);
 
         if (physicalPath != null && physicalPath.toLowerCase().endsWith(".mp4")) {
-            try {
-                final File resourceFile = stream2file(contentRepository.findResource(physicalPath));
-                StaticFileHandler3.ProcessRequestInternal(request, response, resourceFile.getPath());
-                resourceFile.delete();
-            } catch (Exception e) {
-                throw new IOException(e);
-            }
+            final File resourceFile = stream2file(contentRepository.findResource(physicalPath));
+            StaticFileHandler3.ProcessRequestInternal(request, response, resourceFile.getPath());
+            resourceFile.delete();
         } else {
             byte[] bytes = IOUtils.toByteArray(contentRepository.findResource(physicalPath));
             // In order to display SVG files in an <img> tag, the browser needs to know the content type, where this isn't needed for other types
