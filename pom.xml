@@ -4,7 +4,7 @@
   <artifactId>item-renderer-master</artifactId>
   <packaging>pom</packaging>
   <name>item-renderer-master</name>
-  <version>5.0.19-SNAPSHOT</version>
+  <version>5.0.20-SNAPSHOT</version>
 
   <parent>
     <groupId>org.opentestsystem.shared</groupId>
