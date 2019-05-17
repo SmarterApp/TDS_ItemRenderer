@@ -74,12 +74,11 @@ public class APIPRulesEngine
 
           // Adding special condition when TTS_VI is enabled
           // Will only process BrailleText
-          String ruleValue;
+          String ruleValue = null;
           if (accProperties.isTTSViEnabled()) {
-              if (apipRule.getType() instanceof APIPRuleElementGraphics) {
+              if (apipRule.getType() instanceof APIPRuleElementGraphics &&
+                      accessElement.getRelatedElementInfo().getBraille() != null) {
                   ruleValue = accessElement.getRelatedElementInfo().getBraille().getText();
-              } else {
-                  ruleValue = null;
               }
           } else {
               ruleValue = apipRule.getTag().getValue(accessElement);
