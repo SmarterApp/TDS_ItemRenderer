@@ -87,7 +87,7 @@ public class ITSDocumentService implements ItemDocumentService {
 
     // process APIP
     if (content != null && content.getApip() != null && apipMode != APIPMode.None) { // create APIP processor if possible
-      APIPXmlProcessor apipProcessor = ITSDocumentFactory.createAPIPProcessor(apipMode, accProperties.getTTXBusinessRules());
+      APIPXmlProcessor apipProcessor = ITSDocumentFactory.createAPIPProcessor(apipMode, accProperties);
 
       if (apipProcessor != null) {
         apipTasks.registerTask(apipProcessor);

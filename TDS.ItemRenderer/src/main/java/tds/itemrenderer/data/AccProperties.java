@@ -171,6 +171,10 @@ public class AccProperties    {
     return isSelected("TTS", "TDS_TTS_Stim"); 
   }
 
+  public boolean isTTSViEnabled() {
+    return isSelected("TTS", "TDS_TTS_VI");
+  }
+
   public boolean isItemTutorialEnabled()
   {
     return isSelected("Tutorial", "TDS_T1"); 

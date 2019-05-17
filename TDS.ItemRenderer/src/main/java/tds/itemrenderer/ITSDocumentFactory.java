@@ -57,16 +57,18 @@ public class ITSDocumentFactory
       apipMode = accProperties.isBRFEnabled () ? APIPMode.BRF : APIPMode.Braille;
     }
     // check for TTS accommodation
-    else if (accProperties.isTTSStimulusEnabled () || accProperties.isTTSItemEnabled ()) {
+    else if (accProperties.isTTSStimulusEnabled () ||
+            accProperties.isTTSItemEnabled () ||
+            accProperties.isTTSViEnabled()) {
       apipMode = APIPMode.TTS;
     }
 
     return apipMode;
   }
 
-  public static APIPXmlProcessor createAPIPProcessor (APIPMode
-      apipMode, String apipCode) {
+  public static APIPXmlProcessor createAPIPProcessor (APIPMode apipMode, AccProperties accProperties) {
 
+    String apipCode = accProperties.getTTXBusinessRules();
     // get APIP rule group
     APIPRuleGroup apipRuleGroup = null;
 
@@ -79,7 +81,7 @@ public class ITSDocumentFactory
     if (apipRuleGroup == null) {
       return null;
     }
-    return new APIPXmlProcessor (apipMode, apipRuleGroup);
+    return new APIPXmlProcessor (apipMode, apipRuleGroup, accProperties);
   }
    
   
@@ -117,7 +119,7 @@ public class ITSDocumentFactory
 
     // process APIP 
     if (content != null && content.getApip () != null &&  apipMode != APIPMode.None) { // create APIP processor if possible
-       APIPXmlProcessor apipProcessor = createAPIPProcessor(apipMode, accProperties.getTTXBusinessRules ());
+       APIPXmlProcessor apipProcessor = createAPIPProcessor(apipMode, accProperties);
       
        if (apipProcessor != null) {
           apipTasks.registerTask(apipProcessor);

@@ -15,6 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import tds.itemrenderer.data.AccProperties;
 import tds.itemrenderer.data.ITSDocumentXml;
 import tds.itemrenderer.data.ITSTypes.ITSContentType;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
@@ -31,10 +32,12 @@ public class APIPXmlProcessor implements IProcessorTask<Document>
 {
   private final APIPMode      _apipMode;
   private final APIPRuleGroup _apipRuleGroup;
+  private final AccProperties _accProperties;
 
-  public APIPXmlProcessor (APIPMode apipMode, APIPRuleGroup apipRuleGroup) {
+  public APIPXmlProcessor (APIPMode apipMode, APIPRuleGroup apipRuleGroup, AccProperties accProperties) {
     _apipMode = apipMode;
     _apipRuleGroup = apipRuleGroup;
+    _accProperties = accProperties;
   }
 
   public int getContentSupported () {
@@ -61,7 +64,7 @@ public class APIPXmlProcessor implements IProcessorTask<Document>
       Element apipNode = apipElement.getElement ();
   
       // get APIP text for the rules
-      String text = rulesEngine.evaluate (apipNode.getNodeName (), apipAccessElement);
+      String text = rulesEngine.evaluate(apipNode.getNodeName(), apipAccessElement, _accProperties);
 
       if (text != null) {
         if (_apipMode == APIPMode.TTS) {

@@ -8,6 +8,7 @@
  ******************************************************************************/
 package tds.itemrenderer.apip.apipruletag;
 
+import tds.itemrenderer.data.AccProperties;
 import tds.itemrenderer.data.apip.APIPAccessElement;
 
 /**

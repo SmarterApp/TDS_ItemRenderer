@@ -11,7 +11,9 @@ package tds.itemrenderer.apip;
 import java.util.ArrayList;
 import java.util.List;
 
+import tds.itemrenderer.apip.apiprulelement.APIPRuleElementGraphics;
 import tds.itemrenderer.apip.apipruletag.APIPRuleTagNemeth;
+import tds.itemrenderer.data.AccProperties;
 import tds.itemrenderer.data.ITSTypes.ITSContextType;
 import tds.itemrenderer.data.apip.APIPAccessElement;
 
@@ -45,7 +47,7 @@ public class APIPRulesEngine
    * @param accessElement
    * @return
    */
-  public String evaluate(String nodeName, APIPAccessElement accessElement)  {
+  public String evaluate(String nodeName, APIPAccessElement accessElement, AccProperties accProperties)  {
       StringBuilder replacementText = new StringBuilder();
 
       int lastOrderRead = 0;
@@ -69,7 +71,19 @@ public class APIPRulesEngine
           if (apipRule.getTag() == null) {
             throw new APIPException("APIP missing rule tag");
           }
-          String ruleValue = apipRule.getTag().getValue(accessElement);
+
+          // Adding special condition when TTS_VI is enabled
+          // Will only process BrailleText
+          String ruleValue;
+          if (accProperties.isTTSViEnabled()) {
+              if (apipRule.getType() instanceof APIPRuleElementGraphics) {
+                  ruleValue = accessElement.getRelatedElementInfo().getBraille().getText();
+              } else {
+                  ruleValue = null;
+              }
+          } else {
+              ruleValue = apipRule.getTag().getValue(accessElement);
+          }
 
           // check if APIP value exists (NULL if no value exists)
           if (ruleValue != null) {
