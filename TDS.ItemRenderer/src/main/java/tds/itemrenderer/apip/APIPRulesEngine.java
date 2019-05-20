@@ -73,16 +73,16 @@ public class APIPRulesEngine
           }
 
           // Adding special condition when TTS_VI is enabled
-          // Will only process BrailleText
-          String ruleValue = null;
+          // Will BrailleText value takes precedence over other TTS content
+          String ruleValue;
           if (accProperties.isTTSViEnabled()) {
               if (apipRule.getType() instanceof APIPRuleElementGraphics &&
                       accessElement.getRelatedElementInfo().getBraille() != null) {
-                  ruleValue = accessElement.getRelatedElementInfo().getBraille().getText();
+                  return accessElement.getRelatedElementInfo().getBraille().getText();
               }
-          } else {
-              ruleValue = apipRule.getTag().getValue(accessElement);
           }
+
+          ruleValue = apipRule.getTag().getValue(accessElement);
 
           // check if APIP value exists (NULL if no value exists)
           if (ruleValue != null) {
