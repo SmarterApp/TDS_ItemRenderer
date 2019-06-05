@@ -41,8 +41,9 @@ public class ITSDocument extends ITSDocumentXml
 
   @Override
   public long getStimulusKey () {
-    String value = getAttributeValue ("stm_pass_id");
-    return StringUtils.isEmpty (value) ? 0 : Long.parseLong (value);
+    //String value = getAttributeValue ("stm_pass_id");
+    //return StringUtils.isEmpty (value) ? 0 : Long.parseLong (value);
+     return getAssociatedpassage(); 
   }
 
   public void setAttributeLayout (String value) {
