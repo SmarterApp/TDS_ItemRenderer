@@ -25,7 +25,8 @@ public class ITSDocumentXml extends IITSDocument
   private boolean                                      _validated;
   private int                                          _approvedVersion;
   private long                                         _id;
-
+  private long                                         _associatedpassage;
+   
   private final CaseInsensitiveMap<List<ITSAttribute>> _attributes = new CaseInsensitiveMap<List<ITSAttribute>> ();
   private final CaseInsensitiveMap<ITSContent>         _contents   = new CaseInsensitiveMap<ITSContent> ();
   private final List<String>                           _mediaFiles = new ArrayList<String> ();
@@ -77,6 +78,14 @@ public class ITSDocumentXml extends IITSDocument
   public void setId (long value) {
     this._id = value;
   }
+
+  public long getAssociatedpassage () {
+	    return _associatedpassage;
+	  }
+	
+  public void setAssociatedpassage (long value) {
+	    this._associatedpassage = value;
+	  }
 
   public void setBankKey (long value) {
     super.setBankKey (value);
