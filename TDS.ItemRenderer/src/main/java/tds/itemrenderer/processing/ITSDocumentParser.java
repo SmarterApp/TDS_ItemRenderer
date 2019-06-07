@@ -285,6 +285,11 @@ public class ITSDocumentParser<T extends ITSDocumentXml> {
     if (item.getId () != null) {
       document.setId (Long.parseLong (item.getId ().trim ()));
     }
+    
+    if (item.getAssociatedpassage () != null) {
+      document.setAssociatedpassage (Long.parseLong (item.getAssociatedpassage().trim ()));
+    }
+    
     if (item.getBankkey () != null) {
       document.setBankKey (Long.parseLong (item.getBankkey ().trim ()));
     }
