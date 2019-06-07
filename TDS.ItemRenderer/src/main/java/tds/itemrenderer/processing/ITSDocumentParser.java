@@ -285,6 +285,10 @@ public class ITSDocumentParser<T extends ITSDocumentXml> {
     if (item.getId () != null) {
       document.setId (Long.parseLong (item.getId ().trim ()));
     }
+    //06/07/2019: Set the <associatedpassage> xml element in order to be used as StimID
+    if (item.getAssociatedpassage () != null) {
+	      document.setAssociatedpassage (Long.parseLong (item.getAssociatedpassage().trim ()));
+    }
     if (item.getBankkey () != null) {
       document.setBankKey (Long.parseLong (item.getBankkey ().trim ()));
     }
