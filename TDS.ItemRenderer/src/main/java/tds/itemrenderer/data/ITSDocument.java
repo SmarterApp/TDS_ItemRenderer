@@ -33,16 +33,22 @@ public class ITSDocument extends ITSDocumentXml
   public void setItemKey (Long value) {
     setId (value);
   }
-
+ 
+ 
+  //06/07/2019: Commented out since not used, and Stim ID needs to be retrieved from the <associatedpassage> element instead of the <attriblist> element for stm_pass_id
+  /*
   public void setAttributeStimulusKey (long value) {
     setAttributeValue ("stm_pass_id", "" + value);
     setStimulusKey (value);
   }
-
+  */
+  
+  //06/07/2019: Fetch the Stim ID from the <associatedpassage> element instead of the <attriblist> element for stm_pass_id
   @Override
   public long getStimulusKey () {
-    String value = getAttributeValue ("stm_pass_id");
-    return StringUtils.isEmpty (value) ? 0 : Long.parseLong (value);
+    //String value = getAttributeValue ("stm_pass_id");
+    //return StringUtils.isEmpty (value) ? 0 : Long.parseLong (value);
+    return getAssociatedpassage(); 
   }
 
   public void setAttributeLayout (String value) {
