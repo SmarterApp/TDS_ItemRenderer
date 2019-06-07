@@ -34,10 +34,11 @@ public class ITSDocument extends ITSDocumentXml
     setId (value);
   }
 
+  /*
   public void setAttributeStimulusKey (long value) {
     setAttributeValue ("stm_pass_id", "" + value);
     setStimulusKey (value);
-  }
+  }*/
 
   @Override
   public long getStimulusKey () {
