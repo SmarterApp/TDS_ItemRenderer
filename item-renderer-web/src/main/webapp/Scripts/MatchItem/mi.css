@@ -111,7 +111,6 @@
 .matchItemDemoAccesible-Ideal th {
 	border: solid 1px #ccc;
 	padding: 3px 10px;
-	font-weight: bold;
 }
 .matchItemDemoAccesible-Ideal tr th:nth-child(1) {
 	border-top: none;

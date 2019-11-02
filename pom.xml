@@ -4,7 +4,7 @@
   <artifactId>item-renderer-master</artifactId>
   <packaging>pom</packaging>
   <name>item-renderer-master</name>
-  <version>3.3.0.RELEASE.TIMS</version>
+  <version>3.3.0.RELEASE.TIMS.v2</version>
 
   <repositories>
     <repository>
